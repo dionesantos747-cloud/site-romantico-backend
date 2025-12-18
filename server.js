@@ -1,12 +1,18 @@
+// server.js
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
+const axios = require('axios');
 
 const app = express();
 const port = process.env.PORT || 10000;
+
+// Token Mercado Pago (da variável de ambiente)
+const mpToken = process.env.MP_ACCESS_TOKEN;
+console.log('Token Mercado Pago carregado:', mpToken);
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -16,16 +22,32 @@ const upload = multer({ dest: 'uploads/' });
 
 // Persistência simples
 let pagamentos = {};   // status dos pagamentos
-let sitesCriados = {}; // informações do site (link, pasta)
+let sitesCriados = {}; // informações do site (link, pasta, qrCode)
 
 // Rota raiz
 app.get('/', (req, res) => {
   res.send('Servidor rodando, backend do site romântico OK! ❤️');
 });
 
+// Função para consultar pagamento no Mercado Pago
+async function verificarPagamentoMercadoPago(paymentId) {
+  try {
+    const res = await axios.get(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
+      headers: {
+        Authorization: `Bearer ${mpToken}`
+      }
+    });
+    return res.data;
+  } catch(err) {
+    console.error('Erro ao consultar pagamento:', err.response?.data || err.message);
+    return null;
+  }
+}
+
 // Webhook Mercado Pago
-app.post('/webhook', (req, res) => {
+app.post('/webhook', async (req, res) => {
   console.log('Webhook recebido:', req.body);
+
   const paymentId = req.body.data?.id || 'desconhecido';
 
   pagamentos[paymentId] = {
@@ -33,11 +55,12 @@ app.post('/webhook', (req, res) => {
     data: req.body.data || {}
   };
 
-  // Liberar site após pagamento aprovado
-  if(req.body.type === 'payment' || req.body.type === 'payment.updated'){
-    if(req.body.data?.status === 'approved' && sitesCriados[paymentId]){
-      sitesCriados[paymentId].liberado = true;
-    }
+  // Consultar status real do pagamento
+  const pagamentoInfo = await verificarPagamentoMercadoPago(paymentId);
+
+  if(pagamentoInfo?.status === 'approved' && sitesCriados[paymentId]){
+    sitesCriados[paymentId].liberado = true;
+    console.log(`Pagamento ${paymentId} aprovado! Site liberado.`);
   }
 
   res.status(200).send('OK');
@@ -113,7 +136,7 @@ ${musicaHtml}
 
   // Salvar info no backend
   sitesCriados[id] = {
-    liberado: false,
+    liberado: false, // só libera após pagamento aprovado
     pasta: siteFolder,
     qrCode: `https://${process.env.RENDER_EXTERNAL_URL}/sites/${id}/index.html`
   };
@@ -124,6 +147,7 @@ ${musicaHtml}
 // Servir sites estáticos
 app.use('/sites', express.static(path.join(__dirname, 'sites')));
 
+// Start server
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
 });
