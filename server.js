@@ -1,3 +1,4 @@
+
 // server.js
 const express = require('express');
 const cors = require('cors');
@@ -7,7 +8,7 @@ const port = process.env.PORT || 10000;
 app.use(cors());
 app.use(express.json());
 
-// Simula armazenamento de pagamentos (em memória)
+// Armazenamento temporário de pagamentos
 let pagamentos = {};
 
 // Rota raiz
@@ -19,10 +20,11 @@ app.get('/', (req, res) => {
 app.post('/webhook', (req, res) => {
   console.log('Webhook recebido:', req.body);
 
-  // Exemplo: extrair id do pagamento
   const paymentId = req.body.data?.id || 'desconhecido';
+  const status = req.body.type === 'payment' && req.body.data?.status === 'approved' ? 'approved' : 'pending';
+
   pagamentos[paymentId] = {
-    status: req.body.type || 'desconhecido',
+    status,
     data: req.body.data || {}
   };
 
@@ -32,14 +34,13 @@ app.post('/webhook', (req, res) => {
 // Consultar pagamento
 app.get('/check-payment/:id', (req, res) => {
   const { id } = req.params;
-  if (pagamentos[id]) {
-    res.json({ success: true, payment: pagamentos[id] });
+  if (pagamentos[id] && pagamentos[id].status === 'approved') {
+    res.json({ pago: true });
   } else {
-    res.json({ success: false, message: 'Pagamento não encontrado' });
+    res.json({ pago: false });
   }
 });
 
-// Start server
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
 });
