@@ -1,91 +1,80 @@
+// server.js
 const express = require('express');
 const cors = require('cors');
-const multer = require('multer');
-const fs = require('fs');
-const shortid = require('shortid');
+const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 10000;
 
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
 
-// Pastas de upload
-const uploadFotos = multer({ dest: 'uploads/fotos/' });
-const uploadMusicas = multer({ dest: 'uploads/musicas/' });
+// Armazenamento em memória (pode trocar por banco real)
+let pagamentos = {};   // status dos pagamentos
+let sitesCriados = {}; // dados dos sites românticos
 
-// Simula banco de dados
-let sites = {}; // { siteId: { nome, mensagem, carta, data, fotos[], musica } }
-let pagamentos = {}; // { paymentId: true }
-
-// ROOT
-app.get('/', (req,res)=>res.send('Servidor rodando, backend do site romântico OK! ❤️'));
-
-// SALVAR SITE (com arquivos)
-app.post('/save-site', uploadFotos.array('fotos'), uploadMusicas.single('musica'), (req,res)=>{
-  const { nome, mensagem, carta, data } = req.body;
-  const siteId = shortid.generate();
-
-  let fotosURLs = [];
-  if(req.files && req.files.length>0){
-    fotosURLs = req.files.map(f => `/uploads/fotos/${f.filename}`);
-  }
-
-  let musicaURL = '';
-  if(req.file) musicaURL = `/uploads/musicas/${req.file.filename}`;
-
-  sites[siteId] = { nome, mensagem, carta, data, fotos: fotosURLs, musica: musicaURL, pago:false };
-  res.json({ success:true, siteId });
+// Rota raiz
+app.get('/', (req, res) => {
+  res.send('Servidor rodando, backend do site romântico OK! ❤️');
 });
 
-// CONSULTAR PAGAMENTO
-app.get('/latest-payment/:siteId', (req,res)=>{
-  const { siteId } = req.params;
-  if(!sites[siteId]) return res.json({ success:false });
-  res.json({ pago: sites[siteId].pago });
-});
+// Webhook Mercado Pago
+app.post('/webhook', (req, res) => {
+  console.log('Webhook recebido:', req.body);
 
-// WEBHOOK MERCADO PAGO
-app.post('/webhook', (req,res)=>{
+  // ID do pagamento
   const paymentId = req.body.data?.id || 'desconhecido';
-  const siteId = req.body.additional_info?.siteId; // enviar siteId como info adicional
-  if(siteId && sites[siteId]){
-    sites[siteId].pago = true;
+
+  // Armazena status
+  pagamentos[paymentId] = {
+    status: req.body.type || 'desconhecido',
+    data: req.body.data || {}
+  };
+
+  // Aqui você pode salvar o site romântico liberando o link e QR code
+  if(req.body.type === 'payment' || req.body.type === 'payment.updated'){
+    if(req.body.data?.status === 'approved'){
+      // Marcar como liberado
+      sitesCriados[paymentId] = {
+        liberado: true,
+        link: req.body.data?.external_reference || '', // se tiver referência
+        qrCode: `https://seu-site-romantico.com/?id=${paymentId}`
+      };
+    }
   }
-  pagamentos[paymentId] = true;
+
   res.status(200).send('OK');
 });
 
-// SERVIR SITE SALVO
-app.get('/site/:siteId', (req,res)=>{
-  const { siteId } = req.params;
-  const site = sites[siteId];
-  if(!site) return res.status(404).send('Site não encontrado');
-
-  let fotosHtml = site.fotos.map(f => `<img src="${f}" class="foto">`).join('');
-  res.send(`
-    <html>
-      <head>
-        <title>Para ${site.nome}</title>
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
-        <style>
-          body{background:#000;color:#fff;font-family:'Playfair Display',serif;text-align:center;padding:20px;}
-          .foto{width:90%;max-width:340px;border-radius:30px;border:4px solid #ffb3d9;margin:18px auto;display:block;}
-        </style>
-      </head>
-      <body>
-        <h1>${site.nome}</h1>
-        <p style="font-family:'Dancing Script',cursive;font-size:1.6em;">${site.mensagem}</p>
-        ${fotosHtml}
-        ${site.musica ? `<audio controls src="${site.musica}"></audio>` : ''}
-        <p style="font-family:'Dancing Script',cursive;font-size:1.5em;">${site.carta}</p>
-      </body>
-    </html>
-  `);
+// Consultar status do pagamento
+app.get('/check-payment/:id', (req, res) => {
+  const { id } = req.params;
+  if(pagamentos[id] && sitesCriados[id]?.liberado){
+    res.json({ success: true, link: sitesCriados[id].link, qrCode: sitesCriados[id].qrCode });
+  } else {
+    res.json({ success: false, message: 'Pagamento não aprovado ou site não liberado ainda' });
+  }
 });
 
-// SERVIR UPLOADS
-app.use('/uploads', express.static('uploads'));
+// Criar site romântico (exemplo de armazenamento)
+app.post('/create-site/:id', (req, res) => {
+  const { id } = req.params;
+  const { nome, mensagem, carta, fotos, fundo, musica } = req.body;
 
-// START
-app.listen(port, ()=>console.log(`Servidor rodando na porta ${port}`));
+  // Armazena os dados
+  sitesCriados[id] = {
+    liberado: false, // só libera após pagamento aprovado
+    nome,
+    mensagem,
+    carta,
+    fotos,
+    fundo,
+    musica
+  };
+
+  res.json({ success: true, message: 'Site criado com sucesso, aguarde pagamento' });
+});
+
+app.listen(port, () => {
+  console.log(`Servidor rodando na porta ${port}`);
+});
 
