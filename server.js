@@ -1,30 +1,46 @@
+// server.js
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
-
 const app = express();
-app.use(bodyParser.json());
+const port = process.env.PORT || 10000;
+
 app.use(cors());
+app.use(express.json());
 
-// Armazenamento temporário (em produção usar banco de dados)
-let pagamentosAprovados = {};
+// Simula armazenamento de pagamentos (em memória)
+let pagamentos = {};
 
-// Webhook do Mercado Pago
+// Rota raiz
+app.get('/', (req, res) => {
+  res.send('Servidor rodando, backend do site romântico OK! ❤️');
+});
+
+// Webhook Mercado Pago
 app.post('/webhook', (req, res) => {
-    const body = req.body;
-    if(body.type === 'payment' && body.data && body.data.status === 'approved'){
-        pagamentosAprovados[body.data.id] = true;
-        console.log('Pagamento aprovado:', body.data.id);
-    }
-    res.sendStatus(200);
+  console.log('Webhook recebido:', req.body);
+
+  // Exemplo: extrair id do pagamento
+  const paymentId = req.body.data?.id || 'desconhecido';
+  pagamentos[paymentId] = {
+    status: req.body.type || 'desconhecido',
+    data: req.body.data || {}
+  };
+
+  res.status(200).send('OK');
 });
 
-// Endpoint para verificar status do pagamento
-app.get('/status/:id', (req, res) => {
-    const id = req.params.id;
-    const aprovado = pagamentosAprovados[id] || false;
-    res.json({aprovado});
+// Consultar pagamento
+app.get('/check-payment/:id', (req, res) => {
+  const { id } = req.params;
+  if (pagamentos[id]) {
+    res.json({ success: true, payment: pagamentos[id] });
+  } else {
+    res.json({ success: false, message: 'Pagamento não encontrado' });
+  }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, ()=>console.log(`Servidor rodando na porta ${PORT}`));
+// Start server
+app.listen(port, () => {
+  console.log(`Servidor rodando na porta ${port}`);
+});
+
