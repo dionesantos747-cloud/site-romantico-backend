@@ -1,35 +1,64 @@
-// server.js
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const multer = require('multer');
+const fs = require('fs');
 const path = require('path');
-const fs = require('fs-extra');
 
 const app = express();
 const port = process.env.PORT || 10000;
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use('/sites', express.static(path.join(__dirname, 'sites')));
 
-// Multer para uploads temporários
-const upload = multer({ dest: 'tmp/' });
+// Configuração multer
+const upload = multer({ dest: 'uploads/' });
 
-// Armazenamento em memória
+// Persistência simples
 let pagamentos = {};   // status dos pagamentos
-let sitesCriados = {}; // dados dos sites românticos
+let sitesCriados = {}; // informações do site (link, pasta)
 
 // Rota raiz
 app.get('/', (req, res) => {
   res.send('Servidor rodando, backend do site romântico OK! ❤️');
 });
 
+// Webhook Mercado Pago
+app.post('/webhook', (req, res) => {
+  console.log('Webhook recebido:', req.body);
+  const paymentId = req.body.data?.id || 'desconhecido';
+
+  pagamentos[paymentId] = {
+    status: req.body.type || 'desconhecido',
+    data: req.body.data || {}
+  };
+
+  // Liberar site após pagamento aprovado
+  if(req.body.type === 'payment' || req.body.type === 'payment.updated'){
+    if(req.body.data?.status === 'approved' && sitesCriados[paymentId]){
+      sitesCriados[paymentId].liberado = true;
+    }
+  }
+
+  res.status(200).send('OK');
+});
+
+// Consultar status do pagamento
+app.get('/check-payment/:id', (req, res) => {
+  const { id } = req.params;
+  if(sitesCriados[id] && sitesCriados[id].liberado){
+    res.json({ 
+      success: true, 
+      qrCode: sitesCriados[id].qrCode,
+      link: sitesCriados[id].qrCode
+    });
+  } else {
+    res.json({ success: false, message: 'Pagamento não aprovado ou site não liberado ainda' });
+  }
+});
+
 // Criar site romântico
-app.post('/create-site/:id', upload.fields([
-  { name: 'fotos' },
-  { name: 'musica', maxCount: 1 }
-]), async (req, res) => {
+app.post('/create-site/:id', upload.fields([{ name: 'fotos' }, { name: 'musica', maxCount:1 }]), (req, res) => {
   const { id } = req.params;
   const { nome, mensagem, carta, fundo } = req.body;
   const fotos = req.files['fotos'] || [];
@@ -40,13 +69,22 @@ app.post('/create-site/:id', upload.fields([
 
   // Mover arquivos
   fotos.forEach((f,i)=>{
-    fs.renameSync(f.path, path.join(siteFolder, `foto${i+1}${path.extname(f.originalname)}`));
+    const ext = path.extname(f.originalname);
+    fs.renameSync(f.path, path.join(siteFolder, `foto${i+1}${ext}`));
   });
-  if(musica) fs.renameSync(musica.path, path.join(siteFolder, `musica${path.extname(musica.originalname)}`));
+  if(musica){
+    const ext = path.extname(musica.originalname);
+    fs.renameSync(musica.path, path.join(siteFolder, `musica${ext}`));
+  }
 
   // Gerar HTML do site romântico
-  const fotosHtml = fotos.map((f,i)=>`<img src="foto${i+1}${path.extname(f.originalname)}" class="foto">`).join('\n');
+  const fotosHtml = fotos.map((f,i)=>{
+    const ext = path.extname(f.originalname);
+    return `<img src="foto${i+1}${ext}" class="foto">`;
+  }).join('\n');
+
   const musicaHtml = musica ? `<audio controls src="musica${path.extname(musica.originalname)}"></audio>` : '';
+
   const html = `
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -77,38 +115,16 @@ ${musicaHtml}
   sitesCriados[id] = {
     liberado: false,
     pasta: siteFolder,
-    qrCode: `https://${process.env.RENDER_EXTERNAL_URL || 'site-romantico-backend.onrender.com'}/sites/${id}/index.html`
+    qrCode: `https://${process.env.RENDER_EXTERNAL_URL}/sites/${id}/index.html`
   };
 
   res.json({ success:true, message:'Site criado com sucesso, aguarde pagamento.' });
 });
 
-// Webhook Mercado Pago
-app.post('/webhook', (req,res)=>{
-  const paymentId = req.body.data?.id || 'desconhecido';
-  pagamentos[paymentId] = {
-    status: req.body.type || 'desconhecido',
-    data: req.body.data || {}
-  };
+// Servir sites estáticos
+app.use('/sites', express.static(path.join(__dirname, 'sites')));
 
-  if(['payment','payment.updated'].includes(req.body.type)){
-    if(req.body.data?.status === 'approved' && sitesCriados[paymentId]){
-      sitesCriados[paymentId].liberado = true;
-    }
-  }
-
-  res.status(200).send('OK');
+app.listen(port, () => {
+  console.log(`Servidor rodando na porta ${port}`);
 });
-
-// Consultar pagamento
-app.get('/check-payment/:id', (req,res)=>{
-  const { id } = req.params;
-  if(sitesCriados[id]?.liberado){
-    res.json({ success:true, site: sitesCriados[id] });
-  } else {
-    res.json({ success:false, message:'Pagamento não aprovado ou site não liberado ainda' });
-  }
-});
-
-app.listen(port, ()=>console.log(`Servidor rodando na porta ${port}`));
 
