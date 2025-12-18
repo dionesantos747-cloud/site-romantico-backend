@@ -1,5 +1,35 @@
-// server.js (trecho de criação de site)
-app.post('/create-site/:id', upload.fields([{ name: 'fotos' }, { name: 'musica', maxCount:1 }]), (req, res) => {
+// server.js
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs-extra');
+
+const app = express();
+const port = process.env.PORT || 10000;
+
+app.use(cors());
+app.use(bodyParser.json());
+app.use('/sites', express.static(path.join(__dirname, 'sites')));
+
+// Multer para uploads temporários
+const upload = multer({ dest: 'tmp/' });
+
+// Armazenamento em memória
+let pagamentos = {};   // status dos pagamentos
+let sitesCriados = {}; // dados dos sites românticos
+
+// Rota raiz
+app.get('/', (req, res) => {
+  res.send('Servidor rodando, backend do site romântico OK! ❤️');
+});
+
+// Criar site romântico
+app.post('/create-site/:id', upload.fields([
+  { name: 'fotos' },
+  { name: 'musica', maxCount: 1 }
+]), async (req, res) => {
   const { id } = req.params;
   const { nome, mensagem, carta, fundo } = req.body;
   const fotos = req.files['fotos'] || [];
@@ -47,8 +77,38 @@ ${musicaHtml}
   sitesCriados[id] = {
     liberado: false,
     pasta: siteFolder,
-    qrCode: `https://site-romantico-backend.onrender.com/sites/${id}/index.html`
+    qrCode: `https://${process.env.RENDER_EXTERNAL_URL || 'site-romantico-backend.onrender.com'}/sites/${id}/index.html`
   };
 
   res.json({ success:true, message:'Site criado com sucesso, aguarde pagamento.' });
 });
+
+// Webhook Mercado Pago
+app.post('/webhook', (req,res)=>{
+  const paymentId = req.body.data?.id || 'desconhecido';
+  pagamentos[paymentId] = {
+    status: req.body.type || 'desconhecido',
+    data: req.body.data || {}
+  };
+
+  if(['payment','payment.updated'].includes(req.body.type)){
+    if(req.body.data?.status === 'approved' && sitesCriados[paymentId]){
+      sitesCriados[paymentId].liberado = true;
+    }
+  }
+
+  res.status(200).send('OK');
+});
+
+// Consultar pagamento
+app.get('/check-payment/:id', (req,res)=>{
+  const { id } = req.params;
+  if(sitesCriados[id]?.liberado){
+    res.json({ success:true, site: sitesCriados[id] });
+  } else {
+    res.json({ success:false, message:'Pagamento não aprovado ou site não liberado ainda' });
+  }
+});
+
+app.listen(port, ()=>console.log(`Servidor rodando na porta ${port}`));
+
