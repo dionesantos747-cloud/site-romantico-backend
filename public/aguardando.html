@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Aguardando pagamento 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{
+  background:#000;
+  color:#fff;
+  text-align:center;
+  font-family:Arial;
+  padding:40px;
+}
+</style>
+</head>
+<body>
+
+<h1>💖 Estamos confirmando seu pagamento...</h1>
+<p>Assim que for aprovado, você será redirecionado automaticamente.</p>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const paymentId = params.get("payment_id");
+
+async function checkPayment(){
+  const res = await fetch(`/api/check-payment?payment_id=${paymentId}`);
+  const data = await res.json();
+
+  if(data.approved){
+    window.location.href = `/success.html?payment_id=${paymentId}`;
+  }
+}
+
+setInterval(checkPayment, 3000);
+</script>
+
+</body>
+</html>
