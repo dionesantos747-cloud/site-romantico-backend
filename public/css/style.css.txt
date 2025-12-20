@@ -1,0 +1,202 @@
+/* ===== Reset e básico ===== */
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #000;
+  color: #fff;
+  font-family: 'Playfair Display', serif;
+  overflow-x: hidden;
+  touch-action: manipulation;
+}
+
+/* ===== Editor ===== */
+.editor {
+  padding: 20px;
+  background: #0d0f18;
+}
+
+label {
+  color: #ffb3d9;
+  display: block;
+  margin: 14px 0 6px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  font-size: 1em;
+}
+
+input.error, textarea.error {
+  border: 2px solid red;
+}
+
+.error-text {
+  color: red;
+  font-size: .9em;
+  margin-top: 4px;
+  display: none;
+}
+
+textarea { min-height: 90px; }
+
+/* ===== Fundos ===== */
+.bg-options {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.bg-card {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  border: 3px solid #000;
+  cursor: pointer;
+}
+.bg-card.selected { border: 3px solid #fff; }
+.azul { background: radial-gradient(circle,#2b6cff,#000); }
+.roxo { background: radial-gradient(circle,#8a5cff,#000); }
+.rosa { background: radial-gradient(circle,#ff5fa2,#000); }
+.preto { background: radial-gradient(circle,#222,#000); }
+
+/* ===== Fotos ===== */
+.photo-grid {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.photo-slot {
+  width: 90px;
+  height: 90px;
+  border-radius: 18px;
+  border: 2px dashed #777;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2em;
+  cursor: pointer;
+  position: relative;
+}
+.photo-slot.filled { cursor: default; }
+
+.photo-remove {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff4b4b;
+  color: #fff;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.photo {
+  background: #fff;
+  padding: 8px 8px 18px;
+  border-radius: 4px;
+  margin: 20px auto;
+  max-width: 280px;
+  box-shadow: 0 0 18px rgba(255,255,255,.35);
+  animation: floatPhoto 6s ease-in-out infinite;
+}
+
+@keyframes floatPhoto {
+  0%,100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-6px) rotate(1deg); }
+}
+
+/* ===== Música ===== */
+.music-box {
+  margin-top: 12px;
+  background: #222;
+  padding: 14px;
+  border-radius: 14px;
+  text-align: center;
+  cursor: pointer;
+}
+.music-box.disabled { opacity: .7; cursor: default; }
+
+.remove-music {
+  display: none;
+  margin-top: 8px;
+  color: #ff4b4b;
+  text-align: center;
+  cursor: pointer;
+}
+
+/* ===== Preview / Site ===== */
+.preview {
+  min-height: 100vh;
+  padding: 40px 16px 160px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.nome {
+  font-size: 2.5em;
+  font-family: 'Playfair Display', serif;
+  color: #ffd400;
+  text-shadow: 0 0 8px #ffd400;
+  animation: pulse 2.5s infinite alternate;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); text-shadow: 0 0 4px #ffd400; }
+  100% { transform: scale(1.05); text-shadow: 0 0 12px #ffd400; }
+}
+
+.mensagem {
+  font-size: 1.8em;
+  font-style: italic;
+  transform: rotate(-1deg);
+  margin-top: 12px;
+}
+
+.carta {
+  background: #fff;
+  color: #333;
+  padding: 22px;
+  border-radius: 20px;
+  margin-top: 20px;
+  display: none;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+button {
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: 18px;
+  font-size: 1.1em;
+  margin-top: 18px;
+}
+
+.pay {
+  background: #ffd400;
+  color: #000;
+  font-weight: bold;
+}
+
+/* ===== Corações ===== */
+.heart {
+  position: absolute;
+  bottom: -20px;
+  font-size: 18px;
+  opacity: .6;
+  animation: float 8s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes float {
+  to { transform: translateY(-120vh); opacity: 0; }
+}

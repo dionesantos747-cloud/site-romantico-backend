@@ -1,0 +1,143 @@
+/* ===== Variáveis Globais ===== */
+const nomeInput = document.getElementById("nomeInput");
+const msgInput = document.getElementById("msgInput");
+const cartaInput = document.getElementById("cartaInput");
+const dataInput = document.getElementById("dataInput");
+const nome = document.getElementById("nome");
+const mensagem = document.getElementById("mensagem");
+const carta = document.getElementById("carta");
+const tempo = document.getElementById("tempo");
+
+const fotos = [null,null,null];
+let slotAtual = null;
+const fotoInput = document.getElementById("fotoInput");
+const midias = document.getElementById("midias");
+
+const musicBox = document.getElementById("musicBox");
+const musicaInput = document.getElementById("musicaInput");
+const audio = document.getElementById("audioPlayer");
+const removeMusic = document.getElementById("removeMusic");
+
+const preview = document.getElementById("preview");
+
+/* ===== Inputs ===== */
+nomeInput.oninput = () => nome.innerText = nomeInput.value;
+msgInput.oninput = () => mensagem.innerText = msgInput.value;
+cartaInput.oninput = () => carta.innerText = cartaInput.value;
+
+/* ===== Contador ===== */
+setInterval(()=>{
+  if(!dataInput.value) return;
+  const inicio = new Date(dataInput.value);
+  const agora = new Date();
+  const diff = agora-inicio;
+  if(diff<0) return;
+  const s=Math.floor(diff/1000)%60;
+  const m=Math.floor(diff/60000)%60;
+  const h=Math.floor(diff/3600000)%24;
+  const d=Math.floor(diff/86400000)%30;
+  const mo=Math.floor(diff/2592000000)%12;
+  const a=Math.floor(diff/31536000000);
+  const anoText = a===1?"ano":"anos";
+  const mesText = mo===1?"mês":"meses";
+  const diaText = d===1?"dia":"dias";
+  tempo.innerHTML=`<strong>Já estamos juntos há</strong><br>${a} ${anoText} • ${mo} ${mesText} • ${d} ${diaText}<br>${h}h ${m}m ${s}s`;
+},1000);
+
+/* ===== Carta ===== */
+const btnCarta = document.getElementById("btnCarta");
+if(btnCarta){
+  btnCarta.onclick = ()=>{
+    carta.style.display = carta.style.display==="block"?"none":"block";
+    btnCarta.innerText = carta.style.display==="block"?"❌ Fechar carta":"💌 Abrir carta";
+  };
+}
+
+/* ===== Corações ===== */
+function criarCoracoes(){
+  document.querySelectorAll(".heart").forEach(h=>h.remove());
+  for(let i=0;i<12;i++){
+    const h=document.createElement("div");
+    h.className="heart";
+    h.innerText="❤️";
+    h.style.left=Math.random()*100+"%";
+    h.style.animationDuration=6+Math.random()*6+"s";
+    preview.appendChild(h);
+  }
+}
+criarCoracoes();
+
+/* ===== Fundos ===== */
+document.querySelectorAll(".bg-card").forEach(c=>{
+  c.onclick=()=>{
+    document.querySelectorAll(".bg-card").forEach(x=>x.classList.remove("selected"));
+    c.classList.add("selected");
+    preview.className="preview "+c.dataset.bg;
+    criarCoracoes();
+  };
+});
+
+/* ===== Fotos ===== */
+document.querySelectorAll(".photo-slot").forEach(slot=>{
+  slot.onclick=()=>{
+    if(slot.classList.contains("filled")) return;
+    slotAtual = slot.dataset.slot;
+    fotoInput.click();
+  };
+});
+
+fotoInput.onchange = e => {
+  const file = e.target.files[0];
+  if(!file || slotAtual===null) return;
+  const url = URL.createObjectURL(file);
+  fotos[slotAtual] = url;
+
+  const div = document.createElement("div");
+  div.className="photo";
+  div.innerHTML=`<img src="${url}" style="width:100%">`;
+
+  const remove = document.createElement("div");
+  remove.className="photo-remove";
+  remove.innerText="×";
+  remove.onclick=()=>{
+    URL.revokeObjectURL(url);
+    fotos[slotAtual]=null;
+    div.remove();
+    const slotEl=document.querySelector(`.photo-slot[data-slot="${slotAtual}"]`);
+    slotEl.classList.remove("filled");
+    slotEl.innerText="+";
+  };
+  div.appendChild(remove);
+  midias.appendChild(div);
+
+  const slotEl=document.querySelector(`.photo-slot[data-slot="${slotAtual}"]`);
+  slotEl.classList.add("filled");
+  slotEl.innerText="";
+
+  slotAtual=null;
+  fotoInput.value="";
+};
+
+/* ===== Música ===== */
+musicBox.onclick=()=>{
+  if(musicBox.classList.contains("disabled")) return;
+  musicaInput.click();
+};
+
+musicaInput.onchange=()=>{
+  if(!musicaInput.files[0]) return;
+  audio.src = URL.createObjectURL(musicaInput.files[0]);
+  audio.style.display="block";
+  musicBox.innerText="🎶 Música selecionada";
+  musicBox.classList.add("disabled");
+  removeMusic.style.display="block";
+};
+
+removeMusic.onclick=()=>{
+  audio.src="";
+  audio.style.display="none";
+  musicaInput.value="";
+  musicBox.innerText="Adicionar música 🎵";
+  musicBox.classList.remove("disabled");
+  removeMusic.style.display="none";
+};
