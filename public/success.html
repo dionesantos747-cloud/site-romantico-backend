@@ -1,0 +1,30 @@
+app.get("/success.html", async (req, res) => {
+  const { id } = req.query;
+  const users = loadUsers();
+  if (!users[id]) return res.status(404).send("Usuário não encontrado");
+
+  const link = `${req.protocol}://${req.get("host")}/user.html?id=${id}`;
+  const qrData = await QRCode.toDataURL(link, { color: { dark: "#ff5fa2", light: "#fff0" } });
+
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+      <meta charset="UTF-8">
+      <title>Obrigado!</title>
+      <style>
+        body{background:#000;color:#fff;font-family:'Playfair Display', serif;text-align:center;padding:40px;}
+        img{width:250px;height:250px;margin:20px;}
+        h1{color:#ff5fa2;}
+        p{font-size:1.4em;}
+      </style>
+    </head>
+    <body>
+      <h1>Obrigado pela compra! 💖</h1>
+      <p>Compartilhe o link com quem você ama ou escaneie o QR code:</p>
+      <img src="${qrData}" alt="QR Code">
+      <p><a href="${link}" style="color:#ffd400;">Acesse seu site personalizado</a></p>
+    </body>
+    </html>
+  `);
+});
