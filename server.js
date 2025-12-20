@@ -1,10 +1,10 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const fs = require("fs");
 const QRCode = require("qrcode");
 const { v4: uuidv4 } = require("uuid");
 const path = require("path");
 const cors = require("cors");
+const { MongoClient, ObjectId } = require("mongodb");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -13,18 +13,19 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-const DATA_FILE = path.join(__dirname, "data/users.json");
+// URL do MongoDB (substitua pelo seu URI)
+const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://usuario:senha@cluster0.mongodb.net/site-romantico?retryWrites=true&w=majority";
+const client = new MongoClient(MONGO_URI);
 
-// Função para carregar dados
-function loadUsers() {
-  if (!fs.existsSync(DATA_FILE)) return {};
-  return JSON.parse(fs.readFileSync(DATA_FILE));
-}
+let usersCollection;
 
-// Função para salvar dados
-function saveUsers(users) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(users, null, 2));
+async function connectDB() {
+  await client.connect();
+  const db = client.db("site-romantico");
+  usersCollection = db.collection("users");
+  console.log("Conectado ao MongoDB");
 }
+connectDB();
 
 /* =====================
    Rota raiz "/" → editor.html
@@ -36,22 +37,23 @@ app.get("/", (req, res) => {
 /* =====================
    Criar usuário (antes do pagamento)
    ===================== */
-app.post("/create", (req, res) => {
+app.post("/create", async (req, res) => {
   const { nome, mensagem, carta, dataInicio, fotos, musica } = req.body;
   const id = uuidv4();
 
-  const users = loadUsers();
-  users[id] = {
+  const userData = {
+    _id: id,
     nome,
     mensagem,
     carta,
     dataInicio,
     fotos,
     musica,
-    pago: false // ainda não pago
+    pago: false,
+    qrData: null
   };
-  saveUsers(users);
 
+  await usersCollection.insertOne(userData);
   res.json({ id });
 });
 
@@ -60,44 +62,42 @@ app.post("/create", (req, res) => {
    ===================== */
 app.post("/webhook", async (req, res) => {
   const { external_reference, status } = req.body;
+
   if (status === "approved") {
-    const users = loadUsers();
-    if (users[external_reference]) {
-      users[external_reference].pago = true;
+    const link = `${req.protocol}://${req.get("host")}/user.html?id=${external_reference}`;
+    const qrData = await QRCode.toDataURL(link, { color: { dark: "#ff5fa2", light: "#fff0" } });
 
-      // Gerar QR code do link único
-      const link = `${req.protocol}://${req.get("host")}/user.html?id=${external_reference}`;
-      const qrData = await QRCode.toDataURL(link, { color: { dark: "#ff5fa2", light: "#fff0" } });
+    await usersCollection.updateOne(
+      { _id: external_reference },
+      { $set: { pago: true, qrData: qrData } }
+    );
 
-      users[external_reference].qrData = qrData;
-      saveUsers(users);
-
-      console.log(`Pagamento aprovado e link gerado para: ${external_reference}`);
-    }
+    console.log(`Pagamento aprovado e link gerado para: ${external_reference}`);
   }
+
   res.sendStatus(200);
 });
 
 /* =====================
    Página do usuário
    ===================== */
-app.get("/user.html", (req, res) => {
+app.get("/user.html", async (req, res) => {
   const { id } = req.query;
-  const users = loadUsers();
-  if (!users[id]) return res.status(404).send("Usuário não encontrado");
-  if (!users[id].pago) return res.send("Pagamento ainda não confirmado!");
+  const user = await usersCollection.findOne({ _id: id });
+  if (!user) return res.status(404).send("Usuário não encontrado");
+  if (!user.pago) return res.send("Pagamento ainda não confirmado!");
   res.sendFile(path.join(__dirname, "public/user.html"));
 });
 
 /* =====================
    Página de sucesso
    ===================== */
-app.get("/success.html", (req, res) => {
+app.get("/success.html", async (req, res) => {
   const { id } = req.query;
-  const users = loadUsers();
-  if (!users[id]) return res.status(404).send("Usuário não encontrado");
+  const user = await usersCollection.findOne({ _id: id });
+  if (!user) return res.status(404).send("Usuário não encontrado");
 
-  if (!users[id].pago) {
+  if (!user.pago) {
     return res.send(`
       <html><body style="text-align:center;font-family:'Playfair Display', serif;color:#fff;background:#000;padding:40px;">
         <h1>Pagamento em processamento 💖</h1>
@@ -107,7 +107,7 @@ app.get("/success.html", (req, res) => {
   }
 
   const link = `${req.protocol}://${req.get("host")}/user.html?id=${id}`;
-  const qrData = users[id].qrData;
+  const qrData = user.qrData;
 
   res.send(`
     <!DOCTYPE html>
