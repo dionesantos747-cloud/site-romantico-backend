@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Site Romântico</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:#000;
+  color:#fff;
+  font-family:Arial,sans-serif;
+  overflow-x:hidden;
+  touch-action:manipulation;
+}
+
+/* EDITOR */
+.editor{padding:20px;background:#0d0f18}
+label{color:#ffb3d9;display:block;margin:14px 0 6px}
+input,textarea{
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  border:none;
+  font-size:1em;
+}
+textarea{min-height:90px}
+input.error,textarea.error{border:2px solid red}
+.error-text{color:red;font-size:.9em;display:none}
+
+/* FUNDOS */
+.bg-options{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.bg-card{
+  width:60px;height:60px;border-radius:14px;
+  border:3px solid #000;cursor:pointer
+}
+.bg-card.selected{border:3px solid #fff}
+.azul{background:radial-gradient(circle,#2b6cff,#000)}
+.roxo{background:radial-gradient(circle,#8a5cff,#000)}
+.rosa{background:radial-gradient(circle,#ff5fa2,#000)}
+.preto{background:radial-gradient(circle,#222,#000)}
+
+/* FOTOS */
+.photo-grid{display:flex;gap:10px;justify-content:center}
+.photo-slot{
+  width:90px;height:90px;border-radius:18px;
+  border:2px dashed #777;
+  display:flex;align-items:center;justify-content:center;
+  font-size:2em;cursor:pointer;position:relative
+}
+.photo-slot.filled{cursor:default}
+
+.photo-remove{
+  position:absolute;top:-8px;right:-8px;
+  background:#ff4b4b;color:#fff;
+  border-radius:50%;width:22px;height:22px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;cursor:pointer
+}
+
+/* FOTO ESTILO IMPRESSA */
+.photo{
+  background:#fff;
+  padding:10px 10px 28px;
+  border-radius:4px;
+  margin:20px auto;
+  max-width:280px;
+  box-shadow:
+    0 0 18px rgba(255,255,255,.45),
+    0 8px 18px rgba(0,0,0,.4);
+  animation:floatPhoto 6s ease-in-out infinite;
+}
+.photo img{width:100%;display:block}
+
+@keyframes floatPhoto{
+  0%,100%{transform:translateY(0) rotate(-1deg)}
+  50%{transform:translateY(-8px) rotate(1deg)}
+}
+
+/* MÚSICA */
+.music-box{
+  margin-top:12px;background:#222;
+  padding:14px;border-radius:14px;
+  text-align:center;cursor:pointer
+}
+.music-box.disabled{opacity:.7;cursor:default}
+.remove-music{
+  display:none;margin-top:8px;
+  color:#ff4b4b;text-align:center;cursor:pointer
+}
+
+/* PREVIEW */
+.preview{
+  min-height:100vh;
+  padding:40px 16px 160px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+audio{
+  display:none;
+  margin:0 auto 18px;
+}
+.nome{font-size:2.5em}
+.mensagem{
+  font-family:'Dancing Script',cursive;
+  font-size:1.8em
+}
+.carta{
+  background:#fff;color:#333;
+  padding:22px;border-radius:20px;
+  margin-top:20px;display:none;
+  max-height:70vh;overflow-y:auto
+}
+button{
+  width:100%;padding:18px;
+  border:none;border-radius:18px;
+  font-size:1.1em;margin-top:18px
+}
+.pay{background:#ffd400;color:#000;font-weight:bold}
+
+/* CORAÇÕES */
+.heart{
+  position:absolute;bottom:-20px;
+  font-size:18px;opacity:.6;
+  animation:float 8s linear infinite;
+  pointer-events:none
+}
+@keyframes float{
+  to{transform:translateY(-120vh);opacity:0}
+}
+</style>
+</head>
+
+<body>
+
+<div class="editor">
+  <label>Nome</label>
+  <input id="nomeInput" placeholder="Ex: Maria ❤️">
+  <div class="error-text">Campo não preenchido</div>
+
+  <label>Mensagem principal</label>
+  <textarea id="msgInput" placeholder="Mensagem romântica..."></textarea>
+  <div class="error-text">Campo não preenchido</div>
+
+  <label>Carta secreta</label>
+  <textarea id="cartaInput" placeholder="Mensagem secreta 💌"></textarea>
+  <div class="error-text">Campo não preenchido</div>
+
+  <label>Data de início do namoro</label>
+  <input type="date" id="dataInput">
+  <div class="error-text">Campo não preenchido</div>
+
+  <label>Fotos</label>
+  <div class="photo-grid">
+    <div class="photo-slot" data-slot="0">+</div>
+    <div class="photo-slot" data-slot="1">+</div>
+    <div class="photo-slot" data-slot="2">+</div>
+  </div>
+  <input type="file" id="fotoInput" accept="image/*" hidden>
+
+  <label>Música</label>
+  <div class="music-box" id="musicBox">Adicionar música 🎵</div>
+  <div class="remove-music" id="removeMusic">Remover música</div>
+  <input type="file" id="musicaInput" accept="audio/*" hidden>
+
+  <label>Fundo</label>
+  <div class="bg-options">
+    <div class="bg-card azul selected" data-bg="azul"></div>
+    <div class="bg-card roxo" data-bg="roxo"></div>
+    <div class="bg-card rosa" data-bg="rosa"></div>
+    <div class="bg-card preto" data-bg="preto"></div>
+  </div>
+</div>
+
+<div class="preview azul" id="preview">
+  <audio id="audioPlayer" controls></audio>
+
+  <div class="nome" id="nome"></div>
+  <div class="mensagem" id="mensagem"></div>
+
+  <div id="midias"></div>
+
+  <div id="tempo" style="margin-top:20px;font-family:'Dancing Script',cursive;font-size:1.5em"></div>
+
+  <button id="btnCarta">💌 Abrir carta</button>
+  <div class="carta" id="carta"></div>
+
+  <button class="pay" id="btnComprar">Comprar por R$9,99</button>
+</div>
+
+<script>
+/* ELEMENTOS */
+const nomeInput=nomeInput=document.getElementById("nomeInput");
+const msgInput=document.getElementById("msgInput");
+const cartaInput=document.getElementById("cartaInput");
+const dataInput=document.getElementById("dataInput");
+const nome=document.getElementById("nome");
+const mensagem=document.getElementById("mensagem");
+const carta=document.getElementById("carta");
+const tempo=document.getElementById("tempo");
+const preview=document.getElementById("preview");
+
+/* TEXTO EM TEMPO REAL */
+nomeInput.oninput=()=>nome.innerText=nomeInput.value;
+msgInput.oninput=()=>mensagem.innerText=msgInput.value;
+cartaInput.oninput=()=>carta.innerText=cartaInput.value;
+
+/* CONTADOR */
+setInterval(()=>{
+  if(!dataInput.value) return;
+  const i=new Date(dataInput.value),a=new Date();
+  const d=a-i;if(d<0)return;
+  const s=Math.floor(d/1000)%60;
+  const m=Math.floor(d/60000)%60;
+  const h=Math.floor(d/3600000)%24;
+  const di=Math.floor(d/86400000)%30;
+  const mo=Math.floor(d/2592000000)%12;
+  const an=Math.floor(d/31536000000);
+  tempo.innerHTML=`<strong>Já estamos juntos há</strong><br>${an} anos • ${mo} meses • ${di} dias<br>${h}h ${m}m ${s}s`;
+},1000);
+
+/* CARTA */
+const btnCarta=document.getElementById("btnCarta");
+btnCarta.onclick=()=>{
+  carta.style.display=carta.style.display==="block"?"none":"block";
+  btnCarta.innerText=carta.style.display==="block"?"❌ Fechar carta":"💌 Abrir carta";
+};
+
+/* CORAÇÕES */
+function criarCoracoes(){
+  document.querySelectorAll(".heart").forEach(h=>h.remove());
+  for(let i=0;i<12;i++){
+    const h=document.createElement("div");
+    h.className="heart";h.innerText="❤️";
+    h.style.left=Math.random()*100+"%";
+    h.style.animationDuration=6+Math.random()*6+"s";
+    preview.appendChild(h);
+  }
+}
+criarCoracoes();
+
+/* FUNDOS */
+document.querySelectorAll(".bg-card").forEach(c=>{
+  c.onclick=()=>{
+    document.querySelectorAll(".bg-card").forEach(x=>x.classList.remove("selected"));
+    c.classList.add("selected");
+    preview.className="preview "+c.dataset.bg;
+    criarCoracoes();
+  };
+});
+
+/* FOTOS (BUG CORRIGIDO) */
+let fotos=[null,null,null];
+let slotAtual=null;
+const fotoInput=document.getElementById("fotoInput");
+const midias=document.getElementById("midias");
+
+document.querySelectorAll(".photo-slot").forEach(slot=>{
+  slot.onclick=()=>{
+    if(slot.classList.contains("filled")) return;
+    slotAtual=slot.dataset.slot;
+    fotoInput.click();
+  };
+});
+
+fotoInput.onchange=e=>{
+  const file=e.target.files[0];
+  if(!file||slotAtual===null)return;
+
+  const index=slotAtual;
+  const url=URL.createObjectURL(file);
+  fotos[index]=url;
+
+  const div=document.createElement("div");
+  div.className="photo";
+
+  const img=new Image();
+  img.src=url;
+  img.onload=()=>div.appendChild(img);
+
+  const rem=document.createElement("div");
+  rem.className="photo-remove";
+  rem.innerText="×";
+  rem.onclick=()=>{
+    URL.revokeObjectURL(url);
+    fotos[index]=null;
+    div.remove();
+    const s=document.querySelector(`.photo-slot[data-slot="${index}"]`);
+    s.classList.remove("filled");
+    s.innerText="+";
+  };
+
+  div.appendChild(rem);
+  midias.appendChild(div);
+
+  const s=document.querySelector(`.photo-slot[data-slot="${index}"]`);
+  s.classList.add("filled");
+  s.innerText="";
+  slotAtual=null;
+  fotoInput.value="";
+};
+
+/* MÚSICA */
+const musicBox=document.getElementById("musicBox");
+const musicaInput=document.getElementById("musicaInput");
+const audio=document.getElementById("audioPlayer");
+const removeMusic=document.getElementById("removeMusic");
+
+musicBox.onclick=()=>{if(!musicBox.classList.contains("disabled"))musicaInput.click()};
+musicaInput.onchange=()=>{
+  if(!musicaInput.files[0])return;
+  audio.src=URL.createObjectURL(musicaInput.files[0]);
+  audio.style.display="block";
+  musicBox.innerText="🎶 Música selecionada";
+  musicBox.classList.add("disabled");
+  removeMusic.style.display="block";
+};
+removeMusic.onclick=()=>{
+  audio.src="";audio.style.display="none";
+  musicaInput.value="";
+  musicBox.innerText="Adicionar música 🎵";
+  musicBox.classList.remove("disabled");
+  removeMusic.style.display="none";
+};
+
+/* COMPRA */
+document.getElementById("btnComprar").onclick=()=>{
+  const campos=[nomeInput,msgInput,cartaInput,dataInput];
+  let erro=false;
+  campos.forEach(c=>{
+    const e=c.nextElementSibling;
+    if(!c.value){
+      c.classList.add("error");
+      e.style.display="block";
+      if(!erro)c.scrollIntoView({behavior:"smooth"});
+      erro=true;
+    }else{
+      c.classList.remove("error");
+      e.style.display="none";
+    }
+  });
+  if(erro)return;
+  window.open("https://www.mercadopago.com.br/payment-link/v1/go?link-id=cd18cc0f-3041-4781-8b63-353ccce8c504","_blank");
+};
+</script>
+
+</body>
+</html>
