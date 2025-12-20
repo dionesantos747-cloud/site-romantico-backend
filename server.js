@@ -27,7 +27,14 @@ function saveUsers(users) {
 }
 
 /* =====================
-   1️⃣ Criar usuário (antes do pagamento)
+   Rota raiz "/" → editor.html
+   ===================== */
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public/editor.html"));
+});
+
+/* =====================
+   Criar usuário (antes do pagamento)
    ===================== */
 app.post("/create", (req, res) => {
   const { nome, mensagem, carta, dataInicio, fotos, musica } = req.body;
@@ -45,27 +52,23 @@ app.post("/create", (req, res) => {
   };
   saveUsers(users);
 
-  // Retorna apenas o ID, sem gerar link ou QRcode
   res.json({ id });
 });
 
 /* =====================
-   2️⃣ Webhook do Mercado Pago
+   Webhook Mercado Pago
    ===================== */
 app.post("/webhook", async (req, res) => {
-  const { external_reference, status } = req.body; 
-  // 'external_reference' deve ser o UUID do usuário enviado no pagamento
+  const { external_reference, status } = req.body;
   if (status === "approved") {
     const users = loadUsers();
     if (users[external_reference]) {
       users[external_reference].pago = true;
-      saveUsers(users);
 
-      // Gerar QR code do link único agora que o pagamento foi aprovado
+      // Gerar QR code do link único
       const link = `${req.protocol}://${req.get("host")}/user.html?id=${external_reference}`;
       const qrData = await QRCode.toDataURL(link, { color: { dark: "#ff5fa2", light: "#fff0" } });
 
-      // Salva o QR code no usuário (opcional, pode salvar no JSON)
       users[external_reference].qrData = qrData;
       saveUsers(users);
 
@@ -76,7 +79,7 @@ app.post("/webhook", async (req, res) => {
 });
 
 /* =====================
-   3️⃣ Página do usuário
+   Página do usuário
    ===================== */
 app.get("/user.html", (req, res) => {
   const { id } = req.query;
@@ -87,7 +90,7 @@ app.get("/user.html", (req, res) => {
 });
 
 /* =====================
-   4️⃣ Página de sucesso
+   Página de sucesso
    ===================== */
 app.get("/success.html", (req, res) => {
   const { id } = req.query;
@@ -95,11 +98,10 @@ app.get("/success.html", (req, res) => {
   if (!users[id]) return res.status(404).send("Usuário não encontrado");
 
   if (!users[id].pago) {
-    // Aguardar pagamento
     return res.send(`
-      <html><body style="background:#000;color:#fff;text-align:center;font-family:'Playfair Display', serif;">
-      <h1>Pagamento em processamento 💖</h1>
-      <p>Assim que confirmado, o link e QR code serão liberados.</p>
+      <html><body style="text-align:center;font-family:'Playfair Display', serif;color:#fff;background:#000;padding:40px;">
+        <h1>Pagamento em processamento 💖</h1>
+        <p>Assim que confirmado, o link e QR code serão liberados.</p>
       </body></html>
     `);
   }
@@ -115,22 +117,23 @@ app.get("/success.html", (req, res) => {
       <title>Obrigado!</title>
       <style>
         body{background:#000;color:#fff;font-family:'Playfair Display', serif;text-align:center;padding:40px;}
-        img{width:250px;height:250px;margin:20px;}
+        img{width:250px;height:250px;margin:20px;border-radius:20px;box-shadow:0 0 20px #ff5fa2;}
         h1{color:#ff5fa2;}
         p{font-size:1.4em;}
+        a{color:#ffd400;font-weight:bold;text-decoration:none;}
       </style>
     </head>
     <body>
       <h1>Obrigado pela compra! 💖</h1>
       <p>Compartilhe o link com quem você ama ou escaneie o QR code:</p>
       <img src="${qrData}" alt="QR Code">
-      <p><a href="${link}" style="color:#ffd400;">Acesse seu site personalizado</a></p>
+      <p><a href="${link}">Acesse seu site personalizado</a></p>
     </body>
     </html>
   `);
 });
 
 /* =====================
-   5️⃣ Rodar servidor
+   Rodar servidor
    ===================== */
 app.listen(PORT, () => console.log(`Server rodando na porta ${PORT}`));
