@@ -61,6 +61,46 @@ app.get("/", (req, res) => {
 });
 
 /* =====================
+   Criar pagamento PIX
+===================== */
+app.post("/create-payment", async (req, res) => {
+  try {
+    const data = req.body;
+
+    const payment = await axios.post(
+      "https://api.mercadopago.com/v1/payments",
+      {
+        transaction_amount: 9.99,
+        description: "Site Romântico Premium 💖",
+        payment_method_id: "pix",
+        payer: {
+          email: "cliente@email.com"
+        },
+        metadata: data
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${MP_ACCESS_TOKEN}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    const pixData = payment.data.point_of_interaction.transaction_data;
+
+    res.json({
+      payment_id: payment.data.id,
+      qr_code: pixData.qr_code_base64,
+      qr_code_text: pixData.qr_code
+    });
+
+  } catch (err) {
+    console.error("❌ Erro ao criar pagamento:", err.message);
+    res.status(500).json({ error: "Erro ao criar pagamento" });
+  }
+});
+
+/* =====================
    WEBHOOK MERCADO PAGO
 ===================== */
 app.post("/webhook", async (req, res) => {
@@ -68,7 +108,6 @@ app.post("/webhook", async (req, res) => {
     const paymentId = req.body?.data?.id;
     if (!paymentId) return res.sendStatus(200);
 
-    // Consulta pagamento real no Mercado Pago
     const mpResponse = await axios.get(
       `https://api.mercadopago.com/v1/payments/${paymentId}`,
       {
@@ -80,21 +119,17 @@ app.post("/webhook", async (req, res) => {
 
     const payment = mpResponse.data;
 
-    // Só continua se aprovado
     if (payment.status !== "approved") {
       return res.sendStatus(200);
     }
 
-    // Evita duplicação
     const exists = await usersCollection.findOne({ paymentId });
     if (exists) return res.sendStatus(200);
 
-    // Dados enviados via metadata no pagamento
     const data = payment.metadata || {};
-
     const id = uuidv4();
-    const link = `${req.protocol}://${req.get("host")}/user.html?id=${id}`;
 
+    const link = `${req.protocol}://${req.get("host")}/user.html?id=${id}`;
     const qrData = await QRCode.toDataURL(link, {
       color: { dark: "#ff5fa2", light: "#fff0" }
     });
@@ -113,7 +148,7 @@ app.post("/webhook", async (req, res) => {
       createdAt: new Date()
     });
 
-    console.log("💖 Site criado após pagamento:", id);
+    console.log("💖 Pagamento aprovado | Site criado:", id);
     res.sendStatus(200);
 
   } catch (err) {
@@ -123,41 +158,28 @@ app.post("/webhook", async (req, res) => {
 });
 
 /* =====================
-   Verificar status do pagamento (aguardando.html)
+   Verificar pagamento (aguardando.html)
 ===================== */
-app.get("/status-payment", async (req, res) => {
-  try {
-    const { payment_id } = req.query;
+app.get("/check-payment", async (req, res) => {
+  const { payment_id } = req.query;
 
-    if (!payment_id) {
-      return res.json({ status: "error" });
-    }
-
-    const user = await usersCollection.findOne({
-      paymentId: Number(payment_id)
-    });
-
-    if (!user) {
-      return res.json({ status: "pending" });
-    }
-
-    if (user.pago === true) {
-      return res.json({
-        status: "approved",
-        userId: user._id
-      });
-    }
-
-    res.json({ status: "pending" });
-
-  } catch (err) {
-    console.error("Erro status-payment:", err);
-    res.status(500).json({ status: "error" });
+  if (!payment_id) {
+    return res.json({ status: "pending" });
   }
+
+  const user = await usersCollection.findOne({
+    paymentId: Number(payment_id)
+  });
+
+  if (user) {
+    return res.json({ status: "approved" });
+  }
+
+  res.json({ status: "pending" });
 });
 
 /* =====================
-   Página do usuário (site final)
+   Página do site final
 ===================== */
 app.get("/user.html", async (req, res) => {
   const { id } = req.query;
@@ -171,7 +193,7 @@ app.get("/user.html", async (req, res) => {
 });
 
 /* =====================
-   Página de sucesso (pós-pagamento)
+   Página de sucesso
 ===================== */
 app.get("/success.html", async (req, res) => {
   const { payment_id } = req.query;
@@ -184,13 +206,12 @@ app.get("/success.html", async (req, res) => {
     paymentId: Number(payment_id)
   });
 
-  // Ainda não processado
   if (!user) {
     return res.send(`
       <html>
         <body style="background:black;color:white;text-align:center;padding:40px">
           <h1>Pagamento em processamento 💖</h1>
-          <p>Assim que for confirmado, seu site será liberado.</p>
+          <p>Aguarde alguns instantes...</p>
         </body>
       </html>
     `);
