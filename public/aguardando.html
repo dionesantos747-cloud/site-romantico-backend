@@ -4,26 +4,16 @@
 <meta charset="UTF-8">
 <title>Aguardando pagamento 💖</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <meta name="color-scheme" content="only light">
-
 <style>
-body{
-  background:#000;
-  color:#fff;
-  font-family:Arial;
-  text-align:center;
-  padding:40px;
-}
-h1{ color:#ff5fa2; }
+body{background:#000;color:#fff;font-family:Arial;text-align:center;padding:40px}
+h1{color:#ff5fa2;}
 </style>
 </head>
-
 <body>
 <h1>Aguardando pagamento 💖</h1>
 <p>Estamos confirmando seu PIX...</p>
 <p>Não feche esta página.</p>
-
 <script>
 const params = new URLSearchParams(window.location.search);
 const paymentId = params.get("payment_id");
@@ -31,8 +21,9 @@ const paymentId = params.get("payment_id");
 async function checkPayment(){
   const res = await fetch(`/check-payment?payment_id=${paymentId}`);
   const data = await res.json();
-
-  if(data.status === "approved"){
-    window.location.href = `/success.html?payment_id=${paymentId}`;
-  }
+  if(data.status==="approved"){ window.location.href=`/success.html?payment_id=${paymentId}`; }
 }
+setInterval(checkPayment,4000);
+</script>
+</body>
+</html>
