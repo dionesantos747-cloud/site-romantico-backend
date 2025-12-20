@@ -1,4 +1,3 @@
-// server.js
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -10,145 +9,114 @@ const axios = require('axios');
 const app = express();
 const port = process.env.PORT || 10000;
 
-// Token Mercado Pago (da variável de ambiente)
-const mpToken = process.env.MP_ACCESS_TOKEN;
-console.log('Token Mercado Pago carregado:', mpToken);
-
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.static('public'));
 
-// Configuração multer
 const upload = multer({ dest: 'uploads/' });
 
-// Persistência simples
-let pagamentos = {};   // status dos pagamentos
-let sitesCriados = {}; // informações do site (link, pasta, qrCode)
+let sitesCriados = {};
 
-// Rota raiz
 app.get('/', (req, res) => {
-  res.send('Servidor rodando, backend do site romântico OK! ❤️');
+  res.send('Backend do Site Romântico ativo ❤️');
 });
 
-// Função para consultar pagamento no Mercado Pago
-async function verificarPagamentoMercadoPago(paymentId) {
-  try {
-    const res = await axios.get(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
-      headers: {
-        Authorization: `Bearer ${mpToken}`
-      }
-    });
-    return res.data;
-  } catch(err) {
-    console.error('Erro ao consultar pagamento:', err.response?.data || err.message);
-    return null;
-  }
-}
-
-// Webhook Mercado Pago
+/* WEBHOOK MERCADO PAGO */
 app.post('/webhook', async (req, res) => {
-  console.log('Webhook recebido:', req.body);
-
-  const paymentId = req.body.data?.id || 'desconhecido';
-
-  pagamentos[paymentId] = {
-    status: req.body.type || 'desconhecido',
-    data: req.body.data || {}
-  };
-
-  // Consultar status real do pagamento
-  const pagamentoInfo = await verificarPagamentoMercadoPago(paymentId);
-
-  if(pagamentoInfo?.status === 'approved' && sitesCriados[paymentId]){
-    sitesCriados[paymentId].liberado = true;
-    console.log(`Pagamento ${paymentId} aprovado! Site liberado.`);
+  const paymentId = req.body?.data?.id;
+  if (!paymentId || !sitesCriados[paymentId]) {
+    return res.sendStatus(200);
   }
 
-  res.status(200).send('OK');
-});
+  try {
+    const mpRes = await axios.get(
+      `https://api.mercadopago.com/v1/payments/${paymentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.MP_ACCESS_TOKEN}`
+        }
+      }
+    );
 
-// Consultar status do pagamento
-app.get('/check-payment/:id', (req, res) => {
-  const { id } = req.params;
-  if(sitesCriados[id] && sitesCriados[id].liberado){
-    res.json({ 
-      success: true, 
-      qrCode: sitesCriados[id].qrCode,
-      link: sitesCriados[id].qrCode
-    });
-  } else {
-    res.json({ success: false, message: 'Pagamento não aprovado ou site não liberado ainda' });
+    if (mpRes.data.status === 'approved') {
+      sitesCriados[paymentId].liberado = true;
+    }
+  } catch (e) {
+    console.error('Erro MP:', e.message);
   }
+
+  res.sendStatus(200);
 });
 
-// Criar site romântico
-app.post('/create-site/:id', upload.fields([{ name: 'fotos' }, { name: 'musica', maxCount:1 }]), (req, res) => {
+/* CRIA SITE FINAL */
+app.post('/create-site/:id', upload.fields([
+  { name: 'fotos' },
+  { name: 'musica', maxCount: 1 }
+]), (req, res) => {
+
   const { id } = req.params;
   const { nome, mensagem, carta, fundo } = req.body;
-  const fotos = req.files['fotos'] || [];
-  const musica = req.files['musica'] ? req.files['musica'][0] : null;
 
-  const siteFolder = path.join(__dirname, 'sites', id);
-  if(!fs.existsSync(siteFolder)) fs.mkdirSync(siteFolder, { recursive:true });
+  const siteDir = path.join(__dirname, 'sites', id);
+  fs.mkdirSync(siteDir, { recursive: true });
 
-  // Mover arquivos
-  fotos.forEach((f,i)=>{
+  let fotosHtml = '';
+  (req.files['fotos'] || []).forEach((f, i) => {
     const ext = path.extname(f.originalname);
-    fs.renameSync(f.path, path.join(siteFolder, `foto${i+1}${ext}`));
+    const dest = `foto${i + 1}${ext}`;
+    fs.renameSync(f.path, path.join(siteDir, dest));
+    fotosHtml += `<img src="${dest}" class="photo">`;
   });
-  if(musica){
-    const ext = path.extname(musica.originalname);
-    fs.renameSync(musica.path, path.join(siteFolder, `musica${ext}`));
+
+  let musicaHtml = '';
+  if (req.files['musica']) {
+    const m = req.files['musica'][0];
+    const ext = path.extname(m.originalname);
+    const dest = `musica${ext}`;
+    fs.renameSync(m.path, path.join(siteDir, dest));
+    musicaHtml = `<audio controls src="${dest}"></audio>`;
   }
 
-  // Gerar HTML do site romântico
-  const fotosHtml = fotos.map((f,i)=>{
-    const ext = path.extname(f.originalname);
-    return `<img src="foto${i+1}${ext}" class="foto">`;
-  }).join('\n');
-
-  const musicaHtml = musica ? `<audio controls src="musica${path.extname(musica.originalname)}"></audio>` : '';
-
-  const html = `
+  const htmlFinal = `
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <title>${nome} ❤️</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-body{margin:0;background:#000;color:#fff;font-family:Arial,sans-serif;text-align:center;}
-.foto{width:80%;max-width:400px;margin:20px auto;border-radius:20px;border:3px solid #ffb3d9;}
-audio{width:80%;margin:20px auto;display:block;}
-h1,h2{color:#ffb3d9;}
-body{background:${fundo || 'black'};}
+body{margin:0;background:#000;color:#fff;text-align:center;font-family:Arial}
+.photo{
+ background:#fff;padding:10px 10px 28px;
+ border-radius:4px;margin:20px auto;
+ max-width:280px;
+ box-shadow:0 0 18px rgba(255,255,255,.45);
+}
 </style>
 </head>
-<body>
+<body class="${fundo}">
+${musicaHtml}
 <h1>${nome}</h1>
 <h2>${mensagem}</h2>
 <p>${carta}</p>
 ${fotosHtml}
-${musicaHtml}
 </body>
 </html>
 `;
 
-  fs.writeFileSync(path.join(siteFolder, 'index.html'), html);
+  fs.writeFileSync(path.join(siteDir, 'index.html'), htmlFinal);
 
-  // Salvar info no backend
   sitesCriados[id] = {
-    liberado: false, // só libera após pagamento aprovado
-    pasta: siteFolder,
-    qrCode: `https://${process.env.RENDER_EXTERNAL_URL}/sites/${id}/index.html`
+    liberado: false,
+    link: `https://${process.env.RENDER_EXTERNAL_URL}/sites/${id}/`
   };
 
-  res.json({ success:true, message:'Site criado com sucesso, aguarde pagamento.' });
+  res.json({ success: true });
 });
 
-// Servir sites estáticos
 app.use('/sites', express.static(path.join(__dirname, 'sites')));
 
-// Start server
 app.listen(port, () => {
-  console.log(`Servidor rodando na porta ${port}`);
+  console.log('Servidor rodando na porta', port);
 });
 
