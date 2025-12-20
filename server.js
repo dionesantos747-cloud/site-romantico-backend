@@ -123,6 +123,40 @@ app.post("/webhook", async (req, res) => {
 });
 
 /* =====================
+   Verificar status do pagamento (aguardando.html)
+===================== */
+app.get("/status-payment", async (req, res) => {
+  try {
+    const { payment_id } = req.query;
+
+    if (!payment_id) {
+      return res.json({ status: "error" });
+    }
+
+    const user = await usersCollection.findOne({
+      paymentId: Number(payment_id)
+    });
+
+    if (!user) {
+      return res.json({ status: "pending" });
+    }
+
+    if (user.pago === true) {
+      return res.json({
+        status: "approved",
+        userId: user._id
+      });
+    }
+
+    res.json({ status: "pending" });
+
+  } catch (err) {
+    console.error("Erro status-payment:", err);
+    res.status(500).json({ status: "error" });
+  }
+});
+
+/* =====================
    Página do usuário (site final)
 ===================== */
 app.get("/user.html", async (req, res) => {
@@ -133,7 +167,6 @@ app.get("/user.html", async (req, res) => {
   const user = await usersCollection.findOne({ _id: id });
   if (!user) return res.status(404).send("Site não encontrado");
 
-  // HTML apenas visual — dados carregados via JS se quiser
   res.sendFile(path.join(__dirname, "public/user.html"));
 });
 
@@ -151,7 +184,7 @@ app.get("/success.html", async (req, res) => {
     paymentId: Number(payment_id)
   });
 
-  // Pagamento ainda não processado
+  // Ainda não processado
   if (!user) {
     return res.send(`
       <html>
