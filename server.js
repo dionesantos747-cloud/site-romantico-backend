@@ -1,193 +1,97 @@
-// server.js
 const express = require("express");
-const cors = require("cors");
 const bodyParser = require("body-parser");
-const multer = require("multer");
 const fs = require("fs");
+const QRCode = require("qrcode");
+const { v4: uuidv4 } = require("uuid");
 const path = require("path");
-const axios = require("axios");
+const cors = require("cors");
 
 const app = express();
-const port = process.env.PORT || 10000;
+const PORT = process.env.PORT || 3000;
 
-/* ===============================
-   CONFIGURAÇÕES BÁSICAS
-================================ */
 app.use(cors());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-/* 👉 ISSO É O MAIS IMPORTANTE 👇
-   Permite que o editor.html funcione
-*/
 app.use(express.static(path.join(__dirname, "public")));
 
-/* ===============================
-   MERCADO PAGO
-================================ */
-const mpToken = process.env.MP_ACCESS_TOKEN;
+const DATA_FILE = path.join(__dirname, "data/users.json");
 
-async function verificarPagamentoMercadoPago(paymentId) {
-  try {
-    const res = await axios.get(
-      `https://api.mercadopago.com/v1/payments/${paymentId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${mpToken}`,
-        },
-      }
-    );
-    return res.data;
-  } catch (err) {
-    console.error("Erro MP:", err.response?.data || err.message);
-    return null;
-  }
+// Função para carregar dados
+function loadUsers() {
+  if (!fs.existsSync(DATA_FILE)) return {};
+  return JSON.parse(fs.readFileSync(DATA_FILE));
 }
 
-/* ===============================
-   MULTER (UPLOAD)
-================================ */
-const upload = multer({ dest: "uploads/" });
+// Função para salvar dados
+function saveUsers(users) {
+  fs.writeFileSync(DATA_FILE, JSON.stringify(users, null, 2));
+}
 
-/* ===============================
-   BANCO SIMPLES (MEMÓRIA)
-================================ */
-let sitesCriados = {};
+// Criar link único para usuário
+app.post("/create", async (req, res) => {
+  const { nome, mensagem, carta, dataInicio, fotos, musica } = req.body;
+  const id = uuidv4();
 
-/* ===============================
-   ROTAS
-================================ */
+  const users = loadUsers();
+  users[id] = { nome, mensagem, carta, dataInicio, fotos, musica };
+  saveUsers(users);
 
-// Rota raiz (teste)
-app.get("/", (req, res) => {
-  res.send("Backend do site romântico ativo ❤️");
+  // Gerar QR code do link único
+  const link = `${req.protocol}://${req.get("host")}/user.html?id=${id}`;
+  const qrData = await QRCode.toDataURL(link, { color: { dark: "#ff5fa2", light: "#fff0" } });
+
+  res.json({ id, link, qrData });
 });
 
-/* ===============================
-   WEBHOOK MERCADO PAGO
-================================ */
-app.post("/webhook", async (req, res) => {
-  const paymentId = req.body?.data?.id;
-  if (!paymentId) return res.sendStatus(200);
-
-  const pagamento = await verificarPagamentoMercadoPago(paymentId);
-
-  if (
-    pagamento &&
-    pagamento.status === "approved" &&
-    sitesCriados[paymentId]
-  ) {
-    sitesCriados[paymentId].liberado = true;
-    console.log("Pagamento aprovado:", paymentId);
+// Webhook Mercado Pago
+app.post("/webhook", (req, res) => {
+  const { id, status } = req.body; // Ajuste conforme webhook do Mercado Pago
+  if (status === "approved") {
+    console.log(`Pagamento aprovado para: ${id}`);
+    // Aqui você pode enviar e-mail, atualizar DB, etc.
   }
-
   res.sendStatus(200);
 });
 
-/* ===============================
-   CRIAR SITE FINAL
-================================ */
-app.post(
-  "/create-site/:id",
-  upload.fields([
-    { name: "fotos", maxCount: 3 },
-    { name: "musica", maxCount: 1 },
-  ]),
-  (req, res) => {
-    const { id } = req.params;
-    const { nome, mensagem, carta, fundo, data } = req.body;
-
-    const fotos = req.files["fotos"] || [];
-    const musica = req.files["musica"] ? req.files["musica"][0] : null;
-
-    const siteFolder = path.join(__dirname, "sites", id);
-    fs.mkdirSync(siteFolder, { recursive: true });
-
-    /* Salvar fotos */
-    const fotosHtml = fotos
-      .map((f, i) => {
-        const ext = path.extname(f.originalname);
-        const dest = `foto${i + 1}${ext}`;
-        fs.renameSync(f.path, path.join(siteFolder, dest));
-        return `<div class="photo"><img src="${dest}"></div>`;
-      })
-      .join("\n");
-
-    /* Salvar música */
-    let musicaHtml = "";
-    if (musica) {
-      const ext = path.extname(musica.originalname);
-      const dest = `musica${ext}`;
-      fs.renameSync(musica.path, path.join(siteFolder, dest));
-      musicaHtml = `<audio controls src="${dest}"></audio>`;
-    }
-
-    /* HTML FINAL DO CLIENTE (SEM EDITOR) */
-    const htmlFinal = `
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${nome} ❤️</title>
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
-<style>
-body{
-  margin:0;
-  background:#000;
-  color:#fff;
-  font-family:Arial,sans-serif;
-  text-align:center;
-}
-.photo{
-  background:#fff;
-  padding:10px 10px 28px;
-  border-radius:4px;
-  max-width:280px;
-  margin:20px auto;
-  box-shadow:0 0 18px rgba(255,255,255,.4);
-}
-.photo img{width:100%}
-audio{margin:20px auto;display:block}
-.mensagem{
-  font-family:'Dancing Script',cursive;
-  font-size:1.8em;
-}
-</style>
-</head>
-<body class="${fundo}">
-${musicaHtml}
-<h1>${nome}</h1>
-<div class="mensagem">${mensagem}</div>
-<p>${carta}</p>
-${fotosHtml}
-</body>
-</html>
-`;
-
-    fs.writeFileSync(path.join(siteFolder, "index.html"), htmlFinal);
-
-    sitesCriados[id] = {
-      liberado: false,
-      link: `${process.env.RENDER_EXTERNAL_URL}/sites/${id}/index.html`,
-    };
-
-    res.json({
-      success: true,
-      message: "Site criado. Aguarde confirmação do pagamento.",
-    });
-  }
-);
-
-/* ===============================
-   SERVIR SITES FINAIS
-================================ */
-app.use("/sites", express.static(path.join(__dirname, "sites")));
-
-/* ===============================
-   START
-================================ */
-app.listen(port, () => {
-  console.log(`Servidor rodando na porta ${port}`);
+// Servir página do usuário
+app.get("/user.html", (req, res) => {
+  const { id } = req.query;
+  const users = loadUsers();
+  if (!users[id]) return res.status(404).send("Usuário não encontrado");
+  res.sendFile(path.join(__dirname, "public/user.html"));
 });
+
+// Página de sucesso
+app.get("/success.html", async (req, res) => {
+  const { id } = req.query;
+  const users = loadUsers();
+  if (!users[id]) return res.status(404).send("Usuário não encontrado");
+
+  const link = `${req.protocol}://${req.get("host")}/user.html?id=${id}`;
+  const qrData = await QRCode.toDataURL(link, { color: { dark: "#ff5fa2", light: "#fff0" } });
+
+  // Página HTML simples com QR code e agradecimento
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+      <meta charset="UTF-8">
+      <title>Obrigado!</title>
+      <style>
+        body{background:#000;color:#fff;font-family:'Playfair Display', serif;text-align:center;padding:40px;}
+        img{width:250px;height:250px;margin:20px;}
+        h1{color:#ff5fa2;}
+        p{font-size:1.4em;}
+      </style>
+    </head>
+    <body>
+      <h1>Obrigado pela compra! 💖</h1>
+      <p>Compartilhe o link com quem você ama ou escaneie o QR code:</p>
+      <img src="${qrData}" alt="QR Code">
+      <p><a href="${link}" style="color:#ffd400;">Acesse seu site personalizado</a></p>
+    </body>
+    </html>
+  `);
+});
+
+app.listen(PORT, () => console.log(`Server rodando na porta ${PORT}`));
 
