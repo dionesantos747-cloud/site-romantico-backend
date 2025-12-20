@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Site Romântico</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="preview azul" id="preview">
+  <audio id="audioPlayer" controls style="display:none;"></audio>
+  <div class="nome" id="nome"></div>
+  <div class="mensagem" id="mensagem"></div>
+  <div id="midias"></div>
+  <div id="tempo"></div>
+  <button id="btnCarta">💌 Abrir carta</button>
+  <div class="carta" id="carta"></div>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const id = urlParams.get("id");
+fetch("/data/users.json")
+  .then(res=>res.json())
+  .then(users=>{
+    const data = users[id];
+    if(!data) return alert("Usuário não encontrado");
+    
+    nome.innerText = data.nome;
+    mensagem.innerText = data.mensagem;
+    carta.innerText = data.carta;
+
+    // Fotos
+    const midiasDiv = document.getElementById("midias");
+    data.fotos.forEach(f=>{
+      if(f){
+        const div = document.createElement("div");
+        div.className="photo";
+        div.innerHTML=`<img src="${f}" style="width:100%">`;
+        midiasDiv.appendChild(div);
+      }
+    });
+
+    // Música
+    if(data.musica){
+      const audio = document.getElementById("audioPlayer");
+      audio.src = data.musica; // Você pode hospedar música no server se quiser
+      audio.style.display="block";
+    }
+
+    // Data inicial
+    const dataInput = { value: data.dataInicio };
+    setInterval(()=>{
+      if(!dataInput.value) return;
+      const inicio = new Date(dataInput.value);
+      const agora = new Date();
+      const diff = agora - inicio;
+      if(diff < 0) return;
+      const s=Math.floor(diff/1000)%60;
+      const m=Math.floor(diff/60000)%60;
+      const h=Math.floor(diff/3600000)%24;
+      const d=Math.floor(diff/86400000)%30;
+      const mo=Math.floor(diff/2592000000)%12;
+      const a=Math.floor(diff/31536000000);
+      const anoText = a===1?"ano":"anos";
+      const mesText = mo===1?"mês":"meses";
+      const diaText = d===1?"dia":"dias";
+      tempo.innerHTML = `<strong>Já estamos juntos há</strong><br>${a} ${anoText} • ${mo} ${mesText} • ${d} ${diaText}<br>${h}h ${m}m ${s}s`;
+    },1000);
+  });
+
+// Abrir carta
+const btnCarta = document.getElementById("btnCarta");
+const carta = document.getElementById("carta");
+btnCarta.onclick = ()=>{
+  carta.style.display = carta.style.display==="block"?"none":"block";
+  btnCarta.innerText = carta.style.display==="block"?"❌ Fechar carta":"💌 Abrir carta";
+};
+
+// Coracoes
+function criarCoracoes(){
+  document.querySelectorAll(".heart").forEach(h=>h.remove());
+  for(let i=0;i<12;i++){
+    const h=document.createElement("div");
+    h.className="heart";
+    h.innerText="❤️";
+    h.style.left = Math.random()*100+"%";
+    h.style.animationDuration = 6+Math.random()*6+"s";
+    document.getElementById("preview").appendChild(h);
+  }
+}
+criarCoracoes();
+</script>
+</body>
+</html>
