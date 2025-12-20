@@ -1,60 +1,125 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Obrigado!</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
-<style>
-  body {
-    background: #000;
-    color: #fff;
-    font-family: 'Playfair Display', serif;
-    text-align: center;
-    padding: 40px;
-  }
-  h1 { color: #ff5fa2; }
-  p { font-size: 1.4em; }
-  img { width: 250px; height: 250px; margin: 20px; border-radius: 20px; box-shadow: 0 0 20px #ff5fa2; }
-  a { color: #ffd400; font-weight: bold; text-decoration: none; }
-</style>
+  <meta charset="UTF-8" />
+  <title>Pagamento confirmado 💖</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+
+  <style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      background:radial-gradient(circle at top,#ff5fa2,#000);
+      color:#fff;
+      font-family:'Playfair Display', serif;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:20px;
+    }
+
+    .card{
+      background:rgba(0,0,0,.75);
+      border-radius:26px;
+      padding:36px 26px;
+      max-width:420px;
+      width:100%;
+      box-shadow:0 0 40px rgba(255,95,162,.6);
+      animation:fadeIn .8s ease;
+    }
+
+    h1{
+      color:#ffd400;
+      margin-bottom:10px;
+    }
+
+    p{
+      font-size:1.15em;
+      line-height:1.4;
+    }
+
+    .qr{
+      margin:26px 0;
+    }
+
+    .qr img{
+      width:260px;
+      max-width:100%;
+      border-radius:22px;
+      box-shadow:0 0 25px #ff5fa2;
+      background:#fff;
+      padding:10px;
+    }
+
+    a{
+      display:inline-block;
+      margin-top:18px;
+      padding:16px 22px;
+      background:#ffd400;
+      color:#000;
+      border-radius:20px;
+      font-weight:bold;
+      text-decoration:none;
+      font-size:1.05em;
+      transition:.3s;
+    }
+
+    a:hover{
+      transform:scale(1.05);
+    }
+
+    .heart{
+      position:fixed;
+      bottom:-20px;
+      font-size:18px;
+      opacity:.6;
+      animation:float 8s linear infinite;
+      pointer-events:none;
+    }
+
+    @keyframes float{
+      to{transform:translateY(-120vh);opacity:0}
+    }
+
+    @keyframes fadeIn{
+      from{opacity:0;transform:scale(.95)}
+      to{opacity:1;transform:scale(1)}
+    }
+  </style>
 </head>
+
 <body>
 
-<h1>Obrigado pela compra! 💖</h1>
-<p>Seu link personalizado será liberado assim que o pagamento for confirmado.</p>
+<div class="card">
+  <h1>Pagamento confirmado 💖</h1>
+  <p>
+    Seu site romântico foi criado com sucesso!<br>
+    Compartilhe o link ou escaneie o QR Code abaixo.
+  </p>
 
-<div id="qrContainer"></div>
-<p id="linkContainer"></p>
+  <!-- O servidor injeta o QR aqui -->
+  <div class="qr">
+    {{QR_CODE}}
+  </div>
+
+  <!-- O servidor injeta o link aqui -->
+  <a href="{{LINK}}" target="_blank">💌 Acessar meu site</a>
+</div>
 
 <script>
-const urlParams = new URLSearchParams(window.location.search);
-const id = urlParams.get("id");
-
-// Carregar dados do usuário
-fetch("/data/users.json")
-  .then(res => res.json())
-  .then(users => {
-    const data = users[id];
-    if(!data){
-      document.getElementById("qrContainer").innerHTML = "<p>Usuário não encontrado</p>";
-      return;
-    }
-
-    if(!data.pago){
-      document.getElementById("qrContainer").innerHTML = "<p>Pagamento ainda não confirmado 💖</p>";
-      return;
-    }
-
-    // Mostrar QR code e link
-    const qrImg = document.createElement("img");
-    qrImg.src = data.qrData;
-    qrImg.alt = "QR Code";
-    document.getElementById("qrContainer").appendChild(qrImg);
-
-    const linkEl = document.getElementById("linkContainer");
-    linkEl.innerHTML = `<a href="/user.html?id=${id}">Acesse seu site personalizado</a>`;
-  });
+  // corações flutuando
+  for(let i=0;i<12;i++){
+    const h=document.createElement("div");
+    h.className="heart";
+    h.innerText="❤️";
+    h.style.left=Math.random()*100+"%";
+    h.style.animationDuration=6+Math.random()*6+"s";
+    document.body.appendChild(h);
+  }
 </script>
 
 </body>
