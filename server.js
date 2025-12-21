@@ -63,7 +63,10 @@ let users = null;
    UPLOAD FOTO
 ===================== */
 app.post("/upload-image", upload.single("file"), (req, res) => {
-  cloudinary.uploader.upload_stream(
+ if (!req.file) {
+  return res.status(400).json({ error: "Arquivo não enviado" });
+}
+   cloudinary.uploader.upload_stream(
     { folder: "site-romantico/fotos" },
     (err, result) => {
       if (err) return res.status(500).json({ error: "Erro imagem" });
@@ -76,7 +79,10 @@ app.post("/upload-image", upload.single("file"), (req, res) => {
    UPLOAD MÚSICA
 ===================== */
 app.post("/upload-music", upload.single("file"), (req, res) => {
-  cloudinary.uploader.upload_stream(
+  if (!req.file) {
+  return res.status(400).json({ error: "Arquivo não enviado" });
+}
+   cloudinary.uploader.upload_stream(
     { resource_type: "video", folder: "site-romantico/musicas" },
     (err, result) => {
       if (err) return res.status(500).json({ error: "Erro música" });
