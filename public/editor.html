@@ -447,9 +447,12 @@ removeMusic.onclick = ()=>{
   removeMusic.style.display = "none";  
 };  
   
-/* COMPRA E BLOQUEIO */  
-document.getElementById("btnComprar").onclick = ()=>{  
-   // 🔹 validação (MANTER)
+/* COMPRA */
+const btnComprar = document.getElementById("btnComprar");
+
+btnComprar.onclick = async () => {
+
+  // validação
   const campos = [nomeInput, msgInput, cartaInput, dataInput];
   let erro = false;
 
@@ -468,7 +471,7 @@ document.getElementById("btnComprar").onclick = ()=>{
 
   if (erro) return;
 
-  // 🔹 NOVO PAGAMENTO (SUBSTITUI O ANTIGO)
+  // pagamento
   const res = await fetch("/create-payment", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -481,11 +484,12 @@ document.getElementById("btnComprar").onclick = ()=>{
 
   const data = await res.json();
 
-  // 🔹 redireciona para aguardando
-  window.location.href = /aguardando.html?payment_id=${data.payment_id};
+  // redireciona corretamente
+  window.location.href = `/aguardando.html?payment_id=${data.payment_id}`;
 };  
 </script>  </body>  
 </html>
+
 
 
 
