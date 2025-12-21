@@ -156,18 +156,25 @@ app.post("/webhook", (req, res) => {
    CHECK PAYMENT
 ===================== */
 app.get("/check-payment", async (req, res) => {
-  const paymentId = String(req.query.payment_id);
+  try {
+    const paymentId = String(req.query.payment_id);
 
-  const mp = await axios.get(
-    `https://api.mercadopago.com/v1/payments/${paymentId}`,
-    { headers: { Authorization: `Bearer ${MP_ACCESS_TOKEN}` } }
-  );
+    const mp = await axios.get(
+      `https://api.mercadopago.com/v1/payments/${paymentId}`,
+      { headers: { Authorization: `Bearer ${MP_ACCESS_TOKEN}` } }
+    );
 
-  if (mp.data.status === "approved") {
-    return res.json({ status: "approved" });
+    if (mp.data.status === "approved") {
+      return res.json({ status: "approved" });
+    }
+
+    res.json({ status: "pending" });
+
+  } catch (err) {
+    // evita quebrar o fluxo por erro momentâneo do MP
+    console.error("check-payment:", err.response?.status || err.message);
+    res.json({ status: "pending" });
   }
-
-  res.json({ status: "pending" });
 });
 
 /* =====================
