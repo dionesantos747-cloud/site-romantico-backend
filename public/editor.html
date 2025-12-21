@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>Site Romântico</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
 
 <style>
@@ -15,7 +14,6 @@ body{
   color:#fff;
   font-family:Arial,sans-serif;
   overflow-x:hidden;
-  touch-action:manipulation;
 }
 
 .editor{
@@ -37,18 +35,9 @@ input,textarea{
   font-size:1em;
 }
 
-input.error,textarea.error{
-  border:2px solid red;
-}
-
-.error-text{
-  color:red;
-  font-size:.9em;
-  margin-top:4px;
-  display:none;
-}
-
 textarea{min-height:90px}
+
+.error{border:2px solid red}
 
 /* FUNDOS */
 .bg-options{
@@ -58,8 +47,7 @@ textarea{min-height:90px}
   flex-wrap:wrap;
 }
 .bg-card{
-  width:60px;
-  height:60px;
+  width:60px;height:60px;
   border-radius:14px;
   border:3px solid #000;
   cursor:pointer;
@@ -120,7 +108,7 @@ textarea{min-height:90px}
 
 /* MÚSICA */
 #audioPlayer{
-  display:block;
+  display:none;
   margin:0 auto 20px;
   width:80%;
   max-width:300px;
@@ -134,7 +122,6 @@ textarea{min-height:90px}
   cursor:pointer;
 }
 .music-box.disabled{opacity:.7;cursor:default}
-
 .remove-music{
   display:none;
   margin-top:8px;
@@ -157,7 +144,6 @@ textarea{min-height:90px}
   font-size:3em;
   font-weight:bold;
   color:#ffd400;
-  text-shadow:0 0 6px #ffd400,1px 1px 3px #000;
   animation:pulseNome 3s infinite;
 }
 
@@ -241,19 +227,15 @@ button{
 <div class="editor" id="editor">
   <label>Nome</label>
   <input id="nomeInput">
-  <div class="error-text">Campo obrigatório</div>
 
   <label>Mensagem principal</label>
   <textarea id="msgInput"></textarea>
-  <div class="error-text">Campo obrigatório</div>
 
   <label>Carta secreta</label>
   <textarea id="cartaInput"></textarea>
-  <div class="error-text">Campo obrigatório</div>
 
   <label>Data de início do namoro</label>
   <input type="date" id="dataInput">
-  <div class="error-text">Campo obrigatório</div>
 
   <label>Fotos</label>
   <div class="photo-grid">
@@ -278,7 +260,7 @@ button{
 </div>
 
 <div class="preview azul" id="preview">
-  <audio id="audioPlayer" controls style="display:none"></audio>
+  <audio id="audioPlayer" controls></audio>
   <div class="nome" id="nome"></div>
   <div class="mensagem" id="mensagem"></div>
   <div id="midias"></div>
@@ -299,11 +281,12 @@ const carta=document.getElementById("carta");
 const tempo=document.getElementById("tempo");
 const preview=document.getElementById("preview");
 
+/* Preview */
 nomeInput.oninput=()=>nome.innerText=nomeInput.value;
 msgInput.oninput=()=>mensagem.innerText=msgInput.value;
 cartaInput.oninput=()=>carta.innerText=cartaInput.value;
 
-/* CONTADOR */
+/* Contador */
 setInterval(()=>{
   if(!dataInput.value) return;
   const i=new Date(dataInput.value),a=new Date(),d=a-i;
@@ -324,12 +307,12 @@ setInterval(()=>{
     </div>`;
 },1000);
 
-/* CARTA */
+/* Carta */
 document.getElementById("btnCarta").onclick=()=>{
   carta.style.display=carta.style.display==="block"?"none":"block";
 };
 
-/* CORAÇÕES */
+/* Corações */
 function criarCoracoes(){
   document.querySelectorAll(".heart").forEach(h=>h.remove());
   for(let i=0;i<12;i++){
@@ -343,7 +326,7 @@ function criarCoracoes(){
 }
 criarCoracoes();
 
-/* FUNDOS */
+/* Fundos */
 document.querySelectorAll(".bg-card").forEach(c=>{
   c.onclick=()=>{
     document.querySelectorAll(".bg-card").forEach(x=>x.classList.remove("selected"));
@@ -353,7 +336,7 @@ document.querySelectorAll(".bg-card").forEach(c=>{
   };
 });
 
-/* FOTOS */
+/* Fotos */
 let fotos=[null,null,null],slotAtual=null;
 const fotoInput=document.getElementById("fotoInput");
 const midias=document.getElementById("midias");
@@ -371,9 +354,11 @@ fotoInput.onchange=e=>{
   if(!file||slotAtual===null) return;
   const url=URL.createObjectURL(file);
   fotos[slotAtual]=url;
+
   const div=document.createElement("div");
   div.className="photo";
   div.innerHTML=`<img src="${url}" style="width:100%">`;
+
   const r=document.createElement("div");
   r.className="photo-remove";
   r.innerText="×";
@@ -385,28 +370,33 @@ fotoInput.onchange=e=>{
     s.classList.remove("filled");
     s.innerText="+";
   };
+
   div.appendChild(r);
   midias.appendChild(div);
+
   const s=document.querySelector(\`.photo-slot[data-slot="${slotAtual}"]\`);
   s.classList.add("filled");
   s.innerText="";
+
   slotAtual=null;
   fotoInput.value="";
 };
 
-/* MÚSICA */
+/* Música */
 const musicBox=document.getElementById("musicBox");
 const musicaInput=document.getElementById("musicaInput");
 const audio=document.getElementById("audioPlayer");
 const removeMusic=document.getElementById("removeMusic");
 
 musicBox.onclick=()=>{ if(!musicBox.classList.contains("disabled")) musicaInput.click(); };
+
 musicaInput.onchange=()=>{
   audio.src=URL.createObjectURL(musicaInput.files[0]);
   audio.style.display="block";
   musicBox.classList.add("disabled");
   removeMusic.style.display="block";
 };
+
 removeMusic.onclick=()=>{
   audio.src="";
   audio.style.display="none";
@@ -415,16 +405,12 @@ removeMusic.onclick=()=>{
   removeMusic.style.display="none";
 };
 
-/* PAGAMENTO */
+/* Compra */
 document.getElementById("btnComprar").onclick=async()=>{
-  const campos=[nomeInput,msgInput,cartaInput,dataInput];
-  let erro=false;
-  campos.forEach(c=>{
-    const e=c.nextElementSibling;
-    if(!c.value){c.classList.add("error");e.style.display="block";erro=true}
-    else{c.classList.remove("error");e.style.display="none"}
-  });
-  if(erro) return;
+  if(!nomeInput.value||!msgInput.value||!cartaInput.value||!dataInput.value){
+    alert("Preencha todos os campos");
+    return;
+  }
 
   const res=await fetch("/create-payment",{
     method:"POST",
@@ -438,8 +424,10 @@ document.getElementById("btnComprar").onclick=async()=>{
       musica:audio.src||null
     })
   });
+
   const data=await res.json();
   if(!data.payment_id){alert("Erro ao criar pagamento");return;}
+
   window.location.href=`/aguardando.html?payment_id=${data.payment_id}`;
 };
 </script>
