@@ -113,38 +113,38 @@ res.json({
 /* =====================
    WEBHOOK MERCADO PAGO
 ===================== */
-app.post("/webhook", async (req, res) => {
-  // responde IMEDIATAMENTE para o Mercado Pago
+app.post("/webhook", (req, res) => {
+  // responde IMEDIATAMENTE ao Mercado Pago
   res.sendStatus(200);
 
-  try {
-    if (!payments) return;
+  // processa em background
+  (async () => {
+    try {
+      if (!payments) return;
 
-    const paymentId = String(req.body?.data?.id);
-    if (!paymentId) return;
+      const paymentId = String(req.body?.data?.id);
+      if (!paymentId) return;
 
-    // consulta o Mercado Pago
-    const mp = await axios.get(
-      `https://api.mercadopago.com/v1/payments/${paymentId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${MP_ACCESS_TOKEN}`
+      const mp = await axios.get(
+        `https://api.mercadopago.com/v1/payments/${paymentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${MP_ACCESS_TOKEN}`
+          }
         }
-      }
-    );
-
-    if (mp.data.status === "approved") {
-      await payments.updateOne(
-        { paymentId },
-        { $set: { status: "approved" } }
       );
+
+      if (mp.data.status === "approved") {
+        await payments.updateOne(
+          { paymentId },
+          { $set: { status: "approved" } }
+        );
+      }
+    } catch (err) {
+      console.error("Webhook erro:", err.message);
     }
-
-  } catch (err) {
-    console.error("Erro webhook MP:", err.message);
-  }
+  })();
 });
-
 /* =====================
    CHECK PAGAMENTO
 ===================== */
