@@ -114,12 +114,16 @@ res.json({
    WEBHOOK MERCADO PAGO
 ===================== */
 app.post("/webhook", async (req, res) => {
+  // responde IMEDIATAMENTE para o Mercado Pago
+  res.sendStatus(200);
+
   try {
-    if (!payments) return res.sendStatus(200);
+    if (!payments) return;
 
-    const paymentId = req.body?.data?.id;
-    if (!paymentId) return res.sendStatus(200);
+    const paymentId = String(req.body?.data?.id);
+    if (!paymentId) return;
 
+    // consulta o Mercado Pago
     const mp = await axios.get(
       `https://api.mercadopago.com/v1/payments/${paymentId}`,
       {
@@ -131,15 +135,13 @@ app.post("/webhook", async (req, res) => {
 
     if (mp.data.status === "approved") {
       await payments.updateOne(
-        { paymentId: String(paymentId) },
+        { paymentId },
         { $set: { status: "approved" } }
       );
     }
 
-    res.sendStatus(200);
   } catch (err) {
-    console.error("❌ Erro webhook:", err.message);
-    res.sendStatus(200);
+    console.error("Erro webhook MP:", err.message);
   }
 });
 
