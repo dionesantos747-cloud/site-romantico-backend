@@ -4,25 +4,58 @@
 <meta charset="UTF-8">
 <title>Aguardando pagamento</title>
 <style>
-body{background:#000;color:#fff;font-family:Arial;text-align:center;padding:40px}
+body{
+  background:#000;
+  color:#fff;
+  font-family:Arial;
+  text-align:center;
+  padding:40px;
+}
+img{
+  width:260px;
+  margin:20px auto;
+}
+.pix{
+  word-break:break-all;
+  background:#111;
+  padding:12px;
+  border-radius:10px;
+  margin-top:12px;
+}
 </style>
 </head>
 <body>
 
 <h1>Aguardando pagamento</h1>
-<p>Confirmando seu PIX…</p>
+<p>Escaneie o QR Code PIX para pagar</p>
+
+<img id="qr">
+<div class="pix" id="pix"></div>
 
 <script>
+const qr = sessionStorage.getItem("pix_qr");
+const copia = sessionStorage.getItem("pix_copia");
+
+if(qr){
+  document.getElementById("qr").src =
+    "data:image/png;base64," + qr;
+}
+
+if(copia){
+  document.getElementById("pix").innerText = copia;
+}
+
 const params = new URLSearchParams(window.location.search);
 const paymentId = params.get("payment_id");
 
-setInterval(async () => {
+setInterval(async ()=>{
   const res = await fetch(`/check-payment?payment_id=${paymentId}`);
   const data = await res.json();
-  if (data.status === "approved") {
-    window.location.href = `/success.html?payment_id=${paymentId}`;
+  if(data.status === "approved"){
+    window.location.href =
+      `/success.html?payment_id=${paymentId}`;
   }
-}, 3000);
+},3000);
 </script>
 
 </body>
