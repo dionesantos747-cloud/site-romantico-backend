@@ -236,6 +236,36 @@ app.get("/success.html", async (req, res) => {
 /* =====================
    USER (SITE FINAL)
 ===================== */
+app.get("/user-data", async (req, res) => {
+  try {
+    if (!users) {
+      return res.status(503).json({ error: "Banco indisponível" });
+    }
+
+    const id = req.query.id;
+    if (!id) {
+      return res.status(400).json({ error: "ID não informado" });
+    }
+
+    const user = await users.findOne({ _id: id });
+    if (!user) {
+      return res.status(404).json({ error: "Usuário não encontrado" });
+    }
+
+    res.json({
+      nome: user.nome,
+      mensagem: user.mensagem,
+      carta: user.carta,
+      dataInicio: user.dataInicio || null,
+      fotos: user.fotos || [],
+      musica: user.musica || null
+    });
+
+  } catch (err) {
+    console.error("Erro user-data:", err.message);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
 app.get("/user.html", async (req, res) => {
   if (!users) {
     return res.send("Serviço indisponível");
@@ -248,7 +278,6 @@ app.get("/user.html", async (req, res) => {
 
   res.sendFile(path.join(__dirname, "public/user.html"));
 });
-
 /* =====================
    START SERVER
 ===================== */
