@@ -449,38 +449,22 @@ removeMusic.onclick = ()=>{
   
 /* COMPRA E BLOQUEIO */  
 document.getElementById("btnComprar").onclick = ()=>{  
-  const campos = [nomeInput,msgInput,cartaInput,dataInput];  
-  let erro = false;  
-  
-  campos.forEach(c=>{  
-    const err = c.nextElementSibling;  
-    if(!c.value){  
-      c.classList.add("error");  
-      err.style.display="block";  
-      if(!erro) c.scrollIntoView({behavior:"smooth"});  
-      erro = true;  
-    } else {  
-      c.classList.remove("error");  
-      err.style.display="none";  
-    }  
-  });  
-  if(erro) return;  
-  
-  window.open("https://www.mercadopago.com.br/payment-link/v1/go?link-id=cd18cc0f-3041-4781-8b63-353ccce8c504","_blank");  
-  
-  // Bloquear editor  
-  document.getElementById("editor").querySelectorAll("input, textarea, .photo-slot, .bg-card, .music-box").forEach(el=>{  
-    el.disabled = true;  
-    el.style.cursor = "not-allowed";  
-    el.onclick = (e)=>e.preventDefault();  
-  });  
-  fotoInput.disabled = true;  
-  musicaInput.disabled = true;  
-  
-  alert("Editor bloqueado após pagamento. Obrigado! 💖");  
+  const res = await fetch("/create-payment", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      nome: nomeInput.value,
+      mensagem: msgInput.value,
+      carta: cartaInput.value
+    })
+  });
+
+  const data = await res.json();
+  window.location.href = /aguardando.html?payment_id=${data.payment_id};
 };  
 </script>  </body>  
 </html>
+
 
 
 
