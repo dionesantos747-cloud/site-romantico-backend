@@ -67,7 +67,7 @@ app.post("/create-payment", async (req, res) => {
         transaction_amount: 9.99,
         description: "Site Romântico Premium 💖",
         payment_method_id: "pix",
-        payer: { email: "cliente@email.com" },
+        payer: { email: "pagamento@site-romantico.com" },
         metadata: req.body
       },
       {
