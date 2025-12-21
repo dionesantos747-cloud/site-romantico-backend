@@ -484,11 +484,17 @@ btnComprar.onclick = async () => {
 
   const data = await res.json();
 
-  // redireciona corretamente
-  window.location.href = `/aguardando.html?payment_id=${data.payment_id}`;
+// salva o pix temporariamente
+sessionStorage.setItem("pix_qr", data.qr_base64);
+sessionStorage.setItem("pix_copia", data.copia_cola);
+
+// redireciona para aguardando
+window.location.href =
+  `/aguardando.html?payment_id=${data.payment_id}`;
 };  
 </script>  </body>  
 </html>
+
 
 
 
