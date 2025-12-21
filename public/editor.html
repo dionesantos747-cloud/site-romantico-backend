@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Site Romântico</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
 
 <style>
@@ -63,9 +64,7 @@ textarea{min-height:90px}
   border:3px solid #000;
   cursor:pointer;
 }
-.bg-card.selected{
-  border:3px solid #fff;
-}
+.bg-card.selected{border:3px solid #fff}
 .azul{background:radial-gradient(circle,#2b6cff,#000)}
 .roxo{background:radial-gradient(circle,#8a5cff,#000)}
 .rosa{background:radial-gradient(circle,#ff5fa2,#000)}
@@ -78,8 +77,7 @@ textarea{min-height:90px}
   justify-content:center;
 }
 .photo-slot{
-  width:90px;
-  height:90px;
+  width:90px;height:90px;
   border-radius:18px;
   border:2px dashed #777;
   display:flex;
@@ -93,13 +91,11 @@ textarea{min-height:90px}
 
 .photo-remove{
   position:absolute;
-  top:-8px;
-  right:-8px;
+  top:-8px;right:-8px;
   background:#ff4b4b;
   color:#fff;
   border-radius:50%;
-  width:22px;
-  height:22px;
+  width:22px;height:22px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -123,11 +119,11 @@ textarea{min-height:90px}
 }
 
 /* MÚSICA */
-#audioPlayer {
-  display: block;
-  margin: 0 auto 20px;
-  width: 80%;
-  max-width: 300px;
+#audioPlayer{
+  display:block;
+  margin:0 auto 20px;
+  width:80%;
+  max-width:300px;
 }
 .music-box{
   margin-top:12px;
@@ -137,10 +133,7 @@ textarea{min-height:90px}
   text-align:center;
   cursor:pointer;
 }
-.music-box.disabled{
-  opacity:.7;
-  cursor:default;
-}
+.music-box.disabled{opacity:.7;cursor:default}
 
 .remove-music{
   display:none;
@@ -159,30 +152,25 @@ textarea{min-height:90px}
   overflow:hidden;
 }
 
-/* NOME COM MESMA FONTE DO CONTADOR, COR AMARELA, BRILHO LEVE, PULSANTE LENTO */
 .nome{
   font-family:'Playfair Display', serif;
   font-size:3em;
   font-weight:bold;
   color:#ffd400;
-  text-shadow: 0 0 6px #ffd400, 1px 1px 3px #000;
-  display:inline-block;
-  animation: pulseNome 3s infinite;
+  text-shadow:0 0 6px #ffd400,1px 1px 3px #000;
+  animation:pulseNome 3s infinite;
 }
 
 @keyframes pulseNome{
-  0%{transform: scale(1);}
-  50%{transform: scale(1.05);}
-  100%{transform: scale(1);}
+  0%{transform:scale(1)}
+  50%{transform:scale(1.05)}
+  100%{transform:scale(1)}
 }
 
-/* MENSAGEM PRINCIPAL LEGÍVEL INCLINADA */
 .mensagem{
   font-family:'Playfair Display', serif;
   font-size:1.8em;
   font-style:italic;
-  color:#fff;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
 }
 
 .carta{
@@ -209,12 +197,6 @@ button{
   background:#ffd400;
   color:#000;
   font-weight:bold;
-  animation:pulse 1.4s infinite;
-}
-@keyframes pulse{
-  0%{box-shadow:0 0 0 0 rgba(255,212,0,.6)}
-  70%{box-shadow:0 0 0 14px rgba(255,212,0,0)}
-  100%{box-shadow:0 0 0 0 rgba(255,212,0,0)}
 }
 
 /* CORAÇÕES */
@@ -230,35 +212,25 @@ button{
   to{transform:translateY(-120vh);opacity:0}
 }
 
-/* CONTADOR ESTILIZADO */
-#tempo{
-  margin-top:20px;
-  text-align:center;
-}
-
+/* CONTADOR */
+#tempo{margin-top:20px}
 #tempo .titulo{
-  font-family: 'Playfair Display', serif;
+  font-family:'Playfair Display', serif;
   font-size:2.2em;
-  font-weight:bold;
-  margin-bottom:12px;
-  display:block;
   color:#ffd400;
-  text-shadow: 2px 2px 4px #000;
+  margin-bottom:12px;
 }
-
 #tempo .contador{
   display:flex;
   justify-content:center;
   gap:12px;
 }
-
-#tempo .contador .item{
+#tempo .item{
   background:#fff;
   color:#333;
   padding:12px 18px;
   border-radius:12px;
-  box-shadow:0 4px 8px rgba(0,0,0,0.4);
-  font-family: 'Playfair Display', serif;
+  font-family:'Playfair Display', serif;
   font-size:1.6em;
 }
 </style>
@@ -267,22 +239,21 @@ button{
 <body>
 
 <div class="editor" id="editor">
-
   <label>Nome</label>
-  <input id="nomeInput" placeholder="Ex: Maria ❤️">
-  <div class="error-text">Campo não preenchido</div>
+  <input id="nomeInput">
+  <div class="error-text">Campo obrigatório</div>
 
   <label>Mensagem principal</label>
-  <textarea id="msgInput" placeholder="Escreva algo especial..."></textarea>
-  <div class="error-text">Campo não preenchido</div>
+  <textarea id="msgInput"></textarea>
+  <div class="error-text">Campo obrigatório</div>
 
   <label>Carta secreta</label>
-  <textarea id="cartaInput" placeholder="Mensagem só para quem ama 💌"></textarea>
-  <div class="error-text">Campo não preenchido</div>
+  <textarea id="cartaInput"></textarea>
+  <div class="error-text">Campo obrigatório</div>
 
   <label>Data de início do namoro</label>
   <input type="date" id="dataInput">
-  <div class="error-text">Campo não preenchido</div>
+  <div class="error-text">Campo obrigatório</div>
 
   <label>Fotos</label>
   <div class="photo-grid">
@@ -307,82 +278,66 @@ button{
 </div>
 
 <div class="preview azul" id="preview">
-  <audio id="audioPlayer" controls style="display:none;"></audio>
-
+  <audio id="audioPlayer" controls style="display:none"></audio>
   <div class="nome" id="nome"></div>
   <div class="mensagem" id="mensagem"></div>
-
   <div id="midias"></div>
-
   <div id="tempo"></div>
-
   <button id="btnCarta">💌 Abrir carta</button>
   <div class="carta" id="carta"></div>
-
   <button class="pay" id="btnComprar">Gerar QR code por R$9,99</button>
 </div>
 
 <script>
-const nomeInput = document.getElementById("nomeInput");
-const msgInput = document.getElementById("msgInput");
-const cartaInput = document.getElementById("cartaInput");
-const dataInput = document.getElementById("dataInput");
-const nome = document.getElementById("nome");
-const mensagem = document.getElementById("mensagem");
-const carta = document.getElementById("carta");
-const tempo = document.getElementById("tempo");
-const preview = document.getElementById("preview");
+const nomeInput=document.getElementById("nomeInput");
+const msgInput=document.getElementById("msgInput");
+const cartaInput=document.getElementById("cartaInput");
+const dataInput=document.getElementById("dataInput");
+const nome=document.getElementById("nome");
+const mensagem=document.getElementById("mensagem");
+const carta=document.getElementById("carta");
+const tempo=document.getElementById("tempo");
+const preview=document.getElementById("preview");
 
-/* Atualizar preview em tempo real */
-nomeInput.oninput = () => nome.innerText = nomeInput.value;
-msgInput.oninput = () => mensagem.innerText = msgInput.value;
-cartaInput.oninput = () => carta.innerText = cartaInput.value;
+nomeInput.oninput=()=>nome.innerText=nomeInput.value;
+msgInput.oninput=()=>mensagem.innerText=msgInput.value;
+cartaInput.oninput=()=>carta.innerText=cartaInput.value;
 
-/* CONTADOR ESTILIZADO COM SINGULAR/PLURAL */
+/* CONTADOR */
 setInterval(()=>{
   if(!dataInput.value) return;
-  const inicio = new Date(dataInput.value);
-  const agora = new Date();
-  const diff = agora - inicio;
-  if(diff < 0) return;
-  const s = Math.floor(diff/1000)%60;
-  const m = Math.floor(diff/60000)%60;
-  const h = Math.floor(diff/3600000)%24;
-  const d = Math.floor(diff/86400000)%30;
-  const mo = Math.floor(diff/2592000000)%12;
-  const a = Math.floor(diff/31536000000);
-
-  const anoText = a===1 ? "ano" : "anos";
-  const mesText = mo===1 ? "mês" : "meses";
-  const diaText = d===1 ? "dia" : "dias";
-
-  tempo.innerHTML = `
-    <span class="titulo">Já estamos juntos há</span>
+  const i=new Date(dataInput.value),a=new Date(),d=a-i;
+  if(d<0) return;
+  const s=Math.floor(d/1000)%60,
+        m=Math.floor(d/60000)%60,
+        h=Math.floor(d/3600000)%24,
+        di=Math.floor(d/86400000)%30,
+        mo=Math.floor(d/2592000000)%12,
+        an=Math.floor(d/31536000000);
+  tempo.innerHTML=`
+    <div class="titulo">Já estamos juntos há</div>
     <div class="contador">
-      <div class="item">${a} ${anoText}</div>
-      <div class="item">${mo} ${mesText}</div>
-      <div class="item">${d} ${diaText}</div>
+      <div class="item">${an} ${an===1?"ano":"anos"}</div>
+      <div class="item">${mo} ${mo===1?"mês":"meses"}</div>
+      <div class="item">${di} ${di===1?"dia":"dias"}</div>
       <div class="item">${h}h ${m}m ${s}s</div>
-    </div>
-  `;
+    </div>`;
 },1000);
 
 /* CARTA */
-const btnCarta = document.getElementById("btnCarta");
-btnCarta.onclick = () => {
-  carta.style.display = carta.style.display==="block"?"none":"block";
-  btnCarta.innerText = carta.style.display==="block"?"❌ Fechar carta":"💌 Abrir carta";
+document.getElementById("btnCarta").onclick=()=>{
+  carta.style.display=carta.style.display==="block"?"none":"block";
 };
 
 /* CORAÇÕES */
 function criarCoracoes(){
-  document.querySelectorAll(".heart").forEach(h => h.remove());
+  document.querySelectorAll(".heart").forEach(h=>h.remove());
   for(let i=0;i<12;i++){
     const h=document.createElement("div");
     h.className="heart";
     h.innerText="❤️";
-    h.style.left = Math.random()*100+"%";
-    h.style.animationDuration = 6+Math.random()*6+"s";
+    h.style.left=Math.random()*100+"%";
+    h.style.animationDuration=6+Math.random()*6+"s";
     preview.appendChild(h);
   }
 }
@@ -390,131 +345,104 @@ criarCoracoes();
 
 /* FUNDOS */
 document.querySelectorAll(".bg-card").forEach(c=>{
-  c.onclick = () => {
+  c.onclick=()=>{
     document.querySelectorAll(".bg-card").forEach(x=>x.classList.remove("selected"));
     c.classList.add("selected");
-    preview.className = "preview " + c.dataset.bg;
+    preview.className="preview "+c.dataset.bg;
     criarCoracoes();
-  }
+  };
 });
 
 /* FOTOS */
-let fotos=[null,null,null];
-let slotAtual=null;
-const fotoInput = document.getElementById("fotoInput");
-const midias = document.getElementById("midias");
+let fotos=[null,null,null],slotAtual=null;
+const fotoInput=document.getElementById("fotoInput");
+const midias=document.getElementById("midias");
 
-document.querySelectorAll(".photo-slot").forEach(slot=>{
-  slot.onclick = ()=>{
-    if(slot.classList.contains("filled")) return;
-    slotAtual = slot.dataset.slot;
+document.querySelectorAll(".photo-slot").forEach(s=>{
+  s.onclick=()=>{
+    if(s.classList.contains("filled")) return;
+    slotAtual=s.dataset.slot;
     fotoInput.click();
   };
 });
 
-fotoInput.onchange = e=>{
-  const file = e.target.files[0];
-  if(!file || slotAtual===null) return;
-
-  const url = URL.createObjectURL(file);
-  fotos[slotAtual] = url;
-
-  const div = document.createElement("div");
-  div.className = "photo";
-  div.innerHTML = `<img src="${url}" style="width:100%">`;
-
-  const slotIndex = slotAtual;
-  const remove = document.createElement("div");
-  remove.className = "photo-remove";
-  remove.innerText = "×";
-  remove.onclick = ()=>{
+fotoInput.onchange=e=>{
+  const file=e.target.files[0];
+  if(!file||slotAtual===null) return;
+  const url=URL.createObjectURL(file);
+  fotos[slotAtual]=url;
+  const div=document.createElement("div");
+  div.className="photo";
+  div.innerHTML=`<img src="${url}" style="width:100%">`;
+  const r=document.createElement("div");
+  r.className="photo-remove";
+  r.innerText="×";
+  r.onclick=()=>{
     URL.revokeObjectURL(url);
-    fotos[slotIndex] = null;
+    fotos[slotAtual]=null;
     div.remove();
-    const slot = document.querySelector(`.photo-slot[data-slot="${slotIndex}"]`);
-    slot.classList.remove("filled");
-    slot.innerText = "+";
+    const s=document.querySelector(\`.photo-slot[data-slot="${slotAtual}"]\`);
+    s.classList.remove("filled");
+    s.innerText="+";
   };
-
-  div.appendChild(remove);
+  div.appendChild(r);
   midias.appendChild(div);
-
-  const slot = document.querySelector(`.photo-slot[data-slot="${slotAtual}"]`);
-  slot.classList.add("filled");
-  slot.innerText = "";
-
-  slotAtual = null;
-  fotoInput.value = "";
+  const s=document.querySelector(\`.photo-slot[data-slot="${slotAtual}"]\`);
+  s.classList.add("filled");
+  s.innerText="";
+  slotAtual=null;
+  fotoInput.value="";
 };
 
 /* MÚSICA */
-const musicBox = document.getElementById("musicBox");
-const musicaInput = document.getElementById("musicaInput");
-const audio = document.getElementById("audioPlayer");
-const removeMusic = document.getElementById("removeMusic");
+const musicBox=document.getElementById("musicBox");
+const musicaInput=document.getElementById("musicaInput");
+const audio=document.getElementById("audioPlayer");
+const removeMusic=document.getElementById("removeMusic");
 
-musicBox.onclick = ()=>{
-  if(musicBox.classList.contains("disabled")) return;
-  musicaInput.click();
-};
-
-musicaInput.onchange = ()=>{
-  if(!musicaInput.files[0]) return;
-  audio.src = URL.createObjectURL(musicaInput.files[0]);
-  audio.style.display = "block";
-  musicBox.innerText = "🎶 Música selecionada";
+musicBox.onclick=()=>{ if(!musicBox.classList.contains("disabled")) musicaInput.click(); };
+musicaInput.onchange=()=>{
+  audio.src=URL.createObjectURL(musicaInput.files[0]);
+  audio.style.display="block";
   musicBox.classList.add("disabled");
-  removeMusic.style.display = "block";
+  removeMusic.style.display="block";
 };
-
-removeMusic.onclick = ()=>{
-  audio.src = "";
-  audio.style.display = "none";
-  musicaInput.value = "";
-  musicBox.innerText = "Adicionar música 🎵";
+removeMusic.onclick=()=>{
+  audio.src="";
+  audio.style.display="none";
+  musicaInput.value="";
   musicBox.classList.remove("disabled");
-  removeMusic.style.display = "none";
+  removeMusic.style.display="none";
 };
 
-/* COMPRA E BLOQUEIO */
-document.getElementById("btnComprar").onclick = ()=>{
-  const campos = [nomeInput,msgInput,cartaInput,dataInput];
-  let erro = false;
-
+/* PAGAMENTO */
+document.getElementById("btnComprar").onclick=async()=>{
+  const campos=[nomeInput,msgInput,cartaInput,dataInput];
+  let erro=false;
   campos.forEach(c=>{
-    const err = c.nextElementSibling;
-    if(!c.value){
-      c.classList.add("error");
-      err.style.display="block";
-      if(!erro) c.scrollIntoView({behavior:"smooth"});
-      erro = true;
-    } else {
-      c.classList.remove("error");
-      err.style.display="none";
-    }
+    const e=c.nextElementSibling;
+    if(!c.value){c.classList.add("error");e.style.display="block";erro=true}
+    else{c.classList.remove("error");e.style.display="none"}
   });
   if(erro) return;
 
-  window.open("https://www.mercadopago.com.br/payment-link/v1/go?link-id=cd18cc0f-3041-4781-8b63-353ccce8c504","_blank");
-
-  // Bloquear editor
-  document.getElementById("editor").querySelectorAll("input, textarea, .photo-slot, .bg-card, .music-box").forEach(el=>{
-    el.disabled = true;
-    el.style.cursor = "not-allowed";
-    el.onclick = (e)=>e.preventDefault();
+  const res=await fetch("/create-payment",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      nome:nomeInput.value,
+      mensagem:msgInput.value,
+      carta:cartaInput.value,
+      dataInicio:dataInput.value,
+      fotos:fotos,
+      musica:audio.src||null
+    })
   });
-  fotoInput.disabled = true;
-  musicaInput.disabled = true;
-
-  alert("Editor bloqueado após pagamento. Obrigado! 💖");
+  const data=await res.json();
+  if(!data.payment_id){alert("Erro ao criar pagamento");return;}
+  window.location.href=`/aguardando.html?payment_id=${data.payment_id}`;
 };
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
