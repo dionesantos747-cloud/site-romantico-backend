@@ -86,15 +86,19 @@ app.post("/create-payment", async (req, res) => {
     );
 
     await payments.insertOne({
-      paymentId: String(mp.data.id),
-      status: "pending",
-      metadata: mp.data.metadata,
-      createdAt: new Date()
-    });
+  paymentId: String(mp.data.id),
+  status: "pending",
+  metadata: mp.data.metadata,
+  createdAt: new Date()
+});
 
-    res.json({
-      payment_id: String(mp.data.id)
-    });
+const pix = mp.data.point_of_interaction.transaction_data;
+
+res.json({
+  payment_id: String(mp.data.id),
+  qr_base64: pix.qr_code_base64,
+  copia_cola: pix.qr_code
+});
 
   } catch (err) {
     console.error("❌ Erro ao criar pagamento:", err.message);
