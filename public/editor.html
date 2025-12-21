@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Site Romântico</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
 
 <style>
@@ -16,35 +17,48 @@ body{
   overflow-x:hidden;
 }
 
+/* =====================
+   CORREÇÃO DE CAMADAS
+===================== */
 .editor{
+  position:relative;
+  z-index:10; /* editor acima */
   padding:20px;
   background:#0d0f18;
 }
 
+.preview{
+  position:relative;
+  z-index:1; /* preview abaixo */
+  min-height:100vh;
+  padding:40px 16px 160px;
+  text-align:center;
+  overflow:hidden;
+}
+
+/* =====================
+   FORMULÁRIO
+===================== */
 label{
   color:#ffb3d9;
   display:block;
   margin:14px 0 6px;
 }
-
 input,textarea{
   width:100%;
   padding:14px;
   border-radius:14px;
   border:none;
-  font-size:1em;
 }
-
 textarea{min-height:90px}
 
-.error{border:2px solid red}
-
-/* FUNDOS */
+/* =====================
+   FUNDOS
+===================== */
 .bg-options{
   display:flex;
   gap:12px;
   justify-content:center;
-  flex-wrap:wrap;
 }
 .bg-card{
   width:60px;height:60px;
@@ -58,139 +72,27 @@ textarea{min-height:90px}
 .rosa{background:radial-gradient(circle,#ff5fa2,#000)}
 .preto{background:radial-gradient(circle,#222,#000)}
 
-/* FOTOS */
-.photo-grid{
-  display:flex;
-  gap:10px;
-  justify-content:center;
-}
-.photo-slot{
-  width:90px;height:90px;
-  border-radius:18px;
-  border:2px dashed #777;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:2em;
-  cursor:pointer;
-  position:relative;
-}
-.photo-slot.filled{cursor:default}
-
-.photo-remove{
-  position:absolute;
-  top:-8px;right:-8px;
-  background:#ff4b4b;
-  color:#fff;
-  border-radius:50%;
-  width:22px;height:22px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:14px;
-  cursor:pointer;
-}
-
-.photo{
-  background:#fff;
-  padding:8px 8px 18px;
-  border-radius:4px;
-  margin:20px auto;
-  max-width:280px;
-  box-shadow:0 0 18px rgba(255,255,255,.35);
-  animation:floatPhoto 6s ease-in-out infinite;
-}
-
-@keyframes floatPhoto{
-  0%,100%{transform:translateY(0) rotate(-1deg)}
-  50%{transform:translateY(-6px) rotate(1deg)}
-}
-
-/* MÚSICA */
-#audioPlayer{
-  display:none;
-  margin:0 auto 20px;
-  width:80%;
-  max-width:300px;
-}
-.music-box{
-  margin-top:12px;
-  background:#222;
-  padding:14px;
-  border-radius:14px;
-  text-align:center;
-  cursor:pointer;
-}
-.music-box.disabled{opacity:.7;cursor:default}
-.remove-music{
-  display:none;
-  margin-top:8px;
-  color:#ff4b4b;
-  text-align:center;
-  cursor:pointer;
-}
-
-/* PREVIEW */
-.preview{
-  min-height:100vh;
-  padding:40px 16px 160px;
-  text-align:center;
-  position:relative;
-  overflow:hidden;
-}
-
+/* =====================
+   PREVIEW
+===================== */
 .nome{
   font-family:'Playfair Display', serif;
   font-size:3em;
-  font-weight:bold;
   color:#ffd400;
-  animation:pulseNome 3s infinite;
 }
-
-@keyframes pulseNome{
-  0%{transform:scale(1)}
-  50%{transform:scale(1.05)}
-  100%{transform:scale(1)}
-}
-
 .mensagem{
   font-family:'Playfair Display', serif;
-  font-size:1.8em;
+  font-size:1.6em;
   font-style:italic;
 }
 
-.carta{
-  background:#fff;
-  color:#333;
-  padding:22px;
-  border-radius:20px;
-  margin-top:20px;
-  display:none;
-  max-height:70vh;
-  overflow-y:auto;
-}
-
-button{
-  width:100%;
-  padding:18px;
-  border:none;
-  border-radius:18px;
-  font-size:1.1em;
-  margin-top:18px;
-}
-
-.pay{
-  background:#ffd400;
-  color:#000;
-  font-weight:bold;
-}
-
-/* CORAÇÕES */
+/* =====================
+   CORAÇÕES
+===================== */
 .heart{
   position:absolute;
   bottom:-20px;
   font-size:18px;
-  opacity:.6;
   animation:float 8s linear infinite;
   pointer-events:none;
 }
@@ -198,33 +100,53 @@ button{
   to{transform:translateY(-120vh);opacity:0}
 }
 
-/* CONTADOR */
+/* =====================
+   CONTADOR
+===================== */
 #tempo{margin-top:20px}
 #tempo .titulo{
   font-family:'Playfair Display', serif;
-  font-size:2.2em;
+  font-size:2em;
   color:#ffd400;
-  margin-bottom:12px;
 }
 #tempo .contador{
   display:flex;
   justify-content:center;
-  gap:12px;
+  gap:10px;
 }
 #tempo .item{
   background:#fff;
   color:#333;
-  padding:12px 18px;
+  padding:12px;
   border-radius:12px;
   font-family:'Playfair Display', serif;
-  font-size:1.6em;
+}
+
+/* =====================
+   BOTÕES
+===================== */
+button{
+  width:100%;
+  padding:18px;
+  border:none;
+  border-radius:18px;
+  margin-top:18px;
+}
+.pay{
+  background:#ffd400;
+  color:#000;
+  font-weight:bold;
 }
 </style>
 </head>
 
 <body>
 
+<!-- =====================
+     EDITOR
+===================== -->
 <div class="editor" id="editor">
+
   <label>Nome</label>
   <input id="nomeInput">
 
@@ -234,21 +156,8 @@ button{
   <label>Carta secreta</label>
   <textarea id="cartaInput"></textarea>
 
-  <label>Data de início do namoro</label>
+  <label>Data de início</label>
   <input type="date" id="dataInput">
-
-  <label>Fotos</label>
-  <div class="photo-grid">
-    <div class="photo-slot" data-slot="0">+</div>
-    <div class="photo-slot" data-slot="1">+</div>
-    <div class="photo-slot" data-slot="2">+</div>
-  </div>
-  <input type="file" id="fotoInput" accept="image/*" hidden>
-
-  <label>Música</label>
-  <div class="music-box" id="musicBox">Adicionar música 🎵</div>
-  <div class="remove-music" id="removeMusic">Remover música</div>
-  <input type="file" id="musicaInput" accept="audio/*" hidden>
 
   <label>Fundo</label>
   <div class="bg-options">
@@ -257,40 +166,50 @@ button{
     <div class="bg-card rosa" data-bg="rosa"></div>
     <div class="bg-card preto" data-bg="preto"></div>
   </div>
+
 </div>
 
+<!-- =====================
+     PREVIEW
+===================== -->
 <div class="preview azul" id="preview">
-  <audio id="audioPlayer" controls></audio>
+
   <div class="nome" id="nome"></div>
   <div class="mensagem" id="mensagem"></div>
-  <div id="midias"></div>
+
   <div id="tempo"></div>
-  <button id="btnCarta">💌 Abrir carta</button>
-  <div class="carta" id="carta"></div>
-  <button class="pay" id="btnComprar">Gerar QR code por R$9,99</button>
+
+  <button class="pay" id="btnComprar">
+    Gerar QR Code por R$9,99
+  </button>
+
 </div>
 
 <script>
+/* =====================
+   VARIÁVEIS
+===================== */
 const nomeInput=document.getElementById("nomeInput");
 const msgInput=document.getElementById("msgInput");
 const cartaInput=document.getElementById("cartaInput");
 const dataInput=document.getElementById("dataInput");
 const nome=document.getElementById("nome");
 const mensagem=document.getElementById("mensagem");
-const carta=document.getElementById("carta");
 const tempo=document.getElementById("tempo");
 const preview=document.getElementById("preview");
 
-/* Preview */
+/* =====================
+   PREVIEW AO VIVO
+===================== */
 nomeInput.oninput=()=>nome.innerText=nomeInput.value;
 msgInput.oninput=()=>mensagem.innerText=msgInput.value;
-cartaInput.oninput=()=>carta.innerText=cartaInput.value;
 
-/* Contador */
+/* =====================
+   CONTADOR
+===================== */
 setInterval(()=>{
   if(!dataInput.value) return;
   const i=new Date(dataInput.value),a=new Date(),d=a-i;
-  if(d<0) return;
   const s=Math.floor(d/1000)%60,
         m=Math.floor(d/60000)%60,
         h=Math.floor(d/3600000)%24,
@@ -307,12 +226,9 @@ setInterval(()=>{
     </div>`;
 },1000);
 
-/* Carta */
-document.getElementById("btnCarta").onclick=()=>{
-  carta.style.display=carta.style.display==="block"?"none":"block";
-};
-
-/* Corações */
+/* =====================
+   CORAÇÕES
+===================== */
 function criarCoracoes(){
   document.querySelectorAll(".heart").forEach(h=>h.remove());
   for(let i=0;i<12;i++){
@@ -326,7 +242,9 @@ function criarCoracoes(){
 }
 criarCoracoes();
 
-/* Fundos */
+/* =====================
+   FUNDOS
+===================== */
 document.querySelectorAll(".bg-card").forEach(c=>{
   c.onclick=()=>{
     document.querySelectorAll(".bg-card").forEach(x=>x.classList.remove("selected"));
@@ -336,76 +254,9 @@ document.querySelectorAll(".bg-card").forEach(c=>{
   };
 });
 
-/* Fotos */
-let fotos=[null,null,null],slotAtual=null;
-const fotoInput=document.getElementById("fotoInput");
-const midias=document.getElementById("midias");
-
-document.querySelectorAll(".photo-slot").forEach(s=>{
-  s.onclick=()=>{
-    if(s.classList.contains("filled")) return;
-    slotAtual=s.dataset.slot;
-    fotoInput.click();
-  };
-});
-
-fotoInput.onchange=e=>{
-  const file=e.target.files[0];
-  if(!file||slotAtual===null) return;
-  const url=URL.createObjectURL(file);
-  fotos[slotAtual]=url;
-
-  const div=document.createElement("div");
-  div.className="photo";
-  div.innerHTML=`<img src="${url}" style="width:100%">`;
-
-  const r=document.createElement("div");
-  r.className="photo-remove";
-  r.innerText="×";
-  r.onclick=()=>{
-    URL.revokeObjectURL(url);
-    fotos[slotAtual]=null;
-    div.remove();
-    const s=document.querySelector(\`.photo-slot[data-slot="${slotAtual}"]\`);
-    s.classList.remove("filled");
-    s.innerText="+";
-  };
-
-  div.appendChild(r);
-  midias.appendChild(div);
-
-  const s=document.querySelector(\`.photo-slot[data-slot="${slotAtual}"]\`);
-  s.classList.add("filled");
-  s.innerText="";
-
-  slotAtual=null;
-  fotoInput.value="";
-};
-
-/* Música */
-const musicBox=document.getElementById("musicBox");
-const musicaInput=document.getElementById("musicaInput");
-const audio=document.getElementById("audioPlayer");
-const removeMusic=document.getElementById("removeMusic");
-
-musicBox.onclick=()=>{ if(!musicBox.classList.contains("disabled")) musicaInput.click(); };
-
-musicaInput.onchange=()=>{
-  audio.src=URL.createObjectURL(musicaInput.files[0]);
-  audio.style.display="block";
-  musicBox.classList.add("disabled");
-  removeMusic.style.display="block";
-};
-
-removeMusic.onclick=()=>{
-  audio.src="";
-  audio.style.display="none";
-  musicaInput.value="";
-  musicBox.classList.remove("disabled");
-  removeMusic.style.display="none";
-};
-
-/* Compra */
+/* =====================
+   COMPRA
+===================== */
 document.getElementById("btnComprar").onclick=async()=>{
   if(!nomeInput.value||!msgInput.value||!cartaInput.value||!dataInput.value){
     alert("Preencha todos os campos");
@@ -419,14 +270,15 @@ document.getElementById("btnComprar").onclick=async()=>{
       nome:nomeInput.value,
       mensagem:msgInput.value,
       carta:cartaInput.value,
-      dataInicio:dataInput.value,
-      fotos:fotos,
-      musica:audio.src||null
+      dataInicio:dataInput.value
     })
   });
 
   const data=await res.json();
-  if(!data.payment_id){alert("Erro ao criar pagamento");return;}
+  if(!data.payment_id){
+    alert("Erro ao criar pagamento");
+    return;
+  }
 
   window.location.href=`/aguardando.html?payment_id=${data.payment_id}`;
 };
@@ -434,3 +286,5 @@ document.getElementById("btnComprar").onclick=async()=>{
 
 </body>
 </html>
+</html>
+
