@@ -65,25 +65,29 @@ app.post("/create-payment", async (req, res) => {
     }
 
     const mp = await axios.post(
-      "https://api.mercadopago.com/v1/payments",
-      {
-        transaction_amount: 9.99,
-        description: "Site Romântico Premium",
-        payment_method_id: "pix",
-        payer: { email: "cliente@site.com" },
-        metadata: {
-          nome: req.body.nome || "",
-          mensagem: req.body.mensagem || "",
-          carta: req.body.carta || ""
-        }
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${MP_ACCESS_TOKEN}`,
-          "Content-Type": "application/json"
-        }
-      }
-    );
+  "https://api.mercadopago.com/v1/payments",
+  {
+    transaction_amount: 9.99,
+    description: "Site Romântico Premium",
+    payment_method_id: "pix",
+    payer: {
+      email: "dionesantos747@gmail.com"
+    },
+    notification_url: `${req.protocol}://${req.get("host")}/webhook`,
+    metadata: {
+      nome: req.body.nome || "",
+      mensagem: req.body.mensagem || "",
+      carta: req.body.carta || ""
+    }
+  },
+  {
+    headers: {
+      Authorization: `Bearer ${MP_ACCESS_TOKEN}`,
+      "Content-Type": "application/json",
+      "X-Idempotency-Key": uuidv4()
+    }
+  }
+);
 
     await payments.insertOne({
   paymentId: String(mp.data.id),
