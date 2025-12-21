@@ -149,17 +149,38 @@ app.post("/webhook", async (req, res) => {
    CHECK PAGAMENTO
 ===================== */
 app.get("/check-payment", async (req, res) => {
-  if (!payments) {
-    return res.json({ status: "pending" });
+  try {
+    const paymentId = String(req.query.payment_id);
+
+    // consulta direta ao Mercado Pago (fonte da verdade)
+    const mp = await axios.get(
+      `https://api.mercadopago.com/v1/payments/${paymentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${MP_ACCESS_TOKEN}`
+        }
+      }
+    );
+
+    if (mp.data.status === "approved") {
+      // atualiza banco (se existir)
+      if (payments) {
+        await payments.updateOne(
+          { paymentId },
+          { $set: { status: "approved" } },
+          { upsert: true }
+        );
+      }
+
+      return res.json({ status: "approved" });
+    }
+
+    res.json({ status: "pending" });
+
+  } catch (err) {
+    console.error("Erro check-payment:", err.message);
+    res.json({ status: "pending" });
   }
-
-  const pay = await payments.findOne({
-    paymentId: String(req.query.payment_id)
-  });
-
-  res.json({
-    status: pay?.status || "pending"
-  });
 });
 
 /* =====================
