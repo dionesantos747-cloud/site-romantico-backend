@@ -47,12 +47,16 @@ let users = null;
    MONGODB
 ===================== */
 (async () => {
-  const client = new MongoClient(MONGO_URI);
-  await client.connect();
-  const db = client.db("site-romantico");
-  payments = db.collection("payments");
-  users = db.collection("users");
-  console.log("✅ MongoDB conectado");
+  try {
+    const client = new MongoClient(MONGO_URI);
+    await client.connect();
+    const db = client.db("site-romantico");
+    payments = db.collection("payments");
+    users = db.collection("users");
+    console.log("✅ MongoDB conectado");
+  } catch (err) {
+    console.error("❌ Erro MongoDB:", err.message);
+  }
 })();
 
 /* =====================
