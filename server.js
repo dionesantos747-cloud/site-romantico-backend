@@ -11,64 +11,52 @@ const { MongoClient } = require("mongodb");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-/* =====================
-   MIDDLEWARES
-===================== */
+/* ===== Middlewares ===== */
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
-
-/* =====================
-   VARIÁVEIS DE AMBIENTE
-===================== */
-const MONGO_URI = process.env.MONGO_URI;
-const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN;
-
-/* ⚠️ NÃO ENCERRA O SERVIDOR (evita erro no Render) */
-if (!MONGO_URI) console.warn("⚠️ MONGO_URI não definida");
-if (!MP_ACCESS_TOKEN) console.warn("⚠️ MP_ACCESS_TOKEN não definido");
-
-/* =====================
-   MONGODB
-===================== */
-let usersCollection = null;
-
-(async () => {
-  try {
-    if (!MONGO_URI) return;
-
-    const client = new MongoClient(MONGO_URI);
-    await client.connect();
-
-    const db = client.db("site-romantico");
-    usersCollection = db.collection("users");
-
-    console.log("✅ MongoDB conectado");
-  } catch (err) {
-    console.error("❌ Erro MongoDB:", err.message);
-  }
-})();
-
-/* =====================
-   ROTAS
-===================== */
 
 /* Página inicial */
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public/editor.html"));
 });
 
-/* Criar pagamento PIX */
+/* ===== Variáveis ===== */
+const MONGO_URI = process.env.MONGO_URI;
+const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN;
+
+if (!MONGO_URI) console.warn("⚠️ MONGO_URI não definida");
+if (!MP_ACCESS_TOKEN) console.warn("⚠️ MP_ACCESS_TOKEN não definido");
+
+/* ===== MongoDB ===== */
+let payments = null;
+let users = null;
+
+(async () => {
+  if (!MONGO_URI) return;
+  const client = new MongoClient(MONGO_URI);
+  await client.connect();
+  const db = client.db("site-romantico");
+  payments = db.collection("payments");
+  users = db.collection("users");
+  console.log("✅ MongoDB conectado");
+})();
+
+/* ===== Criar pagamento ===== */
 app.post("/create-payment", async (req, res) => {
   try {
-    const payment = await axios.post(
+    const mp = await axios.post(
       "https://api.mercadopago.com/v1/payments",
       {
         transaction_amount: 9.99,
-        description: "Site Romântico Premium 💖",
+        description: "Site Romântico Premium",
         payment_method_id: "pix",
-        payer: { email: "pagamento@site-romantico.com" },
-        metadata: req.body
+        payer: { email: "cliente@site-romantico.com" },
+        metadata: {
+          nome: req.body.nome,
+          mensagem: req.body.mensagem,
+          carta: req.body.carta
+        }
       },
       {
         headers: {
@@ -78,24 +66,30 @@ app.post("/create-payment", async (req, res) => {
       }
     );
 
-    const pix = payment.data.point_of_interaction.transaction_data;
-
-    res.json({
-      payment_id: payment.data.id,
-      qr_code: pix.qr_code_base64,
-      qr_code_text: pix.qr_code
+    await payments.insertOne({
+      paymentId: String(mp.data.id),
+      status: "pending",
+      metadata: mp.data.metadata,
+      createdAt: new Date()
     });
 
-  } catch (err) {
-    console.error("❌ Erro pagamento:", err.message);
+    const pix = mp.data.point_of_interaction.transaction_data;
+
+    res.json({
+      payment_id: String(mp.data.id),
+      qr_code: pix.qr_code_base64
+    });
+
+  } catch (e) {
+    console.error(e.message);
     res.status(500).json({ error: "Erro ao criar pagamento" });
   }
 });
 
-/* Webhook Mercado Pago */
+/* ===== Webhook ===== */
 app.post("/webhook", async (req, res) => {
   try {
-    if (!usersCollection) return res.sendStatus(200);
+    if (!payments) return res.sendStatus(200);
 
     const paymentId = req.body?.data?.id;
     if (!paymentId) return res.sendStatus(200);
@@ -105,61 +99,61 @@ app.post("/webhook", async (req, res) => {
       { headers: { Authorization: `Bearer ${MP_ACCESS_TOKEN}` } }
     );
 
-    if (mp.data.status !== "approved") return res.sendStatus(200);
+    if (mp.data.status === "approved") {
+      await payments.updateOne(
+        { paymentId: String(paymentId) },
+        { $set: { status: "approved" } }
+      );
+    }
 
-    const exists = await usersCollection.findOne({ paymentId });
-    if (exists) return res.sendStatus(200);
-
-    const id = uuidv4();
-    const link = `${req.protocol}://${req.get("host")}/user.html?id=${id}`;
-    const qrData = await QRCode.toDataURL(link);
-
-    await usersCollection.insertOne({
-      _id: id,
-      paymentId,
-      ...mp.data.metadata,
-      pago: true,
-      qrData,
-      createdAt: new Date()
-    });
-
-    console.log("💖 Pagamento aprovado | Site criado:", id);
     res.sendStatus(200);
-
-  } catch (err) {
-    console.error("❌ Webhook erro:", err.message);
+  } catch {
     res.sendStatus(200);
   }
 });
 
-/* Verificar pagamento (aguardando.html) */
+/* ===== Verificar pagamento ===== */
 app.get("/check-payment", async (req, res) => {
-  if (!usersCollection) return res.json({ status: "pending" });
+  if (!payments) return res.json({ status: "pending" });
 
-  const user = await usersCollection.findOne({
-    paymentId: Number(req.query.payment_id)
+  const pay = await payments.findOne({
+    paymentId: String(req.query.payment_id)
   });
 
-  res.json({ status: user ? "approved" : "pending" });
+  res.json({ status: pay?.status || "pending" });
 });
 
-/* Site do usuário */
-app.get("/user.html", async (req, res) => {
-  if (!usersCollection) return res.send("Serviço indisponível");
-  const user = await usersCollection.findOne({ _id: req.query.id });
-  if (!user) return res.status(404).send("Site não encontrado");
-  res.sendFile(path.join(__dirname, "public/user.html"));
-});
-
-/* Página de sucesso */
+/* ===== Success ===== */
 app.get("/success.html", async (req, res) => {
-  if (!usersCollection) return res.send("Processando pagamento...");
-  const user = await usersCollection.findOne({
-    paymentId: Number(req.query.payment_id)
+  if (!payments || !users) {
+    return res.sendFile(path.join(__dirname, "public/aguardando.html"));
+  }
+
+  const pay = await payments.findOne({
+    paymentId: String(req.query.payment_id),
+    status: "approved"
   });
+
+  if (!pay) {
+    return res.sendFile(path.join(__dirname, "public/aguardando.html"));
+  }
+
+  let user = await users.findOne({ paymentId: pay.paymentId });
 
   if (!user) {
-    return res.sendFile(path.join(__dirname, "public/aguardando.html"));
+    const id = uuidv4();
+    const link = `${req.protocol}://${req.get("host")}/user.html?id=${id}`;
+    const qrData = await QRCode.toDataURL(link);
+
+    user = {
+      _id: id,
+      paymentId: pay.paymentId,
+      ...pay.metadata,
+      qrData,
+      createdAt: new Date()
+    };
+
+    await users.insertOne(user);
   }
 
   let html = fs.readFileSync(
@@ -169,17 +163,20 @@ app.get("/success.html", async (req, res) => {
 
   html = html
     .replace("{{QR_CODE}}", `<img src="${user.qrData}">`)
-    .replace(
-      "{{LINK}}",
-      `${req.protocol}://${req.get("host")}/user.html?id=${user._id}`
-    );
+    .replace("{{LINK}}", `${req.protocol}://${req.get("host")}/user.html?id=${user._id}`);
 
   res.send(html);
 });
 
-/* =====================
-   START SERVER (RENDER OK)
-===================== */
+/* ===== User ===== */
+app.get("/user.html", async (req, res) => {
+  if (!users) return res.send("Serviço indisponível");
+  const user = await users.findOne({ _id: req.query.id });
+  if (!user) return res.status(404).send("Site não encontrado");
+  res.sendFile(path.join(__dirname, "public/user.html"));
+});
+
+/* ===== Start ===== */
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`🚀 Server rodando na porta ${PORT}`);
+  console.log("🚀 Servidor rodando");
 });
