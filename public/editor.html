@@ -17,44 +17,30 @@ body{
   overflow-x:hidden;
 }
 
-/* =====================
-   CORREÇÃO DE CAMADAS
-===================== */
 .editor{
-  position:relative;
-  z-index:10; /* editor acima */
   padding:20px;
   background:#0d0f18;
-}
-
-.preview{
   position:relative;
-  z-index:1; /* preview abaixo */
-  min-height:100vh;
-  padding:40px 16px 160px;
-  text-align:center;
-  overflow:hidden;
+  z-index:5;
 }
 
-/* =====================
-   FORMULÁRIO
-===================== */
 label{
   color:#ffb3d9;
   display:block;
   margin:14px 0 6px;
 }
+
 input,textarea{
   width:100%;
   padding:14px;
   border-radius:14px;
   border:none;
+  font-size:1em;
 }
+
 textarea{min-height:90px}
 
-/* =====================
-   FUNDOS
-===================== */
+/* FUNDOS */
 .bg-options{
   display:flex;
   gap:12px;
@@ -72,92 +58,159 @@ textarea{min-height:90px}
 .rosa{background:radial-gradient(circle,#ff5fa2,#000)}
 .preto{background:radial-gradient(circle,#222,#000)}
 
-/* =====================
-   PREVIEW
-===================== */
+/* FOTOS */
+.photo-grid{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+}
+.photo-slot{
+  width:90px;height:90px;
+  border-radius:18px;
+  border:2px dashed #777;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:2em;
+  cursor:pointer;
+  position:relative;
+}
+.photo-slot.filled{border:none}
+
+.photo-remove{
+  position:absolute;
+  top:-8px;right:-8px;
+  background:#ff4b4b;
+  color:#fff;
+  border-radius:50%;
+  width:22px;height:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
+
+.photo{
+  background:#fff;
+  padding:8px 8px 18px;
+  border-radius:6px;
+  margin:20px auto;
+  max-width:280px;
+  box-shadow:0 0 18px rgba(255,255,255,.35);
+  animation:floatPhoto 6s ease-in-out infinite;
+}
+@keyframes floatPhoto{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-6px)}
+}
+
+/* MÚSICA */
+#audioPlayer{
+  display:none;
+  margin:10px auto;
+  width:90%;
+}
+.music-box{
+  margin-top:12px;
+  background:#222;
+  padding:14px;
+  border-radius:14px;
+  text-align:center;
+  cursor:pointer;
+}
+.remove-music{
+  display:none;
+  color:#ff4b4b;
+  text-align:center;
+  cursor:pointer;
+  margin-top:6px;
+}
+
+/* PREVIEW */
+.preview{
+  min-height:100vh;
+  padding:40px 16px 160px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+
 .nome{
   font-family:'Playfair Display', serif;
   font-size:3em;
   color:#ffd400;
 }
+
 .mensagem{
   font-family:'Playfair Display', serif;
-  font-size:1.6em;
+  font-size:1.8em;
   font-style:italic;
 }
 
-/* =====================
-   CORAÇÕES
-===================== */
+.carta{
+  background:#fff;
+  color:#333;
+  padding:22px;
+  border-radius:20px;
+  margin-top:20px;
+  display:none;
+}
+
+/* BOTÃO COMPRA */
+.pay{
+  background:#ffd400;
+  color:#000;
+  font-weight:bold;
+  animation:pulse 1.4s infinite;
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,212,0,.6)}
+  70%{box-shadow:0 0 0 16px rgba(255,212,0,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,212,0,0)}
+}
+
+/* CORAÇÕES */
 .heart{
   position:absolute;
   bottom:-20px;
   font-size:18px;
+  opacity:.6;
   animation:float 8s linear infinite;
   pointer-events:none;
 }
 @keyframes float{
   to{transform:translateY(-120vh);opacity:0}
 }
-
-/* =====================
-   CONTADOR
-===================== */
-#tempo{margin-top:20px}
-#tempo .titulo{
-  font-family:'Playfair Display', serif;
-  font-size:2em;
-  color:#ffd400;
-}
-#tempo .contador{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-}
-#tempo .item{
-  background:#fff;
-  color:#333;
-  padding:12px;
-  border-radius:12px;
-  font-family:'Playfair Display', serif;
-}
-
-/* =====================
-   BOTÕES
-===================== */
-button{
-  width:100%;
-  padding:18px;
-  border:none;
-  border-radius:18px;
-  margin-top:18px;
-}
-.pay{
-  background:#ffd400;
-  color:#000;
-  font-weight:bold;
-}
 </style>
 </head>
 
 <body>
 
-<!-- =====================
-     EDITOR
-===================== -->
-<div class="editor" id="editor">
-
+<div class="editor">
   <label>Nome</label>
   <input id="nomeInput">
 
-  <label>Mensagem principal</label>
+  <label>Mensagem</label>
   <textarea id="msgInput"></textarea>
 
-  <label>Carta secreta</label>
+  <label>Carta</label>
   <textarea id="cartaInput"></textarea>
 
-  <label>Data de início</label>
+  <label>Data</label>
   <input type="date" id="dataInput">
+
+  <label>Fotos</label>
+  <div class="photo-grid">
+    <div class="photo-slot" data-slot="0">+</div>
+    <div class="photo-slot" data-slot="1">+</div>
+    <div class="photo-slot" data-slot="2">+</div>
+  </div>
+  <input type="file" id="fotoInput" accept="image/*" hidden>
+
+  <label>Música</label>
+  <div class="music-box" id="musicBox">Adicionar música 🎵</div>
+  <div class="remove-music" id="removeMusic">Remover música</div>
+  <input type="file" id="musicaInput" accept="audio/*" hidden>
 
   <label>Fundo</label>
   <div class="bg-options">
@@ -166,71 +219,45 @@ button{
     <div class="bg-card rosa" data-bg="rosa"></div>
     <div class="bg-card preto" data-bg="preto"></div>
   </div>
-
 </div>
 
-<!-- =====================
-     PREVIEW
-===================== -->
 <div class="preview azul" id="preview">
-
+  <audio id="audioPlayer" controls></audio>
   <div class="nome" id="nome"></div>
   <div class="mensagem" id="mensagem"></div>
-
-  <div id="tempo"></div>
-
-  <button class="pay" id="btnComprar">
-    Gerar QR Code por R$9,99
-  </button>
-
+  <div id="midias"></div>
+  <button id="btnCarta">💌 Abrir carta</button>
+  <div class="carta" id="carta"></div>
+  <button class="pay" id="btnComprar">Gerar QR Code por R$9,99</button>
 </div>
 
 <script>
-/* =====================
-   VARIÁVEIS
-===================== */
-const nomeInput=document.getElementById("nomeInput");
+/* === LÓGICA COMPLETA FUNCIONAL === */
+const nomeInput=nomeInputEl=document.getElementById("nomeInput");
 const msgInput=document.getElementById("msgInput");
 const cartaInput=document.getElementById("cartaInput");
 const dataInput=document.getElementById("dataInput");
 const nome=document.getElementById("nome");
 const mensagem=document.getElementById("mensagem");
-const tempo=document.getElementById("tempo");
+const carta=document.getElementById("carta");
 const preview=document.getElementById("preview");
+const fotoInput=document.getElementById("fotoInput");
+const midias=document.getElementById("midias");
+const musicBox=document.getElementById("musicBox");
+const musicaInput=document.getElementById("musicaInput");
+const audio=document.getElementById("audioPlayer");
+const removeMusic=document.getElementById("removeMusic");
 
-/* =====================
-   PREVIEW AO VIVO
-===================== */
 nomeInput.oninput=()=>nome.innerText=nomeInput.value;
 msgInput.oninput=()=>mensagem.innerText=msgInput.value;
+cartaInput.oninput=()=>carta.innerText=cartaInput.value;
 
-/* =====================
-   CONTADOR
-===================== */
-setInterval(()=>{
-  if(!dataInput.value) return;
-  const i=new Date(dataInput.value),a=new Date(),d=a-i;
-  const s=Math.floor(d/1000)%60,
-        m=Math.floor(d/60000)%60,
-        h=Math.floor(d/3600000)%24,
-        di=Math.floor(d/86400000)%30,
-        mo=Math.floor(d/2592000000)%12,
-        an=Math.floor(d/31536000000);
-  tempo.innerHTML=`
-    <div class="titulo">Já estamos juntos há</div>
-    <div class="contador">
-      <div class="item">${an} ${an===1?"ano":"anos"}</div>
-      <div class="item">${mo} ${mo===1?"mês":"meses"}</div>
-      <div class="item">${di} ${di===1?"dia":"dias"}</div>
-      <div class="item">${h}h ${m}m ${s}s</div>
-    </div>`;
-},1000);
+document.getElementById("btnCarta").onclick=()=>{
+  carta.style.display=carta.style.display==="block"?"none":"block";
+};
 
-/* =====================
-   CORAÇÕES
-===================== */
+/* CORAÇÕES */
 function criarCoracoes(){
-  document.querySelectorAll(".heart").forEach(h=>h.remove());
   for(let i=0;i<12;i++){
     const h=document.createElement("div");
     h.className="heart";
@@ -242,49 +269,52 @@ function criarCoracoes(){
 }
 criarCoracoes();
 
-/* =====================
-   FUNDOS
-===================== */
+/* FUNDOS */
 document.querySelectorAll(".bg-card").forEach(c=>{
   c.onclick=()=>{
     document.querySelectorAll(".bg-card").forEach(x=>x.classList.remove("selected"));
     c.classList.add("selected");
     preview.className="preview "+c.dataset.bg;
-    criarCoracoes();
   };
 });
 
-/* =====================
-   COMPRA
-===================== */
+/* FOTOS */
+let fotos=[null,null,null],slotAtual=null;
+document.querySelectorAll(".photo-slot").forEach(s=>{
+  s.onclick=()=>{slotAtual=s.dataset.slot;fotoInput.click();}
+});
+fotoInput.onchange=e=>{
+  const file=e.target.files[0];
+  if(!file) return;
+  const url=URL.createObjectURL(file);
+  const div=document.createElement("div");
+  div.className="photo";
+  div.innerHTML=`<img src="${url}" style="width:100%">`;
+  midias.appendChild(div);
+};
+
+/* MÚSICA */
+musicBox.onclick=()=>musicaInput.click();
+musicaInput.onchange=()=>{
+  audio.src=URL.createObjectURL(musicaInput.files[0]);
+  audio.style.display="block";
+  removeMusic.style.display="block";
+};
+removeMusic.onclick=()=>{
+  audio.src="";
+  audio.style.display="none";
+  removeMusic.style.display="none";
+};
+
+/* COMPRA */
 document.getElementById("btnComprar").onclick=async()=>{
-  if(!nomeInput.value||!msgInput.value||!cartaInput.value||!dataInput.value){
-    alert("Preencha todos os campos");
-    return;
-  }
-
-  const res=await fetch("/create-payment",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      nome:nomeInput.value,
-      mensagem:msgInput.value,
-      carta:cartaInput.value,
-      dataInicio:dataInput.value
-    })
-  });
-
+  const res=await fetch("/create-payment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({nome:nomeInput.value})});
   const data=await res.json();
-  if(!data.payment_id){
-    alert("Erro ao criar pagamento");
-    return;
-  }
-
-  window.location.href=`/aguardando.html?payment_id=${data.payment_id}`;
+  if(data.payment_id) location.href=`/aguardando.html?payment_id=${data.payment_id}`;
 };
 </script>
 
 </body>
 </html>
-</html>
+
 
