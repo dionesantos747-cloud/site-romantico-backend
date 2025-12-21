@@ -4,28 +4,14 @@
 <meta charset="UTF-8">
 <title>Site Romântico</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-
-<!-- Forçar modo claro -->
-<meta name="color-scheme" content="light only">
-
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
 
 <style>
-/* =====================
-   FORÇAR CORES FIXAS
-===================== */
-html, body {
-  background-color: #000 !important;
-  color: #fff !important;
-  -webkit-text-fill-color: #fff !important;
-}
-h1, p, label, input, textarea, button, .photo-slot, .bg-card {
-  color: inherit !important;
-  background-color: inherit !important;
-}
 *{box-sizing:border-box}
 body{
   margin:0;
+  background:#000;
+  color:#fff;
   font-family:Arial,sans-serif;
   overflow-x:hidden;
   touch-action:manipulation;
@@ -337,11 +323,196 @@ button{
 </div>
 
 <script>
-// ... Aqui você mantém todo o JS atual do editor
+const nomeInput = document.getElementById("nomeInput");
+const msgInput = document.getElementById("msgInput");
+const cartaInput = document.getElementById("cartaInput");
+const dataInput = document.getElementById("dataInput");
+const nome = document.getElementById("nome");
+const mensagem = document.getElementById("mensagem");
+const carta = document.getElementById("carta");
+const tempo = document.getElementById("tempo");
+const preview = document.getElementById("preview");
+
+/* Atualizar preview em tempo real */
+nomeInput.oninput = () => nome.innerText = nomeInput.value;
+msgInput.oninput = () => mensagem.innerText = msgInput.value;
+cartaInput.oninput = () => carta.innerText = cartaInput.value;
+
+/* CONTADOR ESTILIZADO COM SINGULAR/PLURAL */
+setInterval(()=>{
+  if(!dataInput.value) return;
+  const inicio = new Date(dataInput.value);
+  const agora = new Date();
+  const diff = agora - inicio;
+  if(diff < 0) return;
+  const s = Math.floor(diff/1000)%60;
+  const m = Math.floor(diff/60000)%60;
+  const h = Math.floor(diff/3600000)%24;
+  const d = Math.floor(diff/86400000)%30;
+  const mo = Math.floor(diff/2592000000)%12;
+  const a = Math.floor(diff/31536000000);
+
+  const anoText = a===1 ? "ano" : "anos";
+  const mesText = mo===1 ? "mês" : "meses";
+  const diaText = d===1 ? "dia" : "dias";
+
+  tempo.innerHTML = `
+    <span class="titulo">Já estamos juntos há</span>
+    <div class="contador">
+      <div class="item">${a} ${anoText}</div>
+      <div class="item">${mo} ${mesText}</div>
+      <div class="item">${d} ${diaText}</div>
+      <div class="item">${h}h ${m}m ${s}s</div>
+    </div>
+  `;
+},1000);
+
+/* CARTA */
+const btnCarta = document.getElementById("btnCarta");
+btnCarta.onclick = () => {
+  carta.style.display = carta.style.display==="block"?"none":"block";
+  btnCarta.innerText = carta.style.display==="block"?"❌ Fechar carta":"💌 Abrir carta";
+};
+
+/* CORAÇÕES */
+function criarCoracoes(){
+  document.querySelectorAll(".heart").forEach(h => h.remove());
+  for(let i=0;i<12;i++){
+    const h=document.createElement("div");
+    h.className="heart";
+    h.innerText="❤️";
+    h.style.left = Math.random()*100+"%";
+    h.style.animationDuration = 6+Math.random()*6+"s";
+    preview.appendChild(h);
+  }
+}
+criarCoracoes();
+
+/* FUNDOS */
+document.querySelectorAll(".bg-card").forEach(c=>{
+  c.onclick = () => {
+    document.querySelectorAll(".bg-card").forEach(x=>x.classList.remove("selected"));
+    c.classList.add("selected");
+    preview.className = "preview " + c.dataset.bg;
+    criarCoracoes();
+  }
+});
+
+/* FOTOS */
+let fotos=[null,null,null];
+let slotAtual=null;
+const fotoInput = document.getElementById("fotoInput");
+const midias = document.getElementById("midias");
+
+document.querySelectorAll(".photo-slot").forEach(slot=>{
+  slot.onclick = ()=>{
+    if(slot.classList.contains("filled")) return;
+    slotAtual = slot.dataset.slot;
+    fotoInput.click();
+  };
+});
+
+fotoInput.onchange = e=>{
+  const file = e.target.files[0];
+  if(!file || slotAtual===null) return;
+
+  const url = URL.createObjectURL(file);
+  fotos[slotAtual] = url;
+
+  const div = document.createElement("div");
+  div.className = "photo";
+  div.innerHTML = `<img src="${url}" style="width:100%">`;
+
+  const slotIndex = slotAtual;
+  const remove = document.createElement("div");
+  remove.className = "photo-remove";
+  remove.innerText = "×";
+  remove.onclick = ()=>{
+    URL.revokeObjectURL(url);
+    fotos[slotIndex] = null;
+    div.remove();
+    const slot = document.querySelector(`.photo-slot[data-slot="${slotIndex}"]`);
+    slot.classList.remove("filled");
+    slot.innerText = "+";
+  };
+
+  div.appendChild(remove);
+  midias.appendChild(div);
+
+  const slot = document.querySelector(`.photo-slot[data-slot="${slotAtual}"]`);
+  slot.classList.add("filled");
+  slot.innerText = "";
+
+  slotAtual = null;
+  fotoInput.value = "";
+};
+
+/* MÚSICA */
+const musicBox = document.getElementById("musicBox");
+const musicaInput = document.getElementById("musicaInput");
+const audio = document.getElementById("audioPlayer");
+const removeMusic = document.getElementById("removeMusic");
+
+musicBox.onclick = ()=>{
+  if(musicBox.classList.contains("disabled")) return;
+  musicaInput.click();
+};
+
+musicaInput.onchange = ()=>{
+  if(!musicaInput.files[0]) return;
+  audio.src = URL.createObjectURL(musicaInput.files[0]);
+  audio.style.display = "block";
+  musicBox.innerText = "🎶 Música selecionada";
+  musicBox.classList.add("disabled");
+  removeMusic.style.display = "block";
+};
+
+removeMusic.onclick = ()=>{
+  audio.src = "";
+  audio.style.display = "none";
+  musicaInput.value = "";
+  musicBox.innerText = "Adicionar música 🎵";
+  musicBox.classList.remove("disabled");
+  removeMusic.style.display = "none";
+};
+
+/* COMPRA E BLOQUEIO */
+document.getElementById("btnComprar").onclick = ()=>{
+  const campos = [nomeInput,msgInput,cartaInput,dataInput];
+  let erro = false;
+
+  campos.forEach(c=>{
+    const err = c.nextElementSibling;
+    if(!c.value){
+      c.classList.add("error");
+      err.style.display="block";
+      if(!erro) c.scrollIntoView({behavior:"smooth"});
+      erro = true;
+    } else {
+      c.classList.remove("error");
+      err.style.display="none";
+    }
+  });
+  if(erro) return;
+
+  window.open("https://www.mercadopago.com.br/payment-link/v1/go?link-id=cd18cc0f-3041-4781-8b63-353ccce8c504","_blank");
+
+  // Bloquear editor
+  document.getElementById("editor").querySelectorAll("input, textarea, .photo-slot, .bg-card, .music-box").forEach(el=>{
+    el.disabled = true;
+    el.style.cursor = "not-allowed";
+    el.onclick = (e)=>e.preventDefault();
+  });
+  fotoInput.disabled = true;
+  musicaInput.disabled = true;
+
+  alert("Editor bloqueado após pagamento. Obrigado! 💖");
+};
 </script>
 
 </body>
 </html>
+
 
 
 
