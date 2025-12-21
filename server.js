@@ -75,10 +75,13 @@ app.post("/create-payment", async (req, res) => {
     },
     notification_url: `${req.protocol}://${req.get("host")}/webhook`,
     metadata: {
-      nome: req.body.nome || "",
-      mensagem: req.body.mensagem || "",
-      carta: req.body.carta || ""
-    }
+  nome: req.body.nome || "",
+  mensagem: req.body.mensagem || "",
+  carta: req.body.carta || "",
+  dataInicio: req.body.dataInicio || null,
+  fotos: req.body.fotos || [],
+  musica: req.body.musica || null
+}
   },
   {
     headers: {
