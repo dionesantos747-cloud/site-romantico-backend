@@ -473,14 +473,17 @@ btnComprar.onclick = async () => {
 
   // pagamento
   const res = await fetch("/create-payment", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      nome: nomeInput.value,
-      mensagem: msgInput.value,
-      carta: cartaInput.value
-    })
-  });
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    nome: nomeInput.value,
+    mensagem: msgInput.value,
+    carta: cartaInput.value,
+    dataInicio: dataInput.value,
+    fotos: fotos,        // array que você já usa
+    musica: audio.src || null
+  })
+});
 
   const data = await res.json();
 
@@ -494,6 +497,7 @@ window.location.href =
 };  
 </script>  </body>  
 </html>
+
 
 
 
