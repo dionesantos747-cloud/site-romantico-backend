@@ -221,42 +221,41 @@ app.get("/check-payment", async (req, res) => {
 
     const mp = await axios.get(
       `https://api.mercadopago.com/v1/payments/${paymentId}`,
+      { headers: { Authorization: `Bearer ${MP_ACCESS_TOKEN}` } }
+    );
+
+    if (mp.data.status !== "approved") {
+      return res.json({ status: "pending" });
+    }
+
+    // 🔎 busca pagamento
+    const pay = await payments.findOne({ paymentId });
+
+    if (!pay) {
+      return res.json({ status: "pending" });
+    }
+
+    // 🔎 ativa usuário SE ainda não estiver ativo
+    await users.updateOne(
+      { _id: pay.userId },
       {
-        headers: { Authorization: `Bearer ${MP_ACCESS_TOKEN}` }
+        $set: {
+          status: "approved",
+          paymentId,
+          activatedAt: new Date()
+        }
       }
     );
 
-    if (mp.data.status === "approved") {
+    await payments.updateOne(
+      { paymentId },
+      { $set: { status: "approved" } }
+    );
 
-      // 🔥 GARANTE pagamento aprovado no banco
-      await payments.updateOne(
-        { paymentId },
-        { $set: { status: "approved", approvedAt: new Date() } },
-        { upsert: true }
-      );
-
-      // 🔥 GARANTE usuário ativado
-      const userId = mp.data.metadata?.userId;
-      if (userId) {
-        await users.updateOne(
-          { _id: userId },
-          {
-            $set: {
-              status: "approved",
-              paymentId,
-              activatedAt: new Date()
-            }
-          }
-        );
-      }
-
-      return res.json({ status: "approved" });
-    }
-
-    res.json({ status: "pending" });
+    return res.json({ status: "approved" });
 
   } catch (err) {
-    console.error("check-payment:", err.message);
+    console.error("check-payment erro:", err.message);
     res.json({ status: "pending" });
   }
 });
