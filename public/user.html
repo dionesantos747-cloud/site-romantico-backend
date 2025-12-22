@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Site Romântico</title>
+<title>Nosso Amor 💖</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
@@ -11,36 +11,43 @@
 
 <div class="preview azul" id="preview">
   <audio id="audioPlayer" controls style="display:none;"></audio>
+
   <div class="nome" id="nome"></div>
   <div class="mensagem" id="mensagem"></div>
   <div id="midias"></div>
+
   <div id="tempo"></div>
+
   <button id="btnCarta">💌 Abrir carta</button>
   <div class="carta" id="carta"></div>
 </div>
 
-<script src="js/main.js"></script>
 <script>
-const urlParams = new URLSearchParams(window.location.search);
-const id = urlParams.get("id");
+/* =====================
+   CARREGAR DADOS DO USUÁRIO
+===================== */
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
 
-// Carregar dados do usuário via JSON
-fetch("/data/users.json")
+if(!id){
+  document.body.innerHTML = "<h2>ID inválido</h2>";
+  throw new Error("ID ausente");
+}
+
+fetch(`/user-data?id=${id}`)
   .then(res => res.json())
-  .then(users => {
-    const data = users[id];
-    if(!data) return alert("Usuário não encontrado");
+  .then(data => {
 
-    if(!data.pago) {
+    if(!data || !data.nome){
       document.body.innerHTML = `
-        <div style="text-align:center;font-family:'Playfair Display', serif;color:#fff;padding:40px;">
-          <h1>Pagamento ainda não confirmado 💖</h1>
-          <p>Assim que aprovado, você poderá acessar seu site personalizado.</p>
+        <div style="text-align:center;color:white;padding:40px">
+          <h1>Site não encontrado 💔</h1>
+          <p>Este link pode estar incorreto ou expirado.</p>
         </div>`;
       return;
     }
 
-    // Exibir informações do usuário
+    // ===== ELEMENTOS =====
     const nomeEl = document.getElementById("nome");
     const msgEl = document.getElementById("mensagem");
     const cartaEl = document.getElementById("carta");
@@ -48,54 +55,78 @@ fetch("/data/users.json")
     const audio = document.getElementById("audioPlayer");
     const tempoEl = document.getElementById("tempo");
 
+    // ===== TEXTO =====
     nomeEl.innerText = data.nome;
     msgEl.innerText = data.mensagem;
     cartaEl.innerText = data.carta;
 
-    data.fotos.forEach(f => {
-      if(f){
-        const div = document.createElement("div");
-        div.className = "photo";
-        div.innerHTML = `<img src="${f}" style="width:100%">`;
-        midiasEl.appendChild(div);
-      }
-    });
+    // ===== FOTOS =====
+    if(Array.isArray(data.fotos)){
+      data.fotos.forEach(url => {
+        if(url){
+          const div = document.createElement("div");
+          div.className = "photo";
+          div.innerHTML = `<img src="${url}" style="width:100%">`;
+          midiasEl.appendChild(div);
+        }
+      });
+    }
 
+    // ===== MÚSICA =====
     if(data.musica){
       audio.src = data.musica;
       audio.style.display = "block";
     }
 
-    // Contador de tempo juntos
-    const dataInput = { value: data.dataInicio };
-    setInterval(()=>{
-      if(!dataInput.value) return;
-      const inicio = new Date(dataInput.value);
-      const agora = new Date();
-      const diff = agora - inicio;
-      if(diff < 0) return;
-      const s = Math.floor(diff/1000)%60;
-      const m = Math.floor(diff/60000)%60;
-      const h = Math.floor(diff/3600000)%24;
-      const d = Math.floor(diff/86400000)%30;
-      const mo = Math.floor(diff/2592000000)%12;
-      const a = Math.floor(diff/31536000000);
-      const anoText = a===1?"ano":"anos";
-      const mesText = mo===1?"mês":"meses";
-      const diaText = d===1?"dia":"dias";
-      tempoEl.innerHTML = `<strong>Já estamos juntos há</strong><br>${a} ${anoText} • ${mo} ${mesText} • ${d} ${diaText}<br>${h}h ${m}m ${s}s`;
-    },1000);
+    // ===== CONTADOR =====
+    if(data.dataInicio){
+      setInterval(()=>{
+        const inicio = new Date(data.dataInicio);
+        const agora = new Date();
+        const diff = agora - inicio;
+        if(diff < 0) return;
+
+        const s = Math.floor(diff/1000)%60;
+        const m = Math.floor(diff/60000)%60;
+        const h = Math.floor(diff/3600000)%24;
+        const d = Math.floor(diff/86400000)%30;
+        const mo = Math.floor(diff/2592000000)%12;
+        const a = Math.floor(diff/31536000000);
+
+        const anoText = a===1?"ano":"anos";
+        const mesText = mo===1?"mês":"meses";
+        const diaText = d===1?"dia":"dias";
+
+        tempoEl.innerHTML = `
+          <span class="titulo">Já estamos juntos há</span>
+          <div class="contador">
+            <div class="item">${a} ${anoText}</div>
+            <div class="item">${mo} ${mesText}</div>
+            <div class="item">${d} ${diaText}</div>
+            <div class="item">${h}h ${m}m ${s}s</div>
+          </div>
+        `;
+      },1000);
+    }
   });
 
-// Carta secreta
+/* =====================
+   CARTA
+===================== */
 const btnCarta = document.getElementById("btnCarta");
 const carta = document.getElementById("carta");
+
 btnCarta.onclick = () => {
   carta.style.display = carta.style.display==="block"?"none":"block";
-  btnCarta.innerText = carta.style.display==="block"?"❌ Fechar carta":"💌 Abrir carta";
+  btnCarta.innerText =
+    carta.style.display==="block"
+      ? "❌ Fechar carta"
+      : "💌 Abrir carta";
 };
 
-// Corações animados
+/* =====================
+   CORAÇÕES
+===================== */
 function criarCoracoes(){
   document.querySelectorAll(".heart").forEach(h=>h.remove());
   for(let i=0;i<12;i++){
@@ -109,6 +140,7 @@ function criarCoracoes(){
 }
 criarCoracoes();
 </script>
+
 </body>
 </html>
 
