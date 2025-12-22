@@ -1,15 +1,22 @@
-/* ===== Variáveis Globais ===== */
+/* ===============================
+   DETECTA CONTEXTO
+================================ */
+const isEditor = document.getElementById("editor") !== null;
+
+/* ===============================
+   ELEMENTOS (COM SEGURANÇA)
+================================ */
 const nomeInput = document.getElementById("nomeInput");
 const msgInput = document.getElementById("msgInput");
 const cartaInput = document.getElementById("cartaInput");
 const dataInput = document.getElementById("dataInput");
+
 const nome = document.getElementById("nome");
 const mensagem = document.getElementById("mensagem");
 const carta = document.getElementById("carta");
 const tempo = document.getElementById("tempo");
+const preview = document.getElementById("preview");
 
-const fotos = [null,null,null];
-let slotAtual = null;
 const fotoInput = document.getElementById("fotoInput");
 const midias = document.getElementById("midias");
 
@@ -18,126 +25,208 @@ const musicaInput = document.getElementById("musicaInput");
 const audio = document.getElementById("audioPlayer");
 const removeMusic = document.getElementById("removeMusic");
 
-const preview = document.getElementById("preview");
+/* ===============================
+   ESTADO
+================================ */
+let fotos = [null, null, null];
+let slotAtual = null;
 
-/* ===== Inputs ===== */
-nomeInput.oninput = () => nome.innerText = nomeInput.value;
-msgInput.oninput = () => mensagem.innerText = msgInput.value;
-cartaInput.oninput = () => carta.innerText = cartaInput.value;
+/* ===============================
+   PREVIEW EM TEMPO REAL (EDITOR)
+================================ */
+if (isEditor) {
+  nomeInput.oninput = () => nome.innerText = nomeInput.value;
+  msgInput.oninput = () => mensagem.innerText = msgInput.value;
+  cartaInput.oninput = () => carta.innerText = cartaInput.value;
+}
 
-/* ===== Contador ===== */
-setInterval(()=>{
-  if(!dataInput.value) return;
-  const inicio = new Date(dataInput.value);
-  const agora = new Date();
-  const diff = agora-inicio;
-  if(diff<0) return;
-  const s=Math.floor(diff/1000)%60;
-  const m=Math.floor(diff/60000)%60;
-  const h=Math.floor(diff/3600000)%24;
-  const d=Math.floor(diff/86400000)%30;
-  const mo=Math.floor(diff/2592000000)%12;
-  const a=Math.floor(diff/31536000000);
-  const anoText = a===1?"ano":"anos";
-  const mesText = mo===1?"mês":"meses";
-  const diaText = d===1?"dia":"dias";
-  tempo.innerHTML=`<strong>Já estamos juntos há</strong><br>${a} ${anoText} • ${mo} ${mesText} • ${d} ${diaText}<br>${h}h ${m}m ${s}s`;
-},1000);
+/* ===============================
+   CONTADOR
+================================ */
+function iniciarContador(dataInicio) {
+  if (!dataInicio) return;
 
-/* ===== Carta ===== */
+  setInterval(() => {
+    const inicio = new Date(dataInicio);
+    const agora = new Date();
+    const diff = agora - inicio;
+    if (diff < 0) return;
+
+    const s = Math.floor(diff / 1000) % 60;
+    const m = Math.floor(diff / 60000) % 60;
+    const h = Math.floor(diff / 3600000) % 24;
+    const d = Math.floor(diff / 86400000) % 30;
+    const mo = Math.floor(diff / 2592000000) % 12;
+    const a = Math.floor(diff / 31536000000);
+
+    tempo.innerHTML = `
+      <span class="titulo">Já estamos juntos há</span>
+      <div class="contador">
+        <div class="item">${a} ${a === 1 ? "ano" : "anos"}</div>
+        <div class="item">${mo} ${mo === 1 ? "mês" : "meses"}</div>
+        <div class="item">${d} ${d === 1 ? "dia" : "dias"}</div>
+        <div class="item">${h}h ${m}m ${s}s</div>
+      </div>
+    `;
+  }, 1000);
+}
+
+if (isEditor && dataInput) {
+  dataInput.onchange = () => iniciarContador(dataInput.value);
+}
+
+/* ===============================
+   CARTA
+================================ */
 const btnCarta = document.getElementById("btnCarta");
-if(btnCarta){
-  btnCarta.onclick = ()=>{
-    carta.style.display = carta.style.display==="block"?"none":"block";
-    btnCarta.innerText = carta.style.display==="block"?"❌ Fechar carta":"💌 Abrir carta";
+if (btnCarta && carta) {
+  btnCarta.onclick = () => {
+    carta.style.display = carta.style.display === "block" ? "none" : "block";
+    btnCarta.innerText =
+      carta.style.display === "block" ? "❌ Fechar carta" : "💌 Abrir carta";
   };
 }
 
-/* ===== Corações ===== */
-function criarCoracoes(){
-  document.querySelectorAll(".heart").forEach(h=>h.remove());
-  for(let i=0;i<12;i++){
-    const h=document.createElement("div");
-    h.className="heart";
-    h.innerText="❤️";
-    h.style.left=Math.random()*100+"%";
-    h.style.animationDuration=6+Math.random()*6+"s";
+/* ===============================
+   CORAÇÕES
+================================ */
+function criarCoracoes() {
+  if (!preview) return;
+  document.querySelectorAll(".heart").forEach(h => h.remove());
+
+  for (let i = 0; i < 12; i++) {
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.innerText = "❤️";
+    h.style.left = Math.random() * 100 + "%";
+    h.style.animationDuration = 6 + Math.random() * 6 + "s";
     preview.appendChild(h);
   }
 }
 criarCoracoes();
 
-/* ===== Fundos ===== */
-document.querySelectorAll(".bg-card").forEach(c=>{
-  c.onclick=()=>{
-    document.querySelectorAll(".bg-card").forEach(x=>x.classList.remove("selected"));
+/* ===============================
+   FUNDOS (EDITOR)
+================================ */
+document.querySelectorAll(".bg-card").forEach(c => {
+  c.onclick = () => {
+    document.querySelectorAll(".bg-card").forEach(x => x.classList.remove("selected"));
     c.classList.add("selected");
-    preview.className="preview "+c.dataset.bg;
+    preview.className = "preview " + c.dataset.bg;
     criarCoracoes();
   };
 });
 
-/* ===== Fotos ===== */
-document.querySelectorAll(".photo-slot").forEach(slot=>{
-  slot.onclick=()=>{
-    if(slot.classList.contains("filled")) return;
-    slotAtual = slot.dataset.slot;
-    fotoInput.click();
+/* ===============================
+   FOTOS (EDITOR)
+================================ */
+if (isEditor) {
+  document.querySelectorAll(".photo-slot").forEach(slot => {
+    slot.onclick = () => {
+      if (slot.classList.contains("filled")) return;
+      slotAtual = slot.dataset.slot;
+      fotoInput.click();
+    };
+  });
+
+  fotoInput.onchange = e => {
+    const file = e.target.files[0];
+    if (!file || slotAtual === null) return;
+
+    const url = URL.createObjectURL(file);
+    fotos[slotAtual] = url;
+
+    const div = document.createElement("div");
+    div.className = "photo";
+    div.innerHTML = `<img src="${url}" style="width:100%">`;
+
+    const remove = document.createElement("div");
+    remove.className = "photo-remove";
+    remove.innerText = "×";
+    remove.onclick = () => {
+      URL.revokeObjectURL(url);
+      fotos[slotAtual] = null;
+      div.remove();
+      const s = document.querySelector(`.photo-slot[data-slot="${slotAtual}"]`);
+      s.classList.remove("filled");
+      s.innerText = "+";
+    };
+
+    div.appendChild(remove);
+    midias.appendChild(div);
+
+    const s = document.querySelector(`.photo-slot[data-slot="${slotAtual}"]`);
+    s.classList.add("filled");
+    s.innerText = "";
+
+    slotAtual = null;
+    fotoInput.value = "";
   };
-});
+}
 
-fotoInput.onchange = e => {
-  const file = e.target.files[0];
-  if(!file || slotAtual===null) return;
-  const url = URL.createObjectURL(file);
-  fotos[slotAtual] = url;
-
-  const div = document.createElement("div");
-  div.className="photo";
-  div.innerHTML=`<img src="${url}" style="width:100%">`;
-
-  const remove = document.createElement("div");
-  remove.className="photo-remove";
-  remove.innerText="×";
-  remove.onclick=()=>{
-    URL.revokeObjectURL(url);
-    fotos[slotAtual]=null;
-    div.remove();
-    const slotEl=document.querySelector(`.photo-slot[data-slot="${slotAtual}"]`);
-    slotEl.classList.remove("filled");
-    slotEl.innerText="+";
+/* ===============================
+   MÚSICA
+================================ */
+if (musicBox && musicaInput) {
+  musicBox.onclick = () => {
+    if (musicBox.classList.contains("disabled")) return;
+    musicaInput.click();
   };
-  div.appendChild(remove);
-  midias.appendChild(div);
 
-  const slotEl=document.querySelector(`.photo-slot[data-slot="${slotAtual}"]`);
-  slotEl.classList.add("filled");
-  slotEl.innerText="";
+  musicaInput.onchange = () => {
+    if (!musicaInput.files[0]) return;
+    audio.src = URL.createObjectURL(musicaInput.files[0]);
+    audio.style.display = "block";
+    musicBox.innerText = "🎶 Música selecionada";
+    musicBox.classList.add("disabled");
+    removeMusic.style.display = "block";
+  };
 
-  slotAtual=null;
-  fotoInput.value="";
-};
+  removeMusic.onclick = () => {
+    audio.src = "";
+    audio.style.display = "none";
+    musicaInput.value = "";
+    musicBox.innerText = "Adicionar música 🎵";
+    musicBox.classList.remove("disabled");
+    removeMusic.style.display = "none";
+  };
+}
 
-/* ===== Música ===== */
-musicBox.onclick=()=>{
-  if(musicBox.classList.contains("disabled")) return;
-  musicaInput.click();
-};
+/* ===============================
+   SITE FINAL – CARREGAR DADOS
+================================ */
+const params = new URLSearchParams(window.location.search);
+const userId = params.get("id");
 
-musicaInput.onchange=()=>{
-  if(!musicaInput.files[0]) return;
-  audio.src = URL.createObjectURL(musicaInput.files[0]);
-  audio.style.display="block";
-  musicBox.innerText="🎶 Música selecionada";
-  musicBox.classList.add("disabled");
-  removeMusic.style.display="block";
-};
+if (!isEditor && userId) {
+  fetch(`/user-data?id=${userId}`)
+    .then(res => res.json())
+    .then(data => {
+      if (!data) return;
 
-removeMusic.onclick=()=>{
-  audio.src="";
-  audio.style.display="none";
-  musicaInput.value="";
-  musicBox.innerText="Adicionar música 🎵";
-  musicBox.classList.remove("disabled");
-  removeMusic.style.display="none";
-};
+      nome.innerText = data.nome;
+      mensagem.innerText = data.mensagem;
+      carta.innerText = data.carta;
+
+      iniciarContador(data.dataInicio);
+
+      if (Array.isArray(data.fotos)) {
+        data.fotos.forEach(f => {
+          if (!f) return;
+          const div = document.createElement("div");
+          div.className = "photo";
+          div.innerHTML = `<img src="${f}" style="width:100%">`;
+          midias.appendChild(div);
+        });
+      }
+
+      if (data.musica) {
+        audio.src = data.musica;
+        audio.style.display = "block";
+      }
+    })
+    .catch(() => {
+      document.body.innerHTML = "<h2 style='text-align:center'>Site não encontrado 💔</h2>";
+    });
+}
+
