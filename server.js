@@ -306,6 +306,35 @@ app.get("/success.html", async (req, res) => {
   }
 });
 /* =====================
+   USER DATA
+===================== */
+app.get("/user-data", async (req, res) => {
+  try {
+    const id = req.query.id;
+
+    if (!id) {
+      return res.status(400).json({ error: "ID não informado" });
+    }
+
+    const user = await users.findOne({ _id: id });
+
+    if (!user) {
+      return res.status(404).json({ error: "Usuário não encontrado" });
+    }
+
+    // 🔒 só libera se estiver aprovado
+    if (user.status !== "approved") {
+      return res.json({ status: "pending" });
+    }
+
+    res.json(user);
+
+  } catch (err) {
+    console.error("Erro /user-data:", err.message);
+    res.status(500).json({ error: "Erro interno" });
+  }
+});
+/* =====================
    START
 ===================== */
 app.listen(PORT, "0.0.0.0", () => {
