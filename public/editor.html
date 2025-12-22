@@ -435,8 +435,12 @@ document.addEventListener("DOMContentLoaded", () => {
     midias.appendChild(div);
     midias.scrollIntoView({ behavior: "smooth" });
 
-    document.querySelector(`.photo-slot[data-slot="${slotAtual}"]`)
-      .classList.add("filled");
+   const slotEl = document.querySelector(
+  `.photo-slot[data-slot="${slotAtual}"]`
+);
+
+slotEl.classList.add("filled");
+slotEl.innerText = ""; // 🔥 REMOVE O "+"
 
     slotAtual = null;
     fotoInput.value = "";
@@ -520,6 +524,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script> </body>  
 </html>
+
 
 
 
