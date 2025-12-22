@@ -147,7 +147,9 @@ function copiarPix(){
 /* ===== verificar pagamento ===== */
 const params = new URLSearchParams(window.location.search);
 const paymentId = params.get("payment_id");
-
+if (!paymentId) {
+  alert("Erro: pagamento não identificado. Volte e gere um novo pagamento.");
+}
 setInterval(async ()=>{
   try{
     const res = await fetch(`/check-payment?payment_id=${paymentId}`);
