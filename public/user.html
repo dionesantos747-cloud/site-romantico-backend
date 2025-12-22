@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Nosso Amor 💖</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -29,8 +30,11 @@
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
 
-if(!id){
-  document.body.innerHTML = "<h2>ID inválido</h2>";
+if (!id) {
+  document.body.innerHTML = `
+    <div style="text-align:center;color:white;padding:40px">
+      <h1>ID inválido</h1>
+    </div>`;
   throw new Error("ID ausente");
 }
 
@@ -38,8 +42,8 @@ fetch(`/user-data?id=${id}`)
   .then(res => res.json())
   .then(data => {
 
-    // 🔒 BLOQUEIO SE NÃO ESTIVER ATIVADO
-    if (!data || data.status !== "approved") {
+    /* 🔒 SITE NÃO ATIVADO */
+    if (!data || data.status === "pending") {
       document.body.innerHTML = `
         <div style="text-align:center;color:white;padding:40px">
           <h1>💔 Site indisponível</h1>
@@ -48,81 +52,88 @@ fetch(`/user-data?id=${id}`)
       return;
     }
 
-    // ===== ELEMENTOS =====
+    /* 🔴 SEGURANÇA */
+    if (!data.nome) {
+      document.body.innerHTML = `
+        <div style="text-align:center;color:white;padding:40px">
+          <h1>Site não encontrado</h1>
+        </div>`;
+      return;
+    }
+
+    /* ===== ELEMENTOS ===== */
     const nomeEl = document.getElementById("nome");
     const msgEl = document.getElementById("mensagem");
     const cartaEl = document.getElementById("carta");
     const midiasEl = document.getElementById("midias");
     const audio = document.getElementById("audioPlayer");
     const tempoEl = document.getElementById("tempo");
+    const preview = document.getElementById("preview");
 
-    // ===== TEXTO =====
+    /* ===== TEXTO ===== */
     nomeEl.innerText = data.nome || "";
     msgEl.innerText = data.mensagem || "";
     cartaEl.innerText = data.carta || "";
 
-    // ===== FOTOS =====
-    if(Array.isArray(data.fotos)){
+    /* ===== FUNDO ===== */
+    if (data.fundo) {
+      preview.className = "preview " + data.fundo;
+    }
+
+    /* ===== FOTOS ===== */
+    if (Array.isArray(data.fotos) && data.fotos.filter(Boolean).length > 0) {
       data.fotos.forEach(url => {
-        if(url){
+        if (url) {
           const div = document.createElement("div");
           div.className = "photo";
           div.innerHTML = `<img src="${url}" style="width:100%">`;
           midiasEl.appendChild(div);
         }
       });
+    } else {
+      midiasEl.innerHTML = `
+        <p style="opacity:.7;font-style:italic;margin-top:16px">
+          💖 Cada momento aqui é especial
+        </p>`;
     }
-// ===== MENSAGEM SE NÃO HOUVER FOTOS =====
-if (!Array.isArray(data.fotos) || data.fotos.filter(Boolean).length === 0) {
-  midiasEl.innerHTML = `
-    <p style="opacity:.7; font-style:italic; margin-top:16px;">
-      💖 Cada momento aqui é especial
-    </p>
-  `;
-}
-    // ===== MÚSICA =====
-    if(data.musica){
+
+    /* ===== MÚSICA ===== */
+    if (data.musica) {
       audio.src = data.musica;
       audio.style.display = "block";
     }
 
-    // ===== CONTADOR =====
-if (data.dataInicio) {
+    /* ===== CONTADOR ===== */
+    if (data.dataInicio) {
+      setInterval(() => {
+        const inicio = new Date(data.dataInicio);
+        const agora = new Date();
+        const diff = agora - inicio;
+        if (diff < 0) return;
 
-  let timer = null;
+        const s = Math.floor(diff / 1000) % 60;
+        const m = Math.floor(diff / 60000) % 60;
+        const h = Math.floor(diff / 3600000) % 24;
+        const d = Math.floor(diff / 86400000) % 30;
+        const mo = Math.floor(diff / 2592000000) % 12;
+        const a = Math.floor(diff / 31536000000);
 
-  if (!timer) {
-    timer = setInterval(() => {
+        const anoText = a === 1 ? "ano" : "anos";
+        const mesText = mo === 1 ? "mês" : "meses";
+        const diaText = d === 1 ? "dia" : "dias";
 
-      const inicio = new Date(data.dataInicio);
-      const agora = new Date();
-      const diff = agora - inicio;
-      if (diff < 0) return;
-
-      const s = Math.floor(diff / 1000) % 60;
-      const m = Math.floor(diff / 60000) % 60;
-      const h = Math.floor(diff / 3600000) % 24;
-      const d = Math.floor(diff / 86400000) % 30;
-      const mo = Math.floor(diff / 2592000000) % 12;
-      const a = Math.floor(diff / 31536000000);
-
-      const anoText = a === 1 ? "ano" : "anos";
-      const mesText = mo === 1 ? "mês" : "meses";
-      const diaText = d === 1 ? "dia" : "dias";
-
-      tempoEl.innerHTML = `
-        <span class="titulo">Já estamos juntos há</span>
-        <div class="contador">
-          <div class="item">${a} ${anoText}</div>
-          <div class="item">${mo} ${mesText}</div>
-          <div class="item">${d} ${diaText}</div>
-          <div class="item">${h}h ${m}m ${s}s</div>
-        </div>
-      `;
-
-    }, 1000);
-  }
-}
+        tempoEl.innerHTML = `
+          <span class="titulo">Já estamos juntos há</span>
+          <div class="contador">
+            <div class="item">${a} ${anoText}</div>
+            <div class="item">${mo} ${mesText}</div>
+            <div class="item">${d} ${diaText}</div>
+            <div class="item">${h}h ${m}m ${s}s</div>
+          </div>
+        `;
+      }, 1000);
+    }
+  });
 
 /* =====================
    CARTA
@@ -131,9 +142,9 @@ const btnCarta = document.getElementById("btnCarta");
 const carta = document.getElementById("carta");
 
 btnCarta.onclick = () => {
-  carta.style.display = carta.style.display==="block"?"none":"block";
+  carta.style.display = carta.style.display === "block" ? "none" : "block";
   btnCarta.innerText =
-    carta.style.display==="block"
+    carta.style.display === "block"
       ? "❌ Fechar carta"
       : "💌 Abrir carta";
 };
@@ -141,14 +152,14 @@ btnCarta.onclick = () => {
 /* =====================
    CORAÇÕES
 ===================== */
-function criarCoracoes(){
-  document.querySelectorAll(".heart").forEach(h=>h.remove());
-  for(let i=0;i<12;i++){
-    const h=document.createElement("div");
-    h.className="heart";
-    h.innerText="❤️";
-    h.style.left = Math.random()*100+"%";
-    h.style.animationDuration = 6+Math.random()*6+"s";
+function criarCoracoes() {
+  document.querySelectorAll(".heart").forEach(h => h.remove());
+  for (let i = 0; i < 12; i++) {
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.innerText = "❤️";
+    h.style.left = Math.random() * 100 + "%";
+    h.style.animationDuration = 6 + Math.random() * 6 + "s";
     document.getElementById("preview").appendChild(h);
   }
 }
@@ -157,4 +168,3 @@ criarCoracoes();
 
 </body>
 </html>
-
