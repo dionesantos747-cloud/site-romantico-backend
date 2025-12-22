@@ -436,10 +436,15 @@ const previewUrl = URL.createObjectURL(file);
     slot.innerText = "+";  
   };  
   
-  div.appendChild(remove);  
-  midias.appendChild(div);  
-  
-  const slot = document.querySelector(`.photo-slot[data-slot="${slotAtual}"]`);  
+div.appendChild(remove);  
+
+  // 🔥 AQUI — FORÇA O REPAINT NO MOBILE
+  midias.appendChild(div);
+  midias.scrollIntoView({ behavior: "smooth" });
+
+  const slot = document.querySelector(
+    `.photo-slot[data-slot="${slotAtual}"]`
+  );  
   slot.classList.add("filled");  
   slot.innerText = "";  
   
@@ -458,16 +463,32 @@ musicBox.onclick = ()=>{
   musicaInput.click();  
 };  
   
-musicaInput.onchange = async ()=>{
-  if(!musicaInput.files[0]) return;
+musicaInput.onchange = async () => {
+  const file = musicaInput.files[0];
+  if (!file) return;
 
-  musicaUrl = await uploadMusica(musicaInput.files[0]);
-  audio.src = musicaUrl;
-  audio.style.display = "block";
-
-  musicBox.innerText = "🎶 Música selecionada";
+  // feedback visual imediato
+  musicBox.innerText = "⏳ Enviando música...";
   musicBox.classList.add("disabled");
-  removeMusic.style.display = "block";
+
+  try {
+    const cloudUrl = await uploadMusica(file);
+
+    musicaUrl = cloudUrl;          // 🔥 salva URL REAL
+    audio.src = cloudUrl;
+    audio.load();
+    audio.style.display = "block";
+
+    // autoplay seguro (funciona no mobile)
+    audio.play().catch(() => {});
+
+    musicBox.innerText = "🎶 Música selecionada";
+    removeMusic.style.display = "block";
+
+  } catch (e) {
+    musicBox.innerText = "❌ Erro ao enviar música";
+    musicBox.classList.remove("disabled");
+  }
 };  
   
 removeMusic.onclick = ()=>{  
@@ -529,6 +550,7 @@ window.location.href =
 };  
 </script>  </body>  
 </html>
+
 
 
 
