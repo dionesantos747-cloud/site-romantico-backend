@@ -276,25 +276,36 @@ app.get("/success.html", async (req, res) => {
       return res.sendFile(path.join(__dirname, "public/aguardando.html"));
     }
 
-    const user = await users.findOne({ paymentId });
+    const pay = await payments.findOne({
+  paymentId,
+  status: "approved"
+});
 
-    if (!user) {
-      return res.status(404).send("Usuário não encontrado");
-    }
+if (!pay) {
+  return res.sendFile(
+    path.join(__dirname, "public/aguardando.html")
+  );
+}
 
-    const link = `${req.protocol}://${req.get("host")}/user.html?id=${user._id}`;
-    const qr = await QRCode.toDataURL(link);
+const user = await users.findOne({ _id: pay.userId });
 
-    let html = fs.readFileSync(
-      path.join(__dirname, "views/success.html"),
-      "utf8"
-    );
+if (!user) {
+  return res.status(404).send("Usuário não encontrado");
+}
 
-    html = html
-      .replace("{{QR}}", `<img src="${qr}" />`)
-      .replace("{{LINK}}", link);
+const link = `${req.protocol}://${req.get("host")}/user.html?id=${user._id}`;
+const qr = await QRCode.toDataURL(link);
 
-    res.send(html);
+let html = fs.readFileSync(
+  path.join(__dirname, "views/success.html"),
+  "utf8"
+);
+
+html = html
+  .replace("{{QR}}", `<img src="${qr}" />`)
+  .replace("{{LINK}}", link);
+
+res.send(html);
 
   } catch (err) {
     console.error("Erro success:", err.message);
