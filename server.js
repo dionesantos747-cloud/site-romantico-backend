@@ -267,60 +267,44 @@ app.get("/success.html", async (req, res) => {
   try {
     const paymentId = String(req.query.payment_id);
 
+    // 🔹 BUSCA PAGAMENTO APROVADO
     const pay = await payments.findOne({
       paymentId,
       status: "approved"
     });
 
     if (!pay) {
-      return res.sendFile(path.join(__dirname, "public/aguardando.html"));
+      return res.sendFile(
+        path.join(__dirname, "public/aguardando.html")
+      );
     }
 
-    const pay = await payments.findOne({
-  paymentId,
-  status: "approved"
-});
+    // 🔹 BUSCA USUÁRIO PELO userId SALVO NO PAGAMENTO
+    const user = await users.findOne({ _id: pay.userId });
 
-if (!pay) {
-  return res.sendFile(
-    path.join(__dirname, "public/aguardando.html")
-  );
-}
+    if (!user) {
+      return res.status(404).send("Usuário não encontrado");
+    }
 
-const user = await users.findOne({ _id: pay.userId });
+    const link = `${req.protocol}://${req.get("host")}/user.html?id=${user._id}`;
+    const qr = await QRCode.toDataURL(link);
 
-if (!user) {
-  return res.status(404).send("Usuário não encontrado");
-}
+    let html = fs.readFileSync(
+      path.join(__dirname, "views/success.html"),
+      "utf8"
+    );
 
-const link = `${req.protocol}://${req.get("host")}/user.html?id=${user._id}`;
-const qr = await QRCode.toDataURL(link);
+    html = html
+      .replace("{{QR}}", `<img src="${qr}" />`)
+      .replace("{{LINK}}", link);
 
-let html = fs.readFileSync(
-  path.join(__dirname, "views/success.html"),
-  "utf8"
-);
-
-html = html
-  .replace("{{QR}}", `<img src="${qr}" />`)
-  .replace("{{LINK}}", link);
-
-res.send(html);
+    res.send(html);
 
   } catch (err) {
     console.error("Erro success:", err.message);
     res.status(500).send("Erro ao carregar sucesso");
   }
 });
-
-/* =====================
-   USER DATA
-===================== */
-app.get("/user-data", async (req, res) => {
-  const user = await users.findOne({ _id: req.query.id });
-  res.json(user);
-});
-
 /* =====================
    START
 ===================== */
