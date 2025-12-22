@@ -20,9 +20,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.json({ limit: "20mb" }));
 app.use(express.static(path.join(__dirname, "public")));
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public/editor.html"));
-});
+
 /* =====================
    ROTA INICIAL
 ===================== */
@@ -227,14 +225,29 @@ app.get("/check-payment", async (req, res) => {
     );
 
     if (mp.data.status === "approved") {
+
+      // 🔥 ATUALIZA PAGAMENTO NO BANCO
+      await payments.updateOne(
+        { paymentId },
+        { $set: { status: "approved", approvedAt: new Date() } }
+      );
+
+      // 🔥 ATIVA USUÁRIO
+      const userId = mp.data.metadata?.userId;
+      if (userId) {
+        await users.updateOne(
+          { _id: userId },
+          { $set: { status: "approved", paymentId } }
+        );
+      }
+
       return res.json({ status: "approved" });
     }
 
     res.json({ status: "pending" });
 
   } catch (err) {
-    // evita quebrar o fluxo por erro momentâneo do MP
-    console.error("check-payment:", err.response?.status || err.message);
+    console.error("check-payment:", err.message);
     res.json({ status: "pending" });
   }
 });
