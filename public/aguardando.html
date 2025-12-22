@@ -2,60 +2,163 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Aguardando pagamento</title>
+<title>Pagamento Seguro • PIX</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
+*{box-sizing:border-box}
 body{
-  background:#000;
+  margin:0;
+  min-height:100vh;
+  background:radial-gradient(circle at top,#1a1f3c,#000);
   color:#fff;
-  font-family:Arial;
-  text-align:center;
-  padding:40px;
+  font-family:Arial, sans-serif;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
-img{
-  width:260px;
+
+.card{
+  background:#0d0f18;
+  border-radius:20px;
+  padding:28px;
+  width:100%;
+  max-width:420px;
+  text-align:center;
+  box-shadow:0 0 30px rgba(255,212,0,.15);
+}
+
+h1{
+  color:#ffd400;
+  margin-bottom:10px;
+}
+
+.sub{
+  font-size:.95em;
+  color:#ccc;
+  margin-bottom:20px;
+}
+
+.qr{
   margin:20px auto;
 }
-.pix{
-  word-break:break-all;
+
+.qr img{
+  width:260px;
+  max-width:100%;
+  border-radius:16px;
+  background:#fff;
+  padding:10px;
+}
+
+.pix-box{
   background:#111;
-  padding:12px;
-  border-radius:10px;
+  padding:14px;
+  border-radius:12px;
+  margin-top:14px;
+  word-break:break-all;
+  font-size:.85em;
+}
+
+button{
+  width:100%;
   margin-top:12px;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  font-size:1em;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.copy{
+  background:#ffd400;
+  color:#000;
+}
+
+.secure{
+  margin-top:18px;
+  font-size:.8em;
+  color:#aaa;
+}
+
+.steps{
+  text-align:left;
+  font-size:.85em;
+  margin-top:16px;
+  color:#ddd;
+}
+
+.steps li{
+  margin-bottom:6px;
 }
 </style>
 </head>
+
 <body>
 
-<h1>Aguardando pagamento</h1>
-<p>Escaneie o QR Code PIX para pagar</p>
+<div class="card">
+  <h1>Pagamento Seguro</h1>
+  <div class="sub">
+    Seu pagamento é processado com segurança via <strong>PIX</strong>.
+    Assim que for confirmado, seu site será liberado automaticamente.
+  </div>
 
-<img id="qr">
-<div class="pix" id="pix"></div>
+  <div class="qr">
+    <img id="qr" alt="QR Code PIX">
+  </div>
+
+  <div class="pix-box" id="pix"></div>
+
+  <button class="copy" onclick="copiarPix()">Copiar código PIX</button>
+
+  <ul class="steps">
+    <li>1. Abra o app do seu banco</li>
+    <li>2. Escolha a opção <strong>PIX</strong></li>
+    <li>3. Escaneie o QR Code ou cole o código</li>
+    <li>4. Confirme o pagamento</li>
+  </ul>
+
+  <div class="secure">
+    🔒 Ambiente seguro • Mercado Pago • Conexão protegida
+  </div>
+</div>
 
 <script>
-const qr = sessionStorage.getItem("pix_qr");
-const copia = sessionStorage.getItem("pix_copia");
+/* ===== carregar PIX ===== */
+const qrBase64 = sessionStorage.getItem("pix_qr");
+const pixCopia = sessionStorage.getItem("pix_copia");
 
-if(qr){
+if(qrBase64){
   document.getElementById("qr").src =
-    "data:image/png;base64," + qr;
+    "data:image/png;base64," + qrBase64;
 }
 
-if(copia){
-  document.getElementById("pix").innerText = copia;
+if(pixCopia){
+  document.getElementById("pix").innerText = pixCopia;
 }
 
+/* ===== copiar ===== */
+function copiarPix(){
+  navigator.clipboard.writeText(pixCopia);
+  alert("Código PIX copiado!");
+}
+
+/* ===== verificar pagamento ===== */
 const params = new URLSearchParams(window.location.search);
 const paymentId = params.get("payment_id");
 
 setInterval(async ()=>{
-  const res = await fetch(`/check-payment?payment_id=${paymentId}`);
-  const data = await res.json();
-  if(data.status === "approved"){
-    window.location.href =
-      `/success.html?payment_id=${paymentId}`;
-  }
-},2000);
+  try{
+    const res = await fetch(`/check-payment?payment_id=${paymentId}`);
+    const data = await res.json();
+
+    if(data.status === "approved"){
+      window.location.href =
+        `/success.html?payment_id=${paymentId}`;
+    }
+  }catch(e){}
+}, 3000);
 </script>
 
 </body>
