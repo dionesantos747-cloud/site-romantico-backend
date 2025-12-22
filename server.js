@@ -20,7 +20,12 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.json({ limit: "20mb" }));
 app.use(express.static(path.join(__dirname, "public")));
-
+/* =====================
+   ROTA INICIAL
+===================== */
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "editor.html"));
+});
 /* =====================
    CLOUDINARY
 ===================== */
