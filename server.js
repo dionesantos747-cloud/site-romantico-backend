@@ -105,18 +105,17 @@ app.post("/upload-music", upload.single("file"), (req, res) => {
 app.post("/create-payment", async (req, res) => {
   try {
 
-    // ✅ 1. CRIA ID TEMPORÁRIO DO SITE
+    // 1️⃣ CRIA USUÁRIO TEMPORÁRIO (ANTES DO PAGAMENTO)
     const tempId = uuidv4();
 
-    // ✅ 2. SALVA DADOS DO USUÁRIO ANTES DO PAGAMENTO
     await users.insertOne({
       _id: tempId,
       status: "pending",
       createdAt: new Date(),
-      ...req.body
+      ...req.body   // nome, mensagem, fotos, musica etc
     });
 
-    // ✅ 3. CRIA PAGAMENTO NO MERCADO PAGO
+    // 2️⃣ CRIA PAGAMENTO PIX NO MERCADO PAGO
     const mp = await axios.post(
       "https://api.mercadopago.com/v1/payments",
       {
@@ -125,7 +124,7 @@ app.post("/create-payment", async (req, res) => {
         payment_method_id: "pix",
         payer: { email: "cliente@site.com" },
 
-        // 🔥 ENVIA APENAS O ID (NÃO DADOS GRANDES)
+        // 🔥 LIGA PAGAMENTO AO USUÁRIO
         metadata: {
           userId: tempId
         },
@@ -141,7 +140,7 @@ app.post("/create-payment", async (req, res) => {
       }
     );
 
-    // ✅ 4. SALVA PAGAMENTO
+    // 3️⃣ SALVA PAGAMENTO
     await payments.insertOne({
       paymentId: String(mp.data.id),
       userId: tempId,
@@ -149,7 +148,7 @@ app.post("/create-payment", async (req, res) => {
       createdAt: new Date()
     });
 
-    // ✅ 5. RETORNA PIX PARA O FRONT
+    // 4️⃣ RETORNA PIX PARA O FRONT
     const pix = mp.data.point_of_interaction.transaction_data;
 
     res.json({
@@ -159,60 +158,55 @@ app.post("/create-payment", async (req, res) => {
     });
 
   } catch (err) {
-    console.error("Erro pagamento:", err.message);
+    console.error("❌ Erro pagamento:", err.message);
     res.status(500).json({ error: "Erro ao criar pagamento" });
   }
 });
-
 /* =====================
    WEBHOOK MERCADO PAGO
 ===================== */
 app.post("/webhook", (req, res) => {
 
-  // ⚠️ RESPONDE IMEDIATAMENTE AO MP (evita erro 502)
+  // RESPONDE IMEDIATO (evita erro 502)
   res.sendStatus(200);
 
-  // 🔄 PROCESSA EM BACKGROUND
   (async () => {
     try {
       const paymentId = String(req.body?.data?.id);
       if (!paymentId) return;
 
-      // 🔎 CONSULTA O MERCADO PAGO (fonte da verdade)
+      // CONSULTA MERCADO PAGO
       const mp = await axios.get(
         `https://api.mercadopago.com/v1/payments/${paymentId}`,
         {
-          headers: {
-            Authorization: `Bearer ${MP_ACCESS_TOKEN}`
-          }
+          headers: { Authorization: `Bearer ${MP_ACCESS_TOKEN}` }
         }
       );
 
-      // ❌ SE NÃO APROVADO, IGNORA
       if (mp.data.status !== "approved") return;
 
       const userId = mp.data.metadata?.userId;
       if (!userId) return;
 
-      // ✅ ATUALIZA PAGAMENTO
+      // ATUALIZA PAGAMENTO
       await payments.updateOne(
         { paymentId },
         { $set: { status: "approved", approvedAt: new Date() } }
       );
 
-      // ✅ ATIVA O USUÁRIO (SITE ÚNICO)
+      // ATIVA USUÁRIO
       await users.updateOne(
         { _id: userId },
         {
           $set: {
             status: "approved",
-            paymentId: paymentId,
+            paymentId,
             activatedAt: new Date()
           }
         }
       );
 
-      console.log("💖 Pagamento aprovado | Site ativado:", userId);
+      console.log("💖 Pagamento aprovado | Usuário:", userId);
 
     } catch (err) {
       console.error("❌ Erro webhook:", err.message);
@@ -246,7 +240,7 @@ app.get("/check-payment", async (req, res) => {
 });
 
 /* =====================
-   SUCCESS (DINÂMICO)
+   SUCCESS
 ===================== */
 app.get("/success.html", async (req, res) => {
   try {
@@ -261,23 +255,14 @@ app.get("/success.html", async (req, res) => {
       return res.sendFile(path.join(__dirname, "public/aguardando.html"));
     }
 
-    let user = await users.findOne({ paymentId });
+    const user = await users.findOne({ paymentId });
 
     if (!user) {
-      const id = uuidv4();
-      const link = `${req.protocol}://${req.get("host")}/user.html?id=${id}`;
-      const qr = await QRCode.toDataURL(link);
-
-      user = {
-        _id: id,
-        paymentId,
-        ...pay.metadata,
-        qr,
-        createdAt: new Date()
-      };
-
-      await users.insertOne(user);
+      return res.status(404).send("Usuário não encontrado");
     }
+
+    const link = `${req.protocol}://${req.get("host")}/user.html?id=${user._id}`;
+    const qr = await QRCode.toDataURL(link);
 
     let html = fs.readFileSync(
       path.join(__dirname, "views/success.html"),
@@ -285,14 +270,14 @@ app.get("/success.html", async (req, res) => {
     );
 
     html = html
-      .replace("{{QR}}", `<img src="${user.qr}" alt="QR Code">`)
-      .replace("{{LINK}}", `${req.protocol}://${req.get("host")}/user.html?id=${user._id}`);
+      .replace("{{QR}}", `<img src="${qr}" />`)
+      .replace("{{LINK}}", link);
 
     res.send(html);
 
   } catch (err) {
     console.error("Erro success:", err.message);
-    res.status(500).send("Erro ao gerar página de sucesso");
+    res.status(500).send("Erro ao carregar sucesso");
   }
 });
 
