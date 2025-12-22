@@ -302,8 +302,9 @@ const nome = document.getElementById("nome");
 const mensagem = document.getElementById("mensagem");  
 const carta = document.getElementById("carta");  
 const tempo = document.getElementById("tempo");  
-const preview = document.getElementById("preview");  
+const preview = document.getElementById("preview"); 
   
+let musicaUrl = null;  
 /* Atualizar preview em tempo real */  
 nomeInput.oninput = () => nome.innerText = nomeInput.value;  
 msgInput.oninput = () => mensagem.innerText = msgInput.value;  
@@ -368,7 +369,32 @@ document.querySelectorAll(".bg-card").forEach(c=>{
     criarCoracoes();  
   }  
 });  
-  
+  /* UPLOAD CLOUDINARY */
+async function uploadFoto(file) {
+  const form = new FormData();
+  form.append("file", file);
+
+  const res = await fetch("/upload-image", {
+    method: "POST",
+    body: form
+  });
+
+  const data = await res.json();
+  return data.url;
+}
+
+async function uploadMusica(file) {
+  const form = new FormData();
+  form.append("file", file);
+
+  const res = await fetch("/upload-music", {
+    method: "POST",
+    body: form
+  });
+
+  const data = await res.json();
+  return data.url;
+}
 /* FOTOS */  
 let fotos=[null,null,null];  
 let slotAtual=null;  
@@ -383,23 +409,26 @@ document.querySelectorAll(".photo-slot").forEach(slot=>{
   };  
 });  
   
-fotoInput.onchange = e=>{  
+fotoInput.onchange = async e=>{  
   const file = e.target.files[0];  
   if(!file || slotAtual===null) return;  
   
-  const url = URL.createObjectURL(file);  
-  fotos[slotAtual] = url;  
+  const cloudUrl = await uploadFoto(file);
+fotos[slotAtual] = cloudUrl;
+
+// preview local
+const previewUrl = URL.createObjectURL(file);  
   
   const div = document.createElement("div");  
   div.className = "photo";  
-  div.innerHTML = `<img src="${url}" style="width:100%">`;  
+  div.innerHTML = `<img src="${previewUrl}" style="width:100%">`;  
   
   const slotIndex = slotAtual;  
   const remove = document.createElement("div");  
   remove.className = "photo-remove";  
   remove.innerText = "×";  
   remove.onclick = ()=>{  
-    URL.revokeObjectURL(url);  
+    URL.revokeObjectURL(previewUrl);  
     fotos[slotIndex] = null;  
     div.remove();  
     const slot = document.querySelector(`.photo-slot[data-slot="${slotIndex}"]`);  
@@ -429,13 +458,16 @@ musicBox.onclick = ()=>{
   musicaInput.click();  
 };  
   
-musicaInput.onchange = ()=>{  
-  if(!musicaInput.files[0]) return;  
-  audio.src = URL.createObjectURL(musicaInput.files[0]);  
-  audio.style.display = "block";  
-  musicBox.innerText = "🎶 Música selecionada";  
-  musicBox.classList.add("disabled");  
-  removeMusic.style.display = "block";  
+musicaInput.onchange = async ()=>{
+  if(!musicaInput.files[0]) return;
+
+  musicaUrl = await uploadMusica(musicaInput.files[0]);
+  audio.src = musicaUrl;
+  audio.style.display = "block";
+
+  musicBox.innerText = "🎶 Música selecionada";
+  musicBox.classList.add("disabled");
+  removeMusic.style.display = "block";
 };  
   
 removeMusic.onclick = ()=>{  
@@ -497,6 +529,7 @@ window.location.href =
 };  
 </script>  </body>  
 </html>
+
 
 
 
