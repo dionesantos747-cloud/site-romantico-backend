@@ -1,3 +1,6 @@
+process.on("unhandledRejection", err => {
+  console.error("Unhandled Rejection:", err);
+});
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
@@ -19,8 +22,11 @@ const PORT = process.env.PORT || 3000;
 ===================== */
 app.use(cors());
 app.use(bodyParser.json({ limit: "20mb" }));
-app.use(express.static(path.join(__dirname, "public")));
-
+app.use(express.static(path.join(__dirname, "public"), {
+  maxAge: "7d",          // cache por 7 dias
+  etag: true,            // valida cache
+  lastModified: true
+}));
 /* =====================
    ROTA INICIAL
 ===================== */
