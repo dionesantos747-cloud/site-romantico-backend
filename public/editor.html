@@ -468,29 +468,26 @@ musicaInput.onchange = async () => {
   const file = musicaInput.files[0];
   if (!file) return;
 
-  // cria áudio temporário para validar duração
-  const tempAudio = document.createElement("audio");
-  tempAudio.src = URL.createObjectURL(file);
+  // valida tamanho (aprox 2min = 5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    alert("❌ Música muito grande. Máx. 2 minutos.");
+    musicaInput.value = "";
+    return;
+  }
 
-  tempAudio.onloadedmetadata = async () => {
-    if (tempAudio.duration > LIMITE_MUSICA_SEG) {
-      alert("⚠️ A música deve ter no máximo 2 minutos.");
-      musicaInput.value = "";
-      URL.revokeObjectURL(tempAudio.src);
-      return;
-    }
+  // preview imediato
+  const localUrl = URL.createObjectURL(file);
+  audio.src = localUrl;
+  audio.style.display = "block";
+  audio.play();
 
-    // 🔥 upload só depois de validar
-    musicaUrl = await uploadMusica(file);
+  // upload em background
+  musicaUrl = await uploadMusica(file);
 
-    audio.src = musicaUrl;
-    audio.style.display = "block";
-    audio.play().catch(()=>{});
-
-    musicBox.innerText = "🎶 Música selecionada";
-    musicBox.classList.add("disabled");
-    removeMusic.style.display = "block";
-  };
+  musicBox.innerText = "🎶 Música selecionada";
+  musicBox.classList.add("disabled");
+  removeMusic.style.display = "block";
+};
 };
 
   } catch (e) {
@@ -517,18 +514,15 @@ btnComprar.onclick = async () => {
   const campos = [nomeInput, msgInput, cartaInput, dataInput];
   let erro = false;
 
-  campos.forEach(c => {
-    const err = c.nextElementSibling;
-    if (!c.value) {
-      c.classList.add("error");
-      err.style.display = "block";
-      if (!erro) c.scrollIntoView({ behavior: "smooth" });
-      erro = true;
-    } else {
-      c.classList.remove("error");
-      err.style.display = "none";
-    }
-  });
+ campos.forEach(c => {
+  if (!c.value) {
+    c.classList.add("error");
+    if (!erro) c.scrollIntoView({ behavior: "smooth" });
+    erro = true;
+  } else {
+    c.classList.remove("error");
+  }
+});
 
   if (erro) return;
 
@@ -558,6 +552,7 @@ window.location.href =
 };  
 </script>  </body>  
 </html>
+
 
 
 
