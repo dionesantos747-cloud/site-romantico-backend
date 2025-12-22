@@ -38,7 +38,7 @@ fetch(`/user-data?id=${id}`)
   .then(res => res.json())
   .then(data => {
 
-    if(!data || !data.nome){
+    if(!data || data.status !== "approved"){
       document.body.innerHTML = `
         <div style="text-align:center;color:white;padding:40px">
           <h1>Site não encontrado 💔</h1>
@@ -71,7 +71,14 @@ fetch(`/user-data?id=${id}`)
         }
       });
     }
-
+// ===== MENSAGEM SE NÃO HOUVER FOTOS =====
+if (!Array.isArray(data.fotos) || data.fotos.filter(Boolean).length === 0) {
+  midiasEl.innerHTML = `
+    <p style="opacity:.7; font-style:italic; margin-top:16px;">
+      💖 Cada momento aqui é especial
+    </p>
+  `;
+}
     // ===== MÚSICA =====
     if(data.musica){
       audio.src = data.musica;
@@ -79,36 +86,42 @@ fetch(`/user-data?id=${id}`)
     }
 
     // ===== CONTADOR =====
-    if(data.dataInicio){
-      setInterval(()=>{
-        const inicio = new Date(data.dataInicio);
-        const agora = new Date();
-        const diff = agora - inicio;
-        if(diff < 0) return;
+if (data.dataInicio) {
 
-        const s = Math.floor(diff/1000)%60;
-        const m = Math.floor(diff/60000)%60;
-        const h = Math.floor(diff/3600000)%24;
-        const d = Math.floor(diff/86400000)%30;
-        const mo = Math.floor(diff/2592000000)%12;
-        const a = Math.floor(diff/31536000000);
+  let timer = null;
 
-        const anoText = a===1?"ano":"anos";
-        const mesText = mo===1?"mês":"meses";
-        const diaText = d===1?"dia":"dias";
+  if (!timer) {
+    timer = setInterval(() => {
 
-        tempoEl.innerHTML = `
-          <span class="titulo">Já estamos juntos há</span>
-          <div class="contador">
-            <div class="item">${a} ${anoText}</div>
-            <div class="item">${mo} ${mesText}</div>
-            <div class="item">${d} ${diaText}</div>
-            <div class="item">${h}h ${m}m ${s}s</div>
-          </div>
-        `;
-      },1000);
-    }
-  });
+      const inicio = new Date(data.dataInicio);
+      const agora = new Date();
+      const diff = agora - inicio;
+      if (diff < 0) return;
+
+      const s = Math.floor(diff / 1000) % 60;
+      const m = Math.floor(diff / 60000) % 60;
+      const h = Math.floor(diff / 3600000) % 24;
+      const d = Math.floor(diff / 86400000) % 30;
+      const mo = Math.floor(diff / 2592000000) % 12;
+      const a = Math.floor(diff / 31536000000);
+
+      const anoText = a === 1 ? "ano" : "anos";
+      const mesText = mo === 1 ? "mês" : "meses";
+      const diaText = d === 1 ? "dia" : "dias";
+
+      tempoEl.innerHTML = `
+        <span class="titulo">Já estamos juntos há</span>
+        <div class="contador">
+          <div class="item">${a} ${anoText}</div>
+          <div class="item">${mo} ${mesText}</div>
+          <div class="item">${d} ${diaText}</div>
+          <div class="item">${h}h ${m}m ${s}s</div>
+        </div>
+      `;
+
+    }, 1000);
+  }
+}
 
 /* =====================
    CARTA
