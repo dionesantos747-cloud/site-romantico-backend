@@ -101,15 +101,33 @@ app.post("/upload-music", upload.single("file"), (req, res) => {
 ===================== */
 app.post("/create-payment", async (req, res) => {
   try {
+
+    // ✅ 1. CRIA ID TEMPORÁRIO DO SITE
+    const tempId = uuidv4();
+
+    // ✅ 2. SALVA DADOS DO USUÁRIO ANTES DO PAGAMENTO
+    await users.insertOne({
+      _id: tempId,
+      status: "pending",
+      createdAt: new Date(),
+      ...req.body
+    });
+
+    // ✅ 3. CRIA PAGAMENTO NO MERCADO PAGO
     const mp = await axios.post(
       "https://api.mercadopago.com/v1/payments",
       {
         transaction_amount: 9.99,
-        description: "Site Romântico Premium",
+        description: "Site Romântico Premium 💖",
         payment_method_id: "pix",
         payer: { email: "cliente@site.com" },
-        notification_url: `${req.protocol}://${req.get("host")}/webhook`,
-        metadata: req.body
+
+        // 🔥 ENVIA APENAS O ID (NÃO DADOS GRANDES)
+        metadata: {
+          userId: tempId
+        },
+
+        notification_url: `${req.protocol}://${req.get("host")}/webhook`
       },
       {
         headers: {
@@ -120,13 +138,15 @@ app.post("/create-payment", async (req, res) => {
       }
     );
 
+    // ✅ 4. SALVA PAGAMENTO
     await payments.insertOne({
       paymentId: String(mp.data.id),
+      userId: tempId,
       status: "pending",
-      metadata: mp.data.metadata,
       createdAt: new Date()
     });
 
+    // ✅ 5. RETORNA PIX PARA O FRONT
     const pix = mp.data.point_of_interaction.transaction_data;
 
     res.json({
@@ -136,34 +156,64 @@ app.post("/create-payment", async (req, res) => {
     });
 
   } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ error: "Erro pagamento" });
+    console.error("Erro pagamento:", err.message);
+    res.status(500).json({ error: "Erro ao criar pagamento" });
   }
 });
 
 /* =====================
-   WEBHOOK
+   WEBHOOK MERCADO PAGO
 ===================== */
 app.post("/webhook", (req, res) => {
+
+  // ⚠️ RESPONDE IMEDIATAMENTE AO MP (evita erro 502)
   res.sendStatus(200);
 
+  // 🔄 PROCESSA EM BACKGROUND
   (async () => {
     try {
       const paymentId = String(req.body?.data?.id);
       if (!paymentId) return;
 
+      // 🔎 CONSULTA O MERCADO PAGO (fonte da verdade)
       const mp = await axios.get(
         `https://api.mercadopago.com/v1/payments/${paymentId}`,
-        { headers: { Authorization: `Bearer ${MP_ACCESS_TOKEN}` } }
+        {
+          headers: {
+            Authorization: `Bearer ${MP_ACCESS_TOKEN}`
+          }
+        }
       );
 
-      if (mp.data.status === "approved") {
-        await payments.updateOne(
-          { paymentId },
-          { $set: { status: "approved" } }
-        );
-      }
-    } catch {}
+      // ❌ SE NÃO APROVADO, IGNORA
+      if (mp.data.status !== "approved") return;
+
+      const userId = mp.data.metadata?.userId;
+      if (!userId) return;
+
+      // ✅ ATUALIZA PAGAMENTO
+      await payments.updateOne(
+        { paymentId },
+        { $set: { status: "approved", approvedAt: new Date() } }
+      );
+
+      // ✅ ATIVA O USUÁRIO (SITE ÚNICO)
+      await users.updateOne(
+        { _id: userId },
+        {
+          $set: {
+            status: "approved",
+            paymentId: paymentId,
+            activatedAt: new Date()
+          }
+        }
+      );
+
+      console.log("💖 Pagamento aprovado | Site ativado:", userId);
+
+    } catch (err) {
+      console.error("❌ Erro webhook:", err.message);
+    }
   })();
 });
 
