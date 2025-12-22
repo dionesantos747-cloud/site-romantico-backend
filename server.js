@@ -221,23 +221,32 @@ app.get("/check-payment", async (req, res) => {
 
     const mp = await axios.get(
       `https://api.mercadopago.com/v1/payments/${paymentId}`,
-      { headers: { Authorization: `Bearer ${MP_ACCESS_TOKEN}` } }
+      {
+        headers: { Authorization: `Bearer ${MP_ACCESS_TOKEN}` }
+      }
     );
 
     if (mp.data.status === "approved") {
 
-      // 🔥 ATUALIZA PAGAMENTO NO BANCO
+      // 🔥 GARANTE pagamento aprovado no banco
       await payments.updateOne(
         { paymentId },
-        { $set: { status: "approved", approvedAt: new Date() } }
+        { $set: { status: "approved", approvedAt: new Date() } },
+        { upsert: true }
       );
 
-      // 🔥 ATIVA USUÁRIO
+      // 🔥 GARANTE usuário ativado
       const userId = mp.data.metadata?.userId;
       if (userId) {
         await users.updateOne(
           { _id: userId },
-          { $set: { status: "approved", paymentId } }
+          {
+            $set: {
+              status: "approved",
+              paymentId,
+              activatedAt: new Date()
+            }
+          }
         );
       }
 
