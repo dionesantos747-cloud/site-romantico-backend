@@ -38,11 +38,12 @@ fetch(`/user-data?id=${id}`)
   .then(res => res.json())
   .then(data => {
 
-    if(!data || data.status !== "approved"){
+    // 🔒 BLOQUEIO SE NÃO ESTIVER ATIVADO
+    if (!data || data.status !== "approved") {
       document.body.innerHTML = `
         <div style="text-align:center;color:white;padding:40px">
-          <h1>Site não encontrado 💔</h1>
-          <p>Este link pode estar incorreto ou expirado.</p>
+          <h1>💔 Site indisponível</h1>
+          <p>Este site ainda não foi ativado.</p>
         </div>`;
       return;
     }
@@ -56,9 +57,9 @@ fetch(`/user-data?id=${id}`)
     const tempoEl = document.getElementById("tempo");
 
     // ===== TEXTO =====
-    nomeEl.innerText = data.nome;
-    msgEl.innerText = data.mensagem;
-    cartaEl.innerText = data.carta;
+    nomeEl.innerText = data.nome || "";
+    msgEl.innerText = data.mensagem || "";
+    cartaEl.innerText = data.carta || "";
 
     // ===== FOTOS =====
     if(Array.isArray(data.fotos)){
