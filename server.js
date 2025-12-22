@@ -243,45 +243,54 @@ app.get("/check-payment", async (req, res) => {
 });
 
 /* =====================
-   SUCCESS
+   SUCCESS (DINÂMICO)
 ===================== */
 app.get("/success.html", async (req, res) => {
-  const pay = await payments.findOne({
-    paymentId: String(req.query.payment_id),
-    status: "approved"
-  });
+  try {
+    const paymentId = String(req.query.payment_id);
 
-  if (!pay) {
-    return res.sendFile(path.join(__dirname, "public/aguardando.html"));
+    const pay = await payments.findOne({
+      paymentId,
+      status: "approved"
+    });
+
+    if (!pay) {
+      return res.sendFile(path.join(__dirname, "public/aguardando.html"));
+    }
+
+    let user = await users.findOne({ paymentId });
+
+    if (!user) {
+      const id = uuidv4();
+      const link = `${req.protocol}://${req.get("host")}/user.html?id=${id}`;
+      const qr = await QRCode.toDataURL(link);
+
+      user = {
+        _id: id,
+        paymentId,
+        ...pay.metadata,
+        qr,
+        createdAt: new Date()
+      };
+
+      await users.insertOne(user);
+    }
+
+    let html = fs.readFileSync(
+      path.join(__dirname, "views/success.html"),
+      "utf8"
+    );
+
+    html = html
+      .replace("{{QR}}", `<img src="${user.qr}" alt="QR Code">`)
+      .replace("{{LINK}}", `${req.protocol}://${req.get("host")}/user.html?id=${user._id}`);
+
+    res.send(html);
+
+  } catch (err) {
+    console.error("Erro success:", err.message);
+    res.status(500).send("Erro ao gerar página de sucesso");
   }
-
-  let user = await users.findOne({ paymentId: pay.paymentId });
-
-  if (!user) {
-    const id = uuidv4();
-    const link = `${req.protocol}://${req.get("host")}/user.html?id=${id}`;
-    const qr = await QRCode.toDataURL(link);
-
-    user = {
-      _id: id,
-      paymentId: pay.paymentId,
-      ...pay.metadata,
-      qr
-    };
-
-    await users.insertOne(user);
-  }
-
-  let html = fs.readFileSync(
-    path.join(__dirname, "public/success.html"),
-    "utf8"
-  );
-
-  html = html
-    .replace("{{QR}}", `<img src="${user.qr}">`)
-    .replace("{{LINK}}", `${req.protocol}://${req.get("host")}/user.html?id=${user._id}`);
-
-  res.send(html);
 });
 
 /* =====================
