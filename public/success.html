@@ -5,138 +5,138 @@
 <title>Pagamento Confirmado 💖</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+
 <style>
-*{box-sizing:border-box}
 body{
   margin:0;
-  min-height:100vh;
-  background:radial-gradient(circle at top,#2b1d4f,#000);
-  font-family:Arial, sans-serif;
+  background:radial-gradient(circle,#ff5fa2,#000);
   color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.card{
-  background:#0d0f18;
-  border-radius:24px;
-  padding:30px;
-  max-width:440px;
-  width:100%;
+  font-family:'Playfair Display', serif;
   text-align:center;
-  box-shadow:0 0 40px rgba(255,105,180,.25);
+  padding:40px 16px;
 }
 
-.heart{
-  font-size:48px;
-  animation:pulse 2s infinite;
-}
-
-@keyframes pulse{
-  0%{transform:scale(1)}
-  50%{transform:scale(1.15)}
-  100%{transform:scale(1)}
+.container{
+  max-width:420px;
+  margin:auto;
+  background:rgba(0,0,0,.6);
+  border-radius:24px;
+  padding:32px 20px;
+  box-shadow:0 0 40px rgba(255,95,162,.6);
 }
 
 h1{
   color:#ffd400;
-  margin:12px 0;
+  margin-bottom:10px;
 }
 
-.msg{
-  font-size:.95em;
-  color:#ddd;
-  margin-bottom:20px;
+p{
+  opacity:.95;
+  line-height:1.6;
 }
 
 .qr-box{
+  margin:24px 0;
+  padding:16px;
   background:#fff;
   border-radius:20px;
-  padding:14px;
-  margin:20px auto;
-  width:fit-content;
 }
 
 .qr-box img{
-  width:260px;
+  width:220px;
   max-width:100%;
 }
 
-.link{
+.link-box{
+  margin-top:18px;
   background:#111;
   padding:14px;
   border-radius:14px;
   word-break:break-all;
-  font-size:.85em;
-  margin-top:12px;
+  font-size:.95em;
 }
 
 button{
-  margin-top:14px;
   width:100%;
-  padding:14px;
+  padding:16px;
+  margin-top:14px;
   border:none;
-  border-radius:14px;
+  border-radius:16px;
   font-size:1em;
-  font-weight:bold;
-  background:#ffd400;
-  color:#000;
   cursor:pointer;
 }
 
+.copy{
+  background:#ffd400;
+  color:#000;
+  font-weight:bold;
+}
+
 .print{
-  background:#333;
+  background:#ff5fa2;
   color:#fff;
 }
 
-.footer{
-  margin-top:18px;
-  font-size:.8em;
-  color:#aaa;
+.heart{
+  position:fixed;
+  bottom:-20px;
+  font-size:18px;
+  opacity:.7;
+  animation:float 8s linear infinite;
+  pointer-events:none;
+}
+
+@keyframes float{
+  to{transform:translateY(-120vh);opacity:0}
 }
 </style>
 </head>
 
 <body>
 
-<div class="card">
-  <div class="heart">💖</div>
+<div class="container">
+  <h1>💖 Pagamento confirmado!</h1>
 
-  <h1>Pagamento confirmado!</h1>
-
-  <div class="msg">
-    Obrigado por confiar em nosso trabalho.<br>
-    Seu site romântico foi criado com carinho e já está disponível.
-  </div>
+  <p>
+    Obrigado pela sua confiança.<br>
+    Seu site romântico exclusivo já está pronto ✨
+  </p>
 
   <div class="qr-box">
-    <!-- QR CODE INJETADO PELO SERVER -->
+    <!-- QR CODE DO SITE -->
     {{QR}}
   </div>
 
-  <div class="msg">
-    Escaneie o QR Code acima para acessar ou compartilhar.
-  </div>
+  <p>📲 Escaneie ou salve este QR Code</p>
 
-  <div class="link" id="link">
+  <div class="link-box" id="link">
     {{LINK}}
   </div>
 
-  <button onclick="copiar()">Copiar link do site</button>
-  <button class="print" onclick="window.print()">Salvar / Imprimir</button>
+  <button class="copy" onclick="copiarLink()">📋 Copiar link do site</button>
+  <button class="print" onclick="window.print()">🖨️ Salvar ou imprimir QR Code</button>
 
-  <div class="footer">
-    💝 Agradecemos a confiança<br>
-    Que esse site represente um amor eterno.
-  </div>
+  <p style="margin-top:18px;font-size:.9em;opacity:.85">
+    Você pode compartilhar este link com quem ama ❤️
+  </p>
 </div>
 
 <script>
-function copiar(){
-  const texto = document.getElementById("link").innerText;
-  navigator.clipboard.writeText(texto);
-  alert("Link copiado com sucesso!");
+function copiarLink(){
+  const text = document.getElementById("link").innerText;
+  navigator.clipboard.writeText(text);
+  alert("Link copiado com sucesso 💕");
+}
+
+/* Corações */
+for(let i=0;i<12;i++){
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerText="❤️";
+  h.style.left=Math.random()*100+"%";
+  h.style.animationDuration=6+Math.random()*6+"s";
+  document.body.appendChild(h);
 }
 </script>
 
