@@ -294,6 +294,7 @@ button{
   <div class="carta" id="carta"></div>  <button class="pay" id="btnComprar">Gerar QR code por R$9,99</button>
 
 </div>  <script>  
+const LIMITE_MUSICA_SEG = 120; // 2 minutos  
 const nomeInput = document.getElementById("nomeInput");  
 const msgInput = document.getElementById("msgInput");  
 const cartaInput = document.getElementById("cartaInput");  
@@ -467,23 +468,30 @@ musicaInput.onchange = async () => {
   const file = musicaInput.files[0];
   if (!file) return;
 
-  // feedback visual imediato
-  musicBox.innerText = "⏳ Enviando música...";
-  musicBox.classList.add("disabled");
+  // cria áudio temporário para validar duração
+  const tempAudio = document.createElement("audio");
+  tempAudio.src = URL.createObjectURL(file);
 
-  try {
-    const cloudUrl = await uploadMusica(file);
+  tempAudio.onloadedmetadata = async () => {
+    if (tempAudio.duration > LIMITE_MUSICA_SEG) {
+      alert("⚠️ A música deve ter no máximo 2 minutos.");
+      musicaInput.value = "";
+      URL.revokeObjectURL(tempAudio.src);
+      return;
+    }
 
-    musicaUrl = cloudUrl;          // 🔥 salva URL REAL
-    audio.src = cloudUrl;
-    audio.load();
+    // 🔥 upload só depois de validar
+    musicaUrl = await uploadMusica(file);
+
+    audio.src = musicaUrl;
     audio.style.display = "block";
-
-    // autoplay seguro (funciona no mobile)
-    audio.play().catch(() => {});
+    audio.play().catch(()=>{});
 
     musicBox.innerText = "🎶 Música selecionada";
+    musicBox.classList.add("disabled");
     removeMusic.style.display = "block";
+  };
+};
 
   } catch (e) {
     musicBox.innerText = "❌ Erro ao enviar música";
@@ -550,6 +558,7 @@ window.location.href =
 };  
 </script>  </body>  
 </html>
+
 
 
 
