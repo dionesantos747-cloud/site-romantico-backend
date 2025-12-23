@@ -29,12 +29,6 @@ body {
   overflow-x: hidden;
   touch-action: manipulation;
 }
-body {
-  background: #000;
-  color: #fff;
-  -webkit-text-size-adjust: 100%;
-  -webkit-tap-highlight-color: transparent;
-}
 html {
   filter: none !important;
 }
@@ -139,12 +133,6 @@ textarea { min-height: 90px; }
 /* =====================
    CARROSSEL — EFEITO CARTAS
 ===================== */
-#midias {
-  position: relative;
-  height: 380px;
-  margin-top: 20px;
-}
-
 #midias .photo {
   position: absolute;
   left: 50%;
@@ -154,6 +142,23 @@ textarea { min-height: 90px; }
     opacity 0.5s ease;
 }
 
+#midias .photo.behind-1 {
+  transform: translateX(calc(-50% - 24px))
+             translateY(26px)
+             rotate(-4deg)
+             scale(0.95);
+  z-index: 2;
+  opacity: 0.85;
+}
+
+#midias .photo.behind-2 {
+  transform: translateX(calc(-50% + 24px))
+             translateY(52px)
+             rotate(4deg)
+             scale(0.9);
+  z-index: 1;
+  opacity: 0.7;
+}
 /* carta da frente */
 #midias .photo.active {
   transform: translateX(-50%) translateY(0) rotate(0deg) scale(1);
@@ -336,6 +341,19 @@ body.final .remove-music {
 
 @keyframes float {
   to { transform: translateY(-120vh); opacity: 0; }
+}
+@media (prefers-color-scheme: dark) {
+  html, body {
+    background: #000 !important;
+    color: #fff !important;
+  }
+
+  input,
+  textarea,
+  button {
+    background: #fff !important;
+    color: #000 !important;
+  }
 }
 
 
