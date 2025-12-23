@@ -259,54 +259,34 @@ button{
   font-family: 'Playfair Display', serif;  
   font-size:1.6em;  
 }
-  /* =====================
-   CARROSSEL DE FOTOS
-===================== */
-#midias {
-  display: flex;
-  gap: 24px;
-  overflow-x: auto;
-  padding: 30px 16px;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-}
 
-#midias::-webkit-scrollbar {
-  display: none;
+  /* ===== BASE DO BARALHO ===== */
+#midias {
+  position: relative;
+  height: 380px;
+  margin-top: 30px;
 }
 
 #midias .photo {
-  flex: 0 0 80%;
-  max-width: 80%;
-  scroll-snap-align: center;
-
-  position: relative;
-  transition: 
-    transform 0.5s ease,
-    opacity 0.5s ease,
-    z-index 0.5s ease;
-
-  transform-origin: center bottom;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: transform 0.35s ease;
+  touch-action: none;
 }
 
-/* FOTO ATIVA (FRENTE) */
-#midias .photo.active {
-  transform: scale(1) rotate(0deg);
-  z-index: 3;
-  opacity: 1;
+  /* ===== CARTAS  (TINDER / BARALHO) ===== */
+  #midias .photo.active {
+  transform: translateX(-50%) scale(1) rotate(0deg);
 }
 
-/* FOTOS ATRÁS */
 #midias .photo.behind-1 {
-  transform: scale(0.9) rotate(-6deg) translateX(-40px);
-  z-index: 2;
-  opacity: 0.8;
+  transform: translateX(calc(-50% - 80px)) scale(0.9) rotate(-8deg);
 }
 
 #midias .photo.behind-2 {
-  transform: scale(0.85) rotate(6deg) translateX(40px);
-  z-index: 1;
-  opacity: 0.6;
+  transform: translateX(calc(-50% + 80px)) scale(0.9) rotate(8deg);
 }
 
 /* =====================
@@ -412,6 +392,56 @@ document.addEventListener("DOMContentLoaded", () => {
     else if (i === index + 2) foto.classList.add("behind-2");
   });
 }
+const swipeSound = new Audio("/sounds/card-swipe.mp3");
+
+function ativarSwipe(cartas) {
+  cartas.forEach(carta => {
+    let startX = 0;
+    let currentX = 0;
+    let dragging = false;
+
+    carta.addEventListener("pointerdown", e => {
+      dragging = true;
+      startX = e.clientX;
+      carta.setPointerCapture(e.pointerId);
+      carta.style.transition = "none";
+    });
+
+    carta.addEventListener("pointermove", e => {
+      if (!dragging) return;
+      currentX = e.clientX - startX;
+
+      carta.style.transform =
+        `translateX(calc(-50% + ${currentX}px)) rotate(${currentX / 12}deg)`;
+    });
+
+    carta.addEventListener("pointerup", () => {
+      dragging = false;
+
+      if (Math.abs(currentX) > 120) {
+        swipeSound.currentTime = 0;
+        swipeSound.play();
+
+        carta.style.transition = "transform 0.4s ease";
+        carta.style.transform =
+          `translateX(${currentX > 0 ? 150 : -150}vw) rotate(${currentX > 0 ? 25 : -25}deg)`;
+
+        setTimeout(() => {
+  carta.remove();
+  indexAtivo = Math.min(indexAtivo, document.querySelectorAll("#midias .photo").length - 1);
+  atualizarStack(indexAtivo);
+  criarDots();
+}, 300);
+
+      } else {
+        carta.style.transition = "transform 0.3s ease";
+        carta.style.transform = "translateX(-50%) rotate(0deg)";
+      }
+
+      currentX = 0;
+    });
+  });
+}
 
 function ativarDot(index) {
   document.querySelectorAll(".dot").forEach((dot, i) => {
@@ -435,22 +465,6 @@ function criarDots() {
     dotsContainer.appendChild(dot);
   });
 }
-midias.addEventListener("scroll", () => {
-  const fotosDOM = document.querySelectorAll("#midias .photo");
-  if (!fotosDOM.length) return;
-
-  indexAtivo = 0;
-
-  fotosDOM.forEach((foto, i) => {
-    const rect = foto.getBoundingClientRect();
-    if (rect.left >= 0 && rect.left < window.innerWidth / 2) {
-      indexAtivo = i;
-    }
-  });
-
-  atualizarStack(indexAtivo);
-  ativarDot(indexAtivo);
-});
 
      /* PREVIEW TEXTO */
   nomeInput.oninput = () => nome.innerText = nomeInput.value;
@@ -577,10 +591,19 @@ remove.onclick = () => {
   atualizarStack(0);
 };
 
-    div.appendChild(remove);
-   midias.appendChild(div);
+   div.appendChild(remove);
+midias.appendChild(div);
+
+// 🔥 ATIVA SWIPE NA CARTA
+ativarSwipe([div]);
+
 criarDots();
-setTimeout(() => atualizarStack(0), 50);
+setTimeout(() => {
+  indexAtivo = 0;
+  atualizarStack(indexAtivo);
+}, 50);
+
+
    const slotEl = document.querySelector(
   `.photo-slot[data-slot="${slotAtual}"]`
 );
@@ -675,6 +698,7 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
 });
 </script> </body>  
 </html>
+
 
 
 
