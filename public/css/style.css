@@ -1,3 +1,24 @@
+/* 🔒 BLOQUEIA MODO ESCURO DO SISTEMA */
+:root {
+  color-scheme: dark;
+}
+
+html, body {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+input,
+textarea,
+button,
+select {
+  background-color: inherit !important;
+  color: inherit !important;
+  -webkit-text-fill-color: inherit !important;
+}
+* {
+  -webkit-tap-highlight-color: transparent;
+  forced-color-adjust: none;
+}
 /* ===== Reset e básico ===== */
 * { box-sizing: border-box; }
 body {
@@ -314,6 +335,7 @@ button {
 @keyframes float {
   to { transform: translateY(-120vh); opacity: 0; }
 }
+
 
 
 
