@@ -142,9 +142,18 @@ criarCoracoes();
 ================================ */
 document.querySelectorAll(".bg-card").forEach(c => {
   c.onclick = () => {
-    document.querySelectorAll(".bg-card").forEach(x => x.classList.remove("selected"));
+    document.querySelectorAll(".bg-card").forEach(x =>
+      x.classList.remove("selected")
+    );
+
     c.classList.add("selected");
-    preview.className = "preview " + c.dataset.bg;
+
+    // 🔥 salva o fundo escolhido
+    fundoSelecionado = c.dataset.bg;
+
+    // 🔥 usa a variável (não repete dataset)
+    preview.className = "preview " + fundoSelecionado;
+
     criarCoracoes();
   };
 });
@@ -269,6 +278,7 @@ setTimeout(() => {
       document.body.innerHTML = "<h2 style='text-align:center'>Site não encontrado 💔</h2>";
     });
 }
+
 
 
 
