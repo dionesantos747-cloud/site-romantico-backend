@@ -435,7 +435,9 @@ function criarDots() {
 }
 midias.addEventListener("scroll", () => {
   const fotosDOM = document.querySelectorAll("#midias .photo");
-  let indexAtivo = 0;
+  if (!fotosDOM.length) return;
+
+  indexAtivo = 0;
 
   fotosDOM.forEach((foto, i) => {
     const rect = foto.getBoundingClientRect();
@@ -657,6 +659,7 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
 });
 </script> </body>  
 </html>
+
 
 
 
