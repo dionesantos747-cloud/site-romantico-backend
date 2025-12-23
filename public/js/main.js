@@ -216,10 +216,16 @@ if (!isEditor && userId) {
           const div = document.createElement("div");
           div.className = "photo";
           div.innerHTML = `<img src="${f}" style="width:100%">`;
-        div.scrollIntoView({
-  behavior: "smooth",
-  inline: "center"
-});
+       midias.appendChild(div);
+
+/* 🔥 desliza para a foto adicionada */
+setTimeout(() => {
+  div.scrollIntoView({
+    behavior: "smooth",
+    inline: "center",
+    block: "nearest"
+  });
+}, 100);
       }
 
       if (data.musica) {
@@ -231,5 +237,6 @@ if (!isEditor && userId) {
       document.body.innerHTML = "<h2 style='text-align:center'>Site não encontrado 💔</h2>";
     });
 }
+
 
 
