@@ -20,6 +20,37 @@ const preview = document.getElementById("preview");
 const fotoInput = document.getElementById("fotoInput");
 const midias = document.getElementById("midias");
 
+/* ===============================
+   CARROSSEL / STACK POLAROID
+================================ */
+function atualizarStack(index) {
+  const fotosDOM = document.querySelectorAll("#midias .photo");
+
+  fotosDOM.forEach((foto, i) => {
+    foto.classList.remove("active", "behind-1", "behind-2");
+
+    if (i === index) foto.classList.add("active");
+    else if (i === index + 1) foto.classList.add("behind-1");
+    else if (i === index + 2) foto.classList.add("behind-2");
+  });
+}
+
+if (midias) {
+  midias.addEventListener("scroll", () => {
+    const fotosDOM = document.querySelectorAll("#midias .photo");
+    let index = 0;
+
+    fotosDOM.forEach((foto, i) => {
+      const rect = foto.getBoundingClientRect();
+      if (rect.left >= 0 && rect.left < window.innerWidth / 2) {
+        index = i;
+      }
+    });
+
+    atualizarStack(index);
+  });
+}
+
 const musicBox = document.getElementById("musicBox");
 const musicaInput = document.getElementById("musicaInput");
 const audio = document.getElementById("audioPlayer");
@@ -237,6 +268,7 @@ setTimeout(() => {
       document.body.innerHTML = "<h2 style='text-align:center'>Site não encontrado 💔</h2>";
     });
 }
+
 
 
 
