@@ -641,13 +641,14 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        nome: nomeInput.value,
-        mensagem: msgInput.value,
-        carta: cartaInput.value,
-        dataInicio: dataInput.value,
-        fotos,
-        musica: musicaUrl
-      })
+  nome: nomeInput.value,
+  mensagem: msgInput.value,
+  carta: cartaInput.value,
+  dataInicio: dataInput.value,
+  fotos,
+  musica: musicaUrl,
+  fundo: document.querySelector(".bg-card.selected")?.dataset.bg || "azul"
+})
     });
 
     const d = await r.json();
@@ -659,6 +660,7 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
 });
 </script> </body>  
 </html>
+
 
 
 
