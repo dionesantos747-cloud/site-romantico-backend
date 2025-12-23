@@ -169,26 +169,23 @@ if (isEditor) {
     remove.className = "photo-remove";
     remove.innerText = "×";
      
-  remove.onclick = () => {
+  const slotIndex = slotAtual;
+
+remove.onclick = () => {
   URL.revokeObjectURL(url);
-  fotos[slotAtual] = null;
+  fotos[slotIndex] = null;
   div.remove();
 
-  const s = document.querySelector(`.photo-slot[data-slot="${slotAtual}"]`);
+  const s = document.querySelector(
+    `.photo-slot[data-slot="${slotIndex}"]`
+  );
   s.classList.remove("filled");
   s.innerText = "+";
 
-  // 🔥 REATIVA STACK
   setTimeout(() => {
     atualizarStack(0);
   }, 50);
-};
-    div.appendChild(remove);
-    midias.appendChild(div);
-    // 🔥 ativa efeito cartas assim que adiciona
-setTimeout(() => {
-  atualizarStack(0);
-}, 50); 
+}; 
 
     const s = document.querySelector(`.photo-slot[data-slot="${slotAtual}"]`);
     s.classList.add("filled");
@@ -292,6 +289,7 @@ setTimeout(() => {
       `;
     });
 }
+
 
 
 
