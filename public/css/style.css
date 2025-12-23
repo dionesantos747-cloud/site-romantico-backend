@@ -107,14 +107,40 @@ textarea { min-height: 90px; }
   box-shadow: 0 0 18px rgba(255,255,255,.35);
   animation: floatPhoto 6s ease-in-out infinite;
 }
-/* CARROSSEL DE FOTOS */
+/* CARROSSEL DE FOTOS — EFEITO CARTAS */
 #midias {
-  display: flex;
-  gap: 24px;
-  overflow-x: auto;
-  padding: 30px 16px;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
+  position: relative;
+  height: 360px;
+  margin-top: 20px;
+}
+
+/* todas as fotos empilhadas */
+#midias .photo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+/* foto principal */
+#midias .photo.active {
+  transform: translateX(-50%) translateY(0) rotate(0deg) scale(1);
+  z-index: 3;
+  opacity: 1;
+}
+
+/* carta atrás 1 */
+#midias .photo.behind-1 {
+  transform: translateX(-50%) translateY(22px) rotate(-4deg) scale(0.95);
+  z-index: 2;
+  opacity: 0.85;
+}
+
+/* carta atrás 2 */
+#midias .photo.behind-2 {
+  transform: translateX(-50%) translateY(44px) rotate(4deg) scale(0.9);
+  z-index: 1;
+  opacity: 0.7;
 }
 /* ===== Bolinhas indicadoras ===== */
 .dots {
@@ -288,6 +314,7 @@ button {
 @keyframes float {
   to { transform: translateY(-120vh); opacity: 0; }
 }
+
 
 
 
