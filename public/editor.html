@@ -601,6 +601,8 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
 
     // preview imediato
     audio.src = URL.createObjectURL(file);
+    audio.volume = 0.8;
+    audio.preload = "auto";
     audio.style.display = "block";
     audio.play();
 
@@ -665,6 +667,7 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
 });
 </script> </body>  
 </html>
+
 
 
 
