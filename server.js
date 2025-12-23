@@ -54,7 +54,10 @@ const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN;
 
 let payments = null;
 let users = null;
-
+if (!MONGO_URI || !MP_ACCESS_TOKEN) {
+  console.error("❌ Variáveis de ambiente não definidas");
+  process.exit(1);
+}
 /* =====================
    MONGODB
 ===================== */
@@ -176,7 +179,10 @@ app.post("/webhook", (req, res) => {
 
   (async () => {
     try {
-      const paymentId = String(req.body?.data?.id);
+      const paymentId =
+  req.body?.data?.id ||
+  req.body?.id ||
+  req.query?.id;
       if (!paymentId) return;
 
       // CONSULTA MERCADO PAGO
