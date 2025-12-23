@@ -505,9 +505,12 @@ midias.addEventListener("scroll", () => {
 
   /* FUNDOS */
   document.querySelectorAll(".bg-card").forEach(c => {
-    c.onclick = () => {
-      document.querySelectorAll(".bg-card").forEach(x => x.classList.remove("selected"));
-      c.classList.add("selected");
+  c.onclick = () => {
+  document.querySelectorAll(".bg-card").forEach(x => x.classList.remove("selected"));
+  c.classList.add("selected");
+
+  fundoSelecionado = c.dataset.bg; // 🔥 SALVA
+  preview.className = "preview " + fundoSelecionado;
       preview.className = "preview " + c.dataset.bg;
       criarCoracoes();
     };
@@ -660,6 +663,7 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
 });
 </script> </body>  
 </html>
+
 
 
 
