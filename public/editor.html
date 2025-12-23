@@ -436,12 +436,9 @@ midias.addEventListener("scroll", () => {
       indexAtivo = i;
     }
   });
-ativarDot(indexAtivo);
+
   atualizarStack(indexAtivo); 
-});
-  ativarDot(indexAtivo);
-});
-  const musicBox = document.getElementById("musicBox");
+    const musicBox = document.getElementById("musicBox");
   const musicaInput = document.getElementById("musicaInput");
   const audio = document.getElementById("audioPlayer");
   const removeMusic = document.getElementById("removeMusic");
@@ -452,8 +449,9 @@ ativarDot(indexAtivo);
   let fotos = [null, null, null];
   let slotAtual = null;
   let musicaUrl = null;
-
-  /* PREVIEW TEXTO */
+});
+  
+    /* PREVIEW TEXTO */
   nomeInput.oninput = () => nome.innerText = nomeInput.value;
   msgInput.oninput = () => mensagem.innerText = msgInput.value;
   cartaInput.oninput = () => carta.innerText = cartaInput.value;
@@ -555,10 +553,18 @@ ativarDot(indexAtivo);
     const remove = document.createElement("div");
     remove.className = "photo-remove";
     remove.innerText = "×";
-    remove.onclick = () => {
-      fotos[slotAtual] = null;
-      div.remove();
-    };
+    const slotIndex = slotAtual;
+
+remove.onclick = () => {
+  fotos[slotIndex] = null;
+  div.remove();
+
+  const slot = document.querySelector(
+    `.photo-slot[data-slot="${slotIndex}"]`
+  );
+  slot.classList.remove("filled");
+  slot.innerText = "+";
+};
 
     div.appendChild(remove);
     midias.appendChild(div);
@@ -654,6 +660,7 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
 });
 </script> </body>  
 </html>
+
 
 
 
