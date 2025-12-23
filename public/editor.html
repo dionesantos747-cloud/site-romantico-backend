@@ -257,7 +257,51 @@ button{
   box-shadow:0 4px 8px rgba(0,0,0,0.4);  
   font-family: 'Playfair Display', serif;  
   font-size:1.6em;  
-}  
+}
+  /* =====================
+   CARROSSEL DE FOTOS
+===================== */
+#midias {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding: 30px 16px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+#midias::-webkit-scrollbar {
+  display: none;
+}
+
+#midias .photo {
+  flex: 0 0 80%;
+  max-width: 80%;
+  scroll-snap-align: center;
+}
+
+/* =====================
+   BOLINHAS INDICADORAS
+===================== */
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: -10px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background: #777;
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+
+.dot.active {
+  background: #ffd400;
+  transform: scale(1.3);
+}
 </style>  </head>  <body>  <div class="editor" id="editor">  <label>Nome</label>
 <input id="nomeInput" placeholder="Ex: Maria ❤️">
 
@@ -524,6 +568,7 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
 });
 </script> </body>  
 </html>
+
 
 
 
