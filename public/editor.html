@@ -274,7 +274,13 @@ button{
   transform: translateX(-50%);
   transition: transform 0.35s ease;
   touch-action: none;
+  z-index: 1;
 }
+
+#midias .photo.active { z-index: 3; }
+#midias .photo.behind-1 { z-index: 2; }
+#midias .photo.behind-2 { z-index: 1; }
+
 
   /* ===== CARTAS  (TINDER / BARALHO) ===== */
   #midias .photo.active {
@@ -391,6 +397,10 @@ document.addEventListener("DOMContentLoaded", () => {
     else if (i === index + 1) foto.classList.add("behind-1");
     else if (i === index + 2) foto.classList.add("behind-2");
   });
+
+  // 🔥 AQUI — SEMPRE DEPOIS DO forEach
+  const ativa = document.querySelector("#midias .photo.active");
+  if (ativa) ativarSwipe([ativa]);
 }
 const swipeSound = new Audio("/sounds/card-swipe.mp3");
 
@@ -426,12 +436,21 @@ function ativarSwipe(cartas) {
         carta.style.transform =
           `translateX(${currentX > 0 ? 150 : -150}vw) rotate(${currentX > 0 ? 25 : -25}deg)`;
 
-        setTimeout(() => {
+       setTimeout(() => {
   carta.remove();
-  indexAtivo = Math.min(indexAtivo, document.querySelectorAll("#midias .photo").length - 1);
+
+  // 🔥 AVANÇA O BARALHO
+  indexAtivo = 0;
+
   atualizarStack(indexAtivo);
   criarDots();
+
+  // 🔥 ativa swipe na nova carta da frente
+  const novaCarta = document.querySelector("#midias .photo.active");
+  if (novaCarta) ativarSwipe([novaCarta]);
+
 }, 300);
+
 
       } else {
         carta.style.transition = "transform 0.3s ease";
@@ -698,6 +717,7 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
 });
 </script> </body>  
 </html>
+
 
 
 
