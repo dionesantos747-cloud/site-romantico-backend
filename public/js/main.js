@@ -35,22 +35,6 @@ function atualizarStack(index) {
   });
 }
 
-if (midias) {
-  midias.addEventListener("scroll", () => {
-    const fotosDOM = document.querySelectorAll("#midias .photo");
-    let index = 0;
-
-    fotosDOM.forEach((foto, i) => {
-      const rect = foto.getBoundingClientRect();
-      if (rect.left >= 0 && rect.left < window.innerWidth / 2) {
-        index = i;
-      }
-    });
-
-    atualizarStack(index);
-  });
-}
-
 const musicBox = document.getElementById("musicBox");
 const musicaInput = document.getElementById("musicaInput");
 const audio = document.getElementById("audioPlayer");
@@ -184,15 +168,21 @@ if (isEditor) {
     const remove = document.createElement("div");
     remove.className = "photo-remove";
     remove.innerText = "×";
-    remove.onclick = () => {
-      URL.revokeObjectURL(url);
-      fotos[slotAtual] = null;
-      div.remove();
-      const s = document.querySelector(`.photo-slot[data-slot="${slotAtual}"]`);
-      s.classList.remove("filled");
-      s.innerText = "+";
-    };
+     
+  remove.onclick = () => {
+  URL.revokeObjectURL(url);
+  fotos[slotAtual] = null;
+  div.remove();
 
+  const s = document.querySelector(`.photo-slot[data-slot="${slotAtual}"]`);
+  s.classList.remove("filled");
+  s.innerText = "+";
+
+  // 🔥 REATIVA STACK
+  setTimeout(() => {
+    atualizarStack(0);
+  }, 50);
+};
     div.appendChild(remove);
     midias.appendChild(div);
     // 🔥 ativa efeito cartas assim que adiciona
@@ -274,15 +264,6 @@ setTimeout(() => {
   atualizarStack(0);
 }, 100);
 }
-/* 🔥 desliza para a foto adicionada */
-setTimeout(() => {
-  div.scrollIntoView({
-    behavior: "smooth",
-    inline: "center",
-    block: "nearest"
-  });
-}, 100);
-      }
 
      if (data.musica) {
   audio.src = data.musica;
@@ -295,6 +276,7 @@ setTimeout(() => {
       document.body.innerHTML = "<h2 style='text-align:center'>Site não encontrado 💔</h2>";
     });
 }
+
 
 
 
