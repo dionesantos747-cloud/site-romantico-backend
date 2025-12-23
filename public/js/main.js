@@ -266,16 +266,33 @@ setTimeout(() => {
 }
 
      if (data.musica) {
-  audio.src = data.musica;
-  audio.preload = "auto";
-  audio.volume = 0.8;
-  audio.style.display = "block";
-}
+        audio.src = data.musica;
+        audio.preload = "auto";
+        audio.volume = 0.8;
+        audio.style.display = "block";
+      }
     })
+  // ✅ ESTE BLOCO FICA AQUI
     .catch(() => {
-      document.body.innerHTML = "<h2 style='text-align:center'>Site não encontrado 💔</h2>";
+      document.body.innerHTML = `
+        <div style="
+          min-height:100vh;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          text-align:center;
+          color:white;
+          font-family:'Playfair Display', serif;
+        ">
+          <div>
+            <h1>💔 Site não encontrado</h1>
+            <p>Este link é inválido ou ainda não foi ativado.</p>
+          </div>
+        </div>
+      `;
     });
 }
+
 
 
 
