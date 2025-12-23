@@ -1,262 +1,534 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<title>Site Romântico</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<!DOCTYPE html>  <html lang="pt-BR">  
+<head>  
+<meta charset="UTF-8">  
+<title>Site Romântico</title>  
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">  
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">  <style>  
+*{box-sizing:border-box}  
+body{  
+  margin:0;  
+  background:#000;  
+  color:#fff;  
+  font-family:Arial,sans-serif;  
+  overflow-x:hidden;  
+  touch-action:manipulation;  
+}  
+  
+.editor{  
+  padding:20px;  
+  background:#0d0f18;  
+}  
+  
+label{  
+  color:#ffb3d9;  
+  display:block;  
+  margin:14px 0 6px;  
+}  
+  
+input,textarea{  
+  width:100%;  
+  padding:14px;  
+  border-radius:14px;  
+  border:none;  
+  font-size:1em;  
+}  
+  
+input.error,textarea.error{  
+  border:2px solid red;  
+}  
+  
+.error-text{  
+  color:red;  
+  font-size:.9em;  
+  margin-top:4px;  
+  display:none;  
+}  
+  
+textarea{min-height:90px}  
+  
+/* FUNDOS */  
+.bg-options{  
+  display:flex;  
+  gap:12px;  
+  justify-content:center;  
+  flex-wrap:wrap;  
+}  
+.bg-card{  
+  width:60px;  
+  height:60px;  
+  border-radius:14px;  
+  border:3px solid #000;  
+  cursor:pointer;  
+}  
+.bg-card.selected{  
+  border:3px solid #fff;  
+}  
+.azul{background:radial-gradient(circle,#2b6cff,#000)}  
+.roxo{background:radial-gradient(circle,#8a5cff,#000)}  
+.rosa{background:radial-gradient(circle,#ff5fa2,#000)}  
+.preto{background:radial-gradient(circle,#222,#000)}  
+  
+/* FOTOS */  
+.photo-grid{  
+  display:flex;  
+  gap:10px;  
+  justify-content:center;  
+}  
+.photo-slot{  
+  width:90px;  
+  height:90px;  
+  border-radius:18px;  
+  border:2px dashed #777;  
+  display:flex;  
+  align-items:center;  
+  justify-content:center;  
+  font-size:2em;  
+  cursor:pointer;  
+  position:relative;  
+}  
+.photo-slot.filled{cursor:default}  
+  
+.photo-remove{  
+  position:absolute;  
+  top:-8px;  
+  right:-8px;  
+  background:#ff4b4b;  
+  color:#fff;  
+  border-radius:50%;  
+  width:22px;  
+  height:22px;  
+  display:flex;  
+  align-items:center;  
+  justify-content:center;  
+  font-size:14px;  
+  cursor:pointer;  
+}  
+  
+.photo{  
+  background:#fff;  
+  padding:8px 8px 18px;  
+  border-radius:4px;  
+  margin:20px auto;  
+  max-width:280px;  
+  box-shadow:0 0 18px rgba(255,255,255,.35);  
+  animation:floatPhoto 6s ease-in-out infinite;  
+}  
+  
+@keyframes floatPhoto{  
+  0%,100%{transform:translateY(0) rotate(-1deg)}  
+  50%{transform:translateY(-6px) rotate(1deg)}  
+}  
+  
+/* MÚSICA */  
+#audioPlayer {  
+  display: block;  
+  margin: 0 auto 20px;  
+  width: 80%;  
+  max-width: 300px;  
+}  
+.music-box{  
+  margin-top:12px;  
+  background:#222;  
+  padding:14px;  
+  border-radius:14px;  
+  text-align:center;  
+  cursor:pointer;  
+}  
+.music-box.disabled{  
+  opacity:.7;  
+  cursor:default;  
+}  
+  
+.remove-music{  
+  display:none;  
+  margin-top:8px;  
+  color:#ff4b4b;  
+  text-align:center;  
+  cursor:pointer;  
+}  
+  
+/* PREVIEW */  
+.preview{  
+  min-height:100vh;  
+  padding:40px 16px 160px;  
+  text-align:center;  
+  position:relative;  
+  overflow:hidden;  
+}  
+  
+/* NOME COM MESMA FONTE DO CONTADOR, COR AMARELA, BRILHO LEVE, PULSANTE LENTO */  
+.nome{  
+  font-family:'Playfair Display', serif;  
+  font-size:3em;  
+  font-weight:bold;  
+  color:#ffd400;  
+  text-shadow: 0 0 6px #ffd400, 1px 1px 3px #000;  
+  display:inline-block;  
+  animation: pulseNome 3s infinite;  
+}  
+  
+@keyframes pulseNome{  
+  0%{transform: scale(1);}  
+  50%{transform: scale(1.05);}  
+  100%{transform: scale(1);}  
+}  
+  
+/* MENSAGEM PRINCIPAL LEGÍVEL INCLINADA */  
+.mensagem{  
+  font-family:'Playfair Display', serif;  
+  font-size:1.8em;  
+  font-style:italic;  
+  color:#fff;  
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.5);  
+}  
+  
+.carta{  
+  background:#fff;  
+  color:#333;  
+  padding:22px;  
+  border-radius:20px;  
+  margin-top:20px;  
+  display:none;  
+  max-height:70vh;  
+  overflow-y:auto;  
+}  
+  
+button{  
+  width:100%;  
+  padding:18px;  
+  border:none;  
+  border-radius:18px;  
+  font-size:1.1em;  
+  margin-top:18px;  
+}  
+  
+.pay{  
+  background:#ffd400;  
+  color:#000;  
+  font-weight:bold;  
+  animation:pulse 1.4s infinite;  
+}  
+@keyframes pulse{  
+  0%{box-shadow:0 0 0 0 rgba(255,212,0,.6)}  
+  70%{box-shadow:0 0 0 14px rgba(255,212,0,0)}  
+  100%{box-shadow:0 0 0 0 rgba(255,212,0,0)}  
+}  
+  
+/* CORAÇÕES */  
+.heart{  
+  position:absolute;  
+  bottom:-20px;  
+  font-size:18px;  
+  opacity:.6;  
+  animation:float 8s linear infinite;  
+  pointer-events:none;  
+}  
+@keyframes float{  
+  to{transform:translateY(-120vh);opacity:0}  
+}  
+  
+/* CONTADOR ESTILIZADO */  
+#tempo{  
+  margin-top:20px;  
+  text-align:center;  
+}  
+  
+#tempo .titulo{  
+  font-family: 'Playfair Display', serif;  
+  font-size:2.2em;  
+  font-weight:bold;  
+  margin-bottom:12px;  
+  display:block;  
+  color:#ffd400;  
+  text-shadow: 2px 2px 4px #000;  
+}  
+  
+#tempo .contador{  
+  display:flex;  
+  justify-content:center;  
+  gap:12px;  
+}  
+  
+#tempo .contador .item{  
+  background:#fff;  
+  color:#333;  
+  padding:12px 18px;  
+  border-radius:12px;  
+  box-shadow:0 4px 8px rgba(0,0,0,0.4);  
+  font-family: 'Playfair Display', serif;  
+  font-size:1.6em;  
+}  
+</style>  </head>  <body>  <div class="editor" id="editor">  <label>Nome</label>
+<input id="nomeInput" placeholder="Ex: Maria ❤️">
 
-<style>
-/* ===== RESET ===== */
-*{box-sizing:border-box}
-body{
-  margin:0;
-  background:#000;
-  color:#fff;
-  font-family:Arial,sans-serif;
-  overflow-x:hidden;
-  touch-action:manipulation;
-}
+  <div class="error-text">Campo não preenchido</div>  <label>Mensagem principal</label>
 
-/* ===== EDITOR ===== */
-.editor{padding:20px;background:#0d0f18}
-label{color:#ffb3d9;display:block;margin:14px 0 6px}
-input,textarea{
-  width:100%;
-  padding:14px;
-  border-radius:14px;
-  border:none;
-  font-size:1em
-}
-textarea{min-height:90px}
-input.error,textarea.error{border:2px solid red}
-.error-text{color:red;font-size:.9em;display:none}
+  <textarea id="msgInput" placeholder="Escreva algo especial..."></textarea>    <div class="error-text">Campo não preenchido</div>  <label>Carta secreta</label>
 
-/* ===== FUNDOS ===== */
-.bg-options{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.bg-card{width:60px;height:60px;border-radius:14px;border:3px solid #000;cursor:pointer}
-.bg-card.selected{border-color:#fff}
-.azul{background:radial-gradient(circle,#2b6cff,#000)}
-.roxo{background:radial-gradient(circle,#8a5cff,#000)}
-.rosa{background:radial-gradient(circle,#ff5fa2,#000)}
-.preto{background:radial-gradient(circle,#222,#000)}
+  <textarea id="cartaInput" placeholder="Mensagem só para quem ama 💌"></textarea>    <div class="error-text">Campo não preenchido</div>  <label>Data de início do namoro</label>
+<input type="date" id="dataInput">
 
-/* ===== SLOTS ===== */
-.photo-grid{display:flex;gap:10px;justify-content:center}
-.photo-slot{
-  width:90px;height:90px;
-  border-radius:18px;
-  border:2px dashed #777;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:2em;
-  cursor:pointer
-}
-.photo-slot.filled{cursor:default}
+  <div class="error-text">Campo não preenchido</div>  <label>Fotos</label>
 
-/* ===== PREVIEW ===== */
-.preview{
-  min-height:100vh;
-  padding:40px 16px 160px;
-  text-align:center;
-  position:relative;
-  overflow:hidden
-}
+  <div class="photo-grid">  
+    <div class="photo-slot" data-slot="0">+</div>  
+    <div class="photo-slot" data-slot="1">+</div>  
+    <div class="photo-slot" data-slot="2">+</div>  
+  </div>  
+  <input type="file" id="fotoInput" accept="image/*" hidden>  <label>Música</label>
 
-.nome{
-  font-family:'Playfair Display',serif;
-  font-size:3em;
-  color:#ffd400;
-  animation:pulseNome 3s infinite
-}
-@keyframes pulseNome{
-  0%{transform:scale(1)}
-  50%{transform:scale(1.05)}
-  100%{transform:scale(1)}
-}
+  <div class="music-box" id="musicBox">Adicionar música 🎵</div>  
+  <div class="remove-music" id="removeMusic">Remover música</div>  
+  <input type="file" id="musicaInput" accept="audio/*" hidden>  <label>Fundo</label>
 
-.mensagem{
-  font-family:'Playfair Display',serif;
-  font-size:1.8em;
-  font-style:italic
-}
+  <div class="bg-options">  
+    <div class="bg-card azul selected" data-bg="azul"></div>  
+    <div class="bg-card roxo" data-bg="roxo"></div>  
+    <div class="bg-card rosa" data-bg="rosa"></div>  
+    <div class="bg-card preto" data-bg="preto"></div>  
+  </div>  
+</div>  <div class="preview azul" id="preview">  
+  <audio id="audioPlayer" controls style="display:none;"></audio>    <div class="nome" id="nome"></div>  
+  <div class="mensagem" id="mensagem"></div>    <div id="midias"></div>    <div id="tempo"></div>  <button id="btnCarta">💌 Abrir carta</button>
 
-.carta{
-  background:#fff;
-  color:#333;
-  padding:22px;
-  border-radius:20px;
-  margin-top:20px;
-  display:none
-}
+  <div class="carta" id="carta"></div>  <button class="pay" id="btnComprar">Gerar QR code por R$9,99</button>
 
-/* ===== CARROSSEL POLAROID ===== */
-#midias{
-  display:flex;
-  gap:24px;
-  overflow-x:auto;
-  padding:30px 16px;
-  scroll-snap-type:x mandatory
-}
-#midias::-webkit-scrollbar{display:none}
+</div>  <script>  
+const nomeInput = document.getElementById("nomeInput");  
+const msgInput = document.getElementById("msgInput");  
+const cartaInput = document.getElementById("cartaInput");  
+const dataInput = document.getElementById("dataInput");  
+const nome = document.getElementById("nome");  
+const mensagem = document.getElementById("mensagem");  
+const carta = document.getElementById("carta");  
+const tempo = document.getElementById("tempo");  
+const preview = document.getElementById("preview"); 
+  
+let musicaUrl = null;  
+/* Atualizar preview em tempo real */  
+nomeInput.oninput = () => nome.innerText = nomeInput.value;  
+msgInput.oninput = () => mensagem.innerText = msgInput.value;  
+cartaInput.oninput = () => carta.innerText = cartaInput.value;  
+  
+/* CONTADOR ESTILIZADO COM SINGULAR/PLURAL */  
+setInterval(()=>{  
+  if(!dataInput.value) return;  
+  const inicio = new Date(dataInput.value);  
+  const agora = new Date();  
+  const diff = agora - inicio;  
+  if(diff < 0) return;  
+  const s = Math.floor(diff/1000)%60;  
+  const m = Math.floor(diff/60000)%60;  
+  const h = Math.floor(diff/3600000)%24;  
+  const d = Math.floor(diff/86400000)%30;  
+  const mo = Math.floor(diff/2592000000)%12;  
+  const a = Math.floor(diff/31536000000);  
+  
+  const anoText = a===1 ? "ano" : "anos";  
+  const mesText = mo===1 ? "mês" : "meses";  
+  const diaText = d===1 ? "dia" : "dias";  
+  
+  tempo.innerHTML = `  
+    <span class="titulo">Já estamos juntos há</span>  
+    <div class="contador">  
+      <div class="item">${a} ${anoText}</div>  
+      <div class="item">${mo} ${mesText}</div>  
+      <div class="item">${d} ${diaText}</div>  
+      <div class="item">${h}h ${m}m ${s}s</div>  
+    </div>  
+  `;  
+},1000);  
+  
+/* CARTA */  
+const btnCarta = document.getElementById("btnCarta");  
+btnCarta.onclick = () => {  
+  carta.style.display = carta.style.display==="block"?"none":"block";  
+  btnCarta.innerText = carta.style.display==="block"?"❌ Fechar carta":"💌 Abrir carta";  
+};  
+  
+/* CORAÇÕES */  
+function criarCoracoes(){  
+  document.querySelectorAll(".heart").forEach(h => h.remove());  
+  for(let i=0;i<12;i++){  
+    const h=document.createElement("div");  
+    h.className="heart";  
+    h.innerText="❤️";  
+    h.style.left = Math.random()*100+"%";  
+    h.style.animationDuration = 6+Math.random()*6+"s";  
+    preview.appendChild(h);  
+  }  
+}  
+criarCoracoes();  
+  
+/* FUNDOS */  
+document.querySelectorAll(".bg-card").forEach(c=>{  
+  c.onclick = () => {  
+    document.querySelectorAll(".bg-card").forEach(x=>x.classList.remove("selected"));  
+    c.classList.add("selected");  
+    preview.className = "preview " + c.dataset.bg;  
+    criarCoracoes();  
+  }  
+});  
+  /* UPLOAD CLOUDINARY */
+async function uploadFoto(file) {
+  const form = new FormData();
+  form.append("file", file);
 
-.photo{
-  background:#fff;
-  padding:8px 8px 18px;
-  border-radius:4px;
-  max-width:280px;
-  scroll-snap-align:center;
-  box-shadow:0 0 18px rgba(255,255,255,.35);
-  animation:floatPhoto 6s ease-in-out infinite;
-  transition:transform .5s,opacity .5s
-}
-
-@keyframes floatPhoto{
-  0%,100%{transform:translateY(0) rotate(-1deg)}
-  50%{transform:translateY(-6px) rotate(1deg)}
-}
-
-.photo.active{z-index:3}
-.photo.behind-1{transform:scale(.9) rotate(-6deg) translateX(-40px);opacity:.8}
-.photo.behind-2{transform:scale(.85) rotate(6deg) translateX(40px);opacity:.6}
-
-/* ===== DOTS ===== */
-.dots{display:flex;justify-content:center;gap:8px}
-.dot{width:8px;height:8px;border-radius:50%;background:#777}
-.dot.active{background:#ffd400;transform:scale(1.3)}
-
-/* ===== BOTÕES ===== */
-button{
-  width:100%;
-  padding:18px;
-  border:none;
-  border-radius:18px;
-  font-size:1.1em;
-  margin-top:18px
-}
-.pay{
-  background:#ffd400;
-  color:#000;
-  font-weight:bold;
-  animation:pulse 1.4s infinite
-}
-@keyframes pulse{
-  0%{box-shadow:0 0 0 0 rgba(255,212,0,.6)}
-  70%{box-shadow:0 0 0 14px rgba(255,212,0,0)}
-  100%{box-shadow:0 0 0 0 rgba(255,212,0,0)}
-}
-</style>
-</head>
-
-<body>
-
-<!-- ===== EDITOR ===== -->
-<div class="editor">
-  <label>Nome</label>
-  <input id="nomeInput">
-  <div class="error-text">Campo não preenchido</div>
-
-  <label>Mensagem</label>
-  <textarea id="msgInput"></textarea>
-  <div class="error-text">Campo não preenchido</div>
-
-  <label>Carta</label>
-  <textarea id="cartaInput"></textarea>
-  <div class="error-text">Campo não preenchido</div>
-
-  <label>Fotos</label>
-  <div class="photo-grid">
-    <div class="photo-slot" data-slot="0">+</div>
-    <div class="photo-slot" data-slot="1">+</div>
-    <div class="photo-slot" data-slot="2">+</div>
-  </div>
-  <input type="file" id="fotoInput" accept="image/*" hidden>
-</div>
-
-<!-- ===== PREVIEW ===== -->
-<div class="preview azul" id="preview">
-  <div class="nome" id="nome"></div>
-  <div class="mensagem" id="mensagem"></div>
-
-  <div id="midias"></div>
-  <div class="dots" id="dots"></div>
-
-  <button id="btnCarta">💌 Abrir carta</button>
-  <div class="carta" id="carta"></div>
-
-  <button class="pay">Gerar QR Code</button>
-</div>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-
-  /* ===== TEXTO ===== */
-  nomeInput.oninput = () => nome.innerText = nomeInput.value;
-  msgInput.oninput = () => mensagem.innerText = msgInput.value;
-  cartaInput.oninput = () => carta.innerText = cartaInput.value;
-
-  /* ===== CARTA ===== */
-  btnCarta.onclick = () => {
-    carta.style.display = carta.style.display === "block" ? "none" : "block";
-  };
-
-  /* ===== FOTOS ===== */
-  let slotAtual = null;
-
-  document.querySelectorAll(".photo-slot").forEach(slot => {
-    slot.onclick = () => {
-      if(slot.classList.contains("filled")) return;
-      slotAtual = slot.dataset.slot;
-      fotoInput.click();
-    };
+  const res = await fetch("/upload-image", {
+    method: "POST",
+    body: form
   });
 
-  fotoInput.onchange = e => {
-    const file = e.target.files[0];
-    if(!file) return;
+  const data = await res.json();
+  return data.url;
+}
 
-    const url = URL.createObjectURL(file);
+async function uploadMusica(file) {
+  const form = new FormData();
+  form.append("file", file);
 
-    const photo = document.createElement("div");
-    photo.className = "photo active";
-    photo.innerHTML = `<img src="${url}" style="width:100%">`;
-    midias.appendChild(photo);
+  const res = await fetch("/upload-music", {
+    method: "POST",
+    body: form
+  });
 
-    const dot = document.createElement("div");
-    dot.className = "dot";
-    dots.appendChild(dot);
+  const data = await res.json();
+  return data.url;
+}
+/* FOTOS */  
+let fotos=[null,null,null];  
+let slotAtual=null;  
+const fotoInput = document.getElementById("fotoInput");  
+const midias = document.getElementById("midias");  
+  
+document.querySelectorAll(".photo-slot").forEach(slot=>{  
+  slot.onclick = ()=>{  
+    if(slot.classList.contains("filled")) return;  
+    slotAtual = slot.dataset.slot;  
+    fotoInput.click();  
+  };  
+});  
+  
+fotoInput.onchange = async e=>{  
+  const file = e.target.files[0];  
+  if(!file || slotAtual===null) return;  
+  
+  const cloudUrl = await uploadFoto(file);
+fotos[slotAtual] = cloudUrl;
 
-    atualizarStack(0);
+// preview local
+const previewUrl = URL.createObjectURL(file);  
+  
+  const div = document.createElement("div");  
+  div.className = "photo";  
+  div.innerHTML = `<img src="${previewUrl}" style="width:100%">`;  
+  
+  const slotIndex = slotAtual;  
+  const remove = document.createElement("div");  
+  remove.className = "photo-remove";  
+  remove.innerText = "×";  
+  remove.onclick = ()=>{  
+    URL.revokeObjectURL(previewUrl);  
+    fotos[slotIndex] = null;  
+    div.remove();  
+    const slot = document.querySelector(`.photo-slot[data-slot="${slotIndex}"]`);  
+    slot.classList.remove("filled");  
+    slot.innerText = "+";  
+  };  
+  
+  div.appendChild(remove);  
+  midias.appendChild(div);  
+  
+  const slot = document.querySelector(`.photo-slot[data-slot="${slotAtual}"]`);  
+  slot.classList.add("filled");  
+  slot.innerText = "";  
+  
+  slotAtual = null;  
+  fotoInput.value = "";  
+};  
+  
+/* MÚSICA */  
+const musicBox = document.getElementById("musicBox");  
+const musicaInput = document.getElementById("musicaInput");  
+const audio = document.getElementById("audioPlayer");  
+const removeMusic = document.getElementById("removeMusic");  
+  
+musicBox.onclick = ()=>{  
+  if(musicBox.classList.contains("disabled")) return;  
+  musicaInput.click();  
+};  
+  
+musicaInput.onchange = async ()=>{
+  if(!musicaInput.files[0]) return;
 
-    document.querySelector(`[data-slot="${slotAtual}"]`).classList.add("filled");
-    document.querySelector(`[data-slot="${slotAtual}"]`).innerText = "";
+  musicaUrl = await uploadMusica(musicaInput.files[0]);
+  audio.src = musicaUrl;
+  audio.style.display = "block";
 
-    slotAtual = null;
-    fotoInput.value = "";
-  };
+  musicBox.innerText = "🎶 Música selecionada";
+  musicBox.classList.add("disabled");
+  removeMusic.style.display = "block";
+};  
+  
+removeMusic.onclick = ()=>{  
+  audio.src = "";  
+  audio.style.display = "none";  
+  musicaInput.value = "";  
+  musicBox.innerText = "Adicionar música 🎵";  
+  musicBox.classList.remove("disabled");  
+  removeMusic.style.display = "none";  
+};  
+  
+/* COMPRA */
+const btnComprar = document.getElementById("btnComprar");
 
-  function atualizarStack(index){
-    const fotos = document.querySelectorAll(".photo");
-    fotos.forEach((f,i)=>{
-      f.classList.remove("active","behind-1","behind-2");
-      if(i===index) f.classList.add("active");
-      if(i===index+1) f.classList.add("behind-1");
-      if(i===index+2) f.classList.add("behind-2");
-    });
-  }
+btnComprar.onclick = async () => {
 
+  // validação
+  const campos = [nomeInput, msgInput, cartaInput, dataInput];
+  let erro = false;
+
+  campos.forEach(c => {
+    const err = c.nextElementSibling;
+    if (!c.value) {
+      c.classList.add("error");
+      err.style.display = "block";
+      if (!erro) c.scrollIntoView({ behavior: "smooth" });
+      erro = true;
+    } else {
+      c.classList.remove("error");
+      err.style.display = "none";
+    }
+  });
+
+  if (erro) return;
+
+  // pagamento
+  const res = await fetch("/create-payment", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    nome: nomeInput.value,
+    mensagem: msgInput.value,
+    carta: cartaInput.value,
+    dataInicio: dataInput.value,
+    fotos: fotos,        // array que você já usa
+    musica: audio.src || null
+  })
 });
-</script>
 
-</body>
+  const data = await res.json();
+
+// salva o pix temporariamente
+sessionStorage.setItem("pix_qr", data.qr_base64);
+sessionStorage.setItem("pix_copia", data.copia_cola);
+
+// redireciona para aguardando
+window.location.href =
+  `/aguardando.html?payment_id=${data.payment_id}`;
+};  
+</script>  </body>  
 </html>
-
-
-
-
-
-
 
 
 
