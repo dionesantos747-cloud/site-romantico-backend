@@ -98,10 +98,11 @@ fetch(`/user-data?id=${id}`)
     }
 
     /* ===== MÚSICA ===== */
-    if (data.musica) {
-      audio.src = data.musica;
-      audio.style.display = "block";
-    }
+if (data.musica) {
+  audio.src = data.musica;
+  audio.style.display = "block";
+  audio.volume = 0.8; // 🔊 volume inicial
+}
 
     /* ===== CONTADOR ===== */
     if (data.dataInicio) {
