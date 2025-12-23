@@ -61,6 +61,7 @@ const removeMusic = document.getElementById("removeMusic");
 ================================ */
 let fotos = [null, null, null];
 let slotAtual = null;
+let fundoSelecionado = "azul";
 
 /* ===============================
    PREVIEW EM TEMPO REAL (EDITOR)
@@ -268,6 +269,7 @@ setTimeout(() => {
       document.body.innerHTML = "<h2 style='text-align:center'>Site não encontrado 💔</h2>";
     });
 }
+
 
 
 
