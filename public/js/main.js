@@ -216,8 +216,10 @@ if (!isEditor && userId) {
           const div = document.createElement("div");
           div.className = "photo";
           div.innerHTML = `<img src="${f}" style="width:100%">`;
-          midias.appendChild(div);
-        });
+        div.scrollIntoView({
+  behavior: "smooth",
+  inline: "center"
+});
       }
 
       if (data.musica) {
@@ -229,4 +231,5 @@ if (!isEditor && userId) {
       document.body.innerHTML = "<h2 style='text-align:center'>Site não encontrado 💔</h2>";
     });
 }
+
 
