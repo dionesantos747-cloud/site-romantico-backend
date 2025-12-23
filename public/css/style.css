@@ -107,7 +107,26 @@ textarea { min-height: 90px; }
   box-shadow: 0 0 18px rgba(255,255,255,.35);
   animation: floatPhoto 6s ease-in-out infinite;
 }
+/* CARROSSEL DE FOTOS */
+#midias {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding: 30px 16px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
 
+#midias::-webkit-scrollbar {
+  display: none; /* limpa visual */
+}
+
+/* cada foto vira um slide */
+#midias .photo {
+  flex: 0 0 80%;
+  max-width: 80%;
+  scroll-snap-align: center;
+}
 @keyframes floatPhoto {
   0%,100% { transform: translateY(0) rotate(-1deg); }
   50% { transform: translateY(-6px) rotate(1deg); }
@@ -250,4 +269,5 @@ button {
 @keyframes float {
   to { transform: translateY(-120vh); opacity: 0; }
 }
+
 
