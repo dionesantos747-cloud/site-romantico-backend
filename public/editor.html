@@ -299,6 +299,10 @@ button{
 </div>
 
 <script>
+<script>
+/* =====================
+   ELEMENTOS
+===================== */
 const nomeInput = document.getElementById("nomeInput");
 const msgInput = document.getElementById("msgInput");
 const cartaInput = document.getElementById("cartaInput");
@@ -310,62 +314,207 @@ const carta = document.getElementById("carta");
 const tempo = document.getElementById("tempo");
 const preview = document.getElementById("preview");
 
-nomeInput.oninput = ()=> nome.innerText = nomeInput.value;
-msgInput.oninput = ()=> mensagem.innerText = msgInput.value;
-cartaInput.oninput = ()=> carta.innerText = cartaInput.value;
+const btnCarta = document.getElementById("btnCarta");
+const btnComprar = document.getElementById("btnComprar");
 
-/* STACK */
-function atualizarStack(index){
-  document.querySelectorAll("#midias .photo").forEach((f,i)=>{
-    f.classList.remove("active","behind-1","behind-2");
-    if(i===index) f.classList.add("active");
-    if(i===index+1) f.classList.add("behind-1");
-    if(i===index+2) f.classList.add("behind-2");
+/* =====================
+   PREVIEW TEXTO
+===================== */
+nomeInput.oninput = () => nome.innerText = nomeInput.value;
+msgInput.oninput = () => mensagem.innerText = msgInput.value;
+cartaInput.oninput = () => carta.innerText = cartaInput.value;
+
+/* =====================
+   CONTADOR
+===================== */
+setInterval(() => {
+  if (!dataInput.value) return;
+
+  const inicio = new Date(dataInput.value);
+  const agora = new Date();
+  const diff = agora - inicio;
+  if (diff < 0) return;
+
+  const s = Math.floor(diff / 1000) % 60;
+  const m = Math.floor(diff / 60000) % 60;
+  const h = Math.floor(diff / 3600000) % 24;
+  const d = Math.floor(diff / 86400000) % 30;
+  const mo = Math.floor(diff / 2592000000) % 12;
+  const a = Math.floor(diff / 31536000000);
+
+  tempo.innerHTML = `
+    <span class="titulo">Já estamos juntos há</span>
+    <div class="contador">
+      <div class="item">${a} ${a === 1 ? "ano" : "anos"}</div>
+      <div class="item">${mo} ${mo === 1 ? "mês" : "meses"}</div>
+      <div class="item">${d} ${d === 1 ? "dia" : "dias"}</div>
+      <div class="item">${h}h ${m}m ${s}s</div>
+    </div>
+  `;
+}, 1000);
+
+/* =====================
+   CARTA
+===================== */
+btnCarta.onclick = () => {
+  const aberto = carta.style.display === "block";
+  carta.style.display = aberto ? "none" : "block";
+  btnCarta.innerText = aberto ? "💌 Abrir carta" : "❌ Fechar carta";
+};
+
+/* =====================
+   CORAÇÕES
+===================== */
+function criarCoracoes() {
+  document.querySelectorAll(".heart").forEach(h => h.remove());
+  for (let i = 0; i < 12; i++) {
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.innerText = "❤️";
+    h.style.left = Math.random() * 100 + "%";
+    h.style.animationDuration = 6 + Math.random() * 6 + "s";
+    preview.appendChild(h);
+  }
+}
+criarCoracoes();
+
+/* =====================
+   FOTOS
+===================== */
+const fotoInput = document.getElementById("fotoInput");
+const midias = document.getElementById("midias");
+
+let fotos = [null, null, null];
+let slotAtual = null;
+
+function atualizarStack(indexAtivo = 0) {
+  const fotosDOM = document.querySelectorAll("#midias .photo");
+  fotosDOM.forEach((foto, i) => {
+    foto.classList.remove("active", "behind-1", "behind-2");
+    if (i === indexAtivo) foto.classList.add("active");
+    else if (i === indexAtivo + 1) foto.classList.add("behind-1");
+    else if (i === indexAtivo + 2) foto.classList.add("behind-2");
   });
 }
 
-/* FOTOS */
-let fotos=[null,null,null];
-let slotAtual=null;
-const fotoInput=document.getElementById("fotoInput");
-const midias=document.getElementById("midias");
-
-document.querySelectorAll(".photo-slot").forEach(slot=>{
-  slot.onclick=()=>{
-    if(slot.classList.contains("filled")) return;
-    slotAtual=slot.dataset.slot;
+document.querySelectorAll(".photo-slot").forEach(slot => {
+  slot.onclick = () => {
+    if (slot.classList.contains("filled")) return;
+    slotAtual = Number(slot.dataset.slot);
     fotoInput.click();
-  }
+  };
 });
 
-fotoInput.onchange=e=>{
-  const file=e.target.files[0];
-  if(!file) return;
+fotoInput.onchange = e => {
+  const file = e.target.files[0];
+  if (!file || slotAtual === null) return;
 
-  const url=URL.createObjectURL(file);
-  const div=document.createElement("div");
-  div.className="photo";
-  div.innerHTML=`<img src="${url}" style="width:100%">`;
+  const previewUrl = URL.createObjectURL(file);
+  fotos[slotAtual] = previewUrl;
 
-  const rem=document.createElement("div");
-  rem.className="photo-remove";
-  rem.innerText="×";
-  rem.onclick=()=>{div.remove(); atualizarStack(0);}
-  div.appendChild(rem);
+  const div = document.createElement("div");
+  div.className = "photo";
+  div.innerHTML = `<img src="${previewUrl}" style="width:100%">`;
 
+  const remove = document.createElement("div");
+  remove.className = "photo-remove";
+  remove.innerText = "×";
+  remove.onclick = () => {
+    fotos[slotAtual] = null;
+    div.remove();
+
+    const slot = document.querySelector(`.photo-slot[data-slot="${slotAtual}"]`);
+    slot.classList.remove("filled");
+    slot.innerText = "+";
+
+    atualizarStack(0);
+  };
+
+  div.appendChild(remove);
   midias.appendChild(div);
+
+  const slot = document.querySelector(`.photo-slot[data-slot="${slotAtual}"]`);
+  slot.classList.add("filled");
+  slot.innerText = "";
+
   atualizarStack(0);
 
-  const slot=document.querySelector(`.photo-slot[data-slot="${slotAtual}"]`);
-  slot.classList.add("filled");
-  slot.innerText="";
-  slotAtual=null;
-  fotoInput.value="";
+  slotAtual = null;
+  fotoInput.value = "";
+};
+
+/* =====================
+   MÚSICA
+===================== */
+const musicBox = document.getElementById("musicBox");
+const musicaInput = document.getElementById("musicaInput");
+const audio = document.getElementById("audioPlayer");
+const removeMusic = document.getElementById("removeMusic");
+
+let musicaUrl = null;
+
+musicBox.onclick = () => {
+  if (musicBox.classList.contains("disabled")) return;
+  musicaInput.click();
+};
+
+musicaInput.onchange = () => {
+  const file = musicaInput.files[0];
+  if (!file) return;
+
+  musicaUrl = URL.createObjectURL(file);
+  audio.src = musicaUrl;
+  audio.style.display = "block";
+  audio.play();
+
+  musicBox.innerText = "🎶 Música selecionada";
+  musicBox.classList.add("disabled");
+  removeMusic.style.display = "block";
+};
+
+removeMusic.onclick = () => {
+  audio.pause();
+  audio.src = "";
+  audio.style.display = "none";
+  musicaInput.value = "";
+  musicaUrl = null;
+
+  musicBox.innerText = "Adicionar música 🎵";
+  musicBox.classList.remove("disabled");
+  removeMusic.style.display = "none";
+};
+
+/* =====================
+   COMPRA + VALIDAÇÃO
+===================== */
+btnComprar.onclick = () => {
+  const campos = [nomeInput, msgInput, cartaInput, dataInput];
+  let erro = false;
+
+  campos.forEach(campo => {
+    const erroMsg = campo.nextElementSibling;
+    if (!campo.value) {
+      campo.classList.add("error");
+      erroMsg.style.display = "block";
+      erro = true;
+    } else {
+      campo.classList.remove("error");
+      erroMsg.style.display = "none";
+    }
+  });
+
+  if (erro) {
+    campos.find(c => !c.value).scrollIntoView({ behavior: "smooth" });
+    return;
+  }
+
+  alert("✅ Tudo certo! Aqui entra o pagamento PIX.");
 };
 </script>
 
 </body>
 </html>
+
 
 
 
