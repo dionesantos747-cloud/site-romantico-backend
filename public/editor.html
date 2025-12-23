@@ -385,7 +385,30 @@ document.addEventListener("DOMContentLoaded", () => {
   const fotoInput = document.getElementById("fotoInput");
 const midias = document.getElementById("midias");
 const dotsContainer = document.getElementById("dots");
+    const musicBox = document.getElementById("musicBox");
+  const musicaInput = document.getElementById("musicaInput");
+  const audio = document.getElementById("audioPlayer");
+  const removeMusic = document.getElementById("removeMusic");
 
+  const btnCarta = document.getElementById("btnCarta");
+  const btnComprar = document.getElementById("btnComprar");
+
+  let fotos = [null, null, null];
+  let slotAtual = null;
+  let musicaUrl = null;
+midias.addEventListener("scroll", () => {
+  const fotosDOM = document.querySelectorAll("#midias .photo");
+  let indexAtivo = 0;
+
+  fotosDOM.forEach((foto, i) => {
+    const rect = foto.getBoundingClientRect();
+    if (rect.left >= 0 && rect.left < window.innerWidth / 2) {
+      indexAtivo = i;
+    }
+  });
+
+  atualizarStack(indexAtivo);
+});
 function ativarDot(index) {
   document.querySelectorAll(".dot").forEach((dot, i) => {
     dot.classList.toggle("active", i === index);
@@ -426,29 +449,9 @@ function criarDots() {
     dotsContainer.appendChild(dot);
   });
 }
-midias.addEventListener("scroll", () => {
-  const fotosDOM = document.querySelectorAll("#midias .photo");
-  let indexAtivo = 0;
-
-  fotosDOM.forEach((foto, i) => {
-    const rect = foto.getBoundingClientRect();
-    if (rect.left >= 0 && rect.left < window.innerWidth / 2) {
-      indexAtivo = i;
-    }
-  });
 
   atualizarStack(indexAtivo); 
-    const musicBox = document.getElementById("musicBox");
-  const musicaInput = document.getElementById("musicaInput");
-  const audio = document.getElementById("audioPlayer");
-  const removeMusic = document.getElementById("removeMusic");
-
-  const btnCarta = document.getElementById("btnCarta");
-  const btnComprar = document.getElementById("btnComprar");
-
-  let fotos = [null, null, null];
-  let slotAtual = null;
-  let musicaUrl = null;
+   
 });
   
     /* PREVIEW TEXTO */
@@ -660,6 +663,7 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
 });
 </script> </body>  
 </html>
+
 
 
 
