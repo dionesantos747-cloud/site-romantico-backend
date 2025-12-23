@@ -537,6 +537,7 @@ midias.addEventListener("scroll", () => {
     slot.onclick = () => {
       if (slot.classList.contains("filled")) return;
       slotAtual = slot.dataset.slot;
+      fotoInput.value = "";
       fotoInput.click();
     };
   });
@@ -557,7 +558,7 @@ midias.addEventListener("scroll", () => {
     remove.className = "photo-remove";
     remove.innerText = "×";
     const slotIndex = slotAtual;
-
+    
 remove.onclick = () => {
   fotos[slotIndex] = null;
   div.remove();
@@ -565,8 +566,16 @@ remove.onclick = () => {
   const slot = document.querySelector(
     `.photo-slot[data-slot="${slotIndex}"]`
   );
+
+  // 🔥 reset visual
   slot.classList.remove("filled");
   slot.innerText = "+";
+
+  // 🔥 reset lógico
+  slotAtual = null;
+  fotoInput.value = "";
+
+  // 🔥 reajusta o stack
   atualizarStack(0);
 };
 
@@ -668,6 +677,7 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
 });
 </script> </body>  
 </html>
+
 
 
 
