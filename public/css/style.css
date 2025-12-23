@@ -1,6 +1,6 @@
 /* 🔒 BLOQUEIA MODO ESCURO DO SISTEMA */
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 html, body {
@@ -9,11 +9,11 @@ html, body {
 }
 input,
 textarea,
-button,
-select {
-  background-color: inherit !important;
-  color: inherit !important;
-  -webkit-text-fill-color: inherit !important;
+button {
+  background-color: #fff;
+  color: #000;
+  appearance: none;
+  -webkit-appearance: none;
 }
 * {
   -webkit-tap-highlight-color: transparent;
@@ -29,7 +29,15 @@ body {
   overflow-x: hidden;
   touch-action: manipulation;
 }
-
+body {
+  background: #000;
+  color: #fff;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+html {
+  filter: none !important;
+}
 /* ===== Editor ===== */
 .editor {
   padding: 20px;
@@ -335,6 +343,7 @@ button {
 @keyframes float {
   to { transform: translateY(-120vh); opacity: 0; }
 }
+
 
 
 
