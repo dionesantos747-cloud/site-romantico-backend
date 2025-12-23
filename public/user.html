@@ -81,7 +81,6 @@ fetch(`/user-data?id=${id}`)
       preview.className = "preview " + data.fundo;
     }
 
-    /* ===== FOTOS ===== */
   /* ===== FOTOS COM EFEITO STACK ===== */
 if (Array.isArray(data.fotos) && data.fotos.filter(Boolean).length > 0) {
 
@@ -162,21 +161,7 @@ atualizarStack(0);
 const ativa = document.querySelector("#midias .photo.active");
 if (ativa) ativarSwipe([ativa]);
   
-  // 🔁 atualiza ao deslizar
-  midiasEl.addEventListener("scroll", () => {
-    const fotosDOM = document.querySelectorAll("#midias .photo");
-    let index = 0;
-
-    fotosDOM.forEach((foto, i) => {
-      const rect = foto.getBoundingClientRect();
-      if (rect.left >= 0 && rect.left < window.innerWidth / 2) {
-        index = i;
-      }
-    });
-
-    atualizarStack(index);
-  });
-
+ 
 } else {
   midiasEl.innerHTML = `
     <p style="opacity:.7;font-style:italic;margin-top:16px">
