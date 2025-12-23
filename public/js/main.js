@@ -248,17 +248,26 @@ if (!isEditor && userId) {
       nome.innerText = data.nome;
       mensagem.innerText = data.mensagem;
       carta.innerText = data.carta;
+       
+      if (data.fundo) {
+        preview.className = "preview " + data.fundo;
+      } 
 
       iniciarContador(data.dataInicio);
+       
+if (Array.isArray(data.fotos)) {
+  data.fotos.forEach(f => {
+    if (!f) return;
 
-      if (Array.isArray(data.fotos)) {
-        data.fotos.forEach(f => {
-          if (!f) return;
-          const div = document.createElement("div");
-          div.className = "photo";
-          div.innerHTML = `<img src="${f}" style="width:100%">`;
-       midias.appendChild(div);
+    const div = document.createElement("div");
+    div.className = "photo";
+    div.innerHTML = `<img src="${f}" style="width:100%">`;
+    midias.appendChild(div);
+  });
 
+  // 🔥 ATIVA O EFEITO CARTAS IMEDIATAMENTE
+  atualizarStack(0);
+}
 /* 🔥 desliza para a foto adicionada */
 setTimeout(() => {
   div.scrollIntoView({
@@ -272,12 +281,15 @@ setTimeout(() => {
       if (data.musica) {
         audio.src = data.musica;
         audio.style.display = "block";
+        audio.volume = 0.8;
+        audio.preload = "auto";
       }
     })
     .catch(() => {
       document.body.innerHTML = "<h2 style='text-align:center'>Site não encontrado 💔</h2>";
     });
 }
+
 
 
 
