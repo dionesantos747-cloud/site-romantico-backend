@@ -182,9 +182,15 @@ remove.onclick = () => {
   s.classList.remove("filled");
   s.innerText = "+";
 
-  setTimeout(() => {
-    atualizarStack(0);
-  }, 50);
+ setTimeout(() => {
+  atualizarStack(0);
+
+  // 🔥 ativa swipe SOMENTE na carta da frente
+  const ativa = document.querySelector("#midias .photo.active");
+  if (ativa) ativarSwipe([ativa]);
+
+}, 50);
+
 }; 
 
     const s = document.querySelector(`.photo-slot[data-slot="${slotAtual}"]`);
@@ -259,7 +265,13 @@ data.fotos.forEach(f => {
 // 🔥 ativa stack inicial no site final
 setTimeout(() => {
   atualizarStack(0);
+
+  // 🔥 ativa swipe na carta visível
+  const ativa = document.querySelector("#midias .photo.active");
+  if (ativa) ativarSwipe([ativa]);
+
 }, 100);
+
 }
 
      if (data.musica) {
@@ -289,6 +301,7 @@ setTimeout(() => {
       `;
     });
 }
+
 
 
 
