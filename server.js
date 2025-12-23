@@ -129,7 +129,7 @@ app.post("/create-payment", async (req, res) => {
         transaction_amount: 9.99,
         description: "Site Romântico Premium 💖",
         payment_method_id: "pix",
-        payer: { email: "cliente@site.com" },
+        payer: { email: "dionesantosx7@gmail.com" },
 
         // 🔥 LIGA PAGAMENTO AO USUÁRIO
         metadata: {
@@ -177,12 +177,20 @@ app.post("/webhook", (req, res) => {
   // RESPONDE IMEDIATO (evita erro 502)
   res.sendStatus(200);
 
+  // 🔒 VALIDA TIPO DO EVENTO (IMPORTANTE)
+  const topic =
+    req.body?.type ||
+    req.query?.topic ||
+    req.query?.type;
+
+  if (topic !== "payment") return;
+
   (async () => {
     try {
       const paymentId =
-  req.body?.data?.id ||
-  req.body?.id ||
-  req.query?.id;
+        req.body?.data?.id ||
+        req.body?.id ||
+        req.query?.id;
       if (!paymentId) return;
 
       // CONSULTA MERCADO PAGO
@@ -242,7 +250,10 @@ app.get("/check-payment", async (req, res) => {
 
     // 🔎 busca pagamento
     const pay = await payments.findOne({ paymentId });
-
+    
+if (pay?.status === "approved") {
+  return res.json({ status: "approved" });
+}
     if (!pay) {
       return res.json({ status: "pending" });
     }
