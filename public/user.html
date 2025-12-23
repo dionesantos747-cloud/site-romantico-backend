@@ -8,7 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
 <body class="final">
 <div class="preview azul" id="preview">
   <audio id="audioPlayer" controls style="display:none;"></audio>
@@ -63,6 +62,7 @@ fetch(`/user-data?id=${id}`)
     }
 
     /* ===== ELEMENTOS ===== */
+    const swipeSound = new Audio("/sounds/card-swipe.mp3");
     const nomeEl = document.getElementById("nome");
     const msgEl = document.getElementById("mensagem");
     const cartaEl = document.getElementById("carta");
@@ -96,7 +96,56 @@ if (Array.isArray(data.fotos) && data.fotos.filter(Boolean).length > 0) {
       else if (i === index + 2) foto.classList.add("behind-2");
     });
   }
+function ativarSwipe(cartas) {
+  cartas.forEach(carta => {
+    let startX = 0;
+    let currentX = 0;
+    let dragging = false;
 
+    carta.addEventListener("pointerdown", e => {
+      dragging = true;
+      startX = e.clientX;
+      carta.setPointerCapture(e.pointerId);
+      carta.style.transition = "none";
+    });
+
+    carta.addEventListener("pointermove", e => {
+      if (!dragging) return;
+      currentX = e.clientX - startX;
+
+      carta.style.transform =
+        `translateX(calc(-50% + ${currentX}px)) rotate(${currentX / 12}deg)`;
+    });
+
+    carta.addEventListener("pointerup", () => {
+      dragging = false;
+
+      if (Math.abs(currentX) > 120) {
+        swipeSound.currentTime = 0;
+        swipeSound.play();
+
+        carta.style.transition = "transform 0.4s ease";
+        carta.style.transform =
+          `translateX(${currentX > 0 ? 150 : -150}vw) rotate(${currentX > 0 ? 25 : -25}deg)`;
+
+        setTimeout(() => {
+          carta.remove();
+          atualizarStack(0);
+
+          // 🔥 ativa swipe na próxima carta
+          const ativa = document.querySelector("#midias .photo.active");
+          if (ativa) ativarSwipe([ativa]);
+
+        }, 300);
+      } else {
+        carta.style.transition = "transform 0.3s ease";
+        carta.style.transform = "translateX(-50%) rotate(0deg)";
+      }
+
+      currentX = 0;
+    });
+  });
+}
   data.fotos.forEach(url => {
     if (!url) return;
 
@@ -106,9 +155,13 @@ if (Array.isArray(data.fotos) && data.fotos.filter(Boolean).length > 0) {
     midiasEl.appendChild(div);
   });
 
-  // 🔥 ativa o efeito inicial
-  atualizarStack(0);
+ // 🔥 ativa o efeito inicial
+atualizarStack(0);
 
+// 🔥 ativa swipe SOMENTE na carta ativa
+const ativa = document.querySelector("#midias .photo.active");
+if (ativa) ativarSwipe([ativa]);
+  
   // 🔁 atualiza ao deslizar
   midiasEl.addEventListener("scroll", () => {
     const fotosDOM = document.querySelectorAll("#midias .photo");
