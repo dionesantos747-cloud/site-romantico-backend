@@ -383,9 +383,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const preview = document.getElementById("preview");
 
   const fotoInput = document.getElementById("fotoInput");
-const midias = document.getElementById("midias");
-const dotsContainer = document.getElementById("dots");
-    const musicBox = document.getElementById("musicBox");
+  const midias = document.getElementById("midias");
+  const dotsContainer = document.getElementById("dots");
+  
+  const musicBox = document.getElementById("musicBox");
   const musicaInput = document.getElementById("musicaInput");
   const audio = document.getElementById("audioPlayer");
   const removeMusic = document.getElementById("removeMusic");
@@ -396,37 +397,23 @@ const dotsContainer = document.getElementById("dots");
   let fotos = [null, null, null];
   let slotAtual = null;
   let musicaUrl = null;
-midias.addEventListener("scroll", () => {
-  const fotosDOM = document.querySelectorAll("#midias .photo");
   let indexAtivo = 0;
+  
+  function atualizarStack(index) {
+  const fotosDOM = document.querySelectorAll("#midias .photo");
 
   fotosDOM.forEach((foto, i) => {
-    const rect = foto.getBoundingClientRect();
-    if (rect.left >= 0 && rect.left < window.innerWidth / 2) {
-      indexAtivo = i;
-    }
-  });
+    foto.classList.remove("active", "behind-1", "behind-2");
 
-  atualizarStack(indexAtivo);
-});
+    if (i === index) foto.classList.add("active");
+    else if (i === index + 1) foto.classList.add("behind-1");
+    else if (i === index + 2) foto.classList.add("behind-2");
+  });
+}
+
 function ativarDot(index) {
   document.querySelectorAll(".dot").forEach((dot, i) => {
     dot.classList.toggle("active", i === index);
-  });
-}
-  function atualizarStack(indexAtivo) {
-  const fotos = document.querySelectorAll("#midias .photo");
-
-  fotos.forEach((foto, i) => {
-    foto.classList.remove("active", "behind-1", "behind-2");
-
-    if (i === indexAtivo) {
-      foto.classList.add("active");
-    } else if (i === indexAtivo + 1) {
-      foto.classList.add("behind-1");
-    } else if (i === indexAtivo + 2) {
-      foto.classList.add("behind-2");
-    }
   });
 }
 
@@ -440,21 +427,28 @@ function criarDots() {
     if (i === 0) dot.classList.add("active");
 
     dot.onclick = () => {
-      fotosDOM[i].scrollIntoView({
-        behavior: "smooth",
-        inline: "center"
-      });
+      fotosDOM[i].scrollIntoView({ behavior: "smooth", inline: "center" });
     };
 
     dotsContainer.appendChild(dot);
   });
 }
+midias.addEventListener("scroll", () => {
+  const fotosDOM = document.querySelectorAll("#midias .photo");
+  let indexAtivo = 0;
 
-  atualizarStack(indexAtivo); 
-   
+  fotosDOM.forEach((foto, i) => {
+    const rect = foto.getBoundingClientRect();
+    if (rect.left >= 0 && rect.left < window.innerWidth / 2) {
+      indexAtivo = i;
+    }
+  });
+
+  atualizarStack(indexAtivo);
+  ativarDot(indexAtivo);
 });
-  
-    /* PREVIEW TEXTO */
+
+     /* PREVIEW TEXTO */
   nomeInput.oninput = () => nome.innerText = nomeInput.value;
   msgInput.oninput = () => mensagem.innerText = msgInput.value;
   cartaInput.oninput = () => carta.innerText = cartaInput.value;
@@ -663,6 +657,7 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
 });
 </script> </body>  
 </html>
+
 
 
 
