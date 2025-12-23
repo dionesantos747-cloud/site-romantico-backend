@@ -195,6 +195,10 @@ if (isEditor) {
 
     div.appendChild(remove);
     midias.appendChild(div);
+    // 🔥 ativa efeito cartas assim que adiciona
+setTimeout(() => {
+  atualizarStack(0);
+}, 50); 
 
     const s = document.querySelector(`.photo-slot[data-slot="${slotAtual}"]`);
     s.classList.add("filled");
@@ -256,17 +260,19 @@ if (!isEditor && userId) {
       iniciarContador(data.dataInicio);
        
 if (Array.isArray(data.fotos)) {
-  data.fotos.forEach(f => {
-    if (!f) return;
+data.fotos.forEach(f => {
+  if (!f) return;
 
-    const div = document.createElement("div");
-    div.className = "photo";
-    div.innerHTML = `<img src="${f}" style="width:100%">`;
-    midias.appendChild(div);
-  });
+  const div = document.createElement("div");
+  div.className = "photo";
+  div.innerHTML = `<img src="${f}" style="width:100%">`;
+  midias.appendChild(div);
+});
 
-  // 🔥 ATIVA O EFEITO CARTAS IMEDIATAMENTE
+// 🔥 ativa stack inicial no site final
+setTimeout(() => {
   atualizarStack(0);
+}, 100);
 }
 /* 🔥 desliza para a foto adicionada */
 setTimeout(() => {
@@ -278,17 +284,18 @@ setTimeout(() => {
 }, 100);
       }
 
-      if (data.musica) {
-        audio.src = data.musica;
-        audio.style.display = "block";
-        audio.volume = 0.8;
-        audio.preload = "auto";
-      }
+     if (data.musica) {
+  audio.src = data.musica;
+  audio.preload = "auto";
+  audio.volume = 0.8;
+  audio.style.display = "block";
+}
     })
     .catch(() => {
       document.body.innerHTML = "<h2 style='text-align:center'>Site não encontrado 💔</h2>";
     });
 }
+
 
 
 
