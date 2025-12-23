@@ -391,6 +391,21 @@ function ativarDot(index) {
     dot.classList.toggle("active", i === index);
   });
 }
+  function atualizarStack(indexAtivo) {
+  const fotos = document.querySelectorAll("#midias .photo");
+
+  fotos.forEach((foto, i) => {
+    foto.classList.remove("active", "behind-1", "behind-2");
+
+    if (i === indexAtivo) {
+      foto.classList.add("active");
+    } else if (i === indexAtivo + 1) {
+      foto.classList.add("behind-1");
+    } else if (i === indexAtivo + 2) {
+      foto.classList.add("behind-2");
+    }
+  });
+}
 
 function criarDots() {
   dotsContainer.innerHTML = "";
@@ -476,21 +491,7 @@ ativarDot(indexAtivo);
     btnCarta.innerText =
       carta.style.display === "block" ? "❌ Fechar carta" : "💌 Abrir carta";
   };
-function atualizarStack(indexAtivo) {
-  const fotos = document.querySelectorAll("#midias .photo");
 
-  fotos.forEach((foto, i) => {
-    foto.classList.remove("active", "behind-1", "behind-2");
-
-    if (i === indexAtivo) {
-      foto.classList.add("active");
-    } else if (i === indexAtivo + 1) {
-      foto.classList.add("behind-1");
-    } else if (i === indexAtivo + 2) {
-      foto.classList.add("behind-2");
-    }
-  });
-}
   /* CORAÇÕES */
   function criarCoracoes() {
     document.querySelectorAll(".heart").forEach(h => h.remove());
@@ -653,6 +654,7 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
 });
 </script> </body>  
 </html>
+
 
 
 
