@@ -333,7 +333,8 @@ button{
   </div>  
 </div>  <div class="preview azul" id="preview">  
   <audio id="audioPlayer" controls style="display:none;"></audio>    <div class="nome" id="nome"></div>  
-  <div class="mensagem" id="mensagem"></div>    <div id="midias"></div>    <div id="tempo"></div>  <button id="btnCarta">💌 Abrir carta</button>
+  <div class="mensagem" id="mensagem"></div>  <div id="midias"></div>
+<div class="dots" id="dots"></div>    <div id="tempo"></div>  <button id="btnCarta">💌 Abrir carta</button>
 
   <div class="carta" id="carta"></div>  <button class="pay" id="btnComprar">Gerar QR code por R$9,99</button>
 
@@ -354,8 +355,47 @@ document.addEventListener("DOMContentLoaded", () => {
   const preview = document.getElementById("preview");
 
   const fotoInput = document.getElementById("fotoInput");
-  const midias = document.getElementById("midias");
+const midias = document.getElementById("midias");
+const dotsContainer = document.getElementById("dots");
 
+function ativarDot(index) {
+  document.querySelectorAll(".dot").forEach((dot, i) => {
+    dot.classList.toggle("active", i === index);
+  });
+}
+
+function criarDots() {
+  dotsContainer.innerHTML = "";
+  const fotosDOM = document.querySelectorAll("#midias .photo");
+
+  fotosDOM.forEach((_, i) => {
+    const dot = document.createElement("div");
+    dot.className = "dot";
+    if (i === 0) dot.classList.add("active");
+
+    dot.onclick = () => {
+      fotosDOM[i].scrollIntoView({
+        behavior: "smooth",
+        inline: "center"
+      });
+    };
+
+    dotsContainer.appendChild(dot);
+  });
+}
+midias.addEventListener("scroll", () => {
+  const fotosDOM = document.querySelectorAll("#midias .photo");
+  let indexAtivo = 0;
+
+  fotosDOM.forEach((foto, i) => {
+    const rect = foto.getBoundingClientRect();
+    if (rect.left >= 0 && rect.left < window.innerWidth / 2) {
+      indexAtivo = i;
+    }
+  });
+
+  ativarDot(indexAtivo);
+});
   const musicBox = document.getElementById("musicBox");
   const musicaInput = document.getElementById("musicaInput");
   const audio = document.getElementById("audioPlayer");
@@ -478,7 +518,7 @@ document.addEventListener("DOMContentLoaded", () => {
     div.appendChild(remove);
     midias.appendChild(div);
     midias.scrollIntoView({ behavior: "smooth" });
-
+criarDots();
    const slotEl = document.querySelector(
   `.photo-slot[data-slot="${slotAtual}"]`
 );
@@ -568,6 +608,7 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
 });
 </script> </body>  
 </html>
+
 
 
 
