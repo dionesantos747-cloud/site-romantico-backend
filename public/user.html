@@ -112,8 +112,8 @@ function ativarSwipe(cartas) {
       if (!dragging) return;
       currentX = e.clientX - startX;
 
-      carta.style.transform =
-        `translateX(calc(-50% + ${currentX}px)) rotate(${currentX / 12}deg)`;
+     carta.style.transform =
+  `translateX(calc(-50% + ${currentX}px)) translateY(0) rotate(${currentX / 12}deg) scale(1)`;
     });
 
     carta.addEventListener("pointerup", () => {
@@ -138,7 +138,8 @@ function ativarSwipe(cartas) {
         }, 300);
       } else {
         carta.style.transition = "transform 0.3s ease";
-        carta.style.transform = "translateX(-50%) rotate(0deg)";
+        carta.style.transform =
+  "translateX(-50%) translateY(0) rotate(0deg) scale(1)";
       }
 
       currentX = 0;
