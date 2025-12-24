@@ -137,9 +137,9 @@ textarea { min-height: 90px; }
 ===================== */
 #midias {
   position: relative;
-  height: 300px;
+  height: 340px;
   margin-top: 20px;
-  margin-bottom: 60px;
+  margin-bottom: 80px;
 }
 
 #midias .photo {
@@ -368,6 +368,7 @@ body {
   }
 
 }
+
 
 
 
