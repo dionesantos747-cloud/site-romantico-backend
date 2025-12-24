@@ -37,7 +37,12 @@ function atualizarStack(index) {
 const swipeSound = new Audio("/sounds/card-swipe.mp3");
 
 function ativarSwipe(cartas) {
-  cartas.forEach(cartaEl => {
+   if (document.querySelectorAll("#midias .photo").length < 2) return;
+
+ cartas.forEach(cartaEl => {
+  if (cartaEl.dataset.swipe === "true") return;
+  cartaEl.dataset.swipe = "true";
+
     let startX = 0;
     let currentX = 0;
     let dragging = false;
@@ -72,13 +77,13 @@ function ativarSwipe(cartas) {
           cartaEl.remove();
           atualizarStack(0);
 
-          const ativa = document.querySelector("#midias .photo.active");
-          if (ativa) ativarSwipe([ativa]);
+      
         }, 300);
       } else {
         cartaEl.style.transition = "transform 0.3s ease";
-        cartaEl.style.transform =
-          "translateX(-50%) rotate(0deg)";
+       cartaEl.style.transform =
+  "translateX(-50%) translateY(0) rotate(0deg) scale(1)";
+
       }
 
       currentX = 0;
@@ -219,37 +224,24 @@ div.innerHTML = `<img src="${url}" style="width:100%">`;
 midias.appendChild(div); // 🔥 OBRIGATÓRIO
      
 setTimeout(() => {
-  atualizarStack(0);
-  const ativa = document.querySelector("#midias .photo.active");
-  if (ativa) ativarSwipe([ativa]);
-}, 50);
+  const fotosDOM = Array.from(document.querySelectorAll("#midias .photo"));
 
+  if (fotosDOM.length < 2) return;
 
-    const remove = document.createElement("div");
-    remove.className = "photo-remove";
-    remove.innerText = "×";
-     
-  const slotIndex = slotAtual;
+  // 🔁 loop infinito
+  midias.appendChild(cartaEl);
 
-remove.onclick = () => {
-  URL.revokeObjectURL(url);
-  fotos[slotIndex] = null;
-  div.remove();
+  cartaEl.style.transition = "none";
+  cartaEl.style.transform =
+    "translateX(-50%) translateY(0) rotate(0deg) scale(1)";
+  cartaEl.offsetHeight; // 🔥 força reflow
 
-  const s = document.querySelector(
-    `.photo-slot[data-slot="${slotIndex}"]`
-  );
-  s.classList.remove("filled");
-  s.innerText = "+";
+  requestAnimationFrame(() => {
+    cartaEl.style.transition = "";
+    atualizarStack(0);
+  });
+}, 300);
 
- setTimeout(() => {
-  atualizarStack(0);
-
-  // 🔥 ativa swipe SOMENTE na carta da frente
-  const ativa = document.querySelector("#midias .photo.active");
-  if (ativa) ativarSwipe([ativa]);
-
-}, 50);
 
 }; 
 
@@ -361,6 +353,7 @@ setTimeout(() => {
       `;
     });
 }
+
 
 
 
