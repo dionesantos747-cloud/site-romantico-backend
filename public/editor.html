@@ -398,7 +398,8 @@ document.addEventListener("DOMContentLoaded", () => {
     else if (i === index + 2) foto.classList.add("behind-2");
   });
 
-  ativarDot(index);
+  ativarDot(0);
+
 
   // 🔥 ativa swipe SOMENTE na carta da frente
   const ativa = document.querySelector("#midias .photo.active");
@@ -408,7 +409,14 @@ const swipeSound = new Audio("/sounds/card-swipe.mp3");
 
 function ativarSwipe(cartas) {
   const total = document.querySelectorAll("#midias .photo").length;
-if (total < 2) return;
+  if (total < 2) return;
+
+  cartas.forEach(carta => {
+
+    // 🔥 EVITA EVENTOS DUPLICADOS
+    if (carta.dataset.swipe === "true") return;
+    carta.dataset.swipe = "true";
+
 
   if (document.querySelectorAll("#midias .photo").length < 2) {
   return;
@@ -446,30 +454,24 @@ if (total < 2) return;
           `translateX(${currentX > 0 ? 150 : -150}vw) rotate(${currentX > 0 ? 25 : -25}deg)`;
 
        setTimeout(() => {
-  const fotosDOM = Array.from(document.querySelectorAll("#midias .photo"));
+  const fotosDOM = Array.from(midias.children);
 
   if (fotosDOM.length < 2) {
     atualizarStack(0);
     return;
   }
 
-  if (currentX > 0) {
-    // 👉 swipe direita → última vai para frente
-    midias.insertBefore(fotosDOM[fotosDOM.length - 1], fotosDOM[0]);
-  } else {
-    // 👉 swipe esquerda → primeira vai para o fim
-    midias.appendChild(fotosDOM[0]);
-  }
+  // 🔁 LOOP SIMPLES E ESTÁVEL
+  midias.appendChild(carta);
 
   carta.style.transition = "none";
-  carta.style.transform = "translateX(-50%)";
+  carta.style.transform =
+    "translateX(-50%) translateY(0) rotate(0deg) scale(1)";
+  carta.offsetHeight;
 
-  requestAnimationFrame(() => {
-    carta.style.transition = "";
-    atualizarStack(0);
-  });
+  atualizarStack(0);
+}, 280);
 
-}, 300);
 
 
 
@@ -595,7 +597,8 @@ function criarDots() {
   });
 
   fotoInput.onchange = async e => {
-    const file = e.target.files[0];
+    fotoInput.disabled = true;
+   const file = e.target.files[0];
     if (!file || slotAtual === null) return;
 
     const cloud = await uploadFoto(file);
@@ -624,9 +627,12 @@ remove.onclick = () => {
 
   slotAtual = null;
   fotoInput.value = "";
+fotoInput.disabled = false;
 
   criarDots();
   atualizarStack(0);
+  
+
 };
 
    div.appendChild(remove);
@@ -728,6 +734,7 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
 });
 </script> </body>  
 </html>
+
 
 
 
