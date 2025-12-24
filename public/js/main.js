@@ -34,6 +34,57 @@ function atualizarStack(index) {
     else if (i === index + 2) foto.classList.add("behind-2");
   });
 }
+const swipeSound = new Audio("/sounds/card-swipe.mp3");
+
+function ativarSwipe(cartas) {
+  cartas.forEach(cartaEl => {
+    let startX = 0;
+    let currentX = 0;
+    let dragging = false;
+
+    cartaEl.addEventListener("pointerdown", e => {
+      dragging = true;
+      startX = e.clientX;
+      cartaEl.setPointerCapture(e.pointerId);
+      cartaEl.style.transition = "none";
+    });
+
+    cartaEl.addEventListener("pointermove", e => {
+      if (!dragging) return;
+      currentX = e.clientX - startX;
+
+      cartaEl.style.transform =
+        `translateX(calc(-50% + ${currentX}px)) rotate(${currentX / 12}deg)`;
+    });
+
+    cartaEl.addEventListener("pointerup", () => {
+      dragging = false;
+
+      if (Math.abs(currentX) > 120) {
+        swipeSound.currentTime = 0;
+        swipeSound.play();
+
+        cartaEl.style.transition = "transform 0.4s ease";
+        cartaEl.style.transform =
+          `translateX(${currentX > 0 ? 150 : -150}vw) rotate(${currentX > 0 ? 25 : -25}deg)`;
+
+        setTimeout(() => {
+          cartaEl.remove();
+          atualizarStack(0);
+
+          const ativa = document.querySelector("#midias .photo.active");
+          if (ativa) ativarSwipe([ativa]);
+        }, 300);
+      } else {
+        cartaEl.style.transition = "transform 0.3s ease";
+        cartaEl.style.transform =
+          "translateX(-50%) rotate(0deg)";
+      }
+
+      currentX = 0;
+    });
+  });
+}
 
 const musicBox = document.getElementById("musicBox");
 const musicaInput = document.getElementById("musicaInput");
@@ -162,8 +213,17 @@ if (isEditor) {
     fotos[slotAtual] = url;
 
     const div = document.createElement("div");
-    div.className = "photo";
-    div.innerHTML = `<img src="${url}" style="width:100%">`;
+div.className = "photo";
+div.innerHTML = `<img src="${url}" style="width:100%">`;
+
+midias.appendChild(div); // 🔥 OBRIGATÓRIO
+     
+setTimeout(() => {
+  atualizarStack(0);
+  const ativa = document.querySelector("#midias .photo.active");
+  if (ativa) ativarSwipe([ativa]);
+}, 50);
+
 
     const remove = document.createElement("div");
     remove.className = "photo-remove";
@@ -301,6 +361,7 @@ setTimeout(() => {
       `;
     });
 }
+
 
 
 
