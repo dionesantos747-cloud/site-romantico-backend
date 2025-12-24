@@ -37,59 +37,61 @@ function atualizarStack(index) {
 const swipeSound = new Audio("/sounds/card-swipe.mp3");
 
 function ativarSwipe(cartas) {
-   if (document.querySelectorAll("#midias .photo").length < 2) return;
+  if (document.querySelectorAll("#midias .photo").length < 2) return;
 
- cartas.forEach(cartaEl => {
-  if (cartaEl.dataset.swipe === "true") return;
-  cartaEl.dataset.swipe = "true";
+  cartas.forEach(carta => {
+    if (carta.dataset.swipe === "true") return;
+    carta.dataset.swipe = "true";
 
     let startX = 0;
     let currentX = 0;
     let dragging = false;
 
-    cartaEl.addEventListener("pointerdown", e => {
+    carta.addEventListener("pointerdown", e => {
       dragging = true;
       startX = e.clientX;
-      cartaEl.setPointerCapture(e.pointerId);
-      cartaEl.style.transition = "none";
+      carta.setPointerCapture(e.pointerId);
+      carta.style.transition = "none";
     });
 
-    cartaEl.addEventListener("pointermove", e => {
+    carta.addEventListener("pointermove", e => {
       if (!dragging) return;
       currentX = e.clientX - startX;
-
-      cartaEl.style.transform =
+      carta.style.transform =
         `translateX(calc(-50% + ${currentX}px)) rotate(${currentX / 12}deg)`;
     });
 
-    cartaEl.addEventListener("pointerup", () => {
+    carta.addEventListener("pointerup", () => {
       dragging = false;
 
       if (Math.abs(currentX) > 120) {
         swipeSound.currentTime = 0;
         swipeSound.play();
 
-        cartaEl.style.transition = "transform 0.4s ease";
-        cartaEl.style.transform =
-          `translateX(${currentX > 0 ? 150 : -150}vw) rotate(${currentX > 0 ? 25 : -25}deg)`;
+        carta.style.transition = "transform 0.35s ease";
+        carta.style.transform =
+          `translateX(${currentX > 0 ? 150 : -150}vw) rotate(${currentX > 0 ? 20 : -20}deg)`;
 
         setTimeout(() => {
-          cartaEl.remove();
+          midias.appendChild(carta);
+          carta.style.transition = "none";
+          carta.style.transform = "translateX(-50%)";
+
           atualizarStack(0);
 
-      
-        }, 300);
+          const ativa = document.querySelector("#midias .photo.active");
+          if (ativa) ativarSwipe([ativa]);
+        }, 280);
       } else {
-        cartaEl.style.transition = "transform 0.3s ease";
-       cartaEl.style.transform =
-  "translateX(-50%) translateY(0) rotate(0deg) scale(1)";
-
+        carta.style.transition = "transform 0.25s ease";
+        carta.style.transform = "translateX(-50%)";
       }
 
       currentX = 0;
     });
   });
 }
+
 
 const musicBox = document.getElementById("musicBox");
 const musicaInput = document.getElementById("musicaInput");
@@ -229,7 +231,8 @@ setTimeout(() => {
   if (fotosDOM.length < 2) return;
 
   // 🔁 loop infinito
-  midias.appendChild(cartaEl);
+ midias.appendChild(cartaEl || carta);
+
 
   cartaEl.style.transition = "none";
   cartaEl.style.transform =
@@ -353,6 +356,7 @@ setTimeout(() => {
       `;
     });
 }
+
 
 
 
