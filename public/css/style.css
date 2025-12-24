@@ -124,18 +124,19 @@ textarea { min-height: 90px; }
 .photo {
   background: #fff;
   padding: 8px 8px 18px;
-  border-radius: 4px;
-  margin: 20px auto;
-  max-width: 280px;
-  box-shadow: 0 0 18px rgba(255,255,255,.35);
-  animation: floatPhoto 6s ease-in-out infinite;
+  border-radius: 6px;
+  margin: 0;
+  width: 220px;
+  max-width: 70vw;
+  box-shadow: 0 8px 22px rgba(0,0,0,.35);
 }
+
 /* =====================
    CARROSSEL — EFEITO CARTAS
 ===================== */
 #midias {
   position: relative;
-  height: 260px;
+  height: 300px;
   margin-top: 24px;
   margin-bottom: 24px;
 }
@@ -159,22 +160,20 @@ textarea { min-height: 90px; }
   opacity: 1;
 }
 
-/* carta atrás 1 */
 #midias .photo.behind-1 {
-  transform: translateX(calc(-50% - 28px))
-             translateY(28px)
-             rotate(-4deg)
-             scale(0.95);
+  transform: translateX(calc(-50% - 32px))
+             translateY(32px)
+             rotate(-6deg)
+             scale(0.94);
   z-index: 2;
   opacity: 0.85;
 }
 
-/* carta atrás 2 */
 #midias .photo.behind-2 {
-  transform: translateX(calc(-50% + 28px))
-             translateY(56px)
-             rotate(4deg)
-             scale(0.9);
+  transform: translateX(calc(-50% + 32px))
+             translateY(64px)
+             rotate(6deg)
+             scale(0.88);
   z-index: 1;
   opacity: 0.7;
 }
@@ -344,6 +343,15 @@ body.final .remove-music {
 @keyframes float {
   to { transform: translateY(-120vh); opacity: 0; }
 }
+
+html {
+  color-scheme: light !important;
+}
+
+body {
+  background: #000 !important;
+}
+
 @media (prefers-color-scheme: dark) {
   html, body {
     background: #000 !important;
@@ -355,8 +363,11 @@ body.final .remove-music {
   button {
     background: #fff !important;
     color: #000 !important;
+
   }
+
 }
+
 
 
 
