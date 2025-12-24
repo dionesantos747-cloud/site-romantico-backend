@@ -82,7 +82,7 @@ fetch(`/user-data?id=${id}`)
       preview.className = "preview " + data.fundo;
     }
 
-  /* ===== FOTOS COM EFEITO STACK ===== */
+    /* ===== FOTOS COM EFEITO STACK ===== */
 if (Array.isArray(data.fotos) && data.fotos.filter(Boolean).length > 0) {
 
   function atualizarStack(index) {
@@ -99,19 +99,22 @@ if (Array.isArray(data.fotos) && data.fotos.filter(Boolean).length > 0) {
   ativarDot(index); // 🔥 ATUALIZA BOLINHAS
 }
 function criarDots() {
-  const dots = document.getElementById("dots");
-  dots.innerHTML = "";
+  dotsContainer.innerHTML = "";
+  const total = document.querySelectorAll("#midias .photo").length;
 
-  data.fotos.filter(Boolean).forEach((_, i) => {
-    const d = document.createElement("div");
-    d.className = "dot";
-    if (i === 0) d.classList.add("active");
-    dots.appendChild(d);
-  });
+  for (let i = 0; i < total; i++) {
+    const dot = document.createElement("div");
+    dot.className = "dot";
+    if (i === 0) dot.classList.add("active");
+    dotsContainer.appendChild(dot);
+  }
 }
 
-criarDots();
-
+function ativarDot(index) {
+  document.querySelectorAll(".dot").forEach((dot, i) => {
+    dot.classList.toggle("active", i === index);
+  });
+}
 
 
   // ✅ ÚNICO lugar onde o swipe é ativado
@@ -120,6 +123,9 @@ criarDots();
 }
 
 function ativarSwipe(cartas) {
+  const total = document.querySelectorAll("#midias .photo").length;
+if (total < 2) return;
+
   if (document.querySelectorAll("#midias .photo").length < 2) {
   return;
 }
@@ -141,7 +147,7 @@ function ativarSwipe(cartas) {
       currentX = e.clientX - startX;
 
      carta.style.transform =
-  `translateX(calc(-50% + ${currentX}px)) translateY(0) rotate(${currentX / 12}deg) scale(1)`;
+  translateX(calc(-50% + ${currentX}px)) translateY(0) rotate(${currentX / 12}deg) scale(1);
     });
 
     carta.addEventListener("pointerup", () => {
@@ -153,11 +159,34 @@ function ativarSwipe(cartas) {
 
         carta.style.transition = "transform 0.4s ease";
         carta.style.transform =
-          `translateX(${currentX > 0 ? 150 : -150}vw) rotate(${currentX > 0 ? 25 : -25}deg)`;
+          translateX(${currentX > 0 ? 150 : -150}vw) rotate(${currentX > 0 ? 25 : -25}deg);
 
         setTimeout(() => {
-          carta.remove();
-          atualizarStack(0);
+         const fotosDOM = Array.from(document.querySelectorAll("#midias .photo"));
+
+if (currentX > 0) {
+  // swipe direita → última vai pra frente
+  midias.appendChild(fotosDOM.shift());
+} else {
+  // swipe esquerda → primeira vai pro fim
+  midias.appendChild(fotosDOM.shift());
+}
+
+atualizarStack(0);
+ 
+function criarDots() {
+  const dots = document.getElementById("dots");
+  dots.innerHTML = "";
+
+  data.fotos.filter(Boolean).forEach((_, i) => {
+    const d = document.createElement("div");
+    d.className = "dot";
+    if (i === 0) d.classList.add("active");
+    dots.appendChild(d);
+  });
+}
+
+criarDots();
 
          
         }, 300);
@@ -176,7 +205,7 @@ function ativarSwipe(cartas) {
 
     const div = document.createElement("div");
     div.className = "photo";
-    div.innerHTML = `<img src="${url}" style="width:100%">`;
+    div.innerHTML = <img src="${url}" style="width:100%">;
     midiasEl.appendChild(div);
   });
 
