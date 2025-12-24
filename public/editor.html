@@ -104,21 +104,7 @@ textarea{min-height:90px}
   font-size:14px;  
   cursor:pointer;  
 }  
-  
-.photo{  
-  background:#fff;  
-  padding:8px 8px 18px;  
-  border-radius:4px;  
-  margin:20px auto;  
-  max-width:280px;  
-  box-shadow:0 0 18px rgba(255,255,255,.35);  
-  animation:floatPhoto 6s ease-in-out infinite;  
-}  
-  
-@keyframes floatPhoto{  
-  0%,100%{transform:translateY(0) rotate(-1deg)}  
-  50%{transform:translateY(-6px) rotate(1deg)}  
-}  
+    
   
 /* MÚSICA */  
 #audioPlayer {  
@@ -263,19 +249,23 @@ button{
   /* ===== BASE DO BARALHO ===== */
 #midias {
   position: relative;
-  height: 380px;
-  margin-top: 30px;
+  height: 260px; /* 🔥 menor no mobile */
+  margin-top: 24px;
+  margin-bottom: 24px; /* 🔥 não cobre o contador */
 }
 
 #midias .photo {
   position: absolute;
   top: 0;
   left: 50%;
+  width: 220px;        /* 🔥 menor no mobile */
+  max-width: 70vw;
   transform: translateX(-50%);
   transition: transform 0.35s ease;
   touch-action: none;
-  z-index: 1;
+  will-change: transform;
 }
+
 
 #midias .photo.active { z-index: 3; }
 #midias .photo.behind-1 { z-index: 2; }
@@ -288,11 +278,13 @@ button{
 }
 
 #midias .photo.behind-1 {
-  transform: translateX(calc(-50% - 80px)) scale(0.9) rotate(-8deg);
+  transform: translateX(-50%) translateY(22px) rotate(-4deg) scale(0.95);
+  opacity: 0.85;
 }
 
 #midias .photo.behind-2 {
-  transform: translateX(calc(-50% + 80px)) scale(0.9) rotate(8deg);
+  transform: translateX(-50%) translateY(44px) rotate(4deg) scale(0.9);
+  opacity: 0.7;
 }
 
 /* =====================
@@ -454,8 +446,8 @@ function ativarSwipe(cartas) {
 
       } else {
         carta.style.transition = "transform 0.3s ease";
-        carta.style.transform =
-  "translateX(-50%) translateY(0) rotate(0deg) scale(1)";
+       carta.style.transform = "translateX(-50%)";
+
       }
 
       currentX = 0;
@@ -615,7 +607,6 @@ remove.onclick = () => {
 midias.appendChild(div);
 
 // 🔥 ATIVA SWIPE NA CARTA
-ativarSwipe([div]);
 
 criarDots();
 setTimeout(() => {
@@ -718,6 +709,7 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
 });
 </script> </body>  
 </html>
+
 
 
 
