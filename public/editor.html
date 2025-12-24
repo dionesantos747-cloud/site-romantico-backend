@@ -354,6 +354,7 @@ button{
   <div class="carta" id="carta"></div>  <button class="pay" id="btnComprar">Gerar QR code por R$9,99</button>
 
 </div> <script>
+const isEditor = true;
 
   const LIMITE_MUSICA_MB = 5; // ~2 minutos
 
@@ -408,25 +409,11 @@ button{
 const swipeSound = new Audio("/sounds/card-swipe.mp3");
 
 function ativarSwipe(cartas) {
-  if (!isEditor) {
-  if (cartaEl.dataset.swipe === "true") return;
-  cartaEl.dataset.swipe = "true";
-}
-
-  const total = document.querySelectorAll("#midias .photo").length;
+  
+ const total = document.querySelectorAll("#midias .photo").length;
   if (total < 2) return;
 
-  cartas.forEach(carta => {
-
-    // 🔥 EVITA EVENTOS DUPLICADOS
-    if (carta.dataset.swipe === "true") return;
-    carta.dataset.swipe = "true";
-
-
-  if (document.querySelectorAll("#midias .photo").length < 2) {
-  return;
-}
-
+ 
   cartas.forEach(carta => {
     let startX = 0;
     let currentX = 0;
@@ -615,7 +602,7 @@ function criarDots() {
     const local = URL.createObjectURL(file);
     const div = document.createElement("div");
     div.className = "photo";
-   div.innerHTML = `<img src="${url}" style="width:100%">`;
+   div.innerHTML = `<img src="${local}" style="width:100%">`;
 
 
     const remove = document.createElement("div");
@@ -646,6 +633,8 @@ fotoInput.disabled = false;
 
    div.appendChild(remove);
 midias.appendChild(div);
+criarDots();
+atualizarStack(0);
 
 // 🔥 ATIVA SWIPE NA CARTA
 
@@ -743,6 +732,7 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
 });
 </script> </body>  
 </html>
+
 
 
 
