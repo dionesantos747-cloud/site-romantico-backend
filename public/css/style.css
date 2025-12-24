@@ -135,18 +135,22 @@ textarea { min-height: 90px; }
 ===================== */
 #midias {
   position: relative;
-  height: 420px;   /* 🔥 RESERVA ESPAÇO REAL */
-  margin-top: 20px;
-  margin-bottom: 30px; /* 🔥 SEPARA DO CONTADOR */
+  height: 260px;
+  margin-top: 24px;
+  margin-bottom: 24px;
 }
 
 #midias .photo {
   position: absolute;
   top: 0;
   left: 50%;
+  width: 220px;
+  max-width: 70vw;
   transform: translateX(-50%);
-  transition: transform 0.4s ease, opacity 0.4s ease;
+  transition: transform 0.35s ease;
+  touch-action: none;
 }
+
 
 /* carta ativa */
 #midias .photo.active {
@@ -352,6 +356,7 @@ body.final .remove-music {
     color: #000 !important;
   }
 }
+
 
 
 
