@@ -179,12 +179,12 @@ app.post("/webhook", (req, res) => {
 
   // 🔒 VALIDA TIPO DO EVENTO (IMPORTANTE)
   const topic =
-    req.body?.type ||
-    req.query?.topic ||
-    req.query?.type;
+  req.body?.type ||
+  req.body?.action ||
+  req.query?.topic ||
+  req.query?.type;
 
-  if (topic !== "payment") return;
-
+if (!topic || !topic.includes("payment")) return;
   (async () => {
     try {
       const paymentId =
