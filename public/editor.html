@@ -371,6 +371,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const fotoInput = document.getElementById("fotoInput");
   const midias = document.getElementById("midias");
+
   const dotsContainer = document.getElementById("dots");
   
   const musicBox = document.getElementById("musicBox");
@@ -408,6 +409,11 @@ document.addEventListener("DOMContentLoaded", () => {
 const swipeSound = new Audio("/sounds/card-swipe.mp3");
 
 function ativarSwipe(cartas) {
+  if (!isEditor) {
+  if (cartaEl.dataset.swipe === "true") return;
+  cartaEl.dataset.swipe = "true";
+}
+
   const total = document.querySelectorAll("#midias .photo").length;
   if (total < 2) return;
 
@@ -494,6 +500,8 @@ function ativarDot(index) {
 }
 
 function criarDots() {
+  if (!dotsContainer) return; // 🔥 PROTEÇÃO (AQUI)
+
   dotsContainer.innerHTML = "";
   const total = document.querySelectorAll("#midias .photo").length;
 
@@ -504,6 +512,7 @@ function criarDots() {
     dotsContainer.appendChild(dot);
   }
 }
+
 
 
      /* PREVIEW TEXTO */
@@ -607,7 +616,8 @@ function criarDots() {
     const local = URL.createObjectURL(file);
     const div = document.createElement("div");
     div.className = "photo";
-    div.innerHTML = `<img src="${local}" style="width:100%">`;
+   div.innerHTML = `<img src="${url}" style="width:100%">`;
+
 
     const remove = document.createElement("div");
     remove.className = "photo-remove";
@@ -734,6 +744,7 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
 });
 </script> </body>  
 </html>
+
 
 
 
