@@ -445,29 +445,7 @@ function ativarSwipe(cartas) {
         carta.style.transform =
           `translateX(${currentX > 0 ? 150 : -150}vw) rotate(${currentX > 0 ? 25 : -25}deg)`;
 
-       setTimeout(() => {
-  const fotosDOM = Array.from(midias.children);
-
-  if (fotosDOM.length < 2) {
-    atualizarStack(0);
-    return;
-  }
-
-  // 🔁 LOOP SIMPLES E ESTÁVEL
-  midias.appendChild(carta);
-
-  carta.style.transition = "none";
-  carta.style.transform =
-    "translateX(-50%) translateY(0) rotate(0deg) scale(1)";
-  carta.offsetHeight;
-
-  atualizarStack(0);
-}, 280);
-
-
-
-
-
+     
       } else {
         carta.style.transition = "transform 0.3s ease";
        carta.style.transform = "translateX(-50%)";
@@ -636,6 +614,10 @@ midias.appendChild(div);
 criarDots();
 atualizarStack(0);
 
+const ativa = document.querySelector("#midias .photo.active");
+if (ativa) ativarSwipe([ativa]);
+
+
 // 🔥 ATIVA SWIPE NA CARTA
 
 criarDots();
@@ -732,6 +714,7 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
 });
 </script> </body>  
 </html>
+
 
 
 
