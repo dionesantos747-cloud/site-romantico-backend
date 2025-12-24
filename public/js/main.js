@@ -34,6 +34,21 @@ function atualizarStack(index) {
     else if (i === index + 2) foto.classList.add("behind-2");
   });
 }
+function criarDots() {
+  const dots = document.getElementById("dots");
+  if (!dots) return;
+
+  dots.innerHTML = "";
+  const total = document.querySelectorAll("#midias .photo").length;
+
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement("div");
+    d.className = "dot";
+    if (i === 0) d.classList.add("active");
+    dots.appendChild(d);
+  }
+}
+
 const swipeSound = new Audio("/sounds/card-swipe.mp3");
 
 function ativarSwipe(cartas) {
@@ -356,6 +371,7 @@ setTimeout(() => {
       `;
     });
 }
+
 
 
 
