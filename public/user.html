@@ -117,20 +117,20 @@ function atualizarStack(index) {
     else if (i === index + 2) foto.classList.add("behind-2");
   });
 
-  ativarDot(index);
+  ativarDot(0);
+
 
   // 🔥 ativa swipe SOMENTE na carta da frente
-  const ativa = document.querySelector("#midias .photo.active");
-  if (ativa) ativarSwipe([ativa]);
-}
-
+ 
 function ativarSwipe(cartas) {
   if (document.querySelectorAll("#midias .photo").length < 2) return;
 
   cartas.forEach(carta => {
-    let startX = 0;
-    let currentX = 0;
-    let dragging = false;
+
+    // 🔒 trava múltiplos listeners
+    if (carta.dataset.swipe === "true") return;
+    carta.dataset.swipe = "true";
+
 
     carta.onpointerdown = e => {
       dragging = true;
@@ -171,7 +171,10 @@ function ativarSwipe(cartas) {
           }
 
           carta.style.transition = "none";
-          carta.style.transform = "translateX(-50%)";
+carta.style.transform =
+  "translateX(-50%) translateY(0) rotate(0deg) scale(1)";
+carta.offsetHeight; // 🔥 força reflow
+
 
           requestAnimationFrame(() => {
             carta.style.transition = "";
@@ -193,7 +196,7 @@ function ativarSwipe(cartas) {
 
     const div = document.createElement("div");
     div.className = "photo";
-    div.innerHTML = <img src="${url}" style="width:100%">;
+  div.innerHTML = `<img src="${url}" style="width:100%">`;
     midiasEl.appendChild(div);
   });
 
