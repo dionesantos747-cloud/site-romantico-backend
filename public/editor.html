@@ -397,6 +397,10 @@ document.addEventListener("DOMContentLoaded", () => {
 const swipeSound = new Audio("/sounds/card-swipe.mp3");
 
 function ativarSwipe(cartas) {
+  if (document.querySelectorAll("#midias .photo").length < 2) {
+  return;
+}
+
   cartas.forEach(carta => {
     let startX = 0;
     let currentX = 0;
@@ -429,19 +433,28 @@ function ativarSwipe(cartas) {
           `translateX(${currentX > 0 ? 150 : -150}vw) rotate(${currentX > 0 ? 25 : -25}deg)`;
 
        setTimeout(() => {
-  carta.remove();
+  const fotosDOM = Array.from(document.querySelectorAll("#midias .photo"));
 
-  // 🔥 AVANÇA O BARALHO
-  indexAtivo = 0;
+  if (fotosDOM.length < 2) {
+    atualizarStack(0);
+    return;
+  }
 
-  atualizarStack(indexAtivo);
-  criarDots();
+  // 🔁 LOOP REAL: move a carta para o final
+  midias.appendChild(carta);
 
-  // 🔥 ativa swipe na nova carta da frente
-  const novaCarta = document.querySelector("#midias .photo.active");
-  if (novaCarta) ativarSwipe([novaCarta]);
+  // 🔥 reseta posição
+  carta.style.transition = "none";
+  carta.style.transform =
+    "translateX(-50%) translateY(0) rotate(0deg) scale(1)";
+
+  requestAnimationFrame(() => {
+    carta.style.transition = "";
+    atualizarStack(0);
+  });
 
 }, 300);
+
 
 
       } else {
@@ -702,6 +715,7 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
 });
 </script> </body>  
 </html>
+
 
 
 
