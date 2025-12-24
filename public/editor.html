@@ -401,6 +401,9 @@ document.addEventListener("DOMContentLoaded", () => {
 const swipeSound = new Audio("/sounds/card-swipe.mp3");
 
 function ativarSwipe(cartas) {
+  const total = document.querySelectorAll("#midias .photo").length;
+if (total < 2) return;
+
   if (document.querySelectorAll("#midias .photo").length < 2) {
   return;
 }
@@ -437,12 +440,18 @@ function ativarSwipe(cartas) {
           `translateX(${currentX > 0 ? 150 : -150}vw) rotate(${currentX > 0 ? 25 : -25}deg)`;
 
        setTimeout(() => {
-  const fotosDOM = Array.from(document.querySelectorAll("#midias .photo"));
+ const fotosDOM = Array.from(document.querySelectorAll("#midias .photo"));
 
-  if (fotosDOM.length < 2) {
-    atualizarStack(0);
-    return;
-  }
+if (currentX > 0) {
+  // swipe direita → última vai pra frente
+  midias.appendChild(fotosDOM.shift());
+} else {
+  // swipe esquerda → primeira vai pro fim
+  midias.appendChild(fotosDOM.shift());
+}
+
+atualizarStack(0);
+
 
   // 🔁 LOOP REAL: move a carta para o final
   midias.appendChild(carta);
@@ -721,6 +730,7 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
 });
 </script> </body>  
 </html>
+
 
 
 
