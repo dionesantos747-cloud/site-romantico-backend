@@ -414,7 +414,11 @@ function ativarSwipe(cartas) {
   if (total < 2) return;
 
  
-  cartas.forEach(carta => {
+ cartas.forEach(carta => {
+
+  if (carta.dataset.swipe === "true") return;
+  carta.dataset.swipe = "true";
+
     let startX = 0;
     let currentX = 0;
     let dragging = false;
@@ -458,10 +462,13 @@ function ativarSwipe(cartas) {
 }
 
 function ativarDot(index) {
+  if (!dotsContainer) return;
+
   document.querySelectorAll(".dot").forEach((dot, i) => {
     dot.classList.toggle("active", i === index);
   });
 }
+
 
 function criarDots() {
   if (!dotsContainer) return; // 🔥 PROTEÇÃO (AQUI)
@@ -611,11 +618,7 @@ fotoInput.disabled = false;
 
    div.appendChild(remove);
 midias.appendChild(div);
-criarDots();
-atualizarStack(0);
 
-const ativa = document.querySelector("#midias .photo.active");
-if (ativa) ativarSwipe([ativa]);
 
 
 // 🔥 ATIVA SWIPE NA CARTA
@@ -711,9 +714,9 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
     location.href = `/aguardando.html?payment_id=${d.payment_id}`;
   };
 
-});
 </script> </body>  
 </html>
+
 
 
 
