@@ -118,76 +118,58 @@ function atualizarStack(index) {
   });
 
   ativarDot(0);
-
-
-  // 🔥 ativa swipe SOMENTE na carta da frente
  
-function ativarSwipe(cartas) {
+}
+  function ativarSwipe(cartas) {
   if (document.querySelectorAll("#midias .photo").length < 2) return;
 
   cartas.forEach(carta => {
-
-    // 🔒 trava múltiplos listeners
     if (carta.dataset.swipe === "true") return;
     carta.dataset.swipe = "true";
 
+    let startX = 0;
+    let currentX = 0;
+    let dragging = false;
 
-    carta.onpointerdown = e => {
+    carta.addEventListener("pointerdown", e => {
       dragging = true;
       startX = e.clientX;
       carta.setPointerCapture(e.pointerId);
       carta.style.transition = "none";
-    };
+    });
 
-    carta.onpointermove = e => {
+    carta.addEventListener("pointermove", e => {
       if (!dragging) return;
       currentX = e.clientX - startX;
 
       carta.style.transform =
         `translateX(calc(-50% + ${currentX}px)) rotate(${currentX / 12}deg)`;
-    };
+    });
 
-    carta.onpointerup = () => {
+    carta.addEventListener("pointerup", () => {
       dragging = false;
 
       if (Math.abs(currentX) > 120) {
-        swipeSound.currentTime = 0;
-        swipeSound.play();
-
-        carta.style.transition = "transform 0.4s ease";
+        carta.style.transition = "transform 0.35s ease";
         carta.style.transform =
-          `translateX(${currentX > 0 ? 150 : -150}vw) rotate(${currentX > 0 ? 25 : -25}deg)`;
+          `translateX(${currentX > 0 ? 150 : -150}vw) rotate(${currentX > 0 ? 20 : -20}deg)`;
 
         setTimeout(() => {
-          const fotosDOM = Array.from(document.querySelectorAll("#midias .photo"));
-
-          if (currentX > 0) {
-            midiasEl.insertBefore(
-              fotosDOM[fotosDOM.length - 1],
-              fotosDOM[0]
-            );
-          } else {
-            midiasEl.appendChild(fotosDOM[0]);
-          }
-
+          midiasEl.appendChild(carta);
           carta.style.transition = "none";
-carta.style.transform =
-  "translateX(-50%) translateY(0) rotate(0deg) scale(1)";
-carta.offsetHeight; // 🔥 força reflow
+          carta.style.transform = "translateX(-50%)";
+          atualizarStack(0);
 
-
-          requestAnimationFrame(() => {
-            carta.style.transition = "";
-            atualizarStack(0);
-          });
-        }, 300);
+          const ativa = document.querySelector("#midias .photo.active");
+          if (ativa) ativarSwipe([ativa]);
+        }, 280);
       } else {
-        carta.style.transition = "transform 0.3s ease";
+        carta.style.transition = "transform 0.25s ease";
         carta.style.transform = "translateX(-50%)";
       }
 
       currentX = 0;
-    };
+    });
   });
 }
 
