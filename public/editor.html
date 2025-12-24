@@ -632,39 +632,32 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
   musicaInput.click();
 };
   musicaInput.onchange = async () => {
-    const file = musicaInput.files[0];
-    if (!file) return;
+  const file = musicaInput.files[0];
+  if (!file) return;
 
-    if (file.size > LIMITE_MUSICA_MB * 1024 * 1024) {
-      alert("❌ Música muito grande (máx. 2 minutos)");
-      musicaInput.value = "";
-      return;
-    }
-
-    // preview imediato
-    audio.src = URL.createObjectURL(file);
-    audio.volume = 0.8;
-    audio.preload = "auto";
-    audio.style.display = "block";
-    audio.play();
-
-    // upload
-    musicaUrl = await uploadMusica(file);
-
-    musicBox.innerText = "🎶 Música selecionada";
-    musicBox.classList.add("disabled");
-    removeMusic.style.display = "block";
-  };
-
-  removeMusic.onclick = () => {
-    audio.src = "";
-    audio.style.display = "none";
+  if (file.size > LIMITE_MUSICA_MB * 1024 * 1024) {
+    alert("❌ Música muito grande (máx. 2 minutos)");
     musicaInput.value = "";
-    musicBox.innerText = "Adicionar música 🎵";
-    musicBox.classList.remove("disabled");
-    removeMusic.style.display = "none";
-    musicaUrl = null;
-  };
+    return;
+  }
+
+  // 🔥 UPLOAD PARA CLOUDINARY
+  const cloudUrl = await uploadMusica(file);
+
+  // 🔥 PREVIEW COM URL REAL
+  audio.src = cloudUrl;
+  audio.volume = 0.8;
+  audio.preload = "auto";
+  audio.style.display = "block";
+  audio.play();
+
+  // 🔥 SALVA PARA O SITE FINAL
+  musicaUrl = cloudUrl;
+
+  musicBox.innerText = "🎶 Música selecionada";
+  musicBox.classList.add("disabled");
+  removeMusic.style.display = "block";
+};
 
   /* COMPRA — VALIDAÇÃO ORIGINAL */
   btnComprar.onclick = async () => {
@@ -709,6 +702,7 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
 });
 </script> </body>  
 </html>
+
 
 
 
