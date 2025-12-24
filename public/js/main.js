@@ -231,13 +231,13 @@ setTimeout(() => {
   if (fotosDOM.length < 2) return;
 
   // 🔁 loop infinito
- midias.appendChild(cartaEl || carta);
+midias.appendChild(div);
 
+div.style.transition = "none";
+div.style.transform =
+  "translateX(-50%) translateY(0) rotate(0deg) scale(1)";
+div.offsetHeight;
 
-  cartaEl.style.transition = "none";
-  cartaEl.style.transform =
-    "translateX(-50%) translateY(0) rotate(0deg) scale(1)";
-  cartaEl.offsetHeight; // 🔥 força reflow
 
   requestAnimationFrame(() => {
     cartaEl.style.transition = "";
@@ -356,6 +356,7 @@ setTimeout(() => {
       `;
     });
 }
+
 
 
 
