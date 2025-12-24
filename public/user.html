@@ -96,12 +96,37 @@ if (Array.isArray(data.fotos) && data.fotos.filter(Boolean).length > 0) {
     else if (i === index + 2) foto.classList.add("behind-2");
   });
 
+  ativarDot(index); // 🔥 ATUALIZA BOLINHAS
+}
+function criarDots() {
+  dotsContainer.innerHTML = "";
+  const total = document.querySelectorAll("#midias .photo").length;
+
+  for (let i = 0; i < total; i++) {
+    const dot = document.createElement("div");
+    dot.className = "dot";
+    if (i === 0) dot.classList.add("active");
+    dotsContainer.appendChild(dot);
+  }
+}
+
+function ativarDot(index) {
+  document.querySelectorAll(".dot").forEach((dot, i) => {
+    dot.classList.toggle("active", i === index);
+  });
+}
+
+
   // ✅ ÚNICO lugar onde o swipe é ativado
   const ativa = document.querySelector("#midias .photo.active");
   if (ativa) ativarSwipe([ativa]);
 }
 
 function ativarSwipe(cartas) {
+  if (document.querySelectorAll("#midias .photo").length < 2) {
+  return;
+}
+
   cartas.forEach(carta => {
     let startX = 0;
     let currentX = 0;
@@ -158,7 +183,7 @@ function ativarSwipe(cartas) {
     midiasEl.appendChild(div);
   });
 
- // 🔥 ativa o efeito inicial
+criarDots();
 atualizarStack(0);
 
 // 🔥 ativa swipe SOMENTE na carta ativa
