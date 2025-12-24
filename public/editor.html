@@ -273,7 +273,15 @@ button{
 
 
   /* ===== CARTAS  (TINDER / BARALHO) ===== */
-  #midias .photo.active {
+
+#midias {
+  position: relative;
+  height: 300px;
+  margin-top: 24px;
+  margin-bottom: 80px;
+}
+
+    #midias .photo.active {
   transform: translateX(-50%) scale(1) rotate(0deg);
 }
 
@@ -379,7 +387,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let fundoSelecionado = "azul";
   let indexAtivo = 0;
   
-  function atualizarStack(index) {
+ function atualizarStack(index) {
   const fotosDOM = document.querySelectorAll("#midias .photo");
 
   fotosDOM.forEach((foto, i) => {
@@ -390,11 +398,9 @@ document.addEventListener("DOMContentLoaded", () => {
     else if (i === index + 2) foto.classList.add("behind-2");
   });
 
-  ativarDot(index); // 🔥 ATUALIZA BOLINHAS
-}
+  ativarDot(index);
 
-
-  // 🔥 AQUI — SEMPRE DEPOIS DO forEach
+  // 🔥 ativa swipe SOMENTE na carta da frente
   const ativa = document.querySelector("#midias .photo.active");
   if (ativa) ativarSwipe([ativa]);
 }
@@ -440,26 +446,23 @@ if (total < 2) return;
           `translateX(${currentX > 0 ? 150 : -150}vw) rotate(${currentX > 0 ? 25 : -25}deg)`;
 
        setTimeout(() => {
- const fotosDOM = Array.from(document.querySelectorAll("#midias .photo"));
+  const fotosDOM = Array.from(document.querySelectorAll("#midias .photo"));
 
-if (currentX > 0) {
-  // swipe direita → última vai pra frente
-  midias.appendChild(fotosDOM.shift());
-} else {
-  // swipe esquerda → primeira vai pro fim
-  midias.appendChild(fotosDOM.shift());
-}
+  if (fotosDOM.length < 2) {
+    atualizarStack(0);
+    return;
+  }
 
-atualizarStack(0);
+  if (currentX > 0) {
+    // 👉 swipe direita → última vai para frente
+    midias.insertBefore(fotosDOM[fotosDOM.length - 1], fotosDOM[0]);
+  } else {
+    // 👉 swipe esquerda → primeira vai para o fim
+    midias.appendChild(fotosDOM[0]);
+  }
 
-
-  // 🔁 LOOP REAL: move a carta para o final
-  midias.appendChild(carta);
-
-  // 🔥 reseta posição
   carta.style.transition = "none";
-  carta.style.transform =
-    "translateX(-50%) translateY(0) rotate(0deg) scale(1)";
+  carta.style.transform = "translateX(-50%)";
 
   requestAnimationFrame(() => {
     carta.style.transition = "";
@@ -467,6 +470,7 @@ atualizarStack(0);
   });
 
 }, 300);
+
 
 
 
@@ -497,12 +501,6 @@ function criarDots() {
     if (i === 0) dot.classList.add("active");
     dotsContainer.appendChild(dot);
   }
-}
-
-function ativarDot(index) {
-  document.querySelectorAll(".dot").forEach((dot, i) => {
-    dot.classList.toggle("active", i === index);
-  });
 }
 
 
@@ -730,6 +728,7 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
 });
 </script> </body>  
 </html>
+
 
 
 
