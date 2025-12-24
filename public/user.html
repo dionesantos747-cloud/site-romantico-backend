@@ -99,22 +99,19 @@ if (Array.isArray(data.fotos) && data.fotos.filter(Boolean).length > 0) {
   ativarDot(index); // 🔥 ATUALIZA BOLINHAS
 }
 function criarDots() {
-  dotsContainer.innerHTML = "";
-  const total = document.querySelectorAll("#midias .photo").length;
+  const dots = document.getElementById("dots");
+  dots.innerHTML = "";
 
-  for (let i = 0; i < total; i++) {
-    const dot = document.createElement("div");
-    dot.className = "dot";
-    if (i === 0) dot.classList.add("active");
-    dotsContainer.appendChild(dot);
-  }
-}
-
-function ativarDot(index) {
-  document.querySelectorAll(".dot").forEach((dot, i) => {
-    dot.classList.toggle("active", i === index);
+  data.fotos.filter(Boolean).forEach((_, i) => {
+    const d = document.createElement("div");
+    d.className = "dot";
+    if (i === 0) d.classList.add("active");
+    dots.appendChild(d);
   });
 }
+
+criarDots();
+
 
 
   // ✅ ÚNICO lugar onde o swipe é ativado
