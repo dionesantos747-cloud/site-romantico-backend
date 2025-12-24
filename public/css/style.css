@@ -339,8 +339,6 @@ button {
   width: 80%;
   max-width: 320px;
   border-radius: 12px;
-}
-#audioPlayer {
   background: #111;
 }
 
@@ -389,6 +387,7 @@ body {
   }
 
 }
+
 
 
 
