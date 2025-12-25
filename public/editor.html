@@ -170,7 +170,45 @@ textarea{min-height:90px}
   color:#fff;  
   text-shadow: 1px 1px 3px rgba(0,0,0,0.5);  
 }  
-  
+  /* 📱 TEXTO PRINCIPAL ADAPTADO AO MOBILE */
+@media (max-width: 480px) {
+  .mensagem {
+    font-size: 1.2em;   /* 🔥 menor */
+    line-height: 1.4;
+    padding: 0 6px;
+  }
+}
+/* 🔒 TEXTO PRINCIPAL LIMITADO */
+.mensagem.limitada {
+  max-height: 180px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* fade no final */
+.mensagem.limitada::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0),
+    rgba(0,0,0,0.85)
+  );
+}
+.continuar-mensagem {
+  display: none;
+  margin-top: 8px;
+  font-size: 0.9em;
+  color: #ffd400;
+  cursor: pointer;
+  text-align: center;
+  opacity: 0.9;
+}
+
 .carta{  
   background:#fff;  
   color:#333;  
@@ -463,6 +501,9 @@ button{
 
       <div class="nome" id="nome"></div>
       <div class="mensagem" id="mensagem"></div>
+<div class="continuar-mensagem" id="btnContinuarMensagem">
+  Continuar lendo ⌄
+</div>
 
       <div id="midias"></div>
       <div class="dots" id="dots"></div>
@@ -668,6 +709,31 @@ function criarDots() {
      /* PREVIEW TEXTO */
   nomeInput.oninput = () => nome.innerText = nomeInput.value;
   msgInput.oninput = () => mensagem.innerText = msgInput.value;
+  function ajustarMensagem() {
+  const msg = document.getElementById("mensagem");
+  const btn = document.getElementById("btnContinuarMensagem");
+
+  if (!msg || !btn) return;
+
+  setTimeout(() => {
+    if (msg.scrollHeight > 200) {
+      msg.classList.add("limitada");
+      btn.style.display = "block";
+    } else {
+      msg.classList.remove("limitada");
+      btn.style.display = "none";
+    }
+  }, 50);
+}
+const btnContinuarMensagem = document.getElementById("btnContinuarMensagem");
+
+if (btnContinuarMensagem) {
+  btnContinuarMensagem.onclick = () => {
+    mensagem.classList.remove("limitada");
+    btnContinuarMensagem.style.display = "none";
+  };
+}
+
   cartaInput.oninput = () => carta.innerText = cartaInput.value;
 
   /* CONTADOR */
@@ -896,6 +962,7 @@ musicBox.classList.add("disabled");
 
 </script> </body>  
 </html>
+
 
 
 
