@@ -231,7 +231,11 @@ button{
   color:#ffd400;  
   text-shadow: 2px 2px 4px #000;  
 }  
-  
+  /* 🔧 AJUSTE SOMENTE NA PRÉ-VISUALIZAÇÃO */
+.device-screen #tempo .titulo {
+  font-size: 1.4em;   /* 🔥 menor */
+  margin-bottom: 8px;
+}
 #tempo .contador{  
   display:flex;  
   justify-content:center;  
@@ -247,7 +251,16 @@ button{
   font-family: 'Playfair Display', serif;  
   font-size:1.6em;  
 }
+/* 🔧 CONTADOR MAIS COMPACTO NO CELULAR */
+.device-screen #tempo .contador {
+  gap: 8px;
+}
 
+.device-screen #tempo .contador .item {
+  font-size: 1.1em;
+  padding: 8px 10px;
+  min-width: 70px;
+}
   /* ===== BASE DO BARALHO ===== */
 #midias {
   position: relative;
@@ -874,6 +887,7 @@ musicBox.classList.add("disabled");
 
 </script> </body>  
 </html>
+
 
 
 
