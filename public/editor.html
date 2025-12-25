@@ -401,16 +401,40 @@ button{
   </div>
 
   <div class="device-screen">
+<!-- 🔒 MOLDURA DE CELULAR -->
+<div class="device-preview">
+
+  <div class="device-top">
+    <div class="chrome-url">https://nossoamor.app</div>
+  </div>
+
+  <div class="device-screen">
+
+    <!-- 🔥 TUDO DO SITE DO USUÁRIO FICA AQUI DENTRO -->
     <div class="preview azul" id="preview">
-      </div>
+
+      <audio id="audioPlayer" controls style="display:none;"></audio>
+
+      <div class="nome" id="nome"></div>
+      <div class="mensagem" id="mensagem"></div>
+
+      <div id="midias"></div>
+      <div class="dots" id="dots"></div>
+
+      <div id="tempo"></div>
+
+      <button id="btnCarta">💌 Abrir carta</button>
+      <div class="carta" id="carta"></div>
+
+      <button class="pay" id="btnComprar">
+        Gerar QR code por R$9,99
+      </button>
+
+    </div>
+    <!-- 🔚 FIM DO PREVIEW -->
+
   </div>
 </div>
-
-  <audio id="audioPlayer" controls style="display:none;"></audio>    <div class="nome" id="nome"></div>  
-  <div class="mensagem" id="mensagem"></div>  <div id="midias"></div>
-<div class="dots" id="dots"></div>    <div id="tempo"></div>  <button id="btnCarta">💌 Abrir carta</button>
-
-  <div class="carta" id="carta"></div>  <button class="pay" id="btnComprar">Gerar QR code por R$9,99</button>
 
 </div> <script>
 const isEditor = true;
@@ -825,6 +849,7 @@ musicBox.classList.add("disabled");
 
 </script> </body>  
 </html>
+
 
 
 
