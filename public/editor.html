@@ -634,9 +634,10 @@ setTimeout(() => {
   `.photo-slot[data-slot="${slotAtual}"]`
 );
 
-slotEl.classList.add("filled");
-slotEl.innerText = ""; // 🔥 REMOVE O "+"
-
+    slotEl.classList.add("filled");
+    slotEl.innerText = ""; // 🔥 REMOVE O "+"
+    
+    fotoInput.disabled = false;
     slotAtual = null;
     fotoInput.value = "";
   };
@@ -655,6 +656,8 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
     musicaInput.value = "";
     return;
   }
+musicBox.innerText = "⏳ Carregando música...";
+musicBox.classList.add("disabled");
 
   // 🔥 UPLOAD PARA CLOUDINARY
   const cloudUrl = await uploadMusica(file);
@@ -716,6 +719,7 @@ slotEl.innerText = ""; // 🔥 REMOVE O "+"
 
 </script> </body>  
 </html>
+
 
 
 
