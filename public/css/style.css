@@ -185,24 +185,11 @@ will-change: transform;       /* 🔥 GPU */
   opacity: 1;
 }
 
-#midias .photo.behind-1 {
-  transform: translateX(calc(-50% - 32px))
-             translateY(32px)
-             rotate(-6deg)
-             scale(0.94);
-  z-index: 2;
- opacity: 1;
-
-}
-
+#midias .photo.behind-1,
 #midias .photo.behind-2 {
-  transform: translateX(calc(-50% + 32px))
-             translateY(64px)
-             rotate(6deg)
-             scale(0.88);
-  z-index: 1;
-  opacity: 1;
-
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
 }
 
 
@@ -398,6 +385,7 @@ body {
   }
 
 }
+
 
 
 
