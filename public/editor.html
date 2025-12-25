@@ -267,7 +267,12 @@ button{
   height: 320px;
   overflow: hidden; /* 🔒 IMPORTANTE */
 }
-
+/* 🔧 MIDIAS MAIS COMPACTO NA PRÉ-VISUALIZAÇÃO */
+.device-screen #midias {
+  height: 220px;        /* 🔥 menor */
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
 
 #midias .photo {
   position: absolute;
@@ -280,7 +285,10 @@ button{
   touch-action: none;
   will-change: transform;
 }
-
+.device-screen #midias .photo {
+  width: 180px;
+  max-width: 85%;
+}
 #midias .photo {
   border-radius: 18px;
   overflow: hidden;
@@ -387,6 +395,7 @@ button{
   min-height: 100%;
   max-width: 100%;
   overflow-x: hidden;
+  overflow-y: auto;
 }
 
 
@@ -887,6 +896,7 @@ musicBox.classList.add("disabled");
 
 </script> </body>  
 </html>
+
 
 
 
