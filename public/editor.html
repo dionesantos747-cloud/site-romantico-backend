@@ -6,8 +6,6 @@
 <meta name="color-scheme" content="only light">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet"> 
   
- 600px;
-}
   <style>  
 *{box-sizing:border-box}  
 body{  
@@ -270,6 +268,17 @@ button{
   will-change: transform;
 }
 
+#midias .photo {
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+#midias .photo img {
+  width: 100%;
+  height: auto;
+  border-radius: 18px;
+  display: block;
+}
 
 #midias .photo.active { z-index: 3; }
 #midias .photo.behind-1 { z-index: 2; }
@@ -403,20 +412,27 @@ button{
     <div class="bg-card rosa" data-bg="rosa"></div>  
     <div class="bg-card preto" data-bg="preto"></div>  
   </div>  
-</div>  <div class="device-preview">
+</div> 
+  <!-- 👇 TEXTO EXPLICATIVO DO PREVIEW -->
+<div style="
+  text-align:center;
+  margin: 30px 0 10px;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4em;
+  color: #ffd400;
+  text-shadow: 1px 1px 3px #000;
+">
+  Veja como vai ficar ⬇️
+</div>
+
+  <div class="device-preview">
   <div class="device-top">
     <span class="chrome-url">memoryit.com/Eu-e-ela</span>
   </div>
 
   <div class="device-screen">
 <!-- 🔒 MOLDURA DE CELULAR -->
-<div class="device-preview">
 
-  <div class="device-top">
-    <div class="chrome-url">https://nossoamor.app</div>
-  </div>
-
-  <div class="device-screen">
 
     <!-- 🔥 TUDO DO SITE DO USUÁRIO FICA AQUI DENTRO -->
     <div class="preview azul" id="preview">
@@ -434,16 +450,22 @@ button{
       <button id="btnCarta">💌 Abrir carta</button>
       <div class="carta" id="carta"></div>
 
-      <button class="pay" id="btnComprar">
-        Gerar QR code por R$9,99
-      </button>
-
     </div>
     <!-- 🔚 FIM DO PREVIEW -->
-
-  </div>
+<!-- 💳 BOTÃO DE COMPRA (EDITOR APENAS) -->
+<div style="
+  max-width: 420px;
+  margin: 30px auto 80px;
+  padding: 0 20px;
+">
+  <button class="pay" id="btnComprar">
+    Gerar QR Code por R$9,99
+  </button>
 </div>
 
+   </div>
+</div>
+  
 </div> <script>
 const isEditor = true;
 
@@ -714,7 +736,7 @@ function criarDots() {
   });
 
   fotoInput.onchange = async e => {
-    fotoInput.disabled = true;
+   
    const file = e.target.files[0];
     if (!file || slotAtual === null) return;
 
@@ -742,10 +764,9 @@ remove.onclick = () => {
 
   slot.classList.remove("filled");
   slot.innerText = "+";
-fotoInput.disabled = false;
   slotAtual = null;
   fotoInput.value = "";
-fotoInput.disabled = false;
+
 
   criarDots();
   atualizarStack(0);
@@ -775,7 +796,6 @@ setTimeout(() => {
     slotEl.classList.add("filled");
     slotEl.innerText = ""; // 🔥 REMOVE O "+"
     
-    fotoInput.disabled = false;
     slotAtual = null;
     fotoInput.value = "";
   };
@@ -805,14 +825,13 @@ musicBox.classList.add("disabled");
   audio.volume = 0.8;
   audio.preload = "auto";
   audio.style.display = "block";
-  audio.play();
 
   // 🔥 SALVA PARA O SITE FINAL
   musicaUrl = cloudUrl;
 
   musicBox.innerText = "🎶 Música selecionada";
-  musicBox.classList.add("disabled");
-  removeMusic.style.display = "block";
+   removeMusic.style.display = "block";
+     musicBox.classList.add("disabled");
 };
 
   /* COMPRA — VALIDAÇÃO ORIGINAL */
@@ -857,6 +876,7 @@ musicBox.classList.add("disabled");
 
 </script> </body>  
 </html>
+
 
 
 
