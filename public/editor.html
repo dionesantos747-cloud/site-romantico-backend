@@ -280,15 +280,29 @@ button{
   gap:12px;  
 }  
   
-#tempo .contador .item{  
-  background:#fff;  
-  color:#333;  
-  padding:12px 18px;  
-  border-radius:12px;  
-  box-shadow:0 4px 8px rgba(0,0,0,0.4);  
-  font-family: 'Playfair Display', serif;  
-  font-size:1.6em;  
+#tempo .contador .item {
+  background: #2b2b2b;
+  color: #fff;
+
+  width: 72px;              /* 🔒 todos iguais */
+  height: 72px;             /* 🔒 mesma altura */
+
+  display: flex;            /* 🔥 centraliza conteúdo */
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  padding: 8px;
+  border-radius: 14px;
+
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2em;
+  line-height: 1.2;
+  text-align: center;
+
+  box-shadow: 0 4px 10px rgba(0,0,0,.45);
 }
+
 /* 🔧 CONTADOR MAIS COMPACTO NO CELULAR */
 .device-screen #tempo .contador {
   gap: 8px;
@@ -316,13 +330,18 @@ button{
   position: absolute;
   top: 0;
   left: 50%;
-  width: 220px;        /* 🔥 menor no mobile */
+  width: 220px;
   max-width: 70vw;
+
+  border-radius: 18px;     /* 🔥 quinas completas */
+  overflow: hidden;        /* 🔥 corta a imagem */
+  background: #fff;
+
   transform: translateX(-50%);
-  transition: transform 0.35s ease;
-  touch-action: none;
+  transition: transform 0.45s cubic-bezier(.22,.61,.36,1);
   will-change: transform;
 }
+
 .device-screen #midias .photo {
   width: 180px;
   max-width: 85%;
@@ -606,9 +625,9 @@ function ativarSwipe(cartas) {
         
    
 
-        carta.style.transition = "transform 0.3s ease";
-        carta.style.transform =
-          `translateX(${currentX > 0 ? 120 : -120}vw)`;
+       carta.style.transition = "transform 0.45s cubic-bezier(.22,.61,.36,1)";
+carta.style.transform =
+  `translateX(${currentX > 0 ? 110 : -110}vw)`;
 
         setTimeout(() => {
           // 🔁 LOOP SIMPLES
@@ -830,7 +849,15 @@ if (btnContinuarMensagem) {
     const local = URL.createObjectURL(file);
     const div = document.createElement("div");
     div.className = "photo";
-   div.innerHTML = `<img src="${local}" style="width:100%">`;
+ div.innerHTML = `
+  <img src="${local}" 
+       style="
+         width:100%;
+         height:auto;
+         display:block;
+         border-radius:16px;
+       ">
+`;
 
 
     const remove = document.createElement("div");
@@ -960,6 +987,7 @@ musicBox.classList.add("disabled");
 
 </script> </body>  
 </html>
+
 
 
 
