@@ -80,8 +80,7 @@ function ativarSwipe(cartas) {
       dragging = false;
 
       if (Math.abs(currentX) > 120) {
-        swipeSound.currentTime = 0;
-        swipeSound.play();
+
 
         carta.style.transition = "transform 0.35s ease";
         carta.style.transform =
@@ -371,6 +370,7 @@ setTimeout(() => {
       `;
     });
 }
+
 
 
 
