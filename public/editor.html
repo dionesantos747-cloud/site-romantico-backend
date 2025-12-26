@@ -570,7 +570,6 @@ function atualizarStack(index) {
   });
 }
 
-const swipeSound = new Audio("/sounds/card-swipe.mp3");
 
 function ativarSwipe(cartas) {
   if (document.querySelectorAll("#midias .photo").length < 2) return;
@@ -605,8 +604,7 @@ function ativarSwipe(cartas) {
 
       if (Math.abs(currentX) > 100) {
         
-        swipeSound.currentTime = 0;
-        swipeSound.play();
+   
 
         carta.style.transition = "transform 0.3s ease";
         carta.style.transform =
@@ -962,6 +960,7 @@ musicBox.classList.add("disabled");
 
 </script> </body>  
 </html>
+
 
 
 
