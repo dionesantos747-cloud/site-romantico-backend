@@ -125,6 +125,11 @@ let fundoSelecionado = "azul";
 if (isEditor) {
   nomeInput.oninput = () => nome.innerText = nomeInput.value;
   msgInput.oninput = () => mensagem.innerText = msgInput.value;
+   msgInput.oninput = () => {
+  mensagem.innerText = msgInput.value;
+  ajustarMensagem();
+};
+
   cartaInput.oninput = () => carta.innerText = cartaInput.value;
 }
 
@@ -370,6 +375,7 @@ setTimeout(() => {
       `;
     });
 }
+
 
 
 
