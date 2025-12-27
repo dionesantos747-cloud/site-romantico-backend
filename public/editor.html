@@ -379,12 +379,18 @@ button{
   overflow: hidden;
 }
 
+#midias .photo {
+  border-radius: 20px;
+  overflow: hidden;
+}
+
 #midias .photo img {
   width: 100%;
-  height: auto;
-  border-radius: 18px;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
+
 
 #midias .photo.active { z-index: 3; }
 #midias .photo.behind-1 { z-index: 2; }
@@ -483,6 +489,10 @@ button{
   overflow-y: auto;
 }
 
+.device-screen .mensagem {
+  max-width: 100%;
+  padding: 0 12px;
+}
 
 /* 🔒 IMPORTANTE:
    garante que o preview não saia da moldura */
@@ -701,9 +711,7 @@ function iniciarAutoSwipe() {
     ativa.style.transition = "transform 0.35s ease";
     ativa.style.transform = "translateX(-120vw)";
 
-    swipeSound.currentTime = 0;
-    swipeSound.play();
-
+  
     setTimeout(() => {
       // move para o final
       midias.appendChild(ativa);
@@ -1018,6 +1026,7 @@ musicBox.classList.add("disabled");
 
 </script> </body>  
 </html>
+
 
 
 
