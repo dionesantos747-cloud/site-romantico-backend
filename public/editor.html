@@ -184,6 +184,34 @@ textarea{min-height:90px}
   overflow: hidden;
   position: relative;
 }
+/* ===== TEXTO COM "CONTINUAR LENDO" ===== */
+.mensagem {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4em;          /* 🔽 menor no mobile */
+  font-style: italic;
+  color: #fff;
+  line-height: 1.4;
+  margin-top: 12px;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 4;     /* 👈 quantas linhas aparecem */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.ler-mais {
+  background: transparent;
+  border: none;
+  color: #ffd400;
+  font-size: 0.95em;
+  margin-top: 6px;
+  cursor: pointer;
+}
+
+/* quando expandido */
+.mensagem.expandido {
+  -webkit-line-clamp: unset;
+  max-height: none;
+}
 
 /* fade no final */
 .mensagem.limitada::after {
@@ -520,8 +548,13 @@ button{
 
       <div class="nome" id="nome"></div>
       <div class="mensagem" id="mensagem"></div>
-<div class="continuar-mensagem" id="btnContinuarMensagem">
-  Continuar lendo ⌄
+      <button id="btnLerMais" class="ler-mais" style="display:none">
+  Continuar lendo ⬇️
+</button>
+
+<div class="co<button id="btnLerMais" class="ler-mais" style="display:none">
+  Continuar lendo ⬇️
+
 </div>
 
       <div id="midias"></div>
@@ -987,6 +1020,7 @@ musicBox.classList.add("disabled");
 
 </script> </body>  
 </html>
+
 
 
 
