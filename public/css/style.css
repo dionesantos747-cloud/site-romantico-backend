@@ -124,38 +124,27 @@ textarea { min-height: 90px; }
 .photo {
   background: #fff;
   padding: 8px 8px 18px;
-  border-radius: 14px;   /* 🔥 quinas suaves */
   overflow: hidden;      /* 🔥 corta imagem */
   margin: 0;
   width: 220px;
   max-width: 70vw;
   box-shadow: 0 8px 22px rgba(0,0,0,.35);
 }
-.photo img {
-  width: 100%;
-  display: block;
-  border-radius: 10px;
-}
-
-.photo {
-  overflow: hidden; /* 🔥 ESSENCIAL */
-  border-radius: 18px;
-}
 
 .photo img {
   width: 100%;
   height: auto;
-  border-radius: 14px; /* 🔥 garante quinas */
   display: block;
 }
-===================
+/* ===================
    CARROSSEL — EFEITO CARTAS
 ===================== */
+
 #midias {
   position: relative;
-  height: 380px;              /* 🔥 espaço real para o stack */
+  height: 240px;              /* 🔥 espaço real para o stack */
   margin-top: 24px;
-  margin-bottom: 120px;       /* 🔥 empurra o contador */
+  margin-bottom: 40px;       /* 🔥 empurra o contador */
 }
 
 
@@ -166,17 +155,19 @@ textarea { min-height: 90px; }
   width: 220px;
   max-width: 70vw;
   transform: translateX(-50%);
-  transition: transform 0.25s ease;
-will-change: transform;       /* 🔥 GPU */
-  touch-action: none;
+  border-radius: 20px;   /* 🔥 única verdade */
+  overflow: hidden;      /* 🔒 essencial */
+  background: #fff;
 }
 
-.photo img {
+
+#midias .photo img {
   width: 100%;
-  height: auto;
-  border-radius: 12px;   /* 🔥 garante quinas */
-  display: block;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit; /* 🔥 usa o mesmo raio do container */
 }
+
 
 /* carta ativa */
 #midias .photo.active {
@@ -264,10 +255,16 @@ will-change: transform;       /* 🔥 GPU */
 }
 
 .mensagem {
-  font-size: 1.8em;
-  font-style: italic;
-  transform: rotate(-1deg);
-  margin-top: 12px;
+  font-size: 1.4em;
+  line-height: 1.4;
+  transform: rotate(-0.5deg);
+}
+
+@media (max-width: 480px) {
+  .mensagem {
+    font-size: 1.2em;
+    transform: none;
+  }
 }
 
 .carta {
@@ -362,14 +359,6 @@ body.final .remove-music {
   to { transform: translateY(-120vh); opacity: 0; }
 }
 
-html {
-  color-scheme: light !important;
-}
-
-body {
-  background: #000 !important;
-}
-
 @media (prefers-color-scheme: dark) {
   html, body {
     background: #000 !important;
@@ -385,6 +374,7 @@ body {
   }
 
 }
+
 
 
 
