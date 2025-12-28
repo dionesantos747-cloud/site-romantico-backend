@@ -101,8 +101,10 @@ document.addEventListener("DOMContentLoaded", () => {
       slot.classList.add("filled");
       slot.removeAttribute("data-active");
 
-      criarDots();
-      atualizarStack();
+     index = document.querySelectorAll("#midias .photo").length - 1;
+atualizarStack();
+ativarSwipe();
+
     };
   }
 
@@ -111,31 +113,73 @@ document.addEventListener("DOMContentLoaded", () => {
   ================================ */
   let index = 0;
 
-  function atualizarStack() {
-    const fotos = document.querySelectorAll("#midias .photo");
+function atualizarStack() {
+  const fotos = document.querySelectorAll("#midias .photo");
 
-    fotos.forEach((f, i) => {
-      f.classList.toggle("active", i === index);
+  fotos.forEach((foto, i) => {
+    foto.classList.toggle("active", i === index);
+  });
+
+  if (dots) {
+    dots.innerHTML = "";
+    fotos.forEach((_, i) => {
+      const d = document.createElement("div");
+      d.className = "dot";
+      if (i === index) d.classList.add("active");
+      dots.appendChild(d);
     });
-
-    if (dots) {
-      dots.innerHTML = "";
-      fotos.forEach((_, i) => {
-        const d = document.createElement("div");
-        d.className = "dot" + (i === index ? " active" : "");
-        dots.appendChild(d);
-      });
-    }
   }
+}
 
-  setInterval(() => {
-    const fotos = document.querySelectorAll("#midias .photo");
-    if (fotos.length < 2) return;
-    index = (index + 1) % fotos.length;
+function ativarSwipe() {
+  const foto = document.querySelector("#midias .photo.active");
+  if (!foto) return;
+
+  let startX = 0;
+  let currentX = 0;
+  let dragging = false;
+
+  foto.onpointerdown = e => {
+    dragging = true;
+    startX = e.clientX;
+    foto.setPointerCapture(e.pointerId);
+    foto.style.transition = "none";
+  };
+
+  foto.onpointermove = e => {
+    if (!dragging) return;
+    currentX = e.clientX - startX;
+    foto.style.transform = `translateX(calc(-50% + ${currentX}px))`;
+  };
+
+  foto.onpointerup = () => {
+    dragging = false;
+
+    if (Math.abs(currentX) > 80) {
+      index =
+        currentX < 0
+          ? (index + 1) % document.querySelectorAll("#midias .photo").length
+          : (index - 1 + document.querySelectorAll("#midias .photo").length) %
+            document.querySelectorAll("#midias .photo").length;
+    }
+
+    foto.style.transition = "";
+    foto.style.transform = "translateX(-50%)";
     atualizarStack();
-  }, 3500);
+    ativarSwipe();
+  };
+}
+
+ setInterval(() => {
+  const fotos = document.querySelectorAll("#midias .photo");
+  if (fotos.length < 2) return;
+  index = (index + 1) % fotos.length;
+  atualizarStack();
+  ativarSwipe();
+}, 3500);
 
 });
+
 
 
 
