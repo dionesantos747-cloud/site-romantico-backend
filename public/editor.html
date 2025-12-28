@@ -163,13 +163,20 @@ textarea{min-height:90px}
 }  
   
 /* MENSAGEM PRINCIPAL LEGÍVEL INCLINADA */  
-.mensagem{  
-  font-family:'Playfair Display', serif;  
-  font-size:1.8em;  
-  font-style:italic;  
-  color:#fff;  
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.5);  
-}  
+.mensagem {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4em;
+  font-style: italic;
+  line-height: 1.4;
+  color: #fff;
+  margin-top: 12px;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
   /* 📱 TEXTO PRINCIPAL ADAPTADO AO MOBILE */
 @media (max-width: 480px) {
   .mensagem {
@@ -185,19 +192,6 @@ textarea{min-height:90px}
   position: relative;
 }
 /* ===== TEXTO COM "CONTINUAR LENDO" ===== */
-.mensagem {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.4em;          /* 🔽 menor no mobile */
-  font-style: italic;
-  color: #fff;
-  line-height: 1.4;
-  margin-top: 12px;
-
-  display: -webkit-box;
-  -webkit-line-clamp: 4;     /* 👈 quantas linhas aparecem */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
 .ler-mais {
   background: transparent;
   border: none;
@@ -358,30 +352,14 @@ button{
   position: absolute;
   top: 0;
   left: 50%;
-  width: 220px;
-  max-width: 70vw;
-
-  border-radius: 18px;     /* 🔥 quinas completas */
-  overflow: hidden;        /* 🔥 corta a imagem */
+  width: 180px;
+  max-width: 85%;
+  border-radius: 20px;
+  overflow: hidden;
   background: #fff;
-
   transform: translateX(-50%);
   transition: transform 0.45s cubic-bezier(.22,.61,.36,1);
   will-change: transform;
-}
-
-.device-screen #midias .photo {
-  width: 180px;
-  max-width: 85%;
-}
-#midias .photo {
-  border-radius: 18px;
-  overflow: hidden;
-}
-
-#midias .photo {
-  border-radius: 20px;
-  overflow: hidden;
 }
 
 #midias .photo img {
@@ -562,8 +540,6 @@ button{
   Continuar lendo ⬇️
 </button>
 
-
-</div>
 
       <div id="midias"></div>
       <div class="dots" id="dots"></div>
@@ -764,7 +740,11 @@ function criarDots() {
 
      /* PREVIEW TEXTO */
   nomeInput.oninput = () => nome.innerText = nomeInput.value;
-  msgInput.oninput = () => mensagem.innerText = msgInput.value;
+msgInput.oninput = () => {
+  mensagem.innerText = msgInput.value;
+  ajustarMensagem();
+};
+
   function ajustarMensagem() {
   const msg = document.getElementById("mensagem");
   const btn = document.getElementById("btnContinuarMensagem");
@@ -1026,6 +1006,7 @@ musicBox.classList.add("disabled");
 
 </script> </body>  
 </html>
+
 
 
 
