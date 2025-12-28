@@ -304,7 +304,12 @@ if (musicBox && musicaInput) {
 
   musicaInput.onchange = () => {
     if (!musicaInput.files[0]) return;
-    audio.src = URL.createObjectURL(musicaInput.files[0]);
+     musicBox.innerText = "⏳ Carregando música...";
+audio.preload = "auto";
+audio.src = URL.createObjectURL(musicaInput.files[0]);
+audio.load();
+musicBox.innerText = "🎶 Música pronta";
+
     audio.style.display = "block";
     musicBox.innerText = "🎶 Música selecionada";
     musicBox.classList.add("disabled");
@@ -392,6 +397,7 @@ setTimeout(() => {
       `;
     });
 }
+
 
 
 
