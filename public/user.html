@@ -63,7 +63,7 @@ fetch(`/user-data?id=${id}`)
     }
 
     /* ===== ELEMENTOS ===== */
-    const swipeSound = new Audio("/sounds/card-swipe.mp3");
+   
     const nomeEl = document.getElementById("nome");
     const msgEl = document.getElementById("mensagem");
     const cartaEl = document.getElementById("carta");
@@ -81,6 +81,7 @@ fetch(`/user-data?id=${id}`)
     if (data.fundo) {
       preview.className = "preview " + data.fundo;
     }
+criarCoracoes();
 
     /* ===== FOTOS COM EFEITO STACK ===== */
 if (Array.isArray(data.fotos) && data.fotos.filter(Boolean).length > 0) {
@@ -117,7 +118,8 @@ function atualizarStack(index) {
     else if (i === index + 2) foto.classList.add("behind-2");
   });
 
-  ativarDot(0);
+ ativarDot(index);
+
  
 }
   function ativarSwipe(cartas) {
@@ -143,7 +145,8 @@ function atualizarStack(index) {
       currentX = e.clientX - startX;
 
       carta.style.transform =
-        `translateX(calc(-50% + ${currentX}px)) rotate(${currentX / 12}deg)`;
+       `translateX(calc(-50% + ${currentX}px))`
+
     });
 
     carta.addEventListener("pointerup", () => {
@@ -152,7 +155,7 @@ function atualizarStack(index) {
       if (Math.abs(currentX) > 120) {
         carta.style.transition = "transform 0.35s ease";
         carta.style.transform =
-          `translateX(${currentX > 0 ? 150 : -150}vw) rotate(${currentX > 0 ? 20 : -20}deg)`;
+         `translateX(${currentX > 0 ? 150 : -150}vw)`
 
         setTimeout(() => {
           midiasEl.appendChild(carta);
@@ -228,8 +231,8 @@ if (data.musica) {
        tempoEl.innerHTML = `
       <span class="titulo">Já estamos juntos há</span>
       <div class="contador">
-        <div class="item">${a} anos</div>
-        <div class="item">${mo} meses</div>
+       <div class="item">${a} ${anoText}</div>
+       <div class="item">${mo} meses</div>
         <div class="item">${d} dias</div>
         <div class="item">${h}h ${m}m ${s}s</div>
       </div>
@@ -268,7 +271,6 @@ function criarCoracoes() {
 }
 criarCoracoes();
 </script>
-<script src="js/main.js"></script>
 
 </body>
 </html>
