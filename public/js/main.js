@@ -1,440 +1,143 @@
 document.addEventListener("DOMContentLoaded", () => {
-const isEditor = !!document.getElementById("editor");
 
-/* ===============================
-   ELEMENTOS (COM SEGURANÇA)
-================================ */
-const nomeInput = document.getElementById("nomeInput");
-const msgInput = document.getElementById("msgInput");
-const cartaInput = document.getElementById("cartaInput");
-const dataInput = document.getElementById("dataInput");
+  const isEditor = !!document.getElementById("editor");
 
-const nome = document.getElementById("nome");
-const mensagem = document.getElementById("mensagem");
-const carta = document.getElementById("carta");
-const tempo = document.getElementById("tempo");
-const preview = document.getElementById("preview");
+  /* ===============================
+     ELEMENTOS
+  ================================ */
+  const nomeInput = document.getElementById("nomeInput");
+  const msgInput = document.getElementById("msgInput");
+  const cartaInput = document.getElementById("cartaInput");
+  const dataInput = document.getElementById("dataInput");
 
-const fotoInput = document.getElementById("fotoInput");
-const midias = document.getElementById("midias");
+  const nome = document.getElementById("nome");
+  const mensagem = document.getElementById("mensagem");
+  const carta = document.getElementById("carta");
+  const tempo = document.getElementById("tempo");
+  const preview = document.getElementById("preview");
 
-/* ===============================
-   CARROSSEL / STACK POLAROID
-================================ */
-function atualizarStack(index) {
-  const fotosDOM = document.querySelectorAll("#midias .photo");
-
-  fotosDOM.forEach((foto, i) => {
-    foto.classList.remove("active", "behind-1", "behind-2");
-
-    if (i === index) foto.classList.add("active");
-    else if (i === index + 1) foto.classList.add("behind-1");
-    else if (i === index + 2) foto.classList.add("behind-2");
-  });
-}
-function criarDots() {
+  const fotoInput = document.getElementById("fotoInput");
+  const midias = document.getElementById("midias");
   const dots = document.getElementById("dots");
-  if (!dots) return;
 
-  dots.innerHTML = "";
-  const total = document.querySelectorAll("#midias .photo").length;
+  const btnCarta = document.getElementById("btnCarta");
+  const btnContinuarMensagem = document.getElementById("btnContinuarMensagem");
 
-  for (let i = 0; i < total; i++) {
-    const d = document.createElement("div");
-    d.className = "dot";
-    if (i === 0) d.classList.add("active");
-    dots.appendChild(d);
+  /* ===============================
+     TEXTO — EDITOR
+  ================================ */
+  if (isEditor && nomeInput) {
+    nomeInput.oninput = () => nome.innerText = nomeInput.value;
   }
-}
 
+  if (isEditor && msgInput) {
+    msgInput.oninput = () => {
+      mensagem.innerText = msgInput.value;
+      ajustarMensagem();
+    };
+  }
 
-function ativarSwipe(cartas) {
-  if (document.querySelectorAll("#midias .photo").length < 2) return;
+  if (isEditor && cartaInput) {
+    cartaInput.oninput = () => {
+      carta.innerText = cartaInput.value;
+      btnCarta.style.display =
+        cartaInput.value.trim().length ? "block" : "none";
+    };
+  }
 
-  cartas.forEach(carta => {
-    if (carta.dataset.swipe === "true") return;
-    carta.dataset.swipe = "true";
+  function ajustarMensagem() {
+    if (!mensagem || !btnContinuarMensagem) return;
 
-    let startX = 0;
-    let currentX = 0;
-    let dragging = false;
+    if (mensagem.scrollHeight > 180) {
+      mensagem.classList.add("limitada");
+      btnContinuarMensagem.style.display = "block";
+    } else {
+      mensagem.classList.remove("limitada");
+      btnContinuarMensagem.style.display = "none";
+    }
+  }
 
-    carta.addEventListener("pointerdown", e => {
-      dragging = true;
-      startX = e.clientX;
-      carta.setPointerCapture(e.pointerId);
-      carta.style.transition = "none";
+  if (btnContinuarMensagem) {
+    btnContinuarMensagem.onclick = () => {
+      mensagem.classList.remove("limitada");
+      btnContinuarMensagem.style.display = "none";
+    };
+  }
+
+  /* ===============================
+     CARTA
+  ================================ */
+  if (btnCarta) {
+    btnCarta.onclick = () => {
+      carta.style.display =
+        carta.style.display === "block" ? "none" : "block";
+    };
+  }
+
+  /* ===============================
+     FOTOS (EDITOR)
+  ================================ */
+  if (isEditor && fotoInput && midias) {
+    document.querySelectorAll(".photo-slot").forEach(slot => {
+      slot.onclick = () => {
+        if (slot.classList.contains("filled")) return;
+        slot.dataset.active = "true";
+        fotoInput.click();
+      };
     });
 
-    carta.addEventListener("pointermove", e => {
-      if (!dragging) return;
-      currentX = e.clientX - startX;
-      carta.style.transform =
-        `translateX(calc(-50% + ${currentX}px)) rotate(${currentX / 12}deg)`;
+    fotoInput.onchange = e => {
+      const file = e.target.files[0];
+      const slot = document.querySelector(".photo-slot[data-active='true']");
+      if (!file || !slot) return;
+
+      const url = URL.createObjectURL(file);
+
+      const div = document.createElement("div");
+      div.className = "photo";
+      div.innerHTML = `<img src="${url}">`;
+      midias.appendChild(div);
+
+      slot.classList.add("filled");
+      slot.removeAttribute("data-active");
+
+      criarDots();
+      atualizarStack();
+    };
+  }
+
+  /* ===============================
+     CARROSSEL SIMPLES
+  ================================ */
+  let index = 0;
+
+  function atualizarStack() {
+    const fotos = document.querySelectorAll("#midias .photo");
+
+    fotos.forEach((f, i) => {
+      f.classList.toggle("active", i === index);
     });
 
-    carta.addEventListener("pointerup", () => {
-      dragging = false;
-
-      if (Math.abs(currentX) > 120) {
-
-
-        carta.style.transition = "transform 0.35s ease";
-        carta.style.transform =
-          `translateX(${currentX > 0 ? 150 : -150}vw) rotate(${currentX > 0 ? 20 : -20}deg)`;
-
-        setTimeout(() => {
-          midias.appendChild(carta);
-          carta.style.transition = "none";
-          carta.style.transform = "translateX(-50%)";
-
-          atualizarStack(0);
-
-          const ativa = document.querySelector("#midias .photo.active");
-          if (ativa) ativarSwipe([ativa]);
-        }, 280);
-      } else {
-        carta.style.transition = "transform 0.25s ease";
-        carta.style.transform = "translateX(-50%)";
-      }
-
-      currentX = 0;
-    });
-  });
-}
-
-/* =========================
-   SWIPE AUTOMÁTICO SUAVE
-========================= */
-let autoSwipeInterval = null;
-
-function iniciarAutoSwipe() {
-  pararAutoSwipe();
-
-  autoSwipeInterval = setInterval(() => {
-    const ativa = document.querySelector("#midias .photo.active");
-    if (!ativa) return;
-
-    ativa.style.transition = "transform 0.4s ease";
-    ativa.style.transform = "translateX(-120vw)";
-
-    setTimeout(() => {
-      midias.appendChild(ativa);
-
-      ativa.style.transition = "none";
-      ativa.style.transform = "translateX(-50%)";
-
-      atualizarStack(0);
-
-      const nova = document.querySelector("#midias .photo.active");
-      if (nova) ativarSwipe([nova]);
-    }, 420);
-  }, 3500);
-}
-
-function pararAutoSwipe() {
-  if (autoSwipeInterval) {
-    clearInterval(autoSwipeInterval);
-    autoSwipeInterval = null;
+    if (dots) {
+      dots.innerHTML = "";
+      fotos.forEach((_, i) => {
+        const d = document.createElement("div");
+        d.className = "dot" + (i === index ? " active" : "");
+        dots.appendChild(d);
+      });
+    }
   }
-}
-
-const musicBox = document.getElementById("musicBox");
-const musicaInput = document.getElementById("musicaInput");
-const audio = document.getElementById("audioPlayer");
-const removeMusic = document.getElementById("removeMusic");
-
-/* ===============================
-   ESTADO
-================================ */
-let fotos = [null, null, null];
-let slotAtual = null;
-let fundoSelecionado = "azul";
-
-/* ===============================
-   PREVIEW EM TEMPO REAL (EDITOR)
-================================ */
-if (isEditor) {
-  ajustarMensagem();
-};
-
-cartaInput.oninput = () => {
-  carta.innerText = cartaInput.value;
-
-  if (cartaInput.value.trim().length > 0) {
-    btnCarta.style.display = "block";
-  } else {
-    btnCarta.style.display = "none";
-  }
-};
-
-function ajustarMensagem() {
-  const btn = document.getElementById("btnContinuarMensagem");
-  if (!mensagem || !btn) return;
-
-  if (mensagem.scrollHeight > 180) {
-    mensagem.classList.add("limitada");
-    btn.style.display = "block";
-  } else {
-    mensagem.classList.remove("limitada");
-    btn.style.display = "none";
-  }
-}
-
-
-/* ===============================
-   CONTADOR
-================================ */
-function iniciarContador(dataInicio) {
-  if (!dataInicio) return;
 
   setInterval(() => {
-    const inicio = new Date(dataInicio);
-    const agora = new Date();
-    const diff = agora - inicio;
-    if (diff < 0) return;
-
-    const s = Math.floor(diff / 1000) % 60;
-    const m = Math.floor(diff / 60000) % 60;
-    const h = Math.floor(diff / 3600000) % 24;
-    const d = Math.floor(diff / 86400000) % 30;
-    const mo = Math.floor(diff / 2592000000) % 12;
-    const a = Math.floor(diff / 31536000000);
-
-    tempo.innerHTML = `
-      <span class="titulo">Já estamos juntos há</span>
-      <div class="contador">
-        <div class="item">${a} ${a === 1 ? "ano" : "anos"}</div>
-        <div class="item">${mo} ${mo === 1 ? "mês" : "meses"}</div>
-        <div class="item">${d} ${d === 1 ? "dia" : "dias"}</div>
-        <div class="item">${h}h ${m}m ${s}s</div>
-      </div>
-    `;
-  }, 1000);
-}
-
-if (isEditor && dataInput) {
-  dataInput.onchange = () => iniciarContador(dataInput.value);
-}
-
-/* ===============================
-   CARTA
-================================ */
-
-
-const btnCarta = document.getElementById("btnCarta");
-if (btnCarta) btnCarta.style.display = "none";
-
-if (btnCarta && carta) {
-  btnCarta.onclick = () => {
-    carta.style.display = carta.style.display === "block" ? "none" : "block";
-    btnCarta.innerText =
-      carta.style.display === "block" ? "❌ Fechar carta" : "💌 Abrir carta";
-  };
-}
-
-/* ===============================
-   CORAÇÕES
-================================ */
-function criarCoracoes() {
-  if (!preview) return;
-  document.querySelectorAll(".heart").forEach(h => h.remove());
-
-  for (let i = 0; i < 12; i++) {
-    const h = document.createElement("div");
-    h.className = "heart";
-    h.innerText = "❤️";
-    h.style.left = Math.random() * 100 + "%";
-    h.style.animationDuration = 6 + Math.random() * 6 + "s";
-    preview.appendChild(h);
-  }
-}
-criarCoracoes();
-
-/* ===============================
-   FUNDOS (EDITOR)
-================================ */
-document.querySelectorAll(".bg-card").forEach(c => {
-  c.onclick = () => {
-    document.querySelectorAll(".bg-card").forEach(x =>
-      x.classList.remove("selected")
-    );
-
-    c.classList.add("selected");
-
-    // 🔥 salva o fundo escolhido
-    fundoSelecionado = c.dataset.bg;
-
-    // 🔥 usa a variável (não repete dataset)
-    preview.className = "preview " + fundoSelecionado;
-
-    criarCoracoes();
-  };
-});
-
-/* ===============================
-   FOTOS (EDITOR)
-================================ */
-if (isEditor) {
-if (isEditor && msgInput) {
-  msgInput.oninput = () => {
-    mensagem.innerText = msgInput.value;
-    ajustarMensagem();
-  };
-}
-
-
-  document.querySelectorAll(".photo-slot").forEach(slot => {
-    slot.onclick = () => {
-      if (slot.classList.contains("filled")) return;
-      slotAtual = slot.dataset.slot;
-      fotoInput.click();
-    };
-  });
-
- fotoInput.onchange = e => {
-  const file = e.target.files[0];
-  if (!file || slotAtual === null) return;
-
-  const url = URL.createObjectURL(file);
-
-  const div = document.createElement("div");
-  div.className = "photo";
-  div.innerHTML = `<img src="${url}">`;
-
-  midias.appendChild(div);
-
-  const slot = document.querySelector(
-    `.photo-slot[data-slot="${slotAtual}"]`
-  );
-  slot.classList.add("filled");
-  slot.innerHTML = "×";
-
-  slotAtual = null;
-  fotoInput.value = "";
-
-  // 🔥 ATUALIZA TUDO
-  criarDots();
-  atualizarStack(0);
-
-  const ativa = document.querySelector("#midias .photo.active");
-  if (ativa) ativarSwipe([ativa]);
-
-  iniciarAutoSwipe();
-};
-
-    const s = document.querySelector(`.photo-slot[data-slot="${slotAtual}"]`);
-    s.classList.add("filled");
-    s.innerText = "";
-
-    slotAtual = null;
-    fotoInput.value = "";
-  };
-}
-
-/* ===============================
-   MÚSICA
-================================ */
-if (musicBox && musicaInput) {
-  musicBox.onclick = () => {
-    if (musicBox.classList.contains("disabled")) return;
-    musicaInput.click();
-  };
-
-musicaInput.onchange = () => {
-  if (!musicaInput.files[0]) return;
-
-  musicBox.innerText = "⏳ Carregando música...";
-  audio.preload = "auto";
-  audio.src = URL.createObjectURL(musicaInput.files[0]);
-  audio.load();
-
-  audio.oncanplaythrough = () => {
-    musicBox.innerText = "🎶 Música pronta";
-    audio.style.display = "block";
-    musicBox.classList.add("disabled");
-    removeMusic.style.display = "block";
-  };
-};
-
-
-/* ===============================
-   SITE FINAL – CARREGAR DADOS
-================================ */
-const params = new URLSearchParams(window.location.search);
-const userId = params.get("id");
-
-if (!isEditor && userId) {
-  fetch(`/user-data?id=${userId}`)
-    .then(res => res.json())
-    .then(data => {
-      if (!data) return;
-
-      nome.innerText = data.nome;
-      mensagem.innerText = data.mensagem;
-      carta.innerText = data.carta;
-       if (data.carta && data.carta.trim().length > 0) {
-  btnCarta.style.display = "block";
-}
-
-      if (data.fundo) {
-        preview.className = "preview " + data.fundo;
-      } 
-
-      iniciarContador(data.dataInicio);
-       
-if (Array.isArray(data.fotos)) {
-data.fotos.forEach(f => {
-  if (!f) return;
-
-  const div = document.createElement("div");
-  div.className = "photo";
-  div.innerHTML = `<img src="${f}" style="width:100%">`;
-  midias.appendChild(div);
-});
-
-// 🔥 ativa stack inicial no site final
-setTimeout(() => {
-  atualizarStack(0);
-
-  // 🔥 ativa swipe na carta visível
-  const ativa = document.querySelector("#midias .photo.active");
-  if (ativa) ativarSwipe([ativa]);
-iniciarAutoSwipe();
-
-}, 100);
-
-}
-
-     if (data.musica) {
-        audio.src = data.musica;
-        audio.preload = "auto";
-        audio.volume = 0.8;
-        audio.style.display = "block";
-      }
-    })
-  // ✅ ESTE BLOCO FICA AQUI
-    .catch(() => {
-      document.body.innerHTML = `
-        <div style="
-          min-height:100vh;
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          text-align:center;
-          color:white;
-          font-family:'Playfair Display', serif;
-        ">
-          <div>
-            <h1>💔 Site não encontrado</h1>
-            <p>Este link é inválido ou ainda não foi ativado.</p>
-          </div>
-        </div>
-      `;
-    });
-}
+    const fotos = document.querySelectorAll("#midias .photo");
+    if (fotos.length < 2) return;
+    index = (index + 1) % fotos.length;
+    atualizarStack();
+  }, 3500);
 
 });
+
+
 
 
 
