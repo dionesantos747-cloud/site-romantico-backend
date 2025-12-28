@@ -341,7 +341,10 @@ if (!isEditor && userId) {
       nome.innerText = data.nome;
       mensagem.innerText = data.mensagem;
       carta.innerText = data.carta;
-       
+       if (data.carta && data.carta.trim().length > 0) {
+  btnCarta.style.display = "block";
+}
+
       if (data.fundo) {
         preview.className = "preview " + data.fundo;
       } 
@@ -397,6 +400,7 @@ setTimeout(() => {
       `;
     });
 }
+
 
 
 
