@@ -158,8 +158,16 @@ if (isEditor) {
   ajustarMensagem();
 };
 
-  cartaInput.oninput = () => carta.innerText = cartaInput.value;
-}
+cartaInput.oninput = () => {
+  carta.innerText = cartaInput.value;
+
+  if (cartaInput.value.trim().length > 0) {
+    btnCarta.style.display = "block";
+  } else {
+    btnCarta.style.display = "none";
+  }
+};
+
 function ajustarMensagem() {
   const btn = document.getElementById("btnContinuarMensagem");
   if (!mensagem || !btn) return;
@@ -337,18 +345,18 @@ musicaInput.onchange = () => {
   if (!musicaInput.files[0]) return;
 
   musicBox.innerText = "⏳ Carregando música...";
-  musicBox.classList.add("disabled");
-
-  audio.src = URL.createObjectURL(musicaInput.files[0]);
   audio.preload = "auto";
+  audio.src = URL.createObjectURL(musicaInput.files[0]);
   audio.load();
 
   audio.oncanplaythrough = () => {
     musicBox.innerText = "🎶 Música pronta";
     audio.style.display = "block";
+    musicBox.classList.add("disabled");
     removeMusic.style.display = "block";
   };
 };
+
 
 /* ===============================
    SITE FINAL – CARREGAR DADOS
@@ -427,6 +435,7 @@ iniciarAutoSwipe();
 }
 
 });
+
 
 
 
