@@ -91,21 +91,23 @@ textarea{min-height:90px}
 }  
 .photo-slot.filled{cursor:default}  
   
-.photo-remove{  
-  position:absolute;  
-  top:-8px;  
-  right:-8px;  
-  background:#ff4b4b;  
-  color:#fff;  
-  border-radius:50%;  
-  width:22px;  
-  height:22px;  
-  display:flex;  
-  align-items:center;  
-  justify-content:center;  
-  font-size:14px;  
-  cursor:pointer;  
-}  
+.photo-remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 10;
+}
+ 
     
   
 /* MÚSICA */  
@@ -364,10 +366,11 @@ button{
 
 #midias .photo img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;       /* 🔥 NÃO corta */
   display: block;
+  border-radius: 20px;
 }
+
 
 
 #midias .photo.active { z-index: 3; }
@@ -546,7 +549,8 @@ button{
 
       <div id="tempo"></div>
 
-      <button id="btnCarta">💌 Abrir carta</button>
+     <button id="btnCarta" style="display:none">💌 Abrir carta</button>
+
       <div class="carta" id="carta"></div>
 
     </div>
@@ -649,6 +653,14 @@ carta.style.transform =
         setTimeout(() => {
           // 🔁 LOOP SIMPLES
           midias.appendChild(carta);
+setTimeout(() => {
+  atualizarStack(0);
+
+  const ativa = document.querySelector("#midias .photo.active");
+  if (ativa) ativarSwipe([ativa]);
+
+  iniciarAutoSwipe(); // 🔥 AQUI COMEÇA O AUTOMÁTICO
+}, 100);
 
           carta.style.transition = "none";
           carta.style.transform = "translateX(-50%)";
@@ -770,7 +782,15 @@ if (btnContinuarMensagem) {
   };
 }
 
-  cartaInput.oninput = () => carta.innerText = cartaInput.value;
+ cartaInput.oninput = () => {
+  carta.innerText = cartaInput.value;
+
+  if (cartaInput.value.trim().length > 0) {
+    btnCarta.style.display = "block";
+  } else {
+    btnCarta.style.display = "none";
+  }
+};
 
   /* CONTADOR */
   setInterval(() => {
@@ -868,11 +888,8 @@ if (btnContinuarMensagem) {
     const local = URL.createObjectURL(file);
     const div = document.createElement("div");
     div.className = "photo";
- div.innerHTML = `
-  <img src="${local}" 
-       style="
-         width:100%;
-         height:auto;
+div.innerHTML = `<img src="${url}">`;
+  height:auto;
          display:block;
          border-radius:16px;
        ">
@@ -951,7 +968,13 @@ musicBox.classList.add("disabled");
   const cloudUrl = await uploadMusica(file);
 
   // 🔥 PREVIEW COM URL REAL
-  audio.src = cloudUrl;
+  musicBox.innerText = "⏳ Carregando música...";
+
+ audio.preload = "auto";
+audio.src = cloudUrl;
+audio.load();
+musicBox.innerText = "🎶 Música pronta";
+
   audio.volume = 0.8;
   audio.preload = "auto";
   audio.style.display = "block";
@@ -1006,6 +1029,7 @@ musicBox.classList.add("disabled");
 
 </script> </body>  
 </html>
+
 
 
 
