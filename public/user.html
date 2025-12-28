@@ -165,6 +165,8 @@ function atualizarStack(index) {
 
           const ativa = document.querySelector("#midias .photo.active");
           if (ativa) ativarSwipe([ativa]);
+          iniciarAutoSwipe();
+
         }, 280);
       } else {
         carta.style.transition = "transform 0.25s ease";
