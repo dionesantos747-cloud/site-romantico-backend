@@ -49,7 +49,6 @@ function criarDots() {
   }
 }
 
-const swipeSound = new Audio("/sounds/card-swipe.mp3");
 
 function ativarSwipe(cartas) {
   if (document.querySelectorAll("#midias .photo").length < 2) return;
@@ -123,8 +122,6 @@ let fundoSelecionado = "azul";
    PREVIEW EM TEMPO REAL (EDITOR)
 ================================ */
 if (isEditor) {
-  nomeInput.oninput = () => nome.innerText = nomeInput.value;
-  msgInput.oninput = () => mensagem.innerText = msgInput.value;
    msgInput.oninput = () => {
   mensagem.innerText = msgInput.value;
   ajustarMensagem();
@@ -132,6 +129,19 @@ if (isEditor) {
 
   cartaInput.oninput = () => carta.innerText = cartaInput.value;
 }
+function ajustarMensagem() {
+  const btn = document.getElementById("btnContinuarMensagem");
+  if (!mensagem || !btn) return;
+
+  if (mensagem.scrollHeight > 180) {
+    mensagem.classList.add("limitada");
+    btn.style.display = "block";
+  } else {
+    mensagem.classList.remove("limitada");
+    btn.style.display = "none";
+  }
+}
+
 
 /* ===============================
    CONTADOR
@@ -249,8 +259,6 @@ setTimeout(() => {
 
   if (fotosDOM.length < 2) return;
 
-  // 🔁 loop infinito
-midias.appendChild(div);
 
 div.style.transition = "none";
 div.style.transform =
@@ -259,9 +267,10 @@ div.offsetHeight;
 
 
   requestAnimationFrame(() => {
-    cartaEl.style.transition = "";
-    atualizarStack(0);
-  });
+  div.style.transition = "";
+  atualizarStack(0);
+});
+
 }, 300);
 
 
@@ -375,6 +384,7 @@ setTimeout(() => {
       `;
     });
 }
+
 
 
 
