@@ -1,7 +1,5 @@
-/* ===============================
-   DETECTA CONTEXTO
-================================ */
-const isEditor = document.getElementById("editor") !== null;
+document.addEventListener("DOMContentLoaded", () => {
+const isEditor = !!document.getElementById("editor");
 
 /* ===============================
    ELEMENTOS (COM SEGURANÇA)
@@ -157,8 +155,6 @@ let fundoSelecionado = "azul";
    PREVIEW EM TEMPO REAL (EDITOR)
 ================================ */
 if (isEditor) {
-   msgInput.oninput = () => {
-  mensagem.innerText = msgInput.value;
   ajustarMensagem();
 };
 
@@ -272,6 +268,14 @@ document.querySelectorAll(".bg-card").forEach(c => {
    FOTOS (EDITOR)
 ================================ */
 if (isEditor) {
+if (isEditor && msgInput) {
+  msgInput.oninput = () => {
+    mensagem.innerText = msgInput.value;
+    ajustarMensagem();
+  };
+}
+
+
   document.querySelectorAll(".photo-slot").forEach(slot => {
     slot.onclick = () => {
       if (slot.classList.contains("filled")) return;
@@ -280,45 +284,36 @@ if (isEditor) {
     };
   });
 
-  fotoInput.onchange = e => {
-    const file = e.target.files[0];
-    if (!file || slotAtual === null) return;
+ fotoInput.onchange = e => {
+  const file = e.target.files[0];
+  if (!file || slotAtual === null) return;
 
-    const url = URL.createObjectURL(file);
-    fotos[slotAtual] = url;
+  const url = URL.createObjectURL(file);
 
-    const div = document.createElement("div");
-div.className = "photo";
-div.innerHTML = `<img src="${url}" style="width:100%">`;
+  const div = document.createElement("div");
+  div.className = "photo";
+  div.innerHTML = `<img src="${url}">`;
 
-midias.appendChild(div); // 🔥 OBRIGATÓRIO
-     setTimeout(() => {
+  midias.appendChild(div);
+
+  const slot = document.querySelector(
+    `.photo-slot[data-slot="${slotAtual}"]`
+  );
+  slot.classList.add("filled");
+  slot.innerHTML = "×";
+
+  slotAtual = null;
+  fotoInput.value = "";
+
+  // 🔥 ATUALIZA TUDO
+  criarDots();
   atualizarStack(0);
 
-  iniciarAutoSwipe(); // 🔥 AQUI inicia o automático
-}, 100);
+  const ativa = document.querySelector("#midias .photo.active");
+  if (ativa) ativarSwipe([ativa]);
 
-setTimeout(() => {
-  const fotosDOM = Array.from(document.querySelectorAll("#midias .photo"));
-
-  if (fotosDOM.length < 2) return;
-
-
-div.style.transition = "none";
-div.style.transform =
-  "translateX(-50%) translateY(0) rotate(0deg) scale(1)";
-div.offsetHeight;
-
-
-  requestAnimationFrame(() => {
-  div.style.transition = "";
-  atualizarStack(0);
-});
-
-}, 300);
-
-
-}; 
+  iniciarAutoSwipe();
+};
 
     const s = document.querySelector(`.photo-slot[data-slot="${slotAtual}"]`);
     s.classList.add("filled");
@@ -430,6 +425,8 @@ iniciarAutoSwipe();
       `;
     });
 }
+
+});
 
 
 
