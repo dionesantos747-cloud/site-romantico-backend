@@ -253,7 +253,15 @@ div.className = "photo";
 div.innerHTML = `<img src="${url}" style="width:100%">`;
 
 midias.appendChild(div); // 🔥 OBRIGATÓRIO
-     
+     setTimeout(() => {
+  atualizarStack(0);
+
+  const ativa = document.querySelector("#midias .photo.active");
+  if (ativa) ativarSwipe([ativa]);
+
+  iniciarAutoSwipe(); // 🔥 AQUI inicia o automático
+}, 100);
+
 setTimeout(() => {
   const fotosDOM = Array.from(document.querySelectorAll("#midias .photo"));
 
@@ -384,6 +392,7 @@ setTimeout(() => {
       `;
     });
 }
+
 
 
 
