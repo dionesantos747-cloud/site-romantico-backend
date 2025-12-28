@@ -105,6 +105,41 @@ function ativarSwipe(cartas) {
   });
 }
 
+/* =========================
+   SWIPE AUTOMÁTICO SUAVE
+========================= */
+let autoSwipeInterval = null;
+
+function iniciarAutoSwipe() {
+  pararAutoSwipe();
+
+  autoSwipeInterval = setInterval(() => {
+    const ativa = document.querySelector("#midias .photo.active");
+    if (!ativa) return;
+
+    ativa.style.transition = "transform 0.4s ease";
+    ativa.style.transform = "translateX(-120vw)";
+
+    setTimeout(() => {
+      midias.appendChild(ativa);
+
+      ativa.style.transition = "none";
+      ativa.style.transform = "translateX(-50%)";
+
+      atualizarStack(0);
+
+      const nova = document.querySelector("#midias .photo.active");
+      if (nova) ativarSwipe([nova]);
+    }, 420);
+  }, 3500);
+}
+
+function pararAutoSwipe() {
+  if (autoSwipeInterval) {
+    clearInterval(autoSwipeInterval);
+    autoSwipeInterval = null;
+  }
+}
 
 const musicBox = document.getElementById("musicBox");
 const musicaInput = document.getElementById("musicaInput");
@@ -181,7 +216,11 @@ if (isEditor && dataInput) {
 /* ===============================
    CARTA
 ================================ */
+
+
 const btnCarta = document.getElementById("btnCarta");
+if (btnCarta) btnCarta.style.display = "none";
+
 if (btnCarta && carta) {
   btnCarta.onclick = () => {
     carta.style.display = carta.style.display === "block" ? "none" : "block";
@@ -256,9 +295,6 @@ midias.appendChild(div); // 🔥 OBRIGATÓRIO
      setTimeout(() => {
   atualizarStack(0);
 
-  const ativa = document.querySelector("#midias .photo.active");
-  if (ativa) ativarSwipe([ativa]);
-
   iniciarAutoSwipe(); // 🔥 AQUI inicia o automático
 }, 100);
 
@@ -302,29 +338,22 @@ if (musicBox && musicaInput) {
     musicaInput.click();
   };
 
-  musicaInput.onchange = () => {
-    if (!musicaInput.files[0]) return;
-     musicBox.innerText = "⏳ Carregando música...";
-audio.preload = "auto";
-audio.src = URL.createObjectURL(musicaInput.files[0]);
-audio.load();
-musicBox.innerText = "🎶 Música pronta";
+musicaInput.onchange = () => {
+  if (!musicaInput.files[0]) return;
 
+  musicBox.innerText = "⏳ Carregando música...";
+  musicBox.classList.add("disabled");
+
+  audio.src = URL.createObjectURL(musicaInput.files[0]);
+  audio.preload = "auto";
+  audio.load();
+
+  audio.oncanplaythrough = () => {
+    musicBox.innerText = "🎶 Música pronta";
     audio.style.display = "block";
-    musicBox.innerText = "🎶 Música selecionada";
-    musicBox.classList.add("disabled");
     removeMusic.style.display = "block";
   };
-
-  removeMusic.onclick = () => {
-    audio.src = "";
-    audio.style.display = "none";
-    musicaInput.value = "";
-    musicBox.innerText = "Adicionar música 🎵";
-    musicBox.classList.remove("disabled");
-    removeMusic.style.display = "none";
-  };
-}
+};
 
 /* ===============================
    SITE FINAL – CARREGAR DADOS
@@ -368,6 +397,7 @@ setTimeout(() => {
   // 🔥 ativa swipe na carta visível
   const ativa = document.querySelector("#midias .photo.active");
   if (ativa) ativarSwipe([ativa]);
+iniciarAutoSwipe();
 
 }, 100);
 
@@ -400,6 +430,7 @@ setTimeout(() => {
       `;
     });
 }
+
 
 
 
