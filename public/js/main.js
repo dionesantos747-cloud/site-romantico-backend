@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   const isEditor = !!document.getElementById("editor");
+  console.log("isEditor =", isEditor);
 
   /* ===============================
      ELEMENTOS
@@ -132,6 +133,19 @@ function atualizarStack() {
     });
   }
 }
+function criarDots() {
+  if (!dots) return;
+
+  const fotos = document.querySelectorAll("#midias .photo");
+  dots.innerHTML = "";
+
+  fotos.forEach((_, i) => {
+    const d = document.createElement("div");
+    d.className = "dot";
+    if (i === index) d.classList.add("active");
+    dots.appendChild(d);
+  });
+}
 
 function ativarSwipe() {
   const foto = document.querySelector("#midias .photo.active");
@@ -181,6 +195,7 @@ function ativarSwipe() {
 }, 3500);
 
 });
+
 
 
 
