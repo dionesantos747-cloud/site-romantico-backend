@@ -235,52 +235,58 @@ function iniciarContador(dataInicio) {
   }, 1000);
 }
 
-});
+/* ===============================
+     FUNDOS (EDITOR)
+  ================================ */
+  if (isEditor) {
+    document.querySelectorAll(".bg-card").forEach(card => {
+      card.onclick = () => {
+        document.querySelectorAll(".bg-card")
+          .forEach(c => c.classList.remove("selected"));
 
-document.querySelectorAll(".bg-card").forEach(card => {
-  card.onclick = () => {
-    document.querySelectorAll(".bg-card")
-      .forEach(c => c.classList.remove("selected"));
+        card.classList.add("selected");
 
-    card.classList.add("selected");
-
-    if (preview) {
-      preview.className = "preview " + card.dataset.bg;
-    }
-  };
-});
-const musicBox = document.getElementById("musicBox");
-const musicaInput = document.getElementById("musicaInput");
-const audio = document.getElementById("audioPlayer");
-const removeMusic = document.getElementById("removeMusic");
-
-if (isEditor && musicBox && musicaInput && audio) {
-  musicBox.onclick = () => musicaInput.click();
-
-  musicaInput.onchange = () => {
-    if (!musicaInput.files[0]) return;
-
-    audio.src = URL.createObjectURL(musicaInput.files[0]);
-    audio.style.display = "block";
-
-    musicBox.classList.add("disabled");
-    musicBox.innerText = "🎶 Música pronta";
-    if (removeMusic) removeMusic.style.display = "block";
-  };
-
-  if (removeMusic) {
-    removeMusic.onclick = () => {
-      audio.src = "";
-      audio.style.display = "none";
-      musicaInput.value = "";
-      musicBox.classList.remove("disabled");
-      musicBox.innerText = "Adicionar música 🎵";
-      removeMusic.style.display = "none";
-    };
+        preview.className = "preview " + card.dataset.bg;
+      };
+    });
   }
-}
 
+  /* ===============================
+     MÚSICA (EDITOR)
+  ================================ */
+  const musicBox = document.getElementById("musicBox");
+  const musicaInput = document.getElementById("musicaInput");
+  const audio = document.getElementById("audioPlayer");
+  const removeMusic = document.getElementById("removeMusic");
 
+  if (isEditor && musicBox && musicaInput && audio) {
+    musicBox.onclick = () => musicaInput.click();
+
+    musicaInput.onchange = () => {
+      if (!musicaInput.files[0]) return;
+
+      audio.src = URL.createObjectURL(musicaInput.files[0]);
+      audio.style.display = "block";
+
+      musicBox.classList.add("disabled");
+      musicBox.innerText = "🎶 Música pronta";
+
+      if (removeMusic) removeMusic.style.display = "block";
+    };
+
+    if (removeMusic) {
+      removeMusic.onclick = () => {
+        audio.src = "";
+        audio.style.display = "none";
+        musicaInput.value = "";
+        musicBox.classList.remove("disabled");
+        musicBox.innerText = "Adicionar música 🎵";
+        removeMusic.style.display = "none";
+      };
+    }
+  }
+
+}); // 🔒 FECHA DOMContentLoaded (TEM QUE SER O ÚLTIMO)
 
 
 
