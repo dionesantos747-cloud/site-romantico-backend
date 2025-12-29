@@ -30,9 +30,7 @@ const preview = document.getElementById("preview");
 
   const btnCarta = document.getElementById("btnCarta");
   const btnContinuarMensagem = document.getElementById("btnContinuarMensagem");
-if (isEditor && dataInput) {
-  dataInput.onchange = () => iniciarContador(dataInput.value);
-}
+
 
   /* ===============================
      TEXTO — EDITOR
@@ -196,9 +194,7 @@ function ativarSwipe() {
     ativarSwipe();
   };
 }
-if (isEditor && dataInput) {
-  dataInput.onchange = () => iniciarContador(dataInput.value);
-}
+
 
  setInterval(() => {
   const fotos = document.querySelectorAll("#midias .photo");
@@ -285,8 +281,26 @@ function iniciarContador(dataInicio) {
       };
     }
   }
+/* ===============================
+   CONTADOR (EDITOR)
+=============================== */
+if (isEditor && dataInput && tempo) {
+  dataInput.onchange = () => {
+    iniciarContador(dataInput.value);
+  };
+}
+  /* ===============================
+   BOTÃO DE COMPRA (EDITOR)
+=============================== */
+const btnComprar = document.getElementById("btnComprar");
 
+if (isEditor && btnComprar) {
+  btnComprar.onclick = () => {
+    alert("Pagamento simulado ✅\nPróximo passo: gerar QR Code ❤️");
+  };
+}
 }); // 🔒 FECHA DOMContentLoaded (TEM QUE SER O ÚLTIMO)
+
 
 
 
