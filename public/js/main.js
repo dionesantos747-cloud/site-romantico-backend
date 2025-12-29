@@ -12,8 +12,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const dataInput = document.getElementById("dataInput");
 
   const nome = document.getElementById("nome");
-  const mensagem = document.getElementById("mensagem");
-  const carta = document.getElementById("carta");
+const mensagem = isEditor
+  ? document.getElementById("mensagem") // editor (textarea)
+  : document.getElementById("previewMensagem"); // preview
+
+const carta = isEditor
+  ? document.getElementById("carta")
+  : document.getElementById("previewCarta");
+
   const tempo = document.getElementById("tempo");
   const preview = document.getElementById("preview");
 
@@ -23,6 +29,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const btnCarta = document.getElementById("btnCarta");
   const btnContinuarMensagem = document.getElementById("btnContinuarMensagem");
+if (isEditor && dataInput) {
+  dataInput.onchange = () => iniciarContador(dataInput.value);
+}
 
   /* ===============================
      TEXTO — EDITOR
@@ -195,6 +204,35 @@ function ativarSwipe() {
 }, 3500);
 
 });
+const musicBox = document.getElementById("musicBox");
+const musicaInput = document.getElementById("musicaInput");
+const audio = document.getElementById("audioPlayer");
+const removeMusic = document.getElementById("removeMusic");
+
+if (isEditor && musicBox && musicaInput) {
+  musicBox.onclick = () => musicaInput.click();
+
+  musicaInput.onchange = () => {
+    if (!musicaInput.files[0]) return;
+
+    audio.src = URL.createObjectURL(musicaInput.files[0]);
+    audio.style.display = "block";
+
+    musicBox.classList.add("disabled");
+    musicBox.innerText = "🎶 Música pronta";
+    removeMusic.style.display = "block";
+  };
+
+  removeMusic.onclick = () => {
+    audio.src = "";
+    audio.style.display = "none";
+    musicaInput.value = "";
+    musicBox.classList.remove("disabled");
+    musicBox.innerText = "Adicionar música 🎵";
+    removeMusic.style.display = "none";
+  };
+}
+
 
 
 
