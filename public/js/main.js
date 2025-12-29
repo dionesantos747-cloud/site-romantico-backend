@@ -75,38 +75,40 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ===============================
-     FOTOS (EDITOR)
-  ================================ */
-  if (isEditor && fotoInput && midias) {
-    document.querySelectorAll(".photo-slot").forEach(slot => {
-      slot.onclick = () => {
-        if (slot.classList.contains("filled")) return;
-        slot.dataset.active = "true";
-        fotoInput.click();
-      };
-    });
+   FOTOS (EDITOR) — CORRIGIDO
+=============================== */
+let slotAtual = null;
 
-    fotoInput.onchange = e => {
-      const file = e.target.files[0];
-      const slot = document.querySelector(".photo-slot[data-active='true']");
-      if (!file || !slot) return;
+if (isEditor && fotoInput && midias) {
 
-      const url = URL.createObjectURL(file);
-
-      const div = document.createElement("div");
-      div.className = "photo";
-      div.innerHTML = `<img src="${url}">`;
-      midias.appendChild(div);
-
-      slot.classList.add("filled");
-      slot.removeAttribute("data-active");
-
-     index = document.querySelectorAll("#midias .photo").length - 1;
-atualizarStack();
-ativarSwipe();
-
+  document.querySelectorAll(".photo-slot").forEach(slot => {
+    slot.onclick = () => {
+      if (slot.classList.contains("filled")) return;
+      slotAtual = slot;
+      fotoInput.value = "";
+      fotoInput.click();
     };
-  }
+  });
+
+  fotoInput.onchange = e => {
+    const file = e.target.files[0];
+    if (!file || !slotAtual) return;
+
+    const url = URL.createObjectURL(file);
+
+    const div = document.createElement("div");
+    div.className = "photo";
+    div.innerHTML = `<img src="${url}">`;
+    midias.appendChild(div);
+
+    slotAtual.classList.add("filled");
+    slotAtual.innerHTML = "";
+    slotAtual = null;
+
+    criarDots();
+    atualizarStack();
+  };
+}
 
   /* ===============================
      CARROSSEL SIMPLES
@@ -179,6 +181,7 @@ function ativarSwipe() {
 }, 3500);
 
 });
+
 
 
 
