@@ -11,17 +11,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const cartaInput = document.getElementById("cartaInput");
   const dataInput = document.getElementById("dataInput");
 
-  const nome = document.getElementById("nome");
-const mensagem = isEditor
-  ? document.getElementById("mensagem") // editor (textarea)
-  : document.getElementById("previewMensagem"); // preview
+ const nome = document.getElementById("nome");
+const mensagem =
+  document.getElementById("mensagem") ||
+  document.getElementById("previewMensagem");
 
-const carta = isEditor
-  ? document.getElementById("carta")
-  : document.getElementById("previewCarta");
+const carta =
+  document.getElementById("carta") ||
+  document.getElementById("previewCarta");
 
-  const tempo = document.getElementById("tempo");
-  const preview = document.getElementById("preview");
+const tempo = document.getElementById("tempo");
+const preview = document.getElementById("preview");
+
 
   const fotoInput = document.getElementById("fotoInput");
   const midias = document.getElementById("midias");
@@ -47,13 +48,14 @@ if (isEditor && dataInput) {
     };
   }
 
-  if (isEditor && cartaInput) {
-    cartaInput.oninput = () => {
-      carta.innerText = cartaInput.value;
-      btnCarta.style.display =
-        cartaInput.value.trim().length ? "block" : "none";
-    };
-  }
+ if (isEditor && cartaInput && carta && btnCarta) {
+  cartaInput.oninput = () => {
+    carta.innerText = cartaInput.value;
+    btnCarta.style.display =
+      cartaInput.value.trim().length ? "block" : "none";
+  };
+}
+
 
   function ajustarMensagem() {
     if (!mensagem || !btnContinuarMensagem) return;
@@ -194,6 +196,9 @@ function ativarSwipe() {
     ativarSwipe();
   };
 }
+if (isEditor && dataInput) {
+  dataInput.onchange = () => iniciarContador(dataInput.value);
+}
 
  setInterval(() => {
   const fotos = document.querySelectorAll("#midias .photo");
@@ -202,14 +207,54 @@ function ativarSwipe() {
   atualizarStack();
   ativarSwipe();
 }, 3500);
+function iniciarContador(dataInicio) {
+  if (!dataInicio || !tempo) return;
 
+  setInterval(() => {
+    const inicio = new Date(dataInicio);
+    const agora = new Date();
+    const diff = agora - inicio;
+    if (diff < 0) return;
+
+    const s = Math.floor(diff / 1000) % 60;
+    const m = Math.floor(diff / 60000) % 60;
+    const h = Math.floor(diff / 3600000) % 24;
+    const d = Math.floor(diff / 86400000) % 30;
+    const mo = Math.floor(diff / 2592000000) % 12;
+    const a = Math.floor(diff / 31536000000);
+
+    tempo.innerHTML = `
+      <span class="titulo">Já estamos juntos há</span>
+      <div class="contador">
+        <div class="item">${a} anos</div>
+        <div class="item">${mo} meses</div>
+        <div class="item">${d} dias</div>
+        <div class="item">${h}h ${m}m ${s}s</div>
+      </div>
+    `;
+  }, 1000);
+}
+
+});
+
+document.querySelectorAll(".bg-card").forEach(card => {
+  card.onclick = () => {
+    document.querySelectorAll(".bg-card")
+      .forEach(c => c.classList.remove("selected"));
+
+    card.classList.add("selected");
+
+    if (preview) {
+      preview.className = "preview " + card.dataset.bg;
+    }
+  };
 });
 const musicBox = document.getElementById("musicBox");
 const musicaInput = document.getElementById("musicaInput");
 const audio = document.getElementById("audioPlayer");
 const removeMusic = document.getElementById("removeMusic");
 
-if (isEditor && musicBox && musicaInput) {
+if (isEditor && musicBox && musicaInput && audio) {
   musicBox.onclick = () => musicaInput.click();
 
   musicaInput.onchange = () => {
@@ -220,18 +265,21 @@ if (isEditor && musicBox && musicaInput) {
 
     musicBox.classList.add("disabled");
     musicBox.innerText = "🎶 Música pronta";
-    removeMusic.style.display = "block";
+    if (removeMusic) removeMusic.style.display = "block";
   };
 
-  removeMusic.onclick = () => {
-    audio.src = "";
-    audio.style.display = "none";
-    musicaInput.value = "";
-    musicBox.classList.remove("disabled");
-    musicBox.innerText = "Adicionar música 🎵";
-    removeMusic.style.display = "none";
-  };
+  if (removeMusic) {
+    removeMusic.onclick = () => {
+      audio.src = "";
+      audio.style.display = "none";
+      musicaInput.value = "";
+      musicBox.classList.remove("disabled");
+      musicBox.innerText = "Adicionar música 🎵";
+      removeMusic.style.display = "none";
+    };
+  }
 }
+
 
 
 
