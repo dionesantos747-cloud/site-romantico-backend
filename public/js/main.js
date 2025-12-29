@@ -289,17 +289,22 @@ if (isEditor && dataInput && tempo) {
     iniciarContador(dataInput.value);
   };
 }
-  /* ===============================
-   BOTÃO DE COMPRA (EDITOR)
-=============================== */
 const btnComprar = document.getElementById("btnComprar");
 
-if (isEditor && btnComprar) {
+if (btnComprar) {
   btnComprar.onclick = () => {
-    alert("Pagamento simulado ✅\nPróximo passo: gerar QR Code ❤️");
+
+    // 🔗 LINK DO SEU PAGAMENTO MERCADO PAGO
+    const linkPagamento = "https://mpago.la/26yFvLc";
+
+    // 🔒 Marca que o usuário iniciou pagamento
+    sessionStorage.setItem("aguardando_pagamento", "true");
+
+    // 👉 Abre o pagamento
+    window.location.href = linkPagamento;
   };
 }
-}); // 🔒 FECHA DOMContentLoaded (TEM QUE SER O ÚLTIMO)
+});
 
 
 
