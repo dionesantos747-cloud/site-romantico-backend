@@ -260,40 +260,76 @@ if (isEditor && dataInput && tempo) {
     });
   }
 
-  /* ===============================
-     MÚSICA (EDITOR)
-  ================================ */
-  const musicBox = document.getElementById("musicBox");
-  const musicaInput = document.getElementById("musicaInput");
-  const audio = document.getElementById("audioPlayer");
-  const removeMusic = document.getElementById("removeMusic");
+/* ===============================
+   MÚSICA (EDITOR)
+=============================== */
+const musicBox = document.getElementById("musicBox");
+const musicaInput = document.getElementById("musicaInput");
+const audio = document.getElementById("audioPlayer");
+const removeMusic = document.getElementById("removeMusic");
 
-  if (isEditor && musicBox && musicaInput && audio) {
-    musicBox.onclick = () => musicaInput.click();
+if (isEditor && musicBox && musicaInput && audio) {
+  musicBox.addEventListener("click", () => musicaInput.click());
 
-    musicaInput.onchange = () => {
-      if (!musicaInput.files[0]) return;
+  musicaInput.addEventListener("change", () => {
+    const file = musicaInput.files[0];
+    if (!file) return;
 
-      audio.src = URL.createObjectURL(musicaInput.files[0]);
-      audio.style.display = "block";
+    audio.src = URL.createObjectURL(file);
+    audio.style.display = "block";
 
-      musicBox.classList.add("disabled");
-      musicBox.innerText = "🎶 Música pronta";
+    musicBox.classList.add("disabled");
+    musicBox.innerText = "🎶 Música pronta";
 
-      if (removeMusic) removeMusic.style.display = "block";
-    };
+    if (removeMusic) removeMusic.style.display = "block";
+  });
 
-    if (removeMusic) {
-      removeMusic.onclick = () => {
-        audio.src = "";
-        audio.style.display = "none";
-        musicaInput.value = "";
-        musicBox.classList.remove("disabled");
-        musicBox.innerText = "Adicionar música 🎵";
-        removeMusic.style.display = "none";
-      };
-    }
+  if (removeMusic) {
+    removeMusic.addEventListener("click", () => {
+      audio.src = "";
+      audio.style.display = "none";
+      musicaInput.value = "";
+      musicBox.classList.remove("disabled");
+      musicBox.innerText = "Adicionar música 🎵";
+      removeMusic.style.display = "none";
+    });
   }
+}
+
+/* ===============================
+   FUNDOS (EDITOR)
+=============================== */
+if (isEditor && preview) {
+  document.querySelectorAll(".bg-card").forEach(card => {
+    card.addEventListener("click", () => {
+      document
+        .querySelectorAll(".bg-card")
+        .forEach(c => c.classList.remove("selected"));
+
+      card.classList.add("selected");
+      preview.className = "preview " + card.dataset.bg;
+    });
+  });
+}
+/* ===============================
+   CORAÇÕES DE FUNDO
+=============================== */
+function criarCoracoes() {
+  const container = document.getElementById("preview");
+  if (!container) return;
+
+  container.querySelectorAll(".heart").forEach(h => h.remove());
+
+  for (let i = 0; i < 12; i++) {
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.innerText = "❤️";
+    h.style.left = Math.random() * 100 + "%";
+    h.style.animationDuration = 6 + Math.random() * 6 + "s";
+    container.appendChild(h);
+  }
+}
+criarCoracoes();
 
 const btnComprar = document.getElementById("btnComprar");
 
@@ -323,6 +359,7 @@ if (isEditor && preview) {
 }
 
   });
+
 
 
 
