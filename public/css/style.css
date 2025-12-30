@@ -122,14 +122,6 @@ textarea { min-height: 90px; }
   z-index: 10;
 }
 
-.photo {
-  background: #fff;
-  overflow: hidden;      /* 🔥 corta imagem */
-  margin: 0;
-  width: 220px;
-  max-width: 70vw;
-  box-shadow: 0 8px 22px rgba(0,0,0,.35);
-}
 
 /* ===================
    CARROSSEL — EFEITO CARTAS
@@ -137,13 +129,11 @@ textarea { min-height: 90px; }
 
 #midias {
   position: relative;
-  min-height: 260px;   /* 🔥 cresce se precisar */
-  margin-top: 24px;
-  margin-bottom: 40px;
+  height: auto;
+  min-height: 240px;
+  padding-bottom: 40px;
   overflow: hidden;
 }
-
-
 
 #midias .photo {
   position: absolute;
@@ -179,14 +169,14 @@ textarea { min-height: 90px; }
 
 
 /* ===== Bolinhas indicadoras ===== */
-.dots {
+#midias {
   position: relative;
-  z-index: 10;           /* 🔥 acima das fotos */
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: -20px;
+  height: auto;
+  min-height: 240px;
+  padding-bottom: 40px;
+  overflow: hidden;
 }
+
 
 
 .dot {
@@ -368,6 +358,7 @@ body.final .remove-music {
   }
 
 }
+
 
 
 
