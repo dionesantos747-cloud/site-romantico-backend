@@ -198,11 +198,16 @@ function ativarSwipe() {
 
  setInterval(() => {
   const fotos = document.querySelectorAll("#midias .photo");
-  if (fotos.length < 2) return;
-  index = (index + 1) % fotos.length;
+  if (!fotos || fotos.length === 0) return;
+
+  if (fotos.length > 1) {
+    index = (index + 1) % fotos.length;
+  }
+
   atualizarStack();
   ativarSwipe();
 }, 3500);
+
 function iniciarContador(dataInicio) {
   if (!dataInicio || !tempo) return;
 
@@ -229,6 +234,14 @@ function iniciarContador(dataInicio) {
       </div>
     `;
   }, 1000);
+}
+/* ===============================
+   CONTADOR (EDITOR)
+=============================== */
+if (isEditor && dataInput && tempo) {
+  dataInput.onchange = () => {
+    iniciarContador(dataInput.value);
+  };
 }
 
 /* ===============================
@@ -281,14 +294,7 @@ function iniciarContador(dataInicio) {
       };
     }
   }
-/* ===============================
-   CONTADOR (EDITOR)
-=============================== */
-if (isEditor && dataInput && tempo) {
-  dataInput.onchange = () => {
-    iniciarContador(dataInput.value);
-  };
-}
+
 const btnComprar = document.getElementById("btnComprar");
 
 if (btnComprar) {
@@ -305,6 +311,7 @@ if (btnComprar) {
   };
 }
 });
+
 
 
 
