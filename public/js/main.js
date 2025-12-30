@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
-
   const isEditor = !!document.getElementById("editor");
-  console.log("isEditor =", isEditor);
+  console.log("EDITOR ATIVO:", isEditor);
+
 
   /* ===============================
      ELEMENTOS
@@ -311,6 +311,7 @@ if (btnComprar) {
   };
 }
 });
+
 
 
 
