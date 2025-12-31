@@ -346,22 +346,8 @@ if (btnComprar) {
     window.location.href = linkPagamento;
   };
 }
-if (isEditor && preview) {
-  document.querySelectorAll(".bg-card").forEach(card => {
-    card.onclick = () => {
-      document
-        .querySelectorAll(".bg-card")
-        .forEach(c => c.classList.remove("selected"));
 
-      card.classList.add("selected");
-      preview.className = "preview " + card.dataset.bg;
-    };
-}
-
-  });
-
-
-
+});
 
 
 
