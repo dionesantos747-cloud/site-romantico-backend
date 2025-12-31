@@ -12,14 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const dataInput = document.getElementById("dataInput");
 
  const nome = document.getElementById("nome");
-const mensagem =
-  document.getElementById("mensagem") ||
-  document.getElementById("previewMensagem");
-
-const carta =
-  document.getElementById("carta") ||
-  document.getElementById("previewCarta");
-
+const mensagem = document.getElementById("mensagem");
+const carta = document.getElementById("carta");
 const tempo = document.getElementById("tempo");
 const preview = document.getElementById("preview");
 
@@ -46,12 +40,20 @@ const preview = document.getElementById("preview");
     };
   }
 
- if (isEditor && cartaInput && carta && btnCarta) {
-  cartaInput.oninput = () => {
+if (isEditor && cartaInput && carta && btnCarta) {
+  cartaInput.addEventListener("input", () => {
     carta.innerText = cartaInput.value;
+
     btnCarta.style.display =
-      cartaInput.value.trim().length ? "block" : "none";
-  };
+      cartaInput.value.trim().length > 0 ? "block" : "none";
+  });
+}
+
+if (isEditor && msgInput && mensagem) {
+  msgInput.addEventListener("input", () => {
+    mensagem.innerText = msgInput.value;
+    ajustarMensagem();
+  });
 }
 
 
@@ -244,21 +246,6 @@ if (isEditor && dataInput && tempo) {
   };
 }
 
-/* ===============================
-     FUNDOS (EDITOR)
-  ================================ */
-  if (isEditor) {
-    document.querySelectorAll(".bg-card").forEach(card => {
-      card.onclick = () => {
-        document.querySelectorAll(".bg-card")
-          .forEach(c => c.classList.remove("selected"));
-
-        card.classList.add("selected");
-
-        preview.className = "preview " + card.dataset.bg;
-      };
-    });
-  }
 
 /* ===============================
    MÚSICA (EDITOR)
@@ -348,6 +335,7 @@ if (btnComprar) {
 }
 
 });
+
 
 
 
