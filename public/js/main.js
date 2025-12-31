@@ -321,12 +321,10 @@ criarCoracoes();
 const btnComprar = document.getElementById("btnComprar");
 
 if (btnComprar) {
-  btnComprar.onclick = () => {
-
-    // 🔗 LINK DO SEU PAGAMENTO MERCADO PAGO
-    const linkPagamento = "https://mpago.la/26yFvLc";
-
-    // 🔒 Marca que o usuário iniciou pagamento
+  btnComprar.addEventListener("click", () => {
+    window.location.href = "https://mpago.la/26yFvLc";
+  
+  // 🔒 Marca que o usuário iniciou pagamento
     sessionStorage.setItem("aguardando_pagamento", "true");
 
     // 👉 Abre o pagamento
@@ -335,6 +333,7 @@ if (btnComprar) {
 }
 
 });
+
 
 
 
