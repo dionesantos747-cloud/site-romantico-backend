@@ -37,71 +37,109 @@ document.addEventListener("DOMContentLoaded", () => {
     btnCarta.onclick = () => {
       carta.style.display = carta.style.display === "block" ? "none" : "block";
     };
+/* ===============================
+   CONTADOR — FIX DEFINITIVO
+=============================== */
+let contadorInterval = null;
 
-    /* CONTADOR */
-    let contadorInterval = null;
-    dataInput.onchange = () => {
-      if (contadorInterval) clearInterval(contadorInterval);
+function iniciarContador(dataInicio) {
+  if (!dataInicio || !tempo) return;
 
-      contadorInterval = setInterval(() => {
-        const inicio = new Date(dataInput.value);
-        const agora = new Date();
-        const diff = agora - inicio;
-        if (diff < 0) return;
+  if (contadorInterval) {
+    clearInterval(contadorInterval);
+  }
 
-        const s = Math.floor(diff / 1000) % 60;
-        const m = Math.floor(diff / 60000) % 60;
-        const h = Math.floor(diff / 3600000) % 24;
-        const d = Math.floor(diff / 86400000) % 30;
-        const mo = Math.floor(diff / 2592000000) % 12;
-        const a = Math.floor(diff / 31536000000);
+  contadorInterval = setInterval(() => {
+    const inicio = new Date(dataInicio);
+    const agora = new Date();
+    const diff = agora - inicio;
+    if (diff < 0) return;
 
-        tempo.innerHTML = `
-          <span class="titulo">Já estamos juntos há</span>
-          <div class="contador">
-            <div class="item">${a} anos</div>
-            <div class="item">${mo} meses</div>
-            <div class="item">${d} dias</div>
-            <div class="item">${h}h ${m}m ${s}s</div>
-          </div>`;
-      }, 1000);
-    };
+    const s = Math.floor(diff / 1000) % 60;
+    const m = Math.floor(diff / 60000) % 60;
+    const h = Math.floor(diff / 3600000) % 24;
+    const d = Math.floor(diff / 86400000) % 30;
+    const mo = Math.floor(diff / 2592000000) % 12;
+    const a = Math.floor(diff / 31536000000);
 
-    /* FUNDOS */
-    document.querySelectorAll(".bg-card").forEach(card => {
-      card.onclick = () => {
-        document.querySelectorAll(".bg-card")
-          .forEach(c => c.classList.remove("selected"));
-        card.classList.add("selected");
-        preview.className = "preview " + card.dataset.bg;
-      };
+    tempo.innerHTML = `
+      <span class="titulo">Já estamos juntos há</span>
+      <div class="contador">
+        <div class="item">${a} anos</div>
+        <div class="item">${mo} meses</div>
+        <div class="item">${d} dias</div>
+        <div class="item">${h}h ${m}m ${s}s</div>
+      </div>
+    `;
+  }, 1000);
+}
+
+if (isEditor && dataInput) {
+  dataInput.addEventListener("change", () => {
+    iniciarContador(dataInput.value);
+  });
+}
+/* ===============================
+   FUNDOS (EDITOR) — FIX
+=============================== */
+if (isEditor && preview) {
+  document.querySelectorAll(".bg-card").forEach(card => {
+    card.addEventListener("click", () => {
+
+      // remove seleção visual
+      document.querySelectorAll(".bg-card")
+        .forEach(c => c.classList.remove("selected"));
+
+      card.classList.add("selected");
+
+      // remove apenas fundos antigos
+      preview.classList.remove("azul", "roxo", "rosa", "preto");
+
+      // aplica novo fundo
+      preview.classList.add(card.dataset.bg);
     });
+  });
+}
+/* ===============================
+   MÚSICA (EDITOR) — FIX MOBILE
+=============================== */
+const musicBox = document.getElementById("musicBox");
+const musicaInput = document.getElementById("musicaInput");
+const audio = document.getElementById("audioPlayer");
+const removeMusic = document.getElementById("removeMusic");
 
-    /* MÚSICA */
-    const musicBox = document.getElementById("musicBox");
-    const musicaInput = document.getElementById("musicaInput");
-    const audio = document.getElementById("audioPlayer");
-    const removeMusic = document.getElementById("removeMusic");
+if (isEditor && musicBox && musicaInput && audio) {
 
-    musicBox.onclick = () => musicaInput.click();
+  musicBox.addEventListener("pointerup", () => {
+    musicaInput.click();
+  });
 
-    musicaInput.onchange = () => {
-      const file = musicaInput.files[0];
-      if (!file) return;
-      audio.src = URL.createObjectURL(file);
-      audio.style.display = "block";
-      musicBox.innerText = "🎶 Música pronta";
-      removeMusic.style.display = "block";
-    };
+  musicaInput.addEventListener("change", () => {
+    const file = musicaInput.files[0];
+    if (!file) return;
 
-    removeMusic.onclick = () => {
+    audio.src = URL.createObjectURL(file);
+    audio.style.display = "block";
+
+    musicBox.classList.add("disabled");
+    musicBox.innerText = "🎶 Música pronta";
+
+    if (removeMusic) removeMusic.style.display = "block";
+  });
+
+  if (removeMusic) {
+    removeMusic.addEventListener("click", () => {
+      audio.pause();
       audio.src = "";
-      audio.style.display = "none";
       musicaInput.value = "";
+      audio.style.display = "none";
+
+      musicBox.classList.remove("disabled");
       musicBox.innerText = "Adicionar música 🎵";
       removeMusic.style.display = "none";
-    };
+    });
   }
+}
 
   /* ===============================
      CORAÇÕES (EDITOR + FINAL)
@@ -129,6 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+
 
 
 
