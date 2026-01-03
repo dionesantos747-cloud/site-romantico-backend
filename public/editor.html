@@ -137,7 +137,11 @@ textarea{min-height:90px}
   text-align:center;  
   cursor:pointer;  
 }  
-  
+ .music-box {
+  position: relative;
+  z-index: 20;
+}
+ 
 /* PREVIEW */  
 .preview{  
   min-height:100vh;  
@@ -582,6 +586,19 @@ const isEditor = true;
   const carta = document.getElementById("carta");
   const tempo = document.getElementById("tempo");
   const preview = document.getElementById("preview");
+/* FUNDOS */
+document.querySelectorAll(".bg-card").forEach(card => {
+  card.onclick = () => {
+    document
+      .querySelectorAll(".bg-card")
+      .forEach(c => c.classList.remove("selected"));
+
+    card.classList.add("selected");
+
+    preview.classList.remove("azul", "roxo", "rosa", "preto");
+    preview.classList.add(card.dataset.bg);
+  };
+});
 
   const fotoInput = document.getElementById("fotoInput");
   const midias = document.getElementById("midias");
@@ -589,6 +606,31 @@ const isEditor = true;
   const dotsContainer = document.getElementById("dots");
   
   const musicBox = document.getElementById("musicBox");
+musicBox.onclick = () => musicaInput.click();
+
+musicaInput.onchange = () => {
+  const file = musicaInput.files[0];
+  if (!file) return;
+
+  audio.src = URL.createObjectURL(file);
+  audio.style.display = "block";
+
+  musicBox.classList.add("disabled");
+  musicBox.innerText = "🎶 Música pronta";
+
+  removeMusic.style.display = "block";
+};
+
+removeMusic.onclick = () => {
+  audio.src = "";
+  audio.style.display = "none";
+  musicaInput.value = "";
+  musicBox.classList.remove("disabled");
+  musicBox.innerText = "Adicionar música 🎵";
+  removeMusic.style.display = "none";
+};
+
+
   const musicaInput = document.getElementById("musicaInput");
   const audio = document.getElementById("audioPlayer");
   const removeMusic = document.getElementById("removeMusic");
@@ -826,19 +868,21 @@ if (btnContinuarMensagem) {
       carta.style.display === "block" ? "❌ Fechar carta" : "💌 Abrir carta";
   };
 
-  /* CORAÇÕES */
-  function criarCoracoes() {
-    document.querySelectorAll(".heart").forEach(h => h.remove());
-    for (let i = 0; i < 12; i++) {
-      const h = document.createElement("div");
-      h.className = "heart";
-      h.innerText = "❤️";
-      h.style.left = Math.random() * 100 + "%";
-      h.style.animationDuration = 6 + Math.random() * 6 + "s";
-      preview.appendChild(h);
-    }
+ /* CORAÇÕES */
+function criarCoracoes() {
+  document.querySelectorAll(".heart").forEach(h => h.remove());
+
+  for (let i = 0; i < 12; i++) {
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.innerText = "❤️";
+    h.style.left = Math.random() * 100 + "%";
+    h.style.animationDuration = (6 + Math.random() * 6) + "s";
+    preview.appendChild(h);
   }
-  criarCoracoes();
+}
+
+setTimeout(criarCoracoes, 300);
 
   /* FUNDOS */
   document.querySelectorAll(".bg-card").forEach(c => {
@@ -1026,9 +1070,13 @@ musicBox.innerText = "🎶 Música pronta";
     sessionStorage.setItem("pix_copia", d.copia_cola);
     location.href = `/aguardando.html?payment_id=${d.payment_id}`;
   };
+btnComprar.onclick = () => {
+  window.location.href = "https://mpago.la/26yFvLc";
+};
 
 </script> </body>  
 </html>
+
 
 
 
