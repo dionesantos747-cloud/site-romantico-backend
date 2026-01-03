@@ -1,3 +1,4 @@
+alert("main.js carregou");
 document.addEventListener("DOMContentLoaded", () => {
 
   const isEditor = !!document.getElementById("editor");
@@ -189,6 +190,7 @@ function iniciarContador(dataInicio) {
   }
 
 });
+
 
 
 
