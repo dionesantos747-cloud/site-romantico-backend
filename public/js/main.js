@@ -38,12 +38,16 @@ document.addEventListener("DOMContentLoaded", () => {
     msgInput.addEventListener("input", () => {
       mensagem.innerText = msgInput.value;
 
-      if (mensagem.scrollHeight > 180 && btnContinuarMensagem) {
-        mensagem.classList.add("limitada");
-        btnContinuarMensagem.style.display = "block";
-      }
-    });
+    if (btnContinuarMensagem) {
+  if (mensagem.scrollHeight > 180) {
+    mensagem.classList.add("limitada");
+    btnContinuarMensagem.style.display = "block";
+  } else {
+    mensagem.classList.remove("limitada");
+    btnContinuarMensagem.style.display = "none";
   }
+}
+
 
   if (btnContinuarMensagem && mensagem) {
     btnContinuarMensagem.addEventListener("click", () => {
@@ -94,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const removeMusic = document.getElementById("removeMusic");
 
   if (isEditor && musicBox && musicaInput && audio) {
-    musicBox.addEventListener("pointerup", () => musicaInput.click());
+   musicBox.addEventListener("click", () => musicaInput.click());
 
     musicaInput.addEventListener("change", () => {
       const file = musicaInput.files[0];
@@ -173,7 +177,7 @@ function iniciarContador(dataInicio) {
       preview.appendChild(h);
     }
   }
-setTimeout(criarCoracoes, 300);
+
 
   /* ===============================
      COMPRA
@@ -185,6 +189,7 @@ setTimeout(criarCoracoes, 300);
   }
 
 });
+
 
 
 
