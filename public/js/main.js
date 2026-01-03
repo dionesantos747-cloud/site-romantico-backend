@@ -173,6 +173,7 @@ function iniciarContador(dataInicio) {
       preview.appendChild(h);
     }
   }
+setTimeout(criarCoracoes, 300);
 
   /* ===============================
      COMPRA
@@ -184,6 +185,7 @@ function iniciarContador(dataInicio) {
   }
 
 });
+
 
 
 
