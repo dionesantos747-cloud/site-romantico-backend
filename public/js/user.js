@@ -49,8 +49,10 @@ document.addEventListener("DOMContentLoaded", () => {
       msgEl.innerText = data.mensagem || "";
       cartaEl.innerText = data.carta || "";
 
-      if (data.carta) {
+      if (data.carta && data.carta.trim()) {
         btnCarta.style.display = "block";
+      } else {
+        btnCarta.style.display = "none";
       }
 
       /* =====================
@@ -79,6 +81,8 @@ document.addEventListener("DOMContentLoaded", () => {
       /* =====================
          FOTOS (STACK + SWIPE)
       ===================== */
+      let autoSwipeInterval = null;
+
       if (Array.isArray(data.fotos) && data.fotos.filter(Boolean).length) {
 
         data.fotos.forEach(url => {
@@ -110,7 +114,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         function iniciarAutoSwipe() {
-          setInterval(() => {
+          if (autoSwipeInterval) clearInterval(autoSwipeInterval);
+
+          autoSwipeInterval = setInterval(() => {
             const ativa = document.querySelector("#midias .photo.active");
             if (!ativa) return;
 
@@ -143,8 +149,12 @@ document.addEventListener("DOMContentLoaded", () => {
       /* =====================
          CONTADOR
       ===================== */
+      let contadorInterval = null;
+
       if (data.dataInicio) {
-        setInterval(() => {
+        if (contadorInterval) clearInterval(contadorInterval);
+
+        contadorInterval = setInterval(() => {
           const inicio = new Date(data.dataInicio);
           const agora = new Date();
           const diff = agora - inicio;
@@ -182,3 +192,4 @@ document.addEventListener("DOMContentLoaded", () => {
       };
     });
 });
+
