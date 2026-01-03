@@ -1,4 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const nomeInput = document.getElementById("nomeInput");
+
+if (nomeInput) {
+  nomeInput.addEventListener("input", () => {
+    console.log("digitando:", nomeInput.value);
+  });
+}
+
   console.log("DOM carregado");
   console.log("editor existe?", !!document.getElementById("editor"));
 });
@@ -189,6 +197,7 @@ function iniciarContador(dataInicio) {
   }
 
 });
+
 
 
 
