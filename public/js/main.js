@@ -122,36 +122,37 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ===============================
      CONTADOR (FIX)
   ================================ */
-  let contadorInterval = null;
+let contadorInterval = null;
 
-  function iniciarContador(dataInicio) {
-    if (!dataInicio || !tempo) return;
+function iniciarContador(dataInicio) {
+  if (!dataInicio || !tempo) return;
 
-    clearInterval(contadorInterval);
+  if (contadorInterval) clearInterval(contadorInterval);
 
-    contadorInterval = setInterval(() => {
-      const inicio = new Date(dataInicio);
-      const agora = new Date();
-      const diff = agora - inicio;
-      if (diff < 0) return;
+  contadorInterval = setInterval(() => {
+    const inicio = new Date(dataInicio);
+    const agora = new Date();
+    const diff = agora - inicio;
+    if (diff < 0) return;
 
-      const s = Math.floor(diff / 1000) % 60;
-      const m = Math.floor(diff / 60000) % 60;
-      const h = Math.floor(diff / 3600000) % 24;
-      const d = Math.floor(diff / 86400000) % 30;
-      const mo = Math.floor(diff / 2592000000) % 12;
-      const a = Math.floor(diff / 31536000000);
+    const s = Math.floor(diff / 1000) % 60;
+    const m = Math.floor(diff / 60000) % 60;
+    const h = Math.floor(diff / 3600000) % 24;
+    const d = Math.floor(diff / 86400000) % 30;
+    const mo = Math.floor(diff / 2592000000) % 12;
+    const a = Math.floor(diff / 31536000000);
 
-      tempo.innerHTML = `
-        <span class="titulo">Já estamos juntos há</span>
-        <div class="contador">
-          <div class="item">${a} anos</div>
-          <div class="item">${mo} meses</div>
-          <div class="item">${d} dias</div>
-          <div class="item">${h}h ${m}m ${s}s</div>
-        </div>`;
-    }, 1000);
-  }
+    tempo.innerHTML = `
+      <span class="titulo">Já estamos juntos há</span>
+      <div class="contador">
+        <div class="item">${a} anos</div>
+        <div class="item">${mo} meses</div>
+        <div class="item">${d} dias</div>
+        <div class="item">${h}h ${m}m ${s}s</div>
+      </div>
+    `;
+  }, 1000);
+}
 
   if (isEditor && dataInput) {
     dataInput.addEventListener("change", () => {
@@ -183,6 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+
 
 
 
