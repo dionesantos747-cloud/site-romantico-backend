@@ -222,7 +222,9 @@ textarea { min-height: 90px; }
   padding: 40px 16px 160px;
   text-align: center;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
+
 }
 
 .nome {
@@ -342,7 +344,10 @@ body.final .remove-music {
 @keyframes float {
   to { transform: translateY(-120vh); opacity: 0; }
 }
-
+.music-box {
+  position: relative;
+  z-index: 20;
+}
 @media (prefers-color-scheme: dark) {
   html, body {
     background: #000 !important;
@@ -356,12 +361,13 @@ body.final .remove-music {
     color: #000 !important;
 
   }
-.music-box {
-  position: relative;
-  z-index: 20;
 }
+.preview.azul { background: radial-gradient(circle,#2b6cff,#000); }
+.preview.roxo { background: radial-gradient(circle,#8a5cff,#000); }
+.preview.rosa { background: radial-gradient(circle,#ff5fa2,#000); }
+.preview.preto { background: radial-gradient(circle,#222,#000); }
 
-}
+
 
 
 
