@@ -356,8 +356,13 @@ body.final .remove-music {
     color: #000 !important;
 
   }
+.music-box {
+  position: relative;
+  z-index: 20;
+}
 
 }
+
 
 
 
