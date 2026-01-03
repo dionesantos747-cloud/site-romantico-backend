@@ -1,8 +1,7 @@
-alert("main.js carregou");
 document.addEventListener("DOMContentLoaded", () => {
-
-  const isEditor = !!document.getElementById("editor");
-  console.log("EDITOR ATIVO:", isEditor);
+  console.log("DOM carregado");
+  console.log("editor existe?", !!document.getElementById("editor"));
+});
 
   /* ===============================
      ELEMENTOS (TODOS EXISTEM)
@@ -190,6 +189,7 @@ function iniciarContador(dataInicio) {
   }
 
 });
+
 
 
 
