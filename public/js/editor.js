@@ -65,14 +65,17 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   function ajustarMensagem() {
-    if (mensagem.scrollHeight > 180) {
-      mensagem.classList.add("limitada");
-      btnContinuarMensagem.style.display = "block";
-    } else {
-      mensagem.classList.remove("limitada");
-      btnContinuarMensagem.style.display = "none";
-    }
+  const limite = 500;
+
+  if (mensagem.innerText.length > limite) {
+    mensagem.classList.add("limitada");
+    btnContinuarMensagem.style.display = "block";
+  } else {
+    mensagem.classList.remove("limitada");
+    btnContinuarMensagem.style.display = "none";
   }
+}
+
 
   btnContinuarMensagem.onclick = () => {
     mensagem.classList.remove("limitada");
@@ -307,6 +310,7 @@ slotEl.innerHTML = `<img src="${data.url}" style="width:100%;height:100%;object-
   }, 300);
 
 });
+
 
 
 
