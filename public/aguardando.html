@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Pagamento Seguro • PIX</title>
+<title>Pagamento PIX • Aguardando</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -25,7 +25,7 @@ body{
   width:100%;
   max-width:420px;
   text-align:center;
-  box-shadow:0 0 30px rgba(255,212,0,.15);
+  box-shadow:0 0 30px rgba(255,212,0,.2);
 }
 
 h1{
@@ -35,62 +35,47 @@ h1{
 
 .sub{
   font-size:.95em;
-  color:#ccc;
+  opacity:.85;
   margin-bottom:20px;
 }
 
-.qr{
+.qr img{
+  width:220px;
   margin:20px auto;
 }
 
-.qr img{
-  width:260px;
-  max-width:100%;
-  border-radius:16px;
-  background:#fff;
-  padding:10px;
-}
-
-.pix-box{
-  background:#111;
-  padding:14px;
-  border-radius:12px;
-  margin-top:14px;
+.code{
+  background:#000;
+  border-radius:10px;
+  padding:12px;
+  font-size:.75em;
   word-break:break-all;
-  font-size:.85em;
+  margin-bottom:10px;
 }
 
 button{
-  width:100%;
-  margin-top:12px;
-  padding:14px;
+  background:#ffd400;
   border:none;
-  border-radius:14px;
+  color:#000;
+  padding:12px;
+  border-radius:12px;
+  width:100%;
   font-size:1em;
   font-weight:bold;
   cursor:pointer;
 }
 
-.copy{
-  background:#ffd400;
-  color:#000;
-}
-
-.secure{
+.info{
   margin-top:18px;
-  font-size:.8em;
-  color:#aaa;
-}
-
-.steps{
-  text-align:left;
   font-size:.85em;
-  margin-top:16px;
-  color:#ddd;
+  opacity:.8;
+  line-height:1.4;
 }
 
-.steps li{
-  margin-bottom:6px;
+.status{
+  margin-top:14px;
+  color:#4dff88;
+  font-size:.9em;
 }
 </style>
 </head>
@@ -98,106 +83,57 @@ button{
 <body>
 
 <div class="card">
-  <h1>Pagamento Seguro</h1>
+
+  <h1>Pagamento PIX</h1>
   <div class="sub">
-    Seu pagamento é processado com segurança via <strong>PIX</strong>.
-    Assim que for confirmado, seu site será liberado automaticamente.
+    Escaneie o QR Code ou copie o código PIX para finalizar 💖
   </div>
 
-  <div class="qr">
-    <img id="qr" alt="QR Code PIX">
+  <div class="qr" id="qr"></div>
+
+  <div class="code" id="code"></div>
+
+  <button onclick="copiar()">Copiar código PIX</button>
+
+  <div class="info">
+    • Abra o app do seu banco<br>
+    • Escolha PIX → QR Code ou Copia e Cola<br>
+    • Confirme o pagamento<br><br>
+    Assim que o pagamento for aprovado, você será redirecionado automaticamente ✨
   </div>
 
-  <div class="pix-box" id="pix"></div>
+  <div class="status" id="status">⏳ Aguardando pagamento...</div>
 
-  <button class="copy" onclick="copiarPix()">Copiar código PIX</button>
-
-  <ul class="steps">
-    <li>1. Abra o app do seu banco</li>
-    <li>2. Escolha a opção <strong>PIX</strong></li>
-    <li>3. Escaneie o QR Code ou cole o código</li>
-    <li>4. Confirme o pagamento</li>
-  </ul>
-
-  <div class="secure">
-    🔒 Ambiente seguro • Mercado Pago • Conexão protegida
-  </div>
 </div>
 
 <script>
-/* =========================
-   CARREGAR PIX COM FALLBACK
-========================= */
-const qrBase64 = sessionStorage.getItem("pix_qr");
-const pixCopia = sessionStorage.getItem("pix_copia");
+const pix = JSON.parse(sessionStorage.getItem("pix") || "{}");
 
-const qrEl  = document.getElementById("qr");
-const pixEl = document.getElementById("pix");
-
-if (qrBase64) {
-  qrEl.src = "data:image/png;base64," + qrBase64;
+if (!pix.qr_base64) {
+  document.body.innerHTML = "Pagamento não encontrado.";
 } else {
-  qrEl.alt = "QR Code indisponível. Recarregue a página anterior.";
+  document.getElementById("qr").innerHTML =
+    `<img src="data:image/png;base64,${pix.qr_base64}">`;
+  document.getElementById("code").innerText = pix.copia_cola;
 }
 
-if (pixCopia) {
-  pixEl.innerText = pixCopia;
-} else {
-  pixEl.innerText =
-    "Código PIX não encontrado. Volte e gere novamente.";
+function copiar() {
+  navigator.clipboard.writeText(pix.copia_cola);
+  document.getElementById("status").innerText = "✔ Código PIX copiado";
 }
 
-/* =========================
-   COPIAR PIX
-========================= */
-function copiarPix(){
-  if (!pixCopia) return alert("Código PIX indisponível.");
-  navigator.clipboard.writeText(pixCopia);
-  alert("Código PIX copiado!");
-}
-
-/* =========================
-   VERIFICAR PAGAMENTO (ROBUSTO)
-========================= */
-const params = new URLSearchParams(window.location.search);
-const paymentId = params.get("payment_id");
-
-if (!paymentId) {
-  alert("Erro: pagamento não identificado. Gere um novo pagamento.");
-}
-
-/* evita múltiplos redirects */
-let liberado = false;
-
-async function verificarPagamento() {
-  if (!paymentId || liberado) return;
-
-  try {
-    const res = await fetch(
-      `/check-payment?payment_id=${paymentId}`,
-      { cache: "no-store" }
-    );
-
-    if (!res.ok) return;
-
-    const data = await res.json();
-
-    if (
-      data.status === "approved" ||
-      data.status === "authorized"
-    ) {
-      liberado = true;
-      window.location.href =
-        `/success.html?payment_id=${paymentId}`;
-    }
-
-  } catch (e) {
-    // silêncio proposital (evita spam de erro no mobile)
+/* ==========================
+   VERIFICA PAGAMENTO
+========================== */
+async function check() {
+  const res = await fetch(`/check-payment?payment_id=${pix.payment_id}`);
+  const json = await res.json();
+  if (json.status === "approved") {
+    location.href = `/success.html?payment_id=${pix.payment_id}`;
   }
 }
 
-/* checa a cada 3s */
-setInterval(verificarPagamento, 3000);
+setInterval(check, 4000);
 </script>
 
 </body>
