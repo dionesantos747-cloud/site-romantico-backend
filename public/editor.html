@@ -16,53 +16,53 @@
 
     <h1>💖 Criar Site Romântico</h1>
     <p class="editor-sub">
-      Edite tudo abaixo e veja em tempo real como ficará no celular 💕
+      Preencha os dados e veja em tempo real como ficará no celular
     </p>
 
     <!-- TÍTULO -->
     <label>Título do site *</label>
-    <input id="nomeInput" placeholder="Ex: Nossa história começou aqui 💖">
+    <input id="nomeInput" placeholder="Ex: Nossa história de amor 💖">
 
-    <!-- TEXTO PRINCIPAL -->
+    <!-- TEXTO -->
     <label>Texto principal *</label>
-    <textarea id="msgInput" maxlength="1200"
+    <textarea id="msgInput"
       placeholder="Conte sua história, momentos especiais, sentimentos..."></textarea>
 
     <!-- CARTA -->
     <label>Carta secreta *</label>
     <textarea id="cartaInput"
-      placeholder="Escreva uma carta especial que será aberta no site 💌"></textarea>
+      placeholder="Escreva uma carta especial 💌"></textarea>
 
     <!-- DATA -->
     <label>Data de início do relacionamento *</label>
     <input type="date" id="dataInput">
 
- <!-- FOTOS -->
-<label>Fotos (máx. 10)</label>
+    <!-- FOTOS -->
+    <label>Fotos (máx. 10)</label>
 
-<label for="fotoInput" class="add-foto">
-  ➕ Adicionar fotos (máx. 10)
-</label>
+    <label for="fotoInput" class="add-foto">
+      ➕ Adicionar fotos
+    </label>
+    <input type="file" id="fotoInput" accept="image/*" multiple>
 
-<input type="file" id="fotoInput" accept="image/*" multiple>
+    <div id="miniaturas" class="miniaturas"></div>
 
-<div id="miniaturas" class="miniaturas"></div>
     <!-- MÚSICA -->
     <label>Música (opcional)</label>
     <input type="file" id="musicaInput" accept="audio/*">
-    <button id="removeMusic" class="btn-secondary">Remover música</button>
+    <button id="removeMusic">Remover música</button>
 
     <!-- FUNDO -->
     <label>Cor de fundo</label>
     <div class="cores">
       <button data-cor="rosa"></button>
-      <button data-cor="azul"></button>
+      <button data-cor="azul" class="ativo"></button>
       <button data-cor="vermelho"></button>
       <button data-cor="preto"></button>
       <button data-cor="branco"></button>
     </div>
 
-    <!-- BOTÃO COMPRA -->
+    <!-- COMPRA -->
     <button id="comprarBtn" class="btn-comprar pulsar">
       Gerar QR Code por R$ 9,99
     </button>
@@ -81,6 +81,7 @@
 <script src="/js/editor.js"></script>
 </body>
 </html>
+
 
 
 
