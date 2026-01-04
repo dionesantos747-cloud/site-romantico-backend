@@ -125,42 +125,79 @@ button{
 </div>
 
 <script>
-/* ===== carregar PIX ===== */
+/* =========================
+   CARREGAR PIX COM FALLBACK
+========================= */
 const qrBase64 = sessionStorage.getItem("pix_qr");
 const pixCopia = sessionStorage.getItem("pix_copia");
 
-if(qrBase64){
-  document.getElementById("qr").src =
-    "data:image/png;base64," + qrBase64;
+const qrEl  = document.getElementById("qr");
+const pixEl = document.getElementById("pix");
+
+if (qrBase64) {
+  qrEl.src = "data:image/png;base64," + qrBase64;
+} else {
+  qrEl.alt = "QR Code indisponível. Recarregue a página anterior.";
 }
 
-if(pixCopia){
-  document.getElementById("pix").innerText = pixCopia;
+if (pixCopia) {
+  pixEl.innerText = pixCopia;
+} else {
+  pixEl.innerText =
+    "Código PIX não encontrado. Volte e gere novamente.";
 }
 
-/* ===== copiar ===== */
+/* =========================
+   COPIAR PIX
+========================= */
 function copiarPix(){
+  if (!pixCopia) return alert("Código PIX indisponível.");
   navigator.clipboard.writeText(pixCopia);
   alert("Código PIX copiado!");
 }
 
-/* ===== verificar pagamento ===== */
+/* =========================
+   VERIFICAR PAGAMENTO (ROBUSTO)
+========================= */
 const params = new URLSearchParams(window.location.search);
 const paymentId = params.get("payment_id");
+
 if (!paymentId) {
-  alert("Erro: pagamento não identificado. Volte e gere um novo pagamento.");
+  alert("Erro: pagamento não identificado. Gere um novo pagamento.");
 }
-setInterval(async ()=>{
-  try{
-    const res = await fetch(`/check-payment?payment_id=${paymentId}`);
+
+/* evita múltiplos redirects */
+let liberado = false;
+
+async function verificarPagamento() {
+  if (!paymentId || liberado) return;
+
+  try {
+    const res = await fetch(
+      `/check-payment?payment_id=${paymentId}`,
+      { cache: "no-store" }
+    );
+
+    if (!res.ok) return;
+
     const data = await res.json();
 
-    if(data.status === "approved"){
+    if (
+      data.status === "approved" ||
+      data.status === "authorized"
+    ) {
+      liberado = true;
       window.location.href =
         `/success.html?payment_id=${paymentId}`;
     }
-  }catch(e){}
-}, 3000);
+
+  } catch (e) {
+    // silêncio proposital (evita spam de erro no mobile)
+  }
+}
+
+/* checa a cada 3s */
+setInterval(verificarPagamento, 3000);
 </script>
 
 </body>
