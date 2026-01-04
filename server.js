@@ -1,6 +1,7 @@
 process.on("unhandledRejection", err => {
   console.error("Unhandled Rejection:", err);
 });
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
@@ -10,7 +11,6 @@ const fs = require("fs");
 const QRCode = require("qrcode");
 const { v4: uuidv4 } = require("uuid");
 const { MongoClient } = require("mongodb");
-
 const cloudinary = require("cloudinary").v2;
 const multer = require("multer");
 
@@ -23,16 +23,18 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.json({ limit: "20mb" }));
 app.use(express.static(path.join(__dirname, "public"), {
-  maxAge: "7d",          // cache por 7 dias
-  etag: true,            // valida cache
+  maxAge: "7d",
+  etag: true,
   lastModified: true
 }));
+
 /* =====================
    ROTA INICIAL
 ===================== */
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "editor.html"));
 });
+
 /* =====================
    CLOUDINARY
 ===================== */
@@ -42,9 +44,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-const upload = multer({
-  limits: { fileSize: 10 * 1024 * 1024 }
-});
+const upload = multer({ limits: { fileSize: 10 * 1024 * 1024 } });
 
 /* =====================
    VARIÁVEIS
@@ -52,12 +52,13 @@ const upload = multer({
 const MONGO_URI = process.env.MONGO_URI;
 const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN;
 
-let payments = null;
-let users = null;
+let payments, users;
+
 if (!MONGO_URI || !MP_ACCESS_TOKEN) {
   console.error("❌ Variáveis de ambiente não definidas");
   process.exit(1);
 }
+
 /* =====================
    MONGODB
 ===================== */
@@ -78,10 +79,11 @@ if (!MONGO_URI || !MP_ACCESS_TOKEN) {
    UPLOAD FOTO
 ===================== */
 app.post("/upload-image", upload.single("file"), (req, res) => {
- if (!req.file) {
-  return res.status(400).json({ error: "Arquivo não enviado" });
-}
-   cloudinary.uploader.upload_stream(
+  if (!req.file) {
+    return res.status(400).json({ error: "Arquivo não enviado" });
+  }
+
+  cloudinary.uploader.upload_stream(
     { folder: "site-romantico/fotos" },
     (err, result) => {
       if (err) return res.status(500).json({ error: "Erro imagem" });
@@ -95,9 +97,10 @@ app.post("/upload-image", upload.single("file"), (req, res) => {
 ===================== */
 app.post("/upload-music", upload.single("file"), (req, res) => {
   if (!req.file) {
-  return res.status(400).json({ error: "Arquivo não enviado" });
-}
-   cloudinary.uploader.upload_stream(
+    return res.status(400).json({ error: "Arquivo não enviado" });
+  }
+
+  cloudinary.uploader.upload_stream(
     { resource_type: "video", folder: "site-romantico/musicas" },
     (err, result) => {
       if (err) return res.status(500).json({ error: "Erro música" });
@@ -111,31 +114,46 @@ app.post("/upload-music", upload.single("file"), (req, res) => {
 ===================== */
 app.post("/create-payment", async (req, res) => {
   try {
+    const {
+      nome,
+      mensagem,
+      carta,
+      dataInicio,
+      fotos = [],
+      musica = null,
+      fundo = "azul"
+    } = req.body;
 
-    // 1️⃣ CRIA USUÁRIO TEMPORÁRIO (ANTES DO PAGAMENTO)
+    /* 🔒 VALIDAÇÃO OBRIGATÓRIA */
+    if (!nome || !mensagem || !carta || !dataInicio) {
+      return res.status(400).json({
+        error: "Dados obrigatórios não preenchidos"
+      });
+    }
+
     const tempId = uuidv4();
 
     await users.insertOne({
       _id: tempId,
+      nome,
+      mensagem,
+      carta,
+      dataInicio,
+      fotos,
+      musica,
+      fundo,
       status: "pending",
-      createdAt: new Date(),
-      ...req.body   // nome, mensagem, fotos, musica etc
+      createdAt: new Date()
     });
 
-    // 2️⃣ CRIA PAGAMENTO PIX NO MERCADO PAGO
     const mp = await axios.post(
       "https://api.mercadopago.com/v1/payments",
       {
         transaction_amount: 9.99,
         description: "Site Romântico Premium 💖",
         payment_method_id: "pix",
-        payer: { email: "dionesantosx7@gmail.com" },
-
-        // 🔥 LIGA PAGAMENTO AO USUÁRIO
-        metadata: {
-          userId: tempId
-        },
-
+        payer: { email: "cliente@pagamento.com" },
+        metadata: { userId: tempId },
         notification_url: `${req.protocol}://${req.get("host")}/webhook`
       },
       {
@@ -147,7 +165,6 @@ app.post("/create-payment", async (req, res) => {
       }
     );
 
-    // 3️⃣ SALVA PAGAMENTO
     await payments.insertOne({
       paymentId: String(mp.data.id),
       userId: tempId,
@@ -155,7 +172,6 @@ app.post("/create-payment", async (req, res) => {
       createdAt: new Date()
     });
 
-    // 4️⃣ RETORNA PIX PARA O FRONT
     const pix = mp.data.point_of_interaction.transaction_data;
 
     res.json({
@@ -169,67 +185,45 @@ app.post("/create-payment", async (req, res) => {
     res.status(500).json({ error: "Erro ao criar pagamento" });
   }
 });
+
 /* =====================
    WEBHOOK MERCADO PAGO
 ===================== */
-app.post("/webhook", (req, res) => {
-
-  // RESPONDE IMEDIATO (evita erro 502)
+app.post("/webhook", async (req, res) => {
   res.sendStatus(200);
 
-  // 🔒 VALIDA TIPO DO EVENTO (IMPORTANTE)
-  const topic =
-  req.body?.type ||
-  req.body?.action ||
-  req.query?.topic ||
-  req.query?.type;
+  const paymentId =
+    req.body?.data?.id ||
+    req.query?.id;
 
-if (!topic || !topic.includes("payment")) return;
-  (async () => {
-    try {
-      const paymentId =
-        req.body?.data?.id ||
-        req.body?.id ||
-        req.query?.id;
-      if (!paymentId) return;
+  if (!paymentId) return;
 
-      // CONSULTA MERCADO PAGO
-      const mp = await axios.get(
-        `https://api.mercadopago.com/v1/payments/${paymentId}`,
-        {
-          headers: { Authorization: `Bearer ${MP_ACCESS_TOKEN}` }
-        }
-      );
+  try {
+    const mp = await axios.get(
+      `https://api.mercadopago.com/v1/payments/${paymentId}`,
+      { headers: { Authorization: `Bearer ${MP_ACCESS_TOKEN}` } }
+    );
 
-      if (mp.data.status !== "approved") return;
+    if (mp.data.status !== "approved") return;
 
-      const userId = mp.data.metadata?.userId;
-      if (!userId) return;
+    const userId = mp.data.metadata?.userId;
+    if (!userId) return;
 
-      // ATUALIZA PAGAMENTO
-      await payments.updateOne(
-        { paymentId },
-        { $set: { status: "approved", approvedAt: new Date() } }
-      );
+    await payments.updateOne(
+      { paymentId: String(paymentId) },
+      { $set: { status: "approved", approvedAt: new Date() } }
+    );
 
-      // ATIVA USUÁRIO
-      await users.updateOne(
-        { _id: userId },
-        {
-          $set: {
-            status: "approved",
-            paymentId,
-            activatedAt: new Date()
-          }
-        }
-      );
+    await users.updateOne(
+      { _id: userId },
+      { $set: { status: "approved", activatedAt: new Date() } }
+    );
 
-      console.log("💖 Pagamento aprovado | Usuário:", userId);
+    console.log("💖 Pagamento aprovado:", paymentId);
 
-    } catch (err) {
-      console.error("❌ Erro webhook:", err.message);
-    }
-  })();
+  } catch (err) {
+    console.error("❌ Webhook erro:", err.message);
+  }
 });
 
 /* =====================
@@ -238,47 +232,15 @@ if (!topic || !topic.includes("payment")) return;
 app.get("/check-payment", async (req, res) => {
   try {
     const paymentId = String(req.query.payment_id);
-
-    const mp = await axios.get(
-      `https://api.mercadopago.com/v1/payments/${paymentId}`,
-      { headers: { Authorization: `Bearer ${MP_ACCESS_TOKEN}` } }
-    );
-
-    if (mp.data.status !== "approved") {
-      return res.json({ status: "pending" });
-    }
-
-    // 🔎 busca pagamento
     const pay = await payments.findOne({ paymentId });
-    
-if (pay?.status === "approved") {
-  return res.json({ status: "approved" });
-}
-    if (!pay) {
+
+    if (!pay || pay.status !== "approved") {
       return res.json({ status: "pending" });
     }
-
-    // 🔎 ativa usuário SE ainda não estiver ativo
-    await users.updateOne(
-      { _id: pay.userId },
-      {
-        $set: {
-          status: "approved",
-          paymentId,
-          activatedAt: new Date()
-        }
-      }
-    );
-
-    await payments.updateOne(
-      { paymentId },
-      { $set: { status: "approved" } }
-    );
 
     return res.json({ status: "approved" });
 
-  } catch (err) {
-    console.error("check-payment erro:", err.message);
+  } catch {
     res.json({ status: "pending" });
   }
 });
@@ -287,79 +249,58 @@ if (pay?.status === "approved") {
    SUCCESS
 ===================== */
 app.get("/success.html", async (req, res) => {
-  try {
-    const paymentId = String(req.query.payment_id);
+  const paymentId = String(req.query.payment_id);
 
-    // 🔹 BUSCA PAGAMENTO APROVADO
-    const pay = await payments.findOne({
-      paymentId,
-      status: "approved"
-    });
+  const pay = await payments.findOne({
+    paymentId,
+    status: "approved"
+  });
 
-    if (!pay) {
-      return res.sendFile(
-        path.join(__dirname, "public/aguardando.html")
-      );
-    }
-
-    // 🔹 BUSCA USUÁRIO PELO userId SALVO NO PAGAMENTO
-    const user = await users.findOne({ _id: pay.userId });
-
-    if (!user) {
-      return res.status(404).send("Usuário não encontrado");
-    }
-
-    const link = `${req.protocol}://${req.get("host")}/user.html?id=${user._id}`;
-    const qr = await QRCode.toDataURL(link);
-
-    let html = fs.readFileSync(
-      path.join(__dirname, "views/success.html"),
-      "utf8"
+  if (!pay) {
+    return res.sendFile(
+      path.join(__dirname, "public/aguardando.html")
     );
-
-    html = html
-      .replace("{{QR}}", `<img src="${qr}" />`)
-      .replace("{{LINK}}", link);
-
-    res.send(html);
-
-  } catch (err) {
-    console.error("Erro success:", err.message);
-    res.status(500).send("Erro ao carregar sucesso");
   }
+
+  const user = await users.findOne({ _id: pay.userId });
+  if (!user) return res.status(404).send("Usuário não encontrado");
+
+  const link = `${req.protocol}://${req.get("host")}/user.html?id=${user._id}`;
+  const qr = await QRCode.toDataURL(link);
+
+  let html = fs.readFileSync(
+    path.join(__dirname, "views/success.html"),
+    "utf8"
+  );
+
+  html = html
+    .replace("{{QR}}", `<img src="${qr}" />`)
+    .replace("{{LINK}}", link);
+
+  res.send(html);
 });
+
 /* =====================
    USER DATA
 ===================== */
 app.get("/user-data", async (req, res) => {
-  try {
-    const id = req.query.id;
+  const user = await users.findOne({ _id: req.query.id });
 
-    if (!id) {
-      return res.status(400).json({ error: "ID não informado" });
-    }
-
-    const user = await users.findOne({ _id: id });
-
-    if (!user) {
-      return res.status(404).json({ error: "Usuário não encontrado" });
-    }
-
-    // 🔒 só libera se estiver aprovado
-    if (user.status !== "approved") {
-      return res.json({ status: "pending" });
-    }
-
-    res.json(user);
-
-  } catch (err) {
-    console.error("Erro /user-data:", err.message);
-    res.status(500).json({ error: "Erro interno" });
+  if (!user) {
+    return res.status(404).json({ error: "Usuário não encontrado" });
   }
+
+  if (user.status !== "approved") {
+    return res.json({ status: "pending" });
+  }
+
+  res.json(user);
 });
+
 /* =====================
    START
 ===================== */
 app.listen(PORT, "0.0.0.0", () => {
   console.log("🚀 Server rodando");
 });
+
