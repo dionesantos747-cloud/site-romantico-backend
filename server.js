@@ -290,9 +290,12 @@ app.get("/user-data", async (req, res) => {
     return res.status(404).json({ error: "Usuário não encontrado" });
   }
 
-  if (user.status !== "approved") {
-    return res.json({ status: "pending" });
-  }
+if (user.status !== "approved") {
+  return res.json({
+    status: "pending",
+    message: "Pagamento em processamento"
+  });
+}
 
   res.json(user);
 });
