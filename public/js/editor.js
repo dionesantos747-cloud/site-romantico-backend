@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", () => {
 
   const isEditor = !!document.getElementById("editor");
@@ -105,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* =====================
-     FOTOS (FUNCIONAL)
+     FOTOS (100% FUNCIONAL)
   ===================== */
   document.querySelectorAll(".photo-slot").forEach(slot => {
     slot.onclick = () => {
@@ -122,25 +123,31 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = new FormData();
     form.append("file", file);
 
-    const res = await fetch("/upload-image", {
-      method: "POST",
-      body: form
-    });
+    try {
+      const res = await fetch("/upload-image", {
+        method: "POST",
+        body: form
+      });
 
-    const data = await res.json();
-    if (!data.url) return alert("Erro ao enviar imagem");
+      const data = await res.json();
+      if (!data.url) throw new Error();
 
-    fotos[slot] = data.url;
+      fotos[slot] = data.url;
 
-    midias.innerHTML = "";
-    fotos.filter(Boolean).forEach(url => {
-      const div = document.createElement("div");
-      div.className = "photo";
-      div.innerHTML = `<img src="${url}">`;
-      midias.appendChild(div);
-    });
+      midias.innerHTML = "";
+      fotos.filter(Boolean).forEach(url => {
+        const div = document.createElement("div");
+        div.className = "photo";
+        div.innerHTML = `<img src="${url}">`;
+        midias.appendChild(div);
+      });
 
-    atualizarStack();
+      atualizarStack();
+      fotoInput.value = "";
+
+    } catch {
+      alert("Erro ao enviar imagem");
+    }
   };
 
   function atualizarStack() {
@@ -154,7 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* =====================
-     MÚSICA (OK)
+     MÚSICA
   ===================== */
   musicBox.onclick = () => musicaInput.click();
 
@@ -165,19 +172,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = new FormData();
     form.append("file", file);
 
-    const res = await fetch("/upload-music", {
-      method: "POST",
-      body: form
-    });
+    try {
+      const res = await fetch("/upload-music", {
+        method: "POST",
+        body: form
+      });
 
-    const data = await res.json();
-    if (!data.url) return alert("Erro música");
+      const data = await res.json();
+      if (!data.url) throw new Error();
 
-    musicaUrl = data.url;
-    audio.src = musicaUrl;
-    audio.style.display = "block";
-    musicBox.innerText = "🎶 Música pronta";
-    removeMusic.style.display = "block";
+      musicaUrl = data.url;
+      audio.src = musicaUrl;
+      audio.style.display = "block";
+      musicBox.innerText = "🎶 Música pronta";
+      removeMusic.style.display = "block";
+
+    } catch {
+      alert("Erro ao enviar música");
+    }
   };
 
   removeMusic.onclick = () => {
@@ -189,7 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   /* =====================
-     CONTADOR (CORRIGIDO)
+     CONTADOR (VISÍVEL)
   ===================== */
   dataInput.onchange = () => {
     limparErro(dataInput);
@@ -221,7 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   /* =====================
-     PIX (CORRIGIDO)
+     PIX (ESTÁVEL)
   ===================== */
   btnComprar.onclick = async () => {
 
@@ -240,29 +252,32 @@ document.addEventListener("DOMContentLoaded", () => {
       fundo: document.querySelector(".bg-card.selected")?.dataset.bg || "azul"
     };
 
-    const res = await fetch("/create-payment", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
+    try {
+      const res = await fetch("/create-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
 
-    const data = await res.json();
-    if (!data.payment_id) {
+      const data = await res.json();
+      if (!data.payment_id) throw new Error();
+
+      sessionStorage.setItem("pix_qr", data.qr_base64);
+      sessionStorage.setItem("pix_copia", data.copia_cola);
+
+      window.location.href =
+        `/aguardando.html?payment_id=${data.payment_id}`;
+
+    } catch {
       alert("Erro ao gerar pagamento");
-      return;
     }
-
-    sessionStorage.setItem("pix_qr", data.qr_base64);
-    sessionStorage.setItem("pix_copia", data.copia_cola);
-
-    window.location.href =
-      `/aguardando.html?payment_id=${data.payment_id}`;
   };
 
   /* =====================
-     CORAÇÕES (CORRIGIDO)
+     CORAÇÕES
   ===================== */
   setTimeout(() => {
+    preview.querySelectorAll(".heart").forEach(h => h.remove());
     for (let i = 0; i < 12; i++) {
       const h = document.createElement("div");
       h.className = "heart";
