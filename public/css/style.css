@@ -367,6 +367,28 @@ body.final .remove-music {
 .preview.rosa { background: radial-gradient(circle,#ff5fa2,#000); }
 .preview.preto { background: radial-gradient(circle,#222,#000); }
 
+/* ===== MOLDE DE CELULAR ===== */
+.device-preview {
+  max-width: 360px;
+  margin: 0 auto 40px;
+  background: #111;
+  border-radius: 28px;
+  box-shadow: 0 0 0 6px #000, 0 20px 60px rgba(0,0,0,.8);
+  overflow: hidden;
+}
+
+.device-top {
+  background: #000;
+  padding: 10px;
+  text-align: center;
+  font-size: 0.8em;
+  color: #aaa;
+}
+
+.device-screen {
+  background: #000;
+  min-height: 600px;
+}
 
 
 
