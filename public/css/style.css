@@ -3,10 +3,21 @@
   color-scheme: light;
 }
 
-html, body {
-  background-color: #000 !important;
-  color: #fff !important;
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  forced-color-adjust: none;
 }
+
+html, body {
+  margin: 0;
+  background: #000 !important;
+  color: #fff !important;
+  font-family: 'Playfair Display', serif;
+  overflow-x: hidden;
+}
+
+/* ===== Inputs ===== */
 input,
 textarea,
 button {
@@ -15,23 +26,7 @@ button {
   appearance: none;
   -webkit-appearance: none;
 }
-* {
-  -webkit-tap-highlight-color: transparent;
-  forced-color-adjust: none;
-}
-/* ===== Reset e básico ===== */
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: #000;
-  color: #fff;
-  font-family: 'Playfair Display', serif;
-  overflow-x: hidden;
-  touch-action: manipulation;
-}
-html {
-  filter: none !important;
-}
+
 /* ===== Editor ===== */
 .editor {
   padding: 20px;
@@ -52,26 +47,25 @@ input, textarea {
   font-size: 1em;
 }
 
+textarea { min-height: 90px; }
+
 input.error, textarea.error {
   border: 2px solid red;
 }
 
 .error-text {
+  display: none;
   color: red;
   font-size: .9em;
-  margin-top: 4px;
-  display: none;
 }
-
-textarea { min-height: 90px; }
 
 /* ===== Fundos ===== */
 .bg-options {
   display: flex;
   gap: 12px;
   justify-content: center;
-  flex-wrap: wrap;
 }
+
 .bg-card {
   width: 60px;
   height: 60px;
@@ -79,18 +73,23 @@ textarea { min-height: 90px; }
   border: 3px solid #000;
   cursor: pointer;
 }
-.bg-card.selected { border: 3px solid #fff; }
-.azul { background: radial-gradient(circle,#2b6cff,#000); }
-.roxo { background: radial-gradient(circle,#8a5cff,#000); }
-.rosa { background: radial-gradient(circle,#ff5fa2,#000); }
-.preto { background: radial-gradient(circle,#222,#000); }
 
-/* ===== Fotos ===== */
+.bg-card.selected {
+  border-color: #fff;
+}
+
+.preview.azul  { background: radial-gradient(circle,#2b6cff,#000); }
+.preview.roxo  { background: radial-gradient(circle,#8a5cff,#000); }
+.preview.rosa  { background: radial-gradient(circle,#ff5fa2,#000); }
+.preview.preto { background: radial-gradient(circle,#222,#000); }
+
+/* ===== Fotos (Editor slots) ===== */
 .photo-grid {
   display: flex;
   gap: 10px;
   justify-content: center;
 }
+
 .photo-slot {
   width: 90px;
   height: 90px;
@@ -103,156 +102,122 @@ textarea { min-height: 90px; }
   cursor: pointer;
   position: relative;
 }
-.photo-slot.filled { cursor: default; }
 
-.photo-remove {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  background: rgba(0,0,0,0.75);
-  color: #fff;
-  border-radius: 50%;
-  width: 26px;
-  height: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  cursor: pointer;
-  z-index: 10;
+.photo-slot.filled {
+  border: none;
 }
 
-
-/* ===================
-   CARROSSEL — EFEITO CARTAS
-===================== */
-
-#midias {
-  position: relative;
-  height: auto;
-  min-height: 240px;
-  padding-bottom: 40px;
-  overflow: hidden;
-}
-
-#midias .photo {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 220px;
-  max-width: 70vw;
-  transform: translateX(-50%);
-  border-radius: 20px;   /* 🔥 única verdade */
-  overflow: hidden;      /* 🔒 essencial */
-  background: #fff;
-}
-#midias .photo img {
+.photo-slot img {
   width: 100%;
-  height: auto;          /* nunca corta */
-  display: block;
-  border-radius: inherit; /* usa o mesmo raio do container */
-}
-
-/* carta ativa */
-#midias .photo.active {
-  transform: translateX(-50%) translateY(0) rotate(0deg) scale(1);
-  z-index: 3;
-  opacity: 1;
-}
-
-#midias .photo.behind-1,
-#midias .photo.behind-2 {
-  transform: translateX(-50%);
-  opacity: 0;
-  pointer-events: none;
-}
-
-
-/* ===== Bolinhas indicadoras ===== */
-#midias {
-  position: relative;
-  height: auto;
-  min-height: 240px;
-  padding-bottom: 40px;
-  overflow: hidden;
-}
-
-
-
-.dot {
-  width: 8px;
-  height: 8px;
-  background: #777;
-  border-radius: 50%;
-  transition: all 0.3s;
-}
-
-.dot.active {
-  background: #ffd400;
-  transform: scale(1.3);
-}
-
-@keyframes floatPhoto {
-  0%,100% { transform: translateY(0) rotate(-1deg); }
-  50% { transform: translateY(-6px) rotate(1deg); }
-}
-
-/* ===== Música ===== */
-.music-box {
-  margin-top: 12px;
-  background: #222;
-  padding: 14px;
+  height: 100%;
+  object-fit: cover;
   border-radius: 14px;
-  text-align: center;
-  cursor: pointer;
-}
-.music-box.disabled { opacity: .7; cursor: default; }
-
-.remove-music {
-  display: none;
-  margin-top: 8px;
-  color: #ff4b4b;
-  text-align: center;
-  cursor: pointer;
 }
 
-/* ===== Preview / Site ===== */
+/* ===== PREVIEW ===== */
 .preview {
   min-height: 100vh;
   padding: 40px 16px 160px;
   text-align: center;
   position: relative;
-  overflow-x: hidden;
-  overflow-y: visible;
-
+  overflow: hidden;
 }
 
 .nome {
   font-size: 2.5em;
-  font-family: 'Playfair Display', serif;
   color: #ffd400;
   text-shadow: 0 0 8px #ffd400;
   animation: pulse 2.5s infinite alternate;
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); text-shadow: 0 0 4px #ffd400; }
-  100% { transform: scale(1.05); text-shadow: 0 0 12px #ffd400; }
+  from { transform: scale(1); }
+  to   { transform: scale(1.05); }
 }
 
 .mensagem {
   font-size: 1.4em;
   line-height: 1.4;
-  transform: rotate(-0.5deg);
 }
 
-@media (max-width: 480px) {
-  .mensagem {
-    font-size: 1.2em;
-    transform: none;
-  }
+.mensagem.limitada {
+  max-height: 180px;
+  overflow: hidden;
 }
 
+.ler-mais {
+  background: transparent;
+  color: #ffd400;
+  border: none;
+  font-size: 1em;
+}
+
+/* ===== CARROSSEL POLAROID (CORRIGIDO) ===== */
+#midias {
+  position: relative;
+  min-height: 340px;
+  margin-top: 20px;
+}
+
+#midias .photo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  max-width: 70vw;
+
+  background: #fff;
+  padding: 10px 10px 32px;
+  border-radius: 6px;
+
+  box-shadow:
+    0 10px 25px rgba(0,0,0,0.35),
+    0 4px 10px rgba(0,0,0,0.25);
+}
+
+#midias .photo img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 4px;
+}
+
+/* variação romântica */
+#midias .photo:nth-child(1) { transform: translateX(-50%) rotate(-2deg); }
+#midias .photo:nth-child(2) { transform: translateX(-50%) rotate(1.5deg); }
+#midias .photo:nth-child(3) { transform: translateX(-50%) rotate(-1deg); }
+
+#midias .photo.active {
+  transform: translateX(-50%) rotate(0deg) scale(1);
+  z-index: 3;
+}
+
+/* ===== Contador ===== */
+#tempo {
+  margin-top: 32px;
+}
+
+#tempo .titulo {
+  font-size: 2.2em;
+  color: #ffd400;
+}
+
+#tempo .contador {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+#tempo .item {
+  background: #fff;
+  color: #333;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-size: 1.2em;
+}
+
+/* ===== Carta ===== */
 .carta {
   background: #fff;
   color: #333;
@@ -260,17 +225,43 @@ textarea { min-height: 90px; }
   border-radius: 20px;
   margin-top: 20px;
   display: none;
-  max-height: 70vh;
-  overflow-y: auto;
 }
 
+/* ===== Música ===== */
+.music-box {
+  background: #222;
+  padding: 14px;
+  border-radius: 14px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.music-box.disabled {
+  opacity: .6;
+}
+
+.remove-music {
+  display: none;
+  color: #ff4b4b;
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* ===== Player ===== */
+#audioPlayer {
+  display: block;
+  margin: 20px auto;
+  width: 80%;
+  max-width: 320px;
+}
+
+/* ===== Botão ===== */
 button {
   width: 100%;
   padding: 18px;
-  border: none;
   border-radius: 18px;
   font-size: 1.1em;
-  margin-top: 18px;
+  border: none;
 }
 
 .pay {
@@ -279,95 +270,7 @@ button {
   font-weight: bold;
 }
 
-/* ===== Contador (NOVO) ===== */
-
-#tempo {
-  margin-top: 32px;
-  text-align: center;
-}
-
-#tempo .titulo {
-  font-family: 'Playfair Display', serif;
-  font-size: 2.2em;
-  font-weight: bold;
-  color: #ffd400;
-  margin-bottom: 12px;
-  display: block;
-  text-shadow: 2px 2px 4px #000;
-}
-
-#tempo .contador {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-#tempo .contador .item {
-  background: #fff;
-  color: #333;
-  padding: 12px 18px;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,.4);
-  font-family: 'Playfair Display', serif;
-  font-size: 1.4em;
-}
-
-/* ===== Player de música (MELHORADO) ===== */
-#audioPlayer {
-  display: block;
-  margin: 20px auto;
-  width: 80%;
-  max-width: 320px;
-  border-radius: 12px;
-  background: #111;
-}
-
-/* ===== Segurança visual (SITE FINAL) ===== */
-body.final .editor,
-body.final .photo-grid,
-body.final .music-box,
-body.final .remove-music {
-  display: none !important;
-}
-
-/* ===== Corações ===== */
-.heart {
-  position: absolute;
-  bottom: -20px;
-  font-size: 18px;
-  opacity: .6;
-  animation: float 8s linear infinite;
-  pointer-events: none;
-}
-
-@keyframes float {
-  to { transform: translateY(-120vh); opacity: 0; }
-}
-.music-box {
-  position: relative;
-  z-index: 20;
-}
-@media (prefers-color-scheme: dark) {
-  html, body {
-    background: #000 !important;
-    color: #fff !important;
-  }
-
-  input,
-  textarea,
-  button {
-    background: #fff !important;
-    color: #000 !important;
-
-  }
-}
-.preview.azul { background: radial-gradient(circle,#2b6cff,#000); }
-.preview.roxo { background: radial-gradient(circle,#8a5cff,#000); }
-.preview.rosa { background: radial-gradient(circle,#ff5fa2,#000); }
-.preview.preto { background: radial-gradient(circle,#222,#000); }
-
-/* ===== MOLDE DE CELULAR ===== */
+/* ===== Molde de celular ===== */
 .device-preview {
   max-width: 360px;
   margin: 0 auto 40px;
@@ -380,8 +283,7 @@ body.final .remove-music {
 .device-top {
   background: #000;
   padding: 10px;
-  text-align: center;
-  font-size: 0.8em;
+  font-size: .8em;
   color: #aaa;
 }
 
@@ -390,33 +292,25 @@ body.final .remove-music {
   min-height: 600px;
 }
 
-/* ===== FOTO ESTILO POLAROID ===== */
-#midias .photo {
-  background: #fff;
-  padding: 10px 10px 28px;
-  border-radius: 6px;
-  box-shadow:
-    0 10px 25px rgba(0,0,0,0.35),
-    0 4px 10px rgba(0,0,0,0.25);
-  transform-origin: center bottom;
+/* ===== Corações ===== */
+.heart {
+  position: absolute;
+  bottom: -20px;
+  font-size: 18px;
+  opacity: .6;
+  animation: float 8s linear infinite;
 }
 
-#midias .photo img {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 4px;
+@keyframes float {
+  to { transform: translateY(-120vh); opacity: 0; }
 }
 
-/* leve variação romântica */
-#midias .photo:nth-child(1) { transform: translateX(-50%) rotate(-2deg); }
-#midias .photo:nth-child(2) { transform: translateX(-50%) rotate(1.5deg); }
-#midias .photo:nth-child(3) { transform: translateX(-50%) rotate(-1deg); }
-
-/* quando ativa */
-#midias .photo.active {
-  transform: translateX(-50%) rotate(0deg) scale(1);
-  z-index: 3;
+/* ===== Segurança site final ===== */
+body.final .editor,
+body.final .photo-grid,
+body.final .music-box,
+body.final .remove-music {
+  display: none !important;
 }
 
 
