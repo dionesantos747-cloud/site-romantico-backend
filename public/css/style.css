@@ -1,317 +1,236 @@
-/* 🔒 BLOQUEIA MODO ESCURO DO SISTEMA */
-:root {
-  color-scheme: light;
-}
-
+/* ==========================
+   RESET & BASE
+========================== */
 * {
   box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  forced-color-adjust: none;
+  margin: 0;
+  padding: 0;
 }
 
-html, body {
-  margin: 0;
-  background: #000 !important;
-  color: #fff !important;
-  font-family: 'Playfair Display', serif;
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
+  background: #0b1020;
+  color: #fff;
   overflow-x: hidden;
 }
 
-/* ===== Inputs ===== */
-input,
-textarea,
-button {
-  background-color: #fff;
-  color: #000;
-  appearance: none;
-  -webkit-appearance: none;
+/* ==========================
+   EDITOR LAYOUT
+========================== */
+.editor-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
 }
 
-/* ===== Editor ===== */
-.editor {
+/* ==========================
+   EDITOR PANEL
+========================== */
+.editor-panel {
+  width: 420px;
+  max-width: 100%;
   padding: 20px;
-  background: #0d0f18;
+  background: #0e1430;
+  overflow-y: auto;
+}
+
+.editor-panel h1 {
+  color: #ffd400;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.editor-sub {
+  text-align: center;
+  font-size: 0.9em;
+  margin-bottom: 20px;
+  opacity: 0.85;
 }
 
 label {
-  color: #ffb3d9;
   display: block;
-  margin: 14px 0 6px;
+  margin-top: 16px;
+  font-size: 0.85em;
+  opacity: 0.9;
 }
 
-input, textarea {
+input,
+textarea {
   width: 100%;
-  padding: 14px;
-  border-radius: 14px;
-  border: none;
-  font-size: 1em;
+  padding: 12px;
+  margin-top: 6px;
+  border-radius: 10px;
+  border: 2px solid #1c2350;
+  background: #0b1020;
+  color: #fff;
+  outline: none;
+  font-size: 0.95em;
+  transition: 0.2s;
 }
 
-textarea { min-height: 90px; }
-
-input.error, textarea.error {
-  border: 2px solid red;
+textarea {
+  resize: vertical;
+  min-height: 90px;
 }
 
-.error-text {
-  display: none;
-  color: red;
-  font-size: .9em;
+input:focus,
+textarea:focus {
+  border-color: #ffd400;
 }
 
-/* ===== Fundos ===== */
-.bg-options {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
+input.erro,
+textarea.erro {
+  border-color: #ff4d4d;
 }
 
-.bg-card {
-  width: 60px;
-  height: 60px;
-  border-radius: 14px;
-  border: 3px solid #000;
-  cursor: pointer;
-}
-
-.bg-card.selected {
-  border-color: #fff;
-}
-
-.preview.azul  { background: radial-gradient(circle,#2b6cff,#000); }
-.preview.roxo  { background: radial-gradient(circle,#8a5cff,#000); }
-.preview.rosa  { background: radial-gradient(circle,#ff5fa2,#000); }
-.preview.preto { background: radial-gradient(circle,#222,#000); }
-
-/* ===== Fotos (Editor slots) ===== */
-.photo-grid {
+/* ==========================
+   MINIATURAS
+========================== */
+.miniaturas {
   display: flex;
   gap: 10px;
-  justify-content: center;
-}
-
-.photo-slot {
-  width: 90px;
-  height: 90px;
-  border-radius: 18px;
-  border: 2px dashed #777;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2em;
-  cursor: pointer;
-  position: relative;
-}
-
-.photo-slot.filled {
-  border: none;
-}
-
-.photo-slot img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 14px;
-}
-
-/* ===== PREVIEW ===== */
-.preview {
-  min-height: 100vh;
-  padding: 40px 16px 160px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.nome {
-  font-size: 2.5em;
-  color: #ffd400;
-  text-shadow: 0 0 8px #ffd400;
-  animation: pulse 2.5s infinite alternate;
-}
-
-@keyframes pulse {
-  from { transform: scale(1); }
-  to   { transform: scale(1.05); }
-}
-
-.mensagem {
-  font-size: 1.4em;
-  line-height: 1.4;
-}
-
-.mensagem.limitada {
-  max-height: 180px;
-  overflow: hidden;
-}
-
-.ler-mais {
-  background: transparent;
-  color: #ffd400;
-  border: none;
-  font-size: 1em;
-}
-
-/* ===== CARROSSEL POLAROID (CORRIGIDO) ===== */
-#midias {
-  position: relative;
-  min-height: 340px;
-  margin-top: 20px;
-}
-
-#midias .photo {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 220px;
-  max-width: 70vw;
-
-  background: #fff;
-  padding: 10px 10px 32px;
-  border-radius: 6px;
-
-  box-shadow:
-    0 10px 25px rgba(0,0,0,0.35),
-    0 4px 10px rgba(0,0,0,0.25);
-}
-
-#midias .photo img {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 4px;
-}
-
-/* variação romântica */
-#midias .photo:nth-child(1) { transform: translateX(-50%) rotate(-2deg); }
-#midias .photo:nth-child(2) { transform: translateX(-50%) rotate(1.5deg); }
-#midias .photo:nth-child(3) { transform: translateX(-50%) rotate(-1deg); }
-
-#midias .photo.active {
-  transform: translateX(-50%) rotate(0deg) scale(1);
-  z-index: 3;
-}
-
-/* ===== Contador ===== */
-#tempo {
-  margin-top: 32px;
-}
-
-#tempo .titulo {
-  font-size: 2.2em;
-  color: #ffd400;
-}
-
-#tempo .contador {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
+  margin-top: 10px;
   flex-wrap: wrap;
 }
 
-#tempo .item {
-  background: #fff;
-  color: #333;
-  padding: 12px 18px;
-  border-radius: 12px;
-  font-size: 1.2em;
+.thumb {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid #1c2350;
 }
 
-/* ===== Carta ===== */
-.carta {
-  background: #fff;
-  color: #333;
-  padding: 22px;
-  border-radius: 20px;
-  margin-top: 20px;
-  display: none;
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-/* ===== Música ===== */
-.music-box {
-  background: #222;
-  padding: 14px;
-  border-radius: 14px;
-  text-align: center;
+.thumb button {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #ff4d4d;
+  border: none;
+  color: #fff;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* ==========================
+   BOTÕES
+========================== */
+button {
   cursor: pointer;
 }
 
-.music-box.disabled {
-  opacity: .6;
-}
-
-.remove-music {
-  display: none;
-  color: #ff4b4b;
-  text-align: center;
-  margin-top: 8px;
-}
-
-/* ===== Player ===== */
-#audioPlayer {
-  display: block;
-  margin: 20px auto;
-  width: 80%;
-  max-width: 320px;
-}
-
-/* ===== Botão ===== */
-button {
-  width: 100%;
-  padding: 18px;
-  border-radius: 18px;
-  font-size: 1.1em;
+.btn-secondary {
+  margin-top: 10px;
+  background: #2a3160;
   border: none;
+  color: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  width: 100%;
 }
 
-.pay {
+.btn-comprar {
+  margin-top: 22px;
   background: #ffd400;
   color: #000;
+  border: none;
+  padding: 14px;
+  border-radius: 16px;
+  font-size: 1.1em;
   font-weight: bold;
+  width: 100%;
+  box-shadow: 0 0 20px rgba(255,212,0,0.5);
 }
 
-/* ===== Molde de celular ===== */
-.device-preview {
-  max-width: 360px;
-  margin: 0 auto 40px;
-  background: #111;
-  border-radius: 28px;
-  box-shadow: 0 0 0 6px #000, 0 20px 60px rgba(0,0,0,.8);
-  overflow: hidden;
+.pulsar {
+  animation: pulsar 1.8s infinite;
 }
 
-.device-top {
+@keyframes pulsar {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* ==========================
+   CORES FUNDO
+========================== */
+.cores {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.cores button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+}
+
+.cores button[data-cor="rosa"] { background: #ff5fa2; }
+.cores button[data-cor="azul"] { background: #4da6ff; }
+.cores button[data-cor="vermelho"] { background: #ff4d4d; }
+.cores button[data-cor="preto"] { background: #000; }
+.cores button[data-cor="branco"] { background: #fff; }
+
+/* ==========================
+   PREVIEW
+========================== */
+.preview-panel {
+  flex: 1;
+  background: radial-gradient(circle at top, #121a40, #000);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.phone-mockup {
+  width: 360px;
+  height: 700px;
+  border-radius: 36px;
   background: #000;
-  padding: 10px;
-  font-size: .8em;
-  color: #aaa;
+  padding: 14px;
+  box-shadow: 0 0 40px rgba(0,0,0,0.7);
 }
 
-.device-screen {
+.phone-mockup iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 24px;
   background: #000;
-  min-height: 600px;
 }
 
-/* ===== Corações ===== */
-.heart {
-  position: absolute;
-  bottom: -20px;
-  font-size: 18px;
-  opacity: .6;
-  animation: float 8s linear infinite;
+/* ==========================
+   RESPONSIVO
+========================== */
+@media (max-width: 900px) {
+  .editor-container {
+    flex-direction: column;
+  }
+
+  .editor-panel {
+    width: 100%;
+  }
+
+  .phone-mockup {
+    width: 320px;
+    height: 640px;
+    margin: 20px 0;
+  }
 }
 
-@keyframes float {
-  to { transform: translateY(-120vh); opacity: 0; }
-}
-
-/* ===== Segurança site final ===== */
-body.final .editor,
-body.final .photo-grid,
-body.final .music-box,
-body.final .remove-music {
-  display: none !important;
-}
 
 
 
