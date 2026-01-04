@@ -6,28 +6,28 @@ document.addEventListener("DOMContentLoaded", () => {
   /* =====================
      ELEMENTOS
   ===================== */
-  const nomeInput   = document.getElementById("nomeInput");
-  const msgInput    = document.getElementById("msgInput");
-  const cartaInput  = document.getElementById("cartaInput");
-  const dataInput   = document.getElementById("dataInput");
+  const nomeInput  = document.getElementById("nomeInput");
+  const msgInput   = document.getElementById("msgInput");
+  const cartaInput = document.getElementById("cartaInput");
+  const dataInput  = document.getElementById("dataInput");
 
-  const nome        = document.getElementById("nome");
-  const mensagem    = document.getElementById("mensagem");
-  const carta       = document.getElementById("carta");
-  const tempo       = document.getElementById("tempo");
-  const preview     = document.getElementById("preview");
+  const nome     = document.getElementById("nome");
+  const mensagem = document.getElementById("mensagem");
+  const carta    = document.getElementById("carta");
+  const tempo    = document.getElementById("tempo");
+  const preview  = document.getElementById("preview");
 
-  const btnCarta    = document.getElementById("btnCarta");
-  const btnComprar  = document.getElementById("btnComprar");
+  const btnCarta   = document.getElementById("btnCarta");
+  const btnComprar = document.getElementById("btnComprar");
   const btnContinuarMensagem = document.getElementById("btnContinuarMensagem");
+
+  const fotoInput = document.getElementById("fotoInput");
+  const midias    = document.getElementById("midias");
 
   const musicBox    = document.getElementById("musicBox");
   const musicaInput = document.getElementById("musicaInput");
   const audio       = document.getElementById("audioPlayer");
   const removeMusic = document.getElementById("removeMusic");
-
-  const fotoInput   = document.getElementById("fotoInput");
-  const midias      = document.getElementById("midias");
 
   /* =====================
      ESTADO
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
   /* =====================
      HELPERS
   ===================== */
-  function marcarErro(input) {
+  function erro(input) {
     input.classList.add("error");
     input.scrollIntoView({ behavior: "smooth", block: "center" });
     input.focus();
@@ -99,14 +99,13 @@ document.addEventListener("DOMContentLoaded", () => {
     card.onclick = () => {
       document.querySelectorAll(".bg-card")
         .forEach(c => c.classList.remove("selected"));
-
       card.classList.add("selected");
       preview.className = "preview " + card.dataset.bg;
     };
   });
 
   /* =====================
-     FOTOS (UPLOAD REAL)
+     FOTOS (FUNCIONAL)
   ===================== */
   document.querySelectorAll(".photo-slot").forEach(slot => {
     slot.onclick = () => {
@@ -133,26 +132,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
     fotos[slot] = data.url;
 
-    const div = document.createElement("div");
-    div.className = "photo";
-    div.innerHTML = `<img src="${data.url}">`;
-    midias.appendChild(div);
+    midias.innerHTML = "";
+    fotos.filter(Boolean).forEach(url => {
+      const div = document.createElement("div");
+      div.className = "photo";
+      div.innerHTML = `<img src="${url}">`;
+      midias.appendChild(div);
+    });
 
     atualizarStack();
   };
 
   function atualizarStack() {
-    const fotosDOM = document.querySelectorAll("#midias .photo");
-    fotosDOM.forEach((foto, i) => {
-      foto.classList.remove("active", "behind-1", "behind-2");
-      if (i === 0) foto.classList.add("active");
-      if (i === 1) foto.classList.add("behind-1");
-      if (i === 2) foto.classList.add("behind-2");
+    const cards = document.querySelectorAll("#midias .photo");
+    cards.forEach((c, i) => {
+      c.classList.remove("active", "behind-1", "behind-2");
+      if (i === 0) c.classList.add("active");
+      if (i === 1) c.classList.add("behind-1");
+      if (i === 2) c.classList.add("behind-2");
     });
   }
 
   /* =====================
-     MÚSICA (UPLOAD REAL)
+     MÚSICA (OK)
   ===================== */
   musicBox.onclick = () => musicaInput.click();
 
@@ -169,12 +171,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const data = await res.json();
-    if (!data.url) return alert("Erro ao enviar música");
+    if (!data.url) return alert("Erro música");
 
     musicaUrl = data.url;
     audio.src = musicaUrl;
     audio.style.display = "block";
-
     musicBox.innerText = "🎶 Música pronta";
     removeMusic.style.display = "block";
   };
@@ -183,13 +184,12 @@ document.addEventListener("DOMContentLoaded", () => {
     musicaUrl = null;
     audio.src = "";
     audio.style.display = "none";
-    musicaInput.value = "";
     musicBox.innerText = "Adicionar música 🎵";
     removeMusic.style.display = "none";
   };
 
   /* =====================
-     CONTADOR
+     CONTADOR (CORRIGIDO)
   ===================== */
   dataInput.onchange = () => {
     limparErro(dataInput);
@@ -221,14 +221,14 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   /* =====================
-     COMPRA (PIX)
+     PIX (CORRIGIDO)
   ===================== */
   btnComprar.onclick = async () => {
 
-    if (!nomeInput.value.trim()) return marcarErro(nomeInput);
-    if (!msgInput.value.trim()) return marcarErro(msgInput);
-    if (!cartaInput.value.trim()) return marcarErro(cartaInput);
-    if (!dataInput.value) return marcarErro(dataInput);
+    if (!nomeInput.value.trim()) return erro(nomeInput);
+    if (!msgInput.value.trim()) return erro(msgInput);
+    if (!cartaInput.value.trim()) return erro(cartaInput);
+    if (!dataInput.value) return erro(dataInput);
 
     const payload = {
       nome: nomeInput.value.trim(),
@@ -260,16 +260,18 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   /* =====================
-     CORAÇÕES
+     CORAÇÕES (CORRIGIDO)
   ===================== */
-  for (let i = 0; i < 12; i++) {
-    const h = document.createElement("div");
-    h.className = "heart";
-    h.innerText = "❤️";
-    h.style.left = Math.random() * 100 + "%";
-    h.style.animationDuration = 6 + Math.random() * 6 + "s";
-    preview.appendChild(h);
-  }
+  setTimeout(() => {
+    for (let i = 0; i < 12; i++) {
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.innerText = "❤️";
+      h.style.left = Math.random() * 100 + "%";
+      h.style.animationDuration = 6 + Math.random() * 6 + "s";
+      preview.appendChild(h);
+    }
+  }, 300);
 
 });
 
