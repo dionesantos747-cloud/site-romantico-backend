@@ -1,323 +1,317 @@
-document.addEventListener("DOMContentLoaded", () => {
+/* ==========================
+   ESTADO GLOBAL
+========================== */
+const state = {
+  nome: "",
+  mensagem: "",
+  carta: "",
+  dataInicio: "",
+  fotos: [],
+  musica: null,
+  fundo: "azul"
+};
 
-  const isEditor = !!document.getElementById("editor");
-  if (!isEditor) return;
+const previewFrame = document.getElementById("previewFrame");
 
-  /* =====================
-     ELEMENTOS
-  ===================== */
-  const nomeInput  = document.getElementById("nomeInput");
-  const msgInput   = document.getElementById("msgInput");
-  const cartaInput = document.getElementById("cartaInput");
-  const dataInput  = document.getElementById("dataInput");
+/* ==========================
+   ELEMENTOS
+========================== */
+const nomeInput = document.getElementById("nomeInput");
+const msgInput = document.getElementById("msgInput");
+const cartaInput = document.getElementById("cartaInput");
+const dataInput = document.getElementById("dataInput");
+const fotoInput = document.getElementById("fotoInput");
+const musicaInput = document.getElementById("musicaInput");
+const miniaturas = document.getElementById("miniaturas");
+const comprarBtn = document.getElementById("comprarBtn");
+const removeMusicBtn = document.getElementById("removeMusic");
 
-  const nome     = document.getElementById("nome");
-  const mensagem = document.getElementById("mensagem");
-  const carta    = document.getElementById("carta");
-  const tempo    = document.getElementById("tempo");
-  const preview  = document.getElementById("preview");
+/* ==========================
+   PREVIEW BASE
+========================== */
+function renderPreview() {
+  const html = `
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:${bgColor()};
+  color:${state.fundo === "branco" ? "#000" : "#fff"};
+  overflow:hidden;
+}
+.container{
+  padding:16px;
+}
+h1{
+  text-align:center;
+  margin-bottom:12px;
+}
+.texto{
+  font-size:0.95em;
+  line-height:1.4;
+}
+.ler-mais{
+  color:#ffd400;
+  text-align:center;
+  margin-top:8px;
+  cursor:pointer;
+}
+.polaroid{
+  background:#fff;
+  color:#000;
+  padding:8px;
+  border-radius:6px;
+}
+.slider{
+  position:relative;
+  overflow:hidden;
+  margin:16px 0;
+}
+.slider-track{
+  display:flex;
+  transition:transform 0.6s ease;
+}
+.slide{
+  min-width:100%;
+  padding:6px;
+}
+.slide img{
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  border-radius:4px;
+}
+.dots{
+  text-align:center;
+  margin-top:6px;
+}
+.dot{
+  display:inline-block;
+  width:6px;
+  height:6px;
+  background:#ccc;
+  border-radius:50%;
+  margin:0 3px;
+}
+.dot.active{background:#ffd400}
+.carta-btn{
+  margin:16px auto;
+  background:#ffd400;
+  color:#000;
+  padding:10px;
+  border-radius:12px;
+  width:100%;
+  text-align:center;
+}
+.carta{
+  display:none;
+  margin-top:10px;
+  font-size:0.9em;
+}
+.tempo{
+  margin-top:14px;
+  text-align:center;
+  font-size:0.85em;
+}
+</style>
+</head>
+<body>
+<div class="container">
 
-  const btnCarta   = document.getElementById("btnCarta");
-  const btnComprar = document.getElementById("btnComprar");
-  const btnContinuarMensagem = document.getElementById("btnContinuarMensagem");
+<h1>${state.nome || "Título do site"}</h1>
 
-  const fotoInput = document.getElementById("fotoInput");
-  const midias    = document.getElementById("midias");
+<div class="texto">
+${textoLimitado(state.mensagem)}
+</div>
 
-  const musicBox    = document.getElementById("musicBox");
-  const musicaInput = document.getElementById("musicaInput");
-  const audio       = document.getElementById("audioPlayer");
-  const removeMusic = document.getElementById("removeMusic");
+${sliderHTML()}
 
-  /* =====================
-     ESTADO
-  ===================== */
-  let fotos = [null, null, null];
-  let musicaUrl = null;
-  let contadorInterval = null;
+<div class="carta-btn" onclick="toggleCarta()">Abrir carta 💌</div>
+<div class="carta" id="carta">${state.carta || ""}</div>
 
-  /* =====================
-     FIX: PREVIEW NO MOLDE
-  ===================== */
-  preview.style.minHeight = "auto";
+<div class="tempo">${tempoJuntos()}</div>
 
-  /* =====================
-     HELPERS
-  ===================== */
-  function erro(input) {
-    input.classList.add("error");
-    input.scrollIntoView({ behavior: "smooth", block: "center" });
-    input.focus();
-  }
+${state.musica ? `<audio src="${state.musica}" autoplay loop></audio>` : ""}
 
-  function limparErro(input) {
-    input.classList.remove("error");
-  }
+</div>
 
-  /* =====================
-     TEXTO AO VIVO
-  ===================== */
-  nomeInput.oninput = () => {
-    nome.innerText = nomeInput.value;
-    limparErro(nomeInput);
-  };
+<script>
+let index=0;
+const slides=document.querySelectorAll('.slide');
+const dots=document.querySelectorAll('.dot');
+setInterval(()=>{
+  if(slides.length<=1)return;
+  index=(index+1)%slides.length;
+  document.querySelector('.slider-track').style.transform=
+    'translateX(-'+index*100+'%)';
+  dots.forEach(d=>d.classList.remove('active'));
+  dots[index].classList.add('active');
+},4000);
 
-  msgInput.oninput = () => {
-    mensagem.innerText = msgInput.value;
-    limparErro(msgInput);
-    ajustarMensagem();
-  };
+function toggleCarta(){
+  const c=document.getElementById('carta');
+  c.style.display=c.style.display==='block'?'none':'block';
+}
+</script>
 
-  function ajustarMensagem() {
-    const limite = 500;
-    if (mensagem.innerText.length > limite) {
-      mensagem.classList.add("limitada");
-      mensagem.style.maxHeight = "180px";
-      mensagem.style.overflow = "hidden";
-      btnContinuarMensagem.style.display = "block";
-    } else {
-      mensagem.classList.remove("limitada");
-      mensagem.style.maxHeight = "";
-      mensagem.style.overflow = "";
-      btnContinuarMensagem.style.display = "none";
-    }
-  }
+</body>
+</html>
+`;
+  previewFrame.srcdoc = html;
+}
 
-  btnContinuarMensagem.onclick = () => {
-    mensagem.classList.remove("limitada");
-    mensagem.style.maxHeight = "";
-    mensagem.style.overflow = "";
-    btnContinuarMensagem.style.display = "none";
-  };
+/* ==========================
+   FUNÇÕES AUX
+========================== */
+function bgColor() {
+  return {
+    rosa: "linear-gradient(#ff8fc7,#ff5fa2)",
+    azul: "linear-gradient(#4da6ff,#1c3faa)",
+    vermelho: "linear-gradient(#ff6b6b,#b30000)",
+    preto: "#000",
+    branco: "#fff"
+  }[state.fundo];
+}
 
-  /* =====================
-     CARTA
-  ===================== */
-  cartaInput.oninput = () => {
-    carta.innerText = cartaInput.value;
-    limparErro(cartaInput);
-    btnCarta.style.display = cartaInput.value.trim() ? "block" : "none";
-  };
+function textoLimitado(txt) {
+  if (!txt) return "";
+  if (txt.length <= 500) return txt;
+  return txt.slice(0, 500) + "...";
+}
 
-  btnCarta.onclick = () => {
-    carta.style.display =
-      carta.style.display === "block" ? "none" : "block";
-  };
+function sliderHTML() {
+  if (!state.fotos.length) return "";
+  const slides = state.fotos.map(f => `
+    <div class="slide">
+      <div class="polaroid"><img src="${f}"></div>
+    </div>`).join("");
 
-  /* =====================
-     FUNDOS
-  ===================== */
-  document.querySelectorAll(".bg-card").forEach(card => {
-    card.onclick = () => {
-      document.querySelectorAll(".bg-card")
-        .forEach(c => c.classList.remove("selected"));
-      card.classList.add("selected");
-      preview.className = "preview " + card.dataset.bg;
-    };
+  const dots = state.fotos.length > 1
+    ? `<div class="dots">${state.fotos.map((_,i)=>
+        `<span class="dot ${i===0?'active':''}"></span>`).join("")}</div>`
+    : "";
+
+  return `
+  <div class="slider">
+    <div class="slider-track">${slides}</div>
+  </div>
+  ${dots}
+  `;
+}
+
+function tempoJuntos() {
+  if (!state.dataInicio) return "";
+  const ini = new Date(state.dataInicio);
+  const diff = Date.now() - ini.getTime();
+  const dias = Math.floor(diff / (1000*60*60*24));
+  return `⏳ ${dias} dias juntos`;
+}
+
+/* ==========================
+   EVENTOS
+========================== */
+[nomeInput, msgInput, cartaInput, dataInput].forEach(el => {
+  el.addEventListener("input", () => {
+    state[el.id.replace("Input","")] = el.value;
+    el.classList.remove("erro");
+    renderPreview();
   });
-
-  /* =====================
-     FOTOS (POLAROID + REMOVER)
-  ===================== */
-  document.querySelectorAll(".photo-slot").forEach(slot => {
-    slot.onclick = () => {
-      if (slot.classList.contains("filled")) return;
-      fotoInput.dataset.slot = slot.dataset.slot;
-      fotoInput.click();
-    };
-  });
-
-  fotoInput.onchange = async () => {
-    const file = fotoInput.files[0];
-    if (!file) return;
-
-    const slot = Number(fotoInput.dataset.slot);
-    const form = new FormData();
-    form.append("file", file);
-
-    try {
-      const res = await fetch("/upload-image", { method: "POST", body: form });
-      const data = await res.json();
-      if (!data.url) throw new Error();
-
-      fotos[slot] = data.url;
-
-      const slotEl = document.querySelector(`.photo-slot[data-slot="${slot}"]`);
-      slotEl.classList.add("filled");
-      slotEl.innerHTML = `
-        <img src="${data.url}" style="width:100%;height:100%;object-fit:cover;border-radius:14px">
-        <div class="photo-remove">✕</div>
-      `;
-
-      slotEl.querySelector(".photo-remove").onclick = (e) => {
-        e.stopPropagation();
-        fotos[slot] = null;
-        slotEl.classList.remove("filled");
-        slotEl.innerHTML = "+";
-        renderMidias();
-      };
-
-      renderMidias();
-      fotoInput.value = "";
-
-    } catch {
-      alert("Erro ao enviar imagem");
-    }
-  };
-
-  function renderMidias() {
-    midias.innerHTML = "";
-    fotos.filter(Boolean).forEach(url => {
-      const div = document.createElement("div");
-      div.className = "photo";
-      div.innerHTML = `<img src="${url}">`;
-      midias.appendChild(div);
-    });
-    atualizarStack();
-  }
-
-  function atualizarStack() {
-    const cards = document.querySelectorAll("#midias .photo");
-    cards.forEach((c, i) => {
-      c.classList.remove("active");
-      if (i === 0) c.classList.add("active");
-    });
-  }
-
-  /* =====================
-     MÚSICA (ROBUSTA)
-  ===================== */
-  musicBox.onclick = () => musicaInput.click();
-
-  musicaInput.onchange = async () => {
-    const file = musicaInput.files[0];
-    if (!file) return;
-
-    if (file.size > 10 * 1024 * 1024) {
-      alert("A música deve ter até 1 minuto.");
-      musicaInput.value = "";
-      return;
-    }
-
-    const form = new FormData();
-    form.append("file", file);
-
-    musicBox.innerText = "⏳ Enviando música...";
-    musicBox.classList.add("disabled");
-
-    try {
-      const res = await fetch("/upload-music", { method: "POST", body: form });
-      const data = await res.json();
-      if (!data.url) throw new Error();
-
-      musicaUrl = data.url;
-      audio.src = musicaUrl;
-      audio.style.display = "block";
-      musicBox.innerText = "🎶 Música pronta";
-      removeMusic.style.display = "block";
-
-    } catch {
-      alert("Erro ao enviar música");
-      musicBox.innerText = "Adicionar música 🎵";
-      musicaUrl = null;
-    }
-
-    musicBox.classList.remove("disabled");
-  };
-
-  removeMusic.onclick = () => {
-    musicaUrl = null;
-    audio.src = "";
-    audio.style.display = "none";
-    musicBox.innerText = "Adicionar música 🎵";
-    removeMusic.style.display = "none";
-  };
-
-  /* =====================
-     CONTADOR
-  ===================== */
-  dataInput.onchange = () => {
-    limparErro(dataInput);
-    if (contadorInterval) clearInterval(contadorInterval);
-
-    contadorInterval = setInterval(() => {
-      const inicio = new Date(dataInput.value);
-      const agora = new Date();
-      const diff = agora - inicio;
-      if (diff < 0) return;
-
-      const s = Math.floor(diff / 1000) % 60;
-      const m = Math.floor(diff / 60000) % 60;
-      const h = Math.floor(diff / 3600000) % 24;
-      const d = Math.floor(diff / 86400000) % 30;
-      const mo = Math.floor(diff / 2592000000) % 12;
-      const a = Math.floor(diff / 31536000000);
-
-      tempo.innerHTML = `
-        <span class="titulo">Já estamos juntos há</span>
-        <div class="contador">
-          <div class="item">${a} anos</div>
-          <div class="item">${mo} meses</div>
-          <div class="item">${d} dias</div>
-          <div class="item">${h}h ${m}m ${s}s</div>
-        </div>
-      `;
-    }, 1000);
-  };
-
-  /* =====================
-     PIX
-  ===================== */
-  btnComprar.onclick = async () => {
-    if (!nomeInput.value.trim()) return erro(nomeInput);
-    if (!msgInput.value.trim()) return erro(msgInput);
-    if (!cartaInput.value.trim()) return erro(cartaInput);
-    if (!dataInput.value) return erro(dataInput);
-
-    const payload = {
-      nome: nomeInput.value.trim(),
-      mensagem: msgInput.value.trim(),
-      carta: cartaInput.value.trim(),
-      dataInicio: dataInput.value,
-      fotos: fotos.filter(Boolean),
-      musica: musicaUrl,
-      fundo: document.querySelector(".bg-card.selected")?.dataset.bg || "azul"
-    };
-
-    try {
-      const res = await fetch("/create-payment", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-
-      const data = await res.json();
-      if (!data.payment_id) throw new Error();
-
-      sessionStorage.setItem("pix_qr", data.qr_base64);
-      sessionStorage.setItem("pix_copia", data.copia_cola);
-
-      window.location.href = `/aguardando.html?payment_id=${data.payment_id}`;
-
-    } catch {
-      alert("Erro ao gerar pagamento");
-    }
-  };
-
-  /* =====================
-     CORAÇÕES
-  ===================== */
-  preview.querySelectorAll(".heart").forEach(h => h.remove());
-  for (let i = 0; i < 12; i++) {
-    const h = document.createElement("div");
-    h.className = "heart";
-    h.innerText = "❤️";
-    h.style.left = Math.random() * 100 + "%";
-    h.style.animationDuration = 6 + Math.random() * 6 + "s";
-    preview.appendChild(h);
-  }
-
 });
+
+/* ==========================
+   FUNDO
+========================== */
+document.querySelectorAll(".cores button").forEach(btn => {
+  btn.onclick = () => {
+    state.fundo = btn.dataset.cor;
+    renderPreview();
+  };
+});
+
+/* ==========================
+   UPLOAD FOTO
+========================== */
+fotoInput.addEventListener("change", async e => {
+  const files = [...e.target.files];
+  for (let file of files) {
+    if (state.fotos.length >= 10) break;
+    const fd = new FormData();
+    fd.append("file", file);
+    const res = await fetch("/upload-image", { method:"POST", body:fd });
+    const json = await res.json();
+    state.fotos.push(json.url);
+  }
+  renderMiniaturas();
+  renderPreview();
+});
+
+function renderMiniaturas() {
+  miniaturas.innerHTML = "";
+  state.fotos.forEach((f,i)=>{
+    const d=document.createElement("div");
+    d.className="thumb";
+    d.innerHTML=`<img src="${f}"><button>x</button>`;
+    d.querySelector("button").onclick=()=>{
+      state.fotos.splice(i,1);
+      renderMiniaturas();
+      renderPreview();
+    };
+    miniaturas.appendChild(d);
+  });
+}
+
+/* ==========================
+   MÚSICA
+========================== */
+musicaInput.addEventListener("change", async e => {
+  const fd = new FormData();
+  fd.append("file", e.target.files[0]);
+  const res = await fetch("/upload-music",{method:"POST",body:fd});
+  const json = await res.json();
+  state.musica = json.url;
+  renderPreview();
+});
+
+removeMusicBtn.onclick = () => {
+  state.musica = null;
+  musicaInput.value = "";
+  renderPreview();
+};
+
+/* ==========================
+   COMPRA
+========================== */
+comprarBtn.onclick = async () => {
+  let erro=false;
+  [nomeInput,msgInput,cartaInput,dataInput].forEach(el=>{
+    if(!el.value){
+      el.classList.add("erro");
+      el.scrollIntoView({behavior:"smooth"});
+      erro=true;
+    }
+  });
+  if(erro) return;
+
+  const res = await fetch("/create-payment",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify(state)
+  });
+  const json = await res.json();
+  if(json.qr_base64){
+    sessionStorage.setItem("pix", JSON.stringify(json));
+    location.href="/aguardando.html";
+  }
+};
+
+/* INIT */
+renderPreview();
+
 
 
 
