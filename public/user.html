@@ -1,228 +1,40 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Nosso site 💖</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="color-scheme" content="only light">
+  <meta charset="UTF-8">
+  <title>Nosso site 💖</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/style.css">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="color-scheme" content="only light">
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body class="final">
 
-<div class="preview azul" id="preview">
+  <div class="preview azul" id="preview">
 
-  <audio id="audioPlayer" controls style="display:none;"></audio>
+    <audio id="audioPlayer" controls style="display:none;"></audio>
 
-  <div class="nome" id="nome"></div>
-  <div class="mensagem" id="mensagem"></div>
+    <div class="nome" id="nome"></div>
+    <div class="mensagem" id="mensagem"></div>
 
-  <div id="midias"></div>
-  <div class="dots" id="dots"></div>
+    <div id="midias"></div>
+    <div class="dots" id="dots"></div>
 
-  <div id="tempo"></div>
+    <div id="tempo"></div>
 
-  <button id="btnCarta" style="display:none">💌 Abrir carta</button>
-  <div class="carta" id="carta"></div>
+    <button id="btnCarta" style="display:none">💌 Abrir carta</button>
+    <div class="carta" id="carta"></div>
 
-</div>
+  </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-
-  /* =====================
-     PEGAR ID DO USUÁRIO
-  ===================== */
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");
-
-  if (!id) {
-    document.body.innerHTML = `
-      <div style="text-align:center;color:white;padding:40px">
-        <h1>ID inválido</h1>
-      </div>`;
-    return;
-  }
-
-  /* =====================
-     BUSCAR DADOS NO BACKEND
-  ===================== */
-  fetch(`/user-data?id=${id}`)
-    .then(res => res.json())
-    .then(data => {
-
-      if (!data || data.status !== "approved") {
-        document.body.innerHTML = `
-          <div style="text-align:center;color:white;padding:40px">
-            <h1>💔 Site indisponível</h1>
-            <p>Este site ainda não foi ativado.</p>
-          </div>`;
-        return;
-      }
-
-      /* =====================
-         ELEMENTOS
-      ===================== */
-      const nomeEl   = document.getElementById("nome");
-      const msgEl    = document.getElementById("mensagem");
-      const cartaEl  = document.getElementById("carta");
-      const midiasEl = document.getElementById("midias");
-      const audio    = document.getElementById("audioPlayer");
-      const tempoEl  = document.getElementById("tempo");
-      const preview  = document.getElementById("preview");
-      const btnCarta = document.getElementById("btnCarta");
-      const dots     = document.getElementById("dots");
-
-      /* =====================
-         TEXTO
-      ===================== */
-      nomeEl.innerText = data.nome || "";
-      msgEl.innerText  = data.mensagem || "";
-      cartaEl.innerText = data.carta || "";
-
-      if (data.carta && data.carta.trim()) {
-        btnCarta.style.display = "block";
-      }
-
-      /* =====================
-         FUNDO
-      ===================== */
-      if (data.fundo) {
-        preview.className = "preview " + data.fundo;
-      }
-
-      /* =====================
-         CORAÇÕES
-      ===================== */
-      function criarCoracoes() {
-        document.querySelectorAll(".heart").forEach(h => h.remove());
-        for (let i = 0; i < 12; i++) {
-          const h = document.createElement("div");
-          h.className = "heart";
-          h.innerText = "❤️";
-          h.style.left = Math.random() * 100 + "%";
-          h.style.animationDuration = 6 + Math.random() * 6 + "s";
-          preview.appendChild(h);
-        }
-      }
-      criarCoracoes();
-
-      /* =====================
-         FOTOS (STACK)
-      ===================== */
-      if (Array.isArray(data.fotos) && data.fotos.filter(Boolean).length) {
-
-        data.fotos.forEach(url => {
-          if (!url) return;
-          const div = document.createElement("div");
-          div.className = "photo";
-          div.innerHTML = `<img src="${url}">`;
-          midiasEl.appendChild(div);
-        });
-
-        function atualizarStack() {
-          const fotos = document.querySelectorAll("#midias .photo");
-          fotos.forEach((foto, i) => {
-            foto.classList.remove("active", "behind-1", "behind-2");
-            if (i === 0) foto.classList.add("active");
-            if (i === 1) foto.classList.add("behind-1");
-            if (i === 2) foto.classList.add("behind-2");
-          });
-        }
-
-        function criarDots() {
-          dots.innerHTML = "";
-          document.querySelectorAll("#midias .photo").forEach((_, i) => {
-            const d = document.createElement("div");
-            d.className = "dot";
-            if (i === 0) d.classList.add("active");
-            dots.appendChild(d);
-          });
-        }
-
-        function iniciarAutoSwipe() {
-          setInterval(() => {
-            const ativa = document.querySelector("#midias .photo.active");
-            if (!ativa) return;
-
-            ativa.style.transition = "transform 0.4s ease";
-            ativa.style.transform = "translateX(-120vw)";
-
-            setTimeout(() => {
-              midiasEl.appendChild(ativa);
-              ativa.style.transition = "none";
-              ativa.style.transform = "translateX(-50%)";
-              atualizarStack();
-            }, 420);
-          }, 3500);
-        }
-
-        criarDots();
-        atualizarStack();
-        iniciarAutoSwipe();
-      }
-
-      /* =====================
-         MÚSICA
-      ===================== */
-      if (data.musica) {
-        audio.src = data.musica;
-        audio.style.display = "block";
-        audio.volume = 0.8;
-      }
-
-      /* =====================
-         CONTADOR
-      ===================== */
-      if (data.dataInicio) {
-        setInterval(() => {
-          const inicio = new Date(data.dataInicio);
-          const agora = new Date();
-          const diff = agora - inicio;
-          if (diff < 0) return;
-
-          const s = Math.floor(diff / 1000) % 60;
-          const m = Math.floor(diff / 60000) % 60;
-          const h = Math.floor(diff / 3600000) % 24;
-          const d = Math.floor(diff / 86400000) % 30;
-          const mo = Math.floor(diff / 2592000000) % 12;
-          const a = Math.floor(diff / 31536000000);
-
-          tempoEl.innerHTML = `
-            <span class="titulo">Já estamos juntos há</span>
-            <div class="contador">
-              <div class="item">${a} anos</div>
-              <div class="item">${mo} meses</div>
-              <div class="item">${d} dias</div>
-              <div class="item">${h}h ${m}m ${s}s</div>
-            </div>
-          `;
-        }, 1000);
-      }
-
-      /* =====================
-         CARTA
-      ===================== */
-      btnCarta.onclick = () => {
-        const aberto = cartaEl.style.display === "block";
-        cartaEl.style.display = aberto ? "none" : "block";
-        btnCarta.innerText = aberto
-          ? "💌 Abrir carta"
-          : "❌ Fechar carta";
-      };
-
-    })
-    .catch(() => {
-      document.body.innerHTML = `
-        <div style="text-align:center;color:white;padding:40px">
-          <h1>Erro ao carregar</h1>
-        </div>`;
-    });
-});
+  <!-- ✅ JS DO USUÁRIO (APENAS UM) -->
   <script src="/js/user.js"></script>
 
 </body>
 </html>
+
 
