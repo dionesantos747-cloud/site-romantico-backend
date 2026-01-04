@@ -1,216 +1,169 @@
-document.addEventListener("DOMContentLoaded", () => {
+/* ==========================
+   GET USER ID
+========================== */
+const params = new URLSearchParams(window.location.search);
+const userId = params.get("id");
 
-  /* =====================
-     PEGAR ID DO USUÁRIO
-  ===================== */
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");
+/* ==========================
+   ELEMENTOS
+========================== */
+const nomeEl = document.getElementById("nome");
+const msgEl = document.getElementById("mensagem");
+const cartaEl = document.getElementById("carta");
+const tempoEl = document.getElementById("tempo");
+const sliderArea = document.getElementById("sliderArea");
+const musicaEl = document.getElementById("musica");
+const lerBtn = document.getElementById("lerBtn");
+const hearts = document.getElementById("hearts");
 
-  if (!id) {
-    document.body.innerHTML = `
-      <div style="text-align:center;color:white;padding:40px">
-        <h1>ID inválido</h1>
-      </div>`;
+/* ==========================
+   STATE
+========================== */
+let textoCompleto = "";
+let textoExpandido = false;
+
+/* ==========================
+   FETCH USER DATA
+========================== */
+async function carregar() {
+  const res = await fetch(`/user-data?id=${userId}`);
+  const data = await res.json();
+
+  if (data.status === "pending") {
+    document.body.innerHTML = "Pagamento em processamento...";
     return;
   }
 
-  /* =====================
-     BUSCAR DADOS NO BACKEND
-  ===================== */
-  fetch(`/user-data?id=${id}`)
-    .then(res => res.json())
-    .then(data => {
+  aplicarFundo(data.fundo);
 
-      if (!data || data.status !== "approved") {
-        document.body.innerHTML = `
-          <div style="text-align:center;color:white;padding:40px">
-            <h1>💔 Site indisponível</h1>
-          </div>`;
-        return;
-      }
+  nomeEl.innerText = data.nome;
+  textoCompleto = data.mensagem;
 
-      /* =====================
-         ELEMENTOS
-      ===================== */
-      const nomeEl = document.getElementById("nome");
-      const msgEl = document.getElementById("mensagem");
-      const cartaEl = document.getElementById("carta");
-      const midiasEl = document.getElementById("midias");
-      const audio = document.getElementById("audioPlayer");
-      const tempoEl = document.getElementById("tempo");
-      const preview = document.getElementById("preview");
-      const btnCarta = document.getElementById("btnCarta");
-      const dotsContainer = document.getElementById("dots");
+  if (textoCompleto.length > 500) {
+    msgEl.innerText = textoCompleto.slice(0, 500) + "...";
+    lerBtn.style.display = "block";
+    lerBtn.innerText = "Continuar lendo";
+  } else {
+    msgEl.innerText = textoCompleto;
+  }
 
-      /* =====================
-         TEXTO
-      ===================== */
-      nomeEl.innerText = data.nome || "";
-      msgEl.innerText = data.mensagem || "";
-      const limite = 500;
+  cartaEl.innerText = data.carta;
 
-if (msgEl.innerText.length > limite) {
-  msgEl.classList.add("limitada");
-  btnCarta.insertAdjacentHTML(
-    "beforebegin",
-    `<button id="btnContinuarMensagem" class="ler-mais">
-      Continuar lendo ⬇️
-    </button>`
-  );
+  criarSlider(data.fotos || []);
 
-  document
-    .getElementById("btnContinuarMensagem")
-    .onclick = () => {
-      msgEl.classList.remove("limitada");
-      document.getElementById("btnContinuarMensagem").remove();
-    };
+  if (data.musica) {
+    musicaEl.src = data.musica;
+    musicaEl.volume = 0.6;
+    musicaEl.play().catch(()=>{});
+  }
+
+  iniciarTempo(data.dataInicio);
+  criarCorações();
 }
 
-      cartaEl.innerText = data.carta || "";
+/* ==========================
+   FUNDO
+========================== */
+function aplicarFundo(fundo) {
+  const cores = {
+    rosa: "linear-gradient(#ff8fc7,#ff5fa2)",
+    azul: "linear-gradient(#4da6ff,#1c3faa)",
+    vermelho: "linear-gradient(#ff6b6b,#b30000)",
+    preto: "#000",
+    branco: "#fff"
+  };
+  document.body.style.background = cores[fundo] || "#000";
+  if (fundo === "branco") document.body.style.color = "#000";
+}
 
-      if (data.carta && data.carta.trim()) {
-        btnCarta.style.display = "block";
-      } else {
-        btnCarta.style.display = "none";
-      }
-cartaEl.style.display = "none";
-btnCarta.innerText = "💌 Abrir carta";
+/* ==========================
+   LER MAIS
+========================== */
+lerBtn.onclick = () => {
+  textoExpandido = !textoExpandido;
+  msgEl.innerText = textoExpandido ? textoCompleto : textoCompleto.slice(0, 500) + "...";
+  lerBtn.innerText = textoExpandido ? "Ler menos" : "Continuar lendo";
+};
 
-      /* =====================
-         FUNDO
-      ===================== */
-      if (data.fundo) {
-        preview.className = "preview " + data.fundo;
-      }
+/* ==========================
+   SLIDER
+========================== */
+function criarSlider(fotos) {
+  if (!fotos.length) return;
 
-      /* =====================
-         CORAÇÕES
-      ===================== */
-      function criarCoracoes() {
-        document.querySelectorAll(".heart").forEach(h => h.remove());
-        for (let i = 0; i < 12; i++) {
-          const h = document.createElement("div");
-          h.className = "heart";
-          h.innerText = "❤️";
-          h.style.left = Math.random() * 100 + "%";
-          h.style.animationDuration = 6 + Math.random() * 6 + "s";
-          preview.appendChild(h);
-        }
-      }
-      criarCoracoes();
+  let html = `
+  <div class="slider">
+    <div class="slider-track">
+      ${fotos.map(f => `
+        <div class="slide">
+          <div class="polaroid">
+            <img src="${f}">
+          </div>
+        </div>
+      `).join("")}
+    </div>
+  </div>
+  `;
 
-      /* =====================
-         FOTOS (STACK + SWIPE)
-      ===================== */
-      let autoSwipeInterval = null;
+  if (fotos.length > 1) {
+    html += `
+    <div class="dots">
+      ${fotos.map((_,i)=>`<span class="dot ${i===0?'active':''}"></span>`).join("")}
+    </div>`;
+  }
 
-      if (Array.isArray(data.fotos) && data.fotos.filter(Boolean).length) {
+  sliderArea.innerHTML = html;
 
-        data.fotos.forEach(url => {
-          if (!url) return;
-          const div = document.createElement("div");
-          div.className = "photo";
-          div.innerHTML = `<img src="${url}">`;
-          midiasEl.appendChild(div);
-        });
+  let index = 0;
+  const track = sliderArea.querySelector(".slider-track");
+  const dots = sliderArea.querySelectorAll(".dot");
 
-        function criarDots() {
-          dotsContainer.innerHTML = "";
-          document.querySelectorAll("#midias .photo").forEach((_, i) => {
-            const dot = document.createElement("div");
-            dot.className = "dot";
-            if (i === 0) dot.classList.add("active");
-            dotsContainer.appendChild(dot);
-          });
-        }
+  setInterval(() => {
+    if (fotos.length <= 1) return;
+    index = (index + 1) % fotos.length;
+    track.style.transform = `translateX(-${index * 100}%)`;
+    dots.forEach(d => d.classList.remove("active"));
+    dots[index].classList.add("active");
+  }, 4200);
+}
 
-        function atualizarStack() {
-          const fotos = document.querySelectorAll("#midias .photo");
-          fotos.forEach((foto, i) => {
-            foto.classList.remove("active", "behind-1", "behind-2");
-            if (i === 0) foto.classList.add("active");
-            if (i === 1) foto.classList.add("behind-1");
-            if (i === 2) foto.classList.add("behind-2");
-          });
-        }
+/* ==========================
+   CARTA
+========================== */
+function toggleCarta() {
+  cartaEl.style.display =
+    cartaEl.style.display === "block" ? "none" : "block";
+}
 
-        function iniciarAutoSwipe() {
-          if (autoSwipeInterval) clearInterval(autoSwipeInterval);
+/* ==========================
+   TEMPO JUNTOS
+========================== */
+function iniciarTempo(dataInicio) {
+  function atualizar() {
+    const ini = new Date(dataInicio);
+    const diff = Date.now() - ini.getTime();
+    const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
+    tempoEl.innerText = `⏳ ${dias} dias juntos`;
+  }
+  atualizar();
+  setInterval(atualizar, 60000);
+}
 
-          autoSwipeInterval = setInterval(() => {
-            const ativa = document.querySelector("#midias .photo.active");
-            if (!ativa) return;
+/* ==========================
+   CORAÇÕES
+========================== */
+function criarCorações() {
+  for (let i = 0; i < 12; i++) {
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.innerText = "❤";
+    h.style.left = Math.random() * 100 + "%";
+    h.style.animationDuration = 12 + Math.random() * 10 + "s";
+    h.style.fontSize = 12 + Math.random() * 14 + "px";
+    hearts.appendChild(h);
+  }
+}
 
-            ativa.style.transition = "transform 0.4s ease";
-            ativa.style.transform = "translateX(-120vw)";
-
-            setTimeout(() => {
-              midiasEl.appendChild(ativa);
-              ativa.style.transition = "none";
-              ativa.style.transform = "translateX(-50%)";
-              atualizarStack();
-            }, 420);
-          }, 3500);
-        }
-
-        criarDots();
-        atualizarStack();
-        iniciarAutoSwipe();
-      }
-
-      /* =====================
-         MÚSICA
-      ===================== */
-      if (data.musica) {
-        audio.src = data.musica;
-        audio.style.display = "block";
-        audio.volume = 0.8;
-      }
-
-      /* =====================
-         CONTADOR
-      ===================== */
-      let contadorInterval = null;
-
-      if (data.dataInicio) {
-        if (contadorInterval) clearInterval(contadorInterval);
-
-        contadorInterval = setInterval(() => {
-          const inicio = new Date(data.dataInicio);
-          const agora = new Date();
-          const diff = agora - inicio;
-          if (diff < 0) return;
-
-          const s = Math.floor(diff / 1000) % 60;
-          const m = Math.floor(diff / 60000) % 60;
-          const h = Math.floor(diff / 3600000) % 24;
-          const d = Math.floor(diff / 86400000) % 30;
-          const mo = Math.floor(diff / 2592000000) % 12;
-          const a = Math.floor(diff / 31536000000);
-
-          tempoEl.innerHTML = `
-            <span class="titulo">Já estamos juntos há</span>
-            <div class="contador">
-              <div class="item">${a} anos</div>
-              <div class="item">${mo} meses</div>
-              <div class="item">${d} dias</div>
-              <div class="item">${h}h ${m}m ${s}s</div>
-            </div>
-          `;
-        }, 1000);
-      }
-
-      /* =====================
-         CARTA
-      ===================== */
-      btnCarta.onclick = () => {
-        cartaEl.style.display =
-          cartaEl.style.display === "block" ? "none" : "block";
-        btnCarta.innerText =
-          cartaEl.style.display === "block"
-            ? "❌ Fechar carta"
-            : "💌 Abrir carta";
-      };
-    });
-});
+/* INIT */
+carregar();
 
