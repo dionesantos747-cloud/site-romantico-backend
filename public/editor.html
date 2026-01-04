@@ -1,126 +1,80 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Site Romântico</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <meta name="color-scheme" content="only light">
+<meta charset="UTF-8">
+<title>Criar Site Romântico 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
 
-<!-- =====================
-     EDITOR
-===================== -->
-<div class="editor" id="editor">
+<div class="editor-container">
 
-  <label>Nome</label>
-  <input id="nomeInput" placeholder="Ex: Maria ❤️">
-  <div class="error-text">Campo não preenchido</div>
+  <!-- ================= EDITOR ================= -->
+  <div class="editor-panel">
 
-  <label>Mensagem principal</label>
-  <textarea id="msgInput" placeholder="Escreva algo especial..."></textarea>
-  <div class="error-text">Campo não preenchido</div>
+    <h1>💖 Criar Site Romântico</h1>
+    <p class="editor-sub">
+      Edite tudo abaixo e veja em tempo real como ficará no celular 💕
+    </p>
 
-  <label>Carta secreta</label>
-  <textarea id="cartaInput" placeholder="Mensagem só para quem ama 💌"></textarea>
-  <div class="error-text">Campo não preenchido</div>
+    <!-- TÍTULO -->
+    <label>Título do site *</label>
+    <input id="nomeInput" placeholder="Ex: Nossa história começou aqui 💖">
 
-  <label>Data de início do namoro</label>
-  <input type="date" id="dataInput">
-  <div class="error-text">Campo não preenchido</div>
+    <!-- TEXTO PRINCIPAL -->
+    <label>Texto principal *</label>
+    <textarea id="msgInput" maxlength="1200"
+      placeholder="Conte sua história, momentos especiais, sentimentos..."></textarea>
 
-  <label>Fotos</label>
-  <div class="photo-grid">
-    <div class="photo-slot" data-slot="0">+</div>
-    <div class="photo-slot" data-slot="1">+</div>
-    <div class="photo-slot" data-slot="2">+</div>
-  </div>
-  <input type="file" id="fotoInput" accept="image/*" hidden>
+    <!-- CARTA -->
+    <label>Carta secreta *</label>
+    <textarea id="cartaInput"
+      placeholder="Escreva uma carta especial que será aberta no site 💌"></textarea>
 
-  <label>Música</label>
-  <div class="music-box" id="musicBox">Adicionar música 🎵</div>
-  <div class="remove-music" id="removeMusic">Remover música</div>
-  <input type="file" id="musicaInput" accept="audio/*" hidden>
+    <!-- DATA -->
+    <label>Data de início do relacionamento *</label>
+    <input type="date" id="dataInput">
 
-  <label>Fundo</label>
-  <div class="bg-options">
-    <div class="bg-card azul selected" data-bg="azul"></div>
-    <div class="bg-card roxo" data-bg="roxo"></div>
-    <div class="bg-card rosa" data-bg="rosa"></div>
-    <div class="bg-card preto" data-bg="preto"></div>
-  </div>
+    <!-- FOTOS -->
+    <label>Fotos (máx. 10)</label>
+    <input type="file" id="fotoInput" accept="image/*" multiple>
 
-</div>
+    <div id="miniaturas" class="miniaturas"></div>
 
-<!-- =====================
-     TEXTO EXPLICATIVO
-===================== -->
-<div style="
-  text-align:center;
-  margin: 30px 0 10px;
-  font-family: 'Playfair Display', serif;
-  font-size: 1.4em;
-  color: #ffd400;
-  text-shadow: 1px 1px 3px #000;
-">
-  Veja como vai ficar ⬇️
-</div>
+    <!-- MÚSICA -->
+    <label>Música (opcional)</label>
+    <input type="file" id="musicaInput" accept="audio/*">
+    <button id="removeMusic" class="btn-secondary">Remover música</button>
 
-<!-- =====================
-     PREVIEW (CELULAR)
-===================== -->
-<div class="device-preview">
-  <div class="device-top">
-    <span class="chrome-url">memoryit.com/Eu-e-ela</span>
+    <!-- FUNDO -->
+    <label>Cor de fundo</label>
+    <div class="cores">
+      <button data-cor="rosa"></button>
+      <button data-cor="azul"></button>
+      <button data-cor="vermelho"></button>
+      <button data-cor="preto"></button>
+      <button data-cor="branco"></button>
+    </div>
+
+    <!-- BOTÃO COMPRA -->
+    <button id="comprarBtn" class="btn-comprar pulsar">
+      Gerar QR Code por R$ 9,99
+    </button>
+
   </div>
 
-  <div class="device-screen">
-    <div class="preview azul" id="preview">
-
-      <audio id="audioPlayer" controls style="display:none;"></audio>
-
-      <div class="nome" id="nome"></div>
-
-      <div class="mensagem" id="mensagem"></div>
-      <button id="btnContinuarMensagem" class="ler-mais" style="display:none">
-        Continuar lendo ⬇️
-      </button>
-
-      <div id="midias"></div>
-      <div class="dots" id="dots"></div>
-
-      <div id="tempo"></div>
-
-      <button id="btnCarta" style="display:none">💌 Abrir carta</button>
-      <div class="carta" id="carta"></div>
-
+  <!-- ================= PREVIEW ================= -->
+  <div class="preview-panel">
+    <div class="phone-mockup">
+      <iframe id="previewFrame"></iframe>
     </div>
   </div>
+
 </div>
 
-<!-- =====================
-     BOTÃO DE COMPRA
-===================== -->
-<div style="
-  max-width: 420px;
-  margin: 30px auto 80px;
-  padding: 0 20px;
-">
-  <button class="pay" id="btnComprar">
-    Gerar QR Code por R$9,99
-  </button>
-</div>
-
-<!-- =====================
-     SCRIPT PRINCIPAL
-===================== -->
-<script src="/js/editor.js"></script>
-
-
+<script src="js/editor.js"></script>
 </body>
 </html>
 
