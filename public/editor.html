@@ -1,41 +1,64 @@
-<!DOCTYPE html>  <html lang="pt-BR">  
-<head>  
-<meta charset="UTF-8">  
-<title>Site Romântico</title>  
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"> 
-<meta name="color-scheme" content="only light">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet"> 
-<link rel="stylesheet" href="/css/style.css">  </head>  <body>  <div class="editor" id="editor">  <label>Nome</label>
-<input id="nomeInput" placeholder="Ex: Maria ❤️">
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Site Romântico</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="color-scheme" content="only light">
 
-  <div class="error-text">Campo não preenchido</div>  <label>Mensagem principal</label>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
 
-  <textarea id="msgInput" placeholder="Escreva algo especial..."></textarea>    <div class="error-text">Campo não preenchido</div>  <label>Carta secreta</label>
+<body>
 
-  <textarea id="cartaInput" placeholder="Mensagem só para quem ama 💌"></textarea>    <div class="error-text">Campo não preenchido</div>  <label>Data de início do namoro</label>
-<input type="date" id="dataInput">
+<!-- =====================
+     EDITOR
+===================== -->
+<div class="editor" id="editor">
 
-  <div class="error-text">Campo não preenchido</div>  <label>Fotos</label>
+  <label>Nome</label>
+  <input id="nomeInput" placeholder="Ex: Maria ❤️">
+  <div class="error-text">Campo não preenchido</div>
 
-  <div class="photo-grid">  
-    <div class="photo-slot" data-slot="0">+</div>  
-    <div class="photo-slot" data-slot="1">+</div>  
-    <div class="photo-slot" data-slot="2">+</div>  
-  </div>  
-  <input type="file" id="fotoInput" accept="image/*" hidden>  <label>Música</label>
+  <label>Mensagem principal</label>
+  <textarea id="msgInput" placeholder="Escreva algo especial..."></textarea>
+  <div class="error-text">Campo não preenchido</div>
 
-  <div class="music-box" id="musicBox">Adicionar música 🎵</div>  
-  <div class="remove-music" id="removeMusic">Remover música</div>  
-  <input type="file" id="musicaInput" accept="audio/*" hidden>  <label>Fundo</label>
+  <label>Carta secreta</label>
+  <textarea id="cartaInput" placeholder="Mensagem só para quem ama 💌"></textarea>
+  <div class="error-text">Campo não preenchido</div>
 
-  <div class="bg-options">  
-    <div class="bg-card azul selected" data-bg="azul"></div>  
-    <div class="bg-card roxo" data-bg="roxo"></div>  
-    <div class="bg-card rosa" data-bg="rosa"></div>  
-    <div class="bg-card preto" data-bg="preto"></div>  
-  </div>  
-</div> 
-  <!-- 👇 TEXTO EXPLICATIVO DO PREVIEW -->
+  <label>Data de início do namoro</label>
+  <input type="date" id="dataInput">
+  <div class="error-text">Campo não preenchido</div>
+
+  <label>Fotos</label>
+  <div class="photo-grid">
+    <div class="photo-slot" data-slot="0">+</div>
+    <div class="photo-slot" data-slot="1">+</div>
+    <div class="photo-slot" data-slot="2">+</div>
+  </div>
+  <input type="file" id="fotoInput" accept="image/*" hidden>
+
+  <label>Música</label>
+  <div class="music-box" id="musicBox">Adicionar música 🎵</div>
+  <div class="remove-music" id="removeMusic">Remover música</div>
+  <input type="file" id="musicaInput" accept="audio/*" hidden>
+
+  <label>Fundo</label>
+  <div class="bg-options">
+    <div class="bg-card azul selected" data-bg="azul"></div>
+    <div class="bg-card roxo" data-bg="roxo"></div>
+    <div class="bg-card rosa" data-bg="rosa"></div>
+    <div class="bg-card preto" data-bg="preto"></div>
+  </div>
+
+</div>
+
+<!-- =====================
+     TEXTO EXPLICATIVO
+===================== -->
 <div style="
   text-align:center;
   margin: 30px 0 10px;
@@ -47,42 +70,42 @@
   Veja como vai ficar ⬇️
 </div>
 
-  <div class="device-preview">
+<!-- =====================
+     PREVIEW (CELULAR)
+===================== -->
+<div class="device-preview">
   <div class="device-top">
     <span class="chrome-url">memoryit.com/Eu-e-ela</span>
   </div>
 
   <div class="device-screen">
-<!-- 🔒 MOLDURA DE CELULAR -->
-
-
-    <!-- 🔥 TUDO DO SITE DO USUÁRIO FICA AQUI DENTRO -->
     <div class="preview azul" id="preview">
 
       <audio id="audioPlayer" controls style="display:none;"></audio>
 
       <div class="nome" id="nome"></div>
-      <div class="mensagem" id="mensagem"></div>
-    <button id="btnContinuarMensagem" class="ler-mais" style="display:none">
-  Continuar lendo ⬇️
-</button>
 
+      <div class="mensagem" id="mensagem"></div>
+      <button id="btnContinuarMensagem" class="ler-mais" style="display:none">
+        Continuar lendo ⬇️
+      </button>
 
       <div id="midias"></div>
       <div class="dots" id="dots"></div>
 
       <div id="tempo"></div>
 
-     <button id="btnCarta" style="display:none">💌 Abrir carta</button>
-
+      <button id="btnCarta" style="display:none">💌 Abrir carta</button>
       <div class="carta" id="carta"></div>
 
     </div>
-    <!-- 🔚 FIM DO PREVIEW -->
-    </div>
+  </div>
 </div>
-  <!-- 💳 BOTÃO DE COMPRA (EDITOR APENAS) -->
- <div style="
+
+<!-- =====================
+     BOTÃO DE COMPRA
+===================== -->
+<div style="
   max-width: 420px;
   margin: 30px auto 80px;
   padding: 0 20px;
@@ -91,11 +114,21 @@
     Gerar QR Code por R$9,99
   </button>
 </div>
-  
- <script src="/js/editor.js"></script>
 
- </body>  
- </html>
+<!-- =====================
+     SCRIPT PRINCIPAL
+===================== -->
+<script src="/js/editor.js"></script>
+
+
+</body>
+</html>
+
+
+
+
+
+
 
 
 
