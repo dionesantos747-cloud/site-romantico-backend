@@ -1,5 +1,5 @@
 /* ==========================
-   RESET & BASE
+   RESET
 ========================== */
 * {
   box-sizing: border-box;
@@ -15,7 +15,7 @@ body {
 }
 
 /* ==========================
-   EDITOR LAYOUT
+   LAYOUT
 ========================== */
 .editor-container {
   display: flex;
@@ -24,53 +24,51 @@ body {
 }
 
 /* ==========================
-   EDITOR PANEL
+   EDITOR
 ========================== */
 .editor-panel {
   width: 420px;
   max-width: 100%;
   padding: 20px;
   background: #0e1430;
-  overflow-y: auto;
 }
 
 .editor-panel h1 {
-  color: #ffd400;
   text-align: center;
-  margin-bottom: 8px;
+  color: #ffd400;
+  margin-bottom: 6px;
 }
 
 .editor-sub {
   text-align: center;
-  font-size: 0.9em;
-  margin-bottom: 20px;
-  opacity: 0.85;
+  font-size: .85em;
+  opacity: .85;
+  margin-bottom: 18px;
 }
 
 label {
   display: block;
   margin-top: 16px;
-  font-size: 0.85em;
-  opacity: 0.9;
+  font-size: .8em;
+  opacity: .9;
 }
 
 input,
 textarea {
   width: 100%;
-  padding: 12px;
+  padding: 11px;
   margin-top: 6px;
-  border-radius: 10px;
+  border-radius: 12px;
   border: 2px solid #1c2350;
   background: #0b1020;
   color: #fff;
   outline: none;
-  font-size: 0.95em;
-  transition: 0.2s;
+  font-size: 16px; /* evita zoom mobile */
 }
 
 textarea {
   resize: vertical;
-  min-height: 90px;
+  min-height: 80px;
 }
 
 input:focus,
@@ -84,21 +82,41 @@ textarea.erro {
 }
 
 /* ==========================
+   BOTÃO ADD FOTO
+========================== */
+#fotoInput {
+  display: none;
+}
+
+.add-foto {
+  margin-top: 12px;
+  width: 100%;
+  padding: 14px;
+  border-radius: 16px;
+  border: 2px dashed #ffd400;
+  background: transparent;
+  color: #ffd400;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+}
+
+/* ==========================
    MINIATURAS
 ========================== */
 .miniaturas {
   display: flex;
-  gap: 10px;
-  margin-top: 10px;
   flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
 }
 
 .thumb {
-  position: relative;
-  width: 60px;
-  height: 60px;
+  width: 64px;
+  height: 64px;
   border-radius: 10px;
   overflow: hidden;
+  position: relative;
   border: 2px solid #1c2350;
 }
 
@@ -112,44 +130,81 @@ textarea.erro {
   position: absolute;
   top: -6px;
   right: -6px;
-  background: #ff4d4d;
-  border: none;
-  color: #fff;
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  cursor: pointer;
+  border: none;
+  background: #ff4d4d;
+  color: #fff;
   font-size: 14px;
+  cursor: pointer;
 }
 
 /* ==========================
-   BOTÕES
+   MÚSICA
 ========================== */
-button {
+#musicaInput {
+  margin-top: 6px;
+}
+
+#removeMusic {
+  display: none;
+  margin-top: 8px;
+  padding: 10px;
+  border-radius: 12px;
+  border: none;
+  background: #2a3160;
+  color: #fff;
   cursor: pointer;
 }
 
-.btn-secondary {
+/* ==========================
+   CORES FUNDO
+========================== */
+.cores {
+  display: flex;
+  gap: 12px;
   margin-top: 10px;
-  background: #2a3160;
-  border: none;
-  color: #fff;
-  padding: 10px;
-  border-radius: 10px;
-  width: 100%;
 }
 
+.cores button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  cursor: pointer;
+  opacity: .6;
+}
+
+.cores button.ativo {
+  opacity: 1;
+  box-shadow: 0 0 0 3px rgba(255,212,0,.6);
+}
+
+.cores button[data-cor="rosa"] { background: #ff5fa2; }
+.cores button[data-cor="azul"] { background: #4da6ff; }
+.cores button[data-cor="vermelho"] { background: #ff4d4d; }
+.cores button[data-cor="preto"] { background: #000; }
+.cores button[data-cor="branco"] {
+  background: #fff;
+  border-color: #000;
+}
+
+/* ==========================
+   BOTÃO COMPRA
+========================== */
 .btn-comprar {
   margin-top: 22px;
+  padding: 14px;
+  width: 100%;
+  border-radius: 18px;
+  border: none;
   background: #ffd400;
   color: #000;
-  border: none;
-  padding: 14px;
-  border-radius: 16px;
-  font-size: 1.1em;
+  font-size: 1.05em;
   font-weight: bold;
-  width: 100%;
-  box-shadow: 0 0 20px rgba(255,212,0,0.5);
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(255,212,0,.4);
 }
 
 .pulsar {
@@ -163,28 +218,6 @@ button {
 }
 
 /* ==========================
-   CORES FUNDO
-========================== */
-.cores {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.cores button {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: 2px solid #fff;
-}
-
-.cores button[data-cor="rosa"] { background: #ff5fa2; }
-.cores button[data-cor="azul"] { background: #4da6ff; }
-.cores button[data-cor="vermelho"] { background: #ff4d4d; }
-.cores button[data-cor="preto"] { background: #000; }
-.cores button[data-cor="branco"] { background: #fff; }
-
-/* ==========================
    PREVIEW
 ========================== */
 .preview-panel {
@@ -192,16 +225,17 @@ button {
   background: radial-gradient(circle at top, #121a40, #000);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  padding: 20px;
 }
 
 .phone-mockup {
   width: 360px;
   height: 700px;
-  border-radius: 36px;
   background: #000;
+  border-radius: 36px;
   padding: 14px;
-  box-shadow: 0 0 40px rgba(0,0,0,0.7);
+  box-shadow: 0 0 40px rgba(0,0,0,.7);
 }
 
 .phone-mockup iframe {
@@ -209,25 +243,24 @@ button {
   height: 100%;
   border: none;
   border-radius: 24px;
-  background: #000;
 }
 
 /* ==========================
-   RESPONSIVO
+   MOBILE
 ========================== */
 @media (max-width: 900px) {
   .editor-container {
     flex-direction: column;
   }
 
-  .editor-panel {
-    width: 100%;
+  .preview-panel {
+    padding-bottom: 40px;
   }
 
   .phone-mockup {
     width: 320px;
-    height: 640px;
-    margin: 20px 0;
+    height: 620px;
+    margin-top: 20px;
   }
 }
 
