@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", () => {
 
   const isEditor = !!document.getElementById("editor");
@@ -38,6 +37,11 @@ document.addEventListener("DOMContentLoaded", () => {
   let contadorInterval = null;
 
   /* =====================
+     FIX: PREVIEW NO MOLDE
+  ===================== */
+  preview.style.minHeight = "auto";
+
+  /* =====================
      HELPERS
   ===================== */
   function erro(input) {
@@ -65,20 +69,24 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   function ajustarMensagem() {
-  const limite = 500;
-
-  if (mensagem.innerText.length > limite) {
-    mensagem.classList.add("limitada");
-    btnContinuarMensagem.style.display = "block";
-  } else {
-    mensagem.classList.remove("limitada");
-    btnContinuarMensagem.style.display = "none";
+    const limite = 500;
+    if (mensagem.innerText.length > limite) {
+      mensagem.classList.add("limitada");
+      mensagem.style.maxHeight = "180px";
+      mensagem.style.overflow = "hidden";
+      btnContinuarMensagem.style.display = "block";
+    } else {
+      mensagem.classList.remove("limitada");
+      mensagem.style.maxHeight = "";
+      mensagem.style.overflow = "";
+      btnContinuarMensagem.style.display = "none";
+    }
   }
-}
-
 
   btnContinuarMensagem.onclick = () => {
     mensagem.classList.remove("limitada");
+    mensagem.style.maxHeight = "";
+    mensagem.style.overflow = "";
     btnContinuarMensagem.style.display = "none";
   };
 
@@ -109,10 +117,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* =====================
-     FOTOS (100% FUNCIONAL)
+     FOTOS (POLAROID + REMOVER)
   ===================== */
   document.querySelectorAll(".photo-slot").forEach(slot => {
     slot.onclick = () => {
+      if (slot.classList.contains("filled")) return;
       fotoInput.dataset.slot = slot.dataset.slot;
       fotoInput.click();
     };
@@ -127,28 +136,28 @@ document.addEventListener("DOMContentLoaded", () => {
     form.append("file", file);
 
     try {
-      const res = await fetch("/upload-image", {
-        method: "POST",
-        body: form
-      });
-
+      const res = await fetch("/upload-image", { method: "POST", body: form });
       const data = await res.json();
       if (!data.url) throw new Error();
 
       fotos[slot] = data.url;
-const slotEl = document.querySelector(`.photo-slot[data-slot="${slot}"]`);
-slotEl.classList.add("filled");
-slotEl.innerHTML = `<img src="${data.url}" style="width:100%;height:100%;object-fit:cover;border-radius:14px">`;
 
-      midias.innerHTML = "";
-      fotos.filter(Boolean).forEach(url => {
-        const div = document.createElement("div");
-        div.className = "photo";
-        div.innerHTML = `<img src="${url}">`;
-        midias.appendChild(div);
-      });
+      const slotEl = document.querySelector(`.photo-slot[data-slot="${slot}"]`);
+      slotEl.classList.add("filled");
+      slotEl.innerHTML = `
+        <img src="${data.url}" style="width:100%;height:100%;object-fit:cover;border-radius:14px">
+        <div class="photo-remove">✕</div>
+      `;
 
-      atualizarStack();
+      slotEl.querySelector(".photo-remove").onclick = (e) => {
+        e.stopPropagation();
+        fotos[slot] = null;
+        slotEl.classList.remove("filled");
+        slotEl.innerHTML = "+";
+        renderMidias();
+      };
+
+      renderMidias();
       fotoInput.value = "";
 
     } catch {
@@ -156,62 +165,65 @@ slotEl.innerHTML = `<img src="${data.url}" style="width:100%;height:100%;object-
     }
   };
 
+  function renderMidias() {
+    midias.innerHTML = "";
+    fotos.filter(Boolean).forEach(url => {
+      const div = document.createElement("div");
+      div.className = "photo";
+      div.innerHTML = `<img src="${url}">`;
+      midias.appendChild(div);
+    });
+    atualizarStack();
+  }
+
   function atualizarStack() {
     const cards = document.querySelectorAll("#midias .photo");
     cards.forEach((c, i) => {
-      c.classList.remove("active", "behind-1", "behind-2");
+      c.classList.remove("active");
       if (i === 0) c.classList.add("active");
-      if (i === 1) c.classList.add("behind-1");
-      if (i === 2) c.classList.add("behind-2");
     });
   }
 
   /* =====================
-     MÚSICA
+     MÚSICA (ROBUSTA)
   ===================== */
   musicBox.onclick = () => musicaInput.click();
 
- musicaInput.onchange = async () => {
-  const file = musicaInput.files[0];
-  if (!file) return;
+  musicaInput.onchange = async () => {
+    const file = musicaInput.files[0];
+    if (!file) return;
 
-  // 🔒 limite de segurança (10MB ≈ 1min30 mp3)
-  if (file.size > 10 * 1024 * 1024) {
-    alert("A música deve ter até 1 minuto.");
-    musicaInput.value = "";
-    return;
-  }
+    if (file.size > 10 * 1024 * 1024) {
+      alert("A música deve ter até 1 minuto.");
+      musicaInput.value = "";
+      return;
+    }
 
-  const form = new FormData();
-  form.append("file", file);
+    const form = new FormData();
+    form.append("file", file);
 
-  musicBox.innerText = "⏳ Enviando música...";
-  musicBox.classList.add("disabled");
+    musicBox.innerText = "⏳ Enviando música...";
+    musicBox.classList.add("disabled");
 
-  try {
-    const res = await fetch("/upload-music", {
-      method: "POST",
-      body: form
-    });
+    try {
+      const res = await fetch("/upload-music", { method: "POST", body: form });
+      const data = await res.json();
+      if (!data.url) throw new Error();
 
-    const data = await res.json();
-    if (!data.url) throw new Error();
+      musicaUrl = data.url;
+      audio.src = musicaUrl;
+      audio.style.display = "block";
+      musicBox.innerText = "🎶 Música pronta";
+      removeMusic.style.display = "block";
 
-    musicaUrl = data.url;
-    audio.src = musicaUrl;
-    audio.style.display = "block";
+    } catch {
+      alert("Erro ao enviar música");
+      musicBox.innerText = "Adicionar música 🎵";
+      musicaUrl = null;
+    }
 
-    musicBox.innerText = "🎶 Música pronta";
-    removeMusic.style.display = "block";
-
-  } catch {
-    alert("Erro ao enviar música");
-    musicBox.innerText = "Adicionar música 🎵";
-  }
-
-  musicBox.classList.remove("disabled");
-};
-
+    musicBox.classList.remove("disabled");
+  };
 
   removeMusic.onclick = () => {
     musicaUrl = null;
@@ -222,7 +234,7 @@ slotEl.innerHTML = `<img src="${data.url}" style="width:100%;height:100%;object-
   };
 
   /* =====================
-     CONTADOR (VISÍVEL)
+     CONTADOR
   ===================== */
   dataInput.onchange = () => {
     limparErro(dataInput);
@@ -254,10 +266,9 @@ slotEl.innerHTML = `<img src="${data.url}" style="width:100%;height:100%;object-
   };
 
   /* =====================
-     PIX (ESTÁVEL)
+     PIX
   ===================== */
   btnComprar.onclick = async () => {
-
     if (!nomeInput.value.trim()) return erro(nomeInput);
     if (!msgInput.value.trim()) return erro(msgInput);
     if (!cartaInput.value.trim()) return erro(cartaInput);
@@ -286,8 +297,7 @@ slotEl.innerHTML = `<img src="${data.url}" style="width:100%;height:100%;object-
       sessionStorage.setItem("pix_qr", data.qr_base64);
       sessionStorage.setItem("pix_copia", data.copia_cola);
 
-      window.location.href =
-        `/aguardando.html?payment_id=${data.payment_id}`;
+      window.location.href = `/aguardando.html?payment_id=${data.payment_id}`;
 
     } catch {
       alert("Erro ao gerar pagamento");
@@ -297,19 +307,18 @@ slotEl.innerHTML = `<img src="${data.url}" style="width:100%;height:100%;object-
   /* =====================
      CORAÇÕES
   ===================== */
-  setTimeout(() => {
-    preview.querySelectorAll(".heart").forEach(h => h.remove());
-    for (let i = 0; i < 12; i++) {
-      const h = document.createElement("div");
-      h.className = "heart";
-      h.innerText = "❤️";
-      h.style.left = Math.random() * 100 + "%";
-      h.style.animationDuration = 6 + Math.random() * 6 + "s";
-      preview.appendChild(h);
-    }
-  }, 300);
+  preview.querySelectorAll(".heart").forEach(h => h.remove());
+  for (let i = 0; i < 12; i++) {
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.innerText = "❤️";
+    h.style.left = Math.random() * 100 + "%";
+    h.style.animationDuration = 6 + Math.random() * 6 + "s";
+    preview.appendChild(h);
+  }
 
 });
+
 
 
 
