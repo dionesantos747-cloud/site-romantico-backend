@@ -37,12 +37,16 @@
     <label>Data de início do relacionamento *</label>
     <input type="date" id="dataInput">
 
-    <!-- FOTOS -->
-    <label>Fotos (máx. 10)</label>
-    <input type="file" id="fotoInput" accept="image/*" multiple>
+ <!-- FOTOS -->
+<label>Fotos (máx. 10)</label>
 
-    <div id="miniaturas" class="miniaturas"></div>
+<label for="fotoInput" class="add-foto">
+  ➕ Adicionar fotos (máx. 10)
+</label>
 
+<input type="file" id="fotoInput" accept="image/*" multiple>
+
+<div id="miniaturas" class="miniaturas"></div>
     <!-- MÚSICA -->
     <label>Música (opcional)</label>
     <input type="file" id="musicaInput" accept="audio/*">
@@ -77,6 +81,7 @@
 <script src="/js/editor.js"></script>
 </body>
 </html>
+
 
 
 
