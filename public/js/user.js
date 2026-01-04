@@ -54,6 +54,8 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         btnCarta.style.display = "none";
       }
+cartaEl.style.display = "none";
+btnCarta.innerText = "💌 Abrir carta";
 
       /* =====================
          FUNDO
