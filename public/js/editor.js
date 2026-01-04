@@ -133,6 +133,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!data.url) throw new Error();
 
       fotos[slot] = data.url;
+const slotEl = document.querySelector(`.photo-slot[data-slot="${slot}"]`);
+slotEl.classList.add("filled");
+slotEl.innerHTML = `<img src="${data.url}" style="width:100%;height:100%;object-fit:cover;border-radius:14px">`;
 
       midias.innerHTML = "";
       fotos.filter(Boolean).forEach(url => {
@@ -165,32 +168,47 @@ document.addEventListener("DOMContentLoaded", () => {
   ===================== */
   musicBox.onclick = () => musicaInput.click();
 
-  musicaInput.onchange = async () => {
-    const file = musicaInput.files[0];
-    if (!file) return;
+ musicaInput.onchange = async () => {
+  const file = musicaInput.files[0];
+  if (!file) return;
 
-    const form = new FormData();
-    form.append("file", file);
+  // 🔒 limite de segurança (10MB ≈ 1min30 mp3)
+  if (file.size > 10 * 1024 * 1024) {
+    alert("A música deve ter até 1 minuto.");
+    musicaInput.value = "";
+    return;
+  }
 
-    try {
-      const res = await fetch("/upload-music", {
-        method: "POST",
-        body: form
-      });
+  const form = new FormData();
+  form.append("file", file);
 
-      const data = await res.json();
-      if (!data.url) throw new Error();
+  musicBox.innerText = "⏳ Enviando música...";
+  musicBox.classList.add("disabled");
 
-      musicaUrl = data.url;
-      audio.src = musicaUrl;
-      audio.style.display = "block";
-      musicBox.innerText = "🎶 Música pronta";
-      removeMusic.style.display = "block";
+  try {
+    const res = await fetch("/upload-music", {
+      method: "POST",
+      body: form
+    });
 
-    } catch {
-      alert("Erro ao enviar música");
-    }
-  };
+    const data = await res.json();
+    if (!data.url) throw new Error();
+
+    musicaUrl = data.url;
+    audio.src = musicaUrl;
+    audio.style.display = "block";
+
+    musicBox.innerText = "🎶 Música pronta";
+    removeMusic.style.display = "block";
+
+  } catch {
+    alert("Erro ao enviar música");
+    musicBox.innerText = "Adicionar música 🎵";
+  }
+
+  musicBox.classList.remove("disabled");
+};
+
 
   removeMusic.onclick = () => {
     musicaUrl = null;
@@ -289,6 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 300);
 
 });
+
 
 
 
