@@ -152,7 +152,7 @@ app.post("/create-payment", async (req, res) => {
         transaction_amount: 9.99,
         description: "Site Romântico Premium 💖",
         payment_method_id: "pix",
-        payer: { email: "cliente@pagamento.com" },
+        payer: { email: "dionesantosx7@gmail.com" },
         metadata: { userId: tempId },
         notification_url: `${req.protocol}://${req.get("host")}/webhook`
       },
