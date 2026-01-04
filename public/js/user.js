@@ -47,6 +47,25 @@ document.addEventListener("DOMContentLoaded", () => {
       ===================== */
       nomeEl.innerText = data.nome || "";
       msgEl.innerText = data.mensagem || "";
+      const limite = 500;
+
+if (msgEl.innerText.length > limite) {
+  msgEl.classList.add("limitada");
+  btnCarta.insertAdjacentHTML(
+    "beforebegin",
+    `<button id="btnContinuarMensagem" class="ler-mais">
+      Continuar lendo ⬇️
+    </button>`
+  );
+
+  document
+    .getElementById("btnContinuarMensagem")
+    .onclick = () => {
+      msgEl.classList.remove("limitada");
+      document.getElementById("btnContinuarMensagem").remove();
+    };
+}
+
       cartaEl.innerText = data.carta || "";
 
       if (data.carta && data.carta.trim()) {
