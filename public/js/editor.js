@@ -1,204 +1,207 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  const isEditor = !!document.getElementById("editor");
-
   /* =====================
-     ELEMENTOS
-  ====================== */
-  const nomeInput   = document.getElementById("nomeInput");
-  const msgInput    = document.getElementById("msgInput");
-  const cartaInput  = document.getElementById("cartaInput");
-  const dataInput   = document.getElementById("dataInput");
+     PEGAR ID DO USUÁRIO
+  ===================== */
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
 
-  const nome        = document.getElementById("nome");
-  const mensagem    = document.getElementById("mensagem");
-  const carta       = document.getElementById("carta");
-  const tempo       = document.getElementById("tempo");
-  const preview     = document.getElementById("preview");
-
-  const btnCarta    = document.getElementById("btnCarta");
-  const btnComprar  = document.getElementById("btnComprar");
-  const btnContinuarMensagem = document.getElementById("btnContinuarMensagem");
-
-  const musicBox    = document.getElementById("musicBox");
-  const musicaInput = document.getElementById("musicaInput");
-  const audio       = document.getElementById("audioPlayer");
-  const removeMusic = document.getElementById("removeMusic");
-
-  /* =====================
-     TEXTO AO VIVO
-  ====================== */
-  if (isEditor && nomeInput && nome) {
-    nomeInput.addEventListener("input", () => {
-      nome.innerText = nomeInput.value;
-      limparErro(nomeInput);
-    });
-  }
-
-  if (isEditor && msgInput && mensagem) {
-    msgInput.addEventListener("input", () => {
-      mensagem.innerText = msgInput.value;
-      limparErro(msgInput);
-      ajustarMensagem();
-    });
-  }
-
-  function ajustarMensagem() {
-    if (!mensagem || !btnContinuarMensagem) return;
-
-    if (mensagem.scrollHeight > 180) {
-      mensagem.classList.add("limitada");
-      btnContinuarMensagem.style.display = "block";
-    } else {
-      mensagem.classList.remove("limitada");
-      btnContinuarMensagem.style.display = "none";
-    }
-  }
-
-  if (btnContinuarMensagem) {
-    btnContinuarMensagem.onclick = () => {
-      mensagem.classList.remove("limitada");
-      btnContinuarMensagem.style.display = "none";
-    };
+  if (!id) {
+    document.body.innerHTML = `
+      <div style="text-align:center;color:white;padding:40px">
+        <h1>ID inválido</h1>
+      </div>`;
+    return;
   }
 
   /* =====================
-     CARTA
-  ====================== */
-  if (isEditor && cartaInput && carta && btnCarta) {
-    cartaInput.addEventListener("input", () => {
-      carta.innerText = cartaInput.value;
-      limparErro(cartaInput);
-      btnCarta.style.display = cartaInput.value.trim() ? "block" : "none";
-    });
+     BUSCAR DADOS NO BACKEND
+  ===================== */
+  fetch(`/user-data?id=${id}`)
+    .then(res => res.json())
+    .then(data => {
 
-    btnCarta.onclick = () => {
-      carta.style.display =
-        carta.style.display === "block" ? "none" : "block";
-    };
-  }
-
-  /* =====================
-     FUNDOS
-  ====================== */
-  if (isEditor && preview) {
-    document.querySelectorAll(".bg-card").forEach(card => {
-      card.onclick = () => {
-        document.querySelectorAll(".bg-card")
-          .forEach(c => c.classList.remove("selected"));
-
-        card.classList.add("selected");
-        preview.className = "preview " + card.dataset.bg;
-      };
-    });
-  }
-
-  /* =====================
-     MÚSICA
-  ====================== */
-  if (isEditor && musicBox && musicaInput && audio) {
-    musicBox.onclick = () => musicaInput.click();
-
-    musicaInput.onchange = () => {
-      const file = musicaInput.files[0];
-      if (!file) return;
-
-      audio.src = URL.createObjectURL(file);
-      audio.style.display = "block";
-      musicBox.innerText = "🎶 Música pronta";
-      if (removeMusic) removeMusic.style.display = "block";
-    };
-
-    if (removeMusic) {
-      removeMusic.onclick = () => {
-        audio.src = "";
-        audio.style.display = "none";
-        musicaInput.value = "";
-        musicBox.innerText = "Adicionar música 🎵";
-        removeMusic.style.display = "none";
-      };
-    }
-  }
-
-  /* =====================
-     CONTADOR
-  ====================== */
-  let contador = null;
-
-  if (isEditor && dataInput && tempo) {
-    dataInput.onchange = () => {
-      limparErro(dataInput);
-      if (contador) clearInterval(contador);
-
-      contador = setInterval(() => {
-        const inicio = new Date(dataInput.value);
-        const agora = new Date();
-        const diff = agora - inicio;
-        if (diff < 0) return;
-
-        const s = Math.floor(diff / 1000) % 60;
-        const m = Math.floor(diff / 60000) % 60;
-        const h = Math.floor(diff / 3600000) % 24;
-        const d = Math.floor(diff / 86400000) % 30;
-        const mo = Math.floor(diff / 2592000000) % 12;
-        const a = Math.floor(diff / 31536000000);
-
-        tempo.innerHTML = `
-          <span class="titulo">Já estamos juntos há</span>
-          <div class="contador">
-            <div class="item">${a} anos</div>
-            <div class="item">${mo} meses</div>
-            <div class="item">${d} dias</div>
-            <div class="item">${h}h ${m}m ${s}s</div>
-          </div>
-        `;
-      }, 1000);
-    };
-  }
-
-/* ===============================
-   COMPRA (PIX + BACKEND)
-=============================== */
-if (btnComprar) {
-  btnComprar.addEventListener("click", async () => {
-
-    const payload = {
-      nome: nomeInput.value.trim(),
-      mensagem: msgInput.value.trim(),
-      carta: cartaInput.value.trim(),
-      dataInicio: dataInput.value,
-      fotos: fotos.filter(Boolean),
-      musica: musicaUrl || null,
-      fundo: document.querySelector(".bg-card.selected")?.dataset.bg || "azul"
-    };
-
-    try {
-      const res = await fetch("/create-payment", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-
-      const data = await res.json();
-
-      if (!data.payment_id) {
-        alert("Erro ao gerar pagamento. Tente novamente.");
+      /* 🔒 BLOQUEIA SE NÃO ESTIVER APROVADO */
+      if (!data || data.status !== "approved") {
+        document.body.innerHTML = `
+          <div style="text-align:center;color:white;padding:40px">
+            <h1>💔 Site indisponível</h1>
+            <p>Este site ainda não foi ativado.</p>
+          </div>`;
         return;
       }
 
-      // 🔒 SALVA PIX PARA aguardando.html
-      sessionStorage.setItem("pix_qr", data.qr_base64);
-      sessionStorage.setItem("pix_copia", data.copia_cola);
+      /* =====================
+         ELEMENTOS
+      ===================== */
+      const nomeEl   = document.getElementById("nome");
+      const msgEl    = document.getElementById("mensagem");
+      const cartaEl  = document.getElementById("carta");
+      const midiasEl = document.getElementById("midias");
+      const audio    = document.getElementById("audioPlayer");
+      const tempoEl  = document.getElementById("tempo");
+      const preview  = document.getElementById("preview");
+      const btnCarta = document.getElementById("btnCarta");
+      const dots     = document.getElementById("dots");
 
-      // 🔁 REDIRECIONA COM payment_id
-      window.location.href =
-        `/aguardando.html?payment_id=${data.payment_id}`;
+      /* =====================
+         TEXTO
+      ===================== */
+      nomeEl.innerText  = data.nome || "";
+      msgEl.innerText   = data.mensagem || "";
+      cartaEl.innerText = data.carta || "";
 
-    } catch (e) {
-      alert("Erro de conexão. Tente novamente.");
-    }
-  });
-}
+      if (data.carta && data.carta.trim()) {
+        btnCarta.style.display = "block";
+      } else {
+        btnCarta.style.display = "none";
+      }
+
+      /* =====================
+         FUNDO
+      ===================== */
+      if (data.fundo) {
+        preview.className = "preview " + data.fundo;
+      }
+
+      /* =====================
+         CORAÇÕES
+      ===================== */
+      function criarCoracoes() {
+        document.querySelectorAll(".heart").forEach(h => h.remove());
+        for (let i = 0; i < 12; i++) {
+          const h = document.createElement("div");
+          h.className = "heart";
+          h.innerText = "❤️";
+          h.style.left = Math.random() * 100 + "%";
+          h.style.animationDuration = (6 + Math.random() * 6) + "s";
+          preview.appendChild(h);
+        }
+      }
+      criarCoracoes();
+
+      /* =====================
+         FOTOS — STACK + AUTO SWIPE
+      ===================== */
+      let autoSwipeInterval = null;
+
+      if (Array.isArray(data.fotos) && data.fotos.filter(Boolean).length) {
+
+        data.fotos.forEach(url => {
+          if (!url) return;
+          const div = document.createElement("div");
+          div.className = "photo";
+          div.innerHTML = `<img src="${url}">`;
+          midiasEl.appendChild(div);
+        });
+
+        function criarDots() {
+          dots.innerHTML = "";
+          document.querySelectorAll("#midias .photo").forEach((_, i) => {
+            const dot = document.createElement("div");
+            dot.className = "dot";
+            if (i === 0) dot.classList.add("active");
+            dots.appendChild(dot);
+          });
+        }
+
+        function atualizarStack() {
+          const fotos = document.querySelectorAll("#midias .photo");
+          fotos.forEach((foto, i) => {
+            foto.classList.remove("active", "behind-1", "behind-2");
+            if (i === 0) foto.classList.add("active");
+            if (i === 1) foto.classList.add("behind-1");
+            if (i === 2) foto.classList.add("behind-2");
+          });
+        }
+
+        function iniciarAutoSwipe() {
+          if (autoSwipeInterval) clearInterval(autoSwipeInterval);
+
+          autoSwipeInterval = setInterval(() => {
+            const ativa = document.querySelector("#midias .photo.active");
+            if (!ativa) return;
+
+            ativa.style.transition = "transform 0.4s ease";
+            ativa.style.transform = "translateX(-120vw)";
+
+            setTimeout(() => {
+              midiasEl.appendChild(ativa);
+              ativa.style.transition = "none";
+              ativa.style.transform = "translateX(-50%)";
+              atualizarStack();
+            }, 420);
+          }, 3500);
+        }
+
+        criarDots();
+        atualizarStack();
+        iniciarAutoSwipe();
+      }
+
+      /* =====================
+         MÚSICA
+      ===================== */
+      if (data.musica) {
+        audio.src = data.musica;
+        audio.style.display = "block";
+        audio.volume = 0.8;
+      }
+
+      /* =====================
+         CONTADOR — SEM BUG
+      ===================== */
+      let contadorInterval = null;
+
+      if (data.dataInicio) {
+        if (contadorInterval) clearInterval(contadorInterval);
+
+        contadorInterval = setInterval(() => {
+          const inicio = new Date(data.dataInicio);
+          const agora = new Date();
+          const diff = agora - inicio;
+          if (diff < 0) return;
+
+          const s  = Math.floor(diff / 1000) % 60;
+          const m  = Math.floor(diff / 60000) % 60;
+          const h  = Math.floor(diff / 3600000) % 24;
+          const d  = Math.floor(diff / 86400000) % 30;
+          const mo = Math.floor(diff / 2592000000) % 12;
+          const a  = Math.floor(diff / 31536000000);
+
+          tempoEl.innerHTML = `
+            <span class="titulo">Já estamos juntos há</span>
+            <div class="contador">
+              <div class="item">${a} anos</div>
+              <div class="item">${mo} meses</div>
+              <div class="item">${d} dias</div>
+              <div class="item">${h}h ${m}m ${s}s</div>
+            </div>
+          `;
+        }, 1000);
+      }
+
+      /* =====================
+         CARTA
+      ===================== */
+      btnCarta.onclick = () => {
+        const aberto = cartaEl.style.display === "block";
+        cartaEl.style.display = aberto ? "none" : "block";
+        btnCarta.innerText = aberto
+          ? "💌 Abrir carta"
+          : "❌ Fechar carta";
+      };
+
+    })
+    .catch(() => {
+      document.body.innerHTML = `
+        <div style="text-align:center;color:white;padding:40px">
+          <h1>Erro ao carregar</h1>
+        </div>`;
+    });
+
+});
+
 
 
 
