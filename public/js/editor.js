@@ -156,45 +156,49 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  /* =====================
-     VALIDAÇÃO + COMPRA
-  ====================== */
-  if (btnComprar) {
-    btnComprar.onclick = () => {
-      let valido = true;
+/* ===============================
+   COMPRA (PIX + BACKEND)
+=============================== */
+if (btnComprar) {
+  btnComprar.addEventListener("click", async () => {
 
-      if (!nomeInput.value.trim()) erro(nomeInput);
-      if (!msgInput.value.trim()) erro(msgInput);
-      if (!cartaInput.value.trim()) erro(cartaInput);
-      if (!dataInput.value) erro(dataInput);
+    const payload = {
+      nome: nomeInput.value.trim(),
+      mensagem: msgInput.value.trim(),
+      carta: cartaInput.value.trim(),
+      dataInicio: dataInput.value,
+      fotos: fotos.filter(Boolean),
+      musica: musicaUrl || null,
+      fundo: document.querySelector(".bg-card.selected")?.dataset.bg || "azul"
+    };
 
-      valido =
-        nomeInput.value &&
-        msgInput.value &&
-        cartaInput.value &&
-        dataInput.value;
+    try {
+      const res = await fetch("/create-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
 
-      if (!valido) {
-        document.querySelector(".error")?.scrollIntoView({
-          behavior: "smooth",
-          block: "center"
-        });
+      const data = await res.json();
+
+      if (!data.payment_id) {
+        alert("Erro ao gerar pagamento. Tente novamente.");
         return;
       }
 
-      window.location.href = "/aguardando.html";
-    };
-  }
+      // 🔒 SALVA PIX PARA aguardando.html
+      sessionStorage.setItem("pix_qr", data.qr_base64);
+      sessionStorage.setItem("pix_copia", data.copia_cola);
 
-  function erro(el) {
-    el.classList.add("error");
-  }
+      // 🔁 REDIRECIONA COM payment_id
+      window.location.href =
+        `/aguardando.html?payment_id=${data.payment_id}`;
 
-  function limparErro(el) {
-    el.classList.remove("error");
-  }
-
-});
+    } catch (e) {
+      alert("Erro de conexão. Tente novamente.");
+    }
+  });
+}
 
 
 
