@@ -168,7 +168,16 @@ thumbs.appendChild(thumb);
 atualizarMidias();
 
   }
+function atualizarMidias() {
+  midias.innerHTML = "";
 
+  fotos.filter(Boolean).forEach(url => {
+    const div = document.createElement("div");
+    div.className = "photo";
+    div.innerHTML = `<img src="${url}">`;
+    midias.appendChild(div);
+  });
+}
   /* =====================
      MÚSICA
   ===================== */
@@ -287,6 +296,7 @@ musicaInput.onchange = async () => {
   };
 
 });
+
 
 
 
