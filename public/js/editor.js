@@ -116,10 +116,12 @@ document.addEventListener("DOMContentLoaded", () => {
 ===================== */
 document.querySelectorAll(".photo-slot").forEach(slot => {
   slot.onclick = () => {
+    if (slot.classList.contains("filled")) return; // 🔒 bloqueia slot preenchido
     fotoInput.dataset.slot = slot.dataset.slot;
     fotoInput.click();
   };
 });
+
 
 fotoInput.onchange = async () => {
   const file = fotoInput.files[0];
@@ -143,8 +145,23 @@ fotoInput.onchange = async () => {
     const slotEl = document.querySelector(
       `.photo-slot[data-slot="${slot}"]`
     );
-    slotEl.classList.add("filled");
-    slotEl.innerHTML = `<img src="${data.url}">`;
+   const slotEl = document.querySelector(
+  `.photo-slot[data-slot="${slot}"]`
+);
+
+slotEl.classList.add("filled");
+slotEl.innerHTML = `
+  <img src="${data.url}">
+  <div class="photo-remove">×</div>
+`;
+
+slotEl.querySelector(".photo-remove").onclick = () => {
+  fotos[slot] = null;
+  slotEl.classList.remove("filled");
+  slotEl.innerHTML = "+";
+  atualizarMidias();
+};
+
 
     const thumbs = document.getElementById("thumbs");
     if (thumbs) {
@@ -173,16 +190,36 @@ fotoInput.onchange = async () => {
     alert("Erro ao enviar imagem");
   }
 };
-  function atualizarMidias() {
+ function atualizarMidias() {
   midias.innerHTML = "";
 
   fotos.filter(Boolean).forEach(url => {
-    const div = document.createElement("div");
-    div.className = "photo";
-    div.innerHTML = `<img src="${url}">`;
-    midias.appendChild(div);
+    const slide = document.createElement("div");
+    slide.className = "slide";
+    slide.innerHTML = `
+      <div class="polaroid">
+        <img src="${url}">
+      </div>
+    `;
+    midias.appendChild(slide);
   });
+
+  iniciarSlider();
 }
+let slideIndex = 0;
+
+function iniciarSlider() {
+  const track = document.querySelector(".slider-track");
+  const slides = document.querySelectorAll(".slide");
+  if (!slides.length) return;
+
+  setInterval(() => {
+    slideIndex = (slideIndex + 1) % slides.length;
+    track.style.transform =
+      `translateX(-${slideIndex * 100}%)`;
+  }, 3500);
+}
+
   /* =====================
      MÚSICA
   ===================== */
@@ -301,6 +338,7 @@ musicaInput.onchange = async () => {
   };
 
 });
+
 
 
 
