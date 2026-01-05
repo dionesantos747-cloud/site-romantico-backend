@@ -114,59 +114,32 @@ const paymentId = params.get("payment_id");
 const qrImg = document.getElementById("qr");
 const pixBox = document.getElementById("code");
 
-if (!paymentId) {
-  alert("Pagamento não identificado. Gere um novo pagamento.");
-  throw new Error("Sem payment_id");
-}
-
-/* ==========================
-   BUSCAR PIX
-========================== */
 async function carregarPix() {
   try {
     const res = await fetch(`/payment-info?payment_id=${paymentId}`);
     const data = await res.json();
 
-    if (!data.qr || !data.copia) {
-      throw new Error("PIX não disponível");
-    }
-
-    qrImg.src = "data:image/png;base64," + data.qr;
-    pixBox.innerText = data.copia;
-
+    qrImg.src = "data:image/png;base64," + data.qr_base64;
+    pixBox.innerText = data.copia_cola;
   } catch {
-    pixBox.innerText = "Aguardando geração do PIX...";
+    pixBox.innerText = "Erro ao carregar PIX. Aguarde...";
   }
 }
 
-/* ==========================
-   COPIAR PIX
-========================== */
-function copiarPix() {
-  if (!pixBox.innerText) {
-    alert("Código PIX ainda não disponível");
-    return;
-  }
-
+function copiar() {
   navigator.clipboard.writeText(pixBox.innerText);
   alert("Código PIX copiado!");
 }
 
-/* ==========================
-   VERIFICAR PAGAMENTO
-========================== */
 async function verificarPagamento() {
-  try {
-    const res = await fetch(`/check-payment?payment_id=${paymentId}`);
-    const data = await res.json();
+  const res = await fetch(`/check-payment?payment_id=${paymentId}`);
+  const data = await res.json();
 
-    if (data.status === "approved") {
-      window.location.href = `/success.html?payment_id=${paymentId}`;
-    }
-  } catch {}
+  if (data.status === "approved") {
+    window.location.href = `/success.html?payment_id=${paymentId}`;
+  }
 }
 
-/* INIT */
 carregarPix();
 setInterval(verificarPagamento, 3000);
 </script>
