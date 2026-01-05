@@ -185,7 +185,43 @@ app.post("/create-payment", async (req, res) => {
     res.status(500).json({ error: "Erro ao criar pagamento" });
   }
 });
+/* =====================
+   PAYMENT INFO (PIX)
+===================== */
+app.get("/payment-info", async (req, res) => {
+  try {
+    const paymentId = String(req.query.payment_id);
+    const pay = await payments.findOne({ paymentId });
 
+    if (!pay) {
+      return res.status(404).json({ error: "Pagamento não encontrado" });
+    }
+
+    const mp = await axios.get(
+      `https://api.mercadopago.com/v1/payments/${paymentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${MP_ACCESS_TOKEN}`
+        }
+      }
+    );
+
+    const pix = mp.data?.point_of_interaction?.transaction_data;
+
+    if (!pix) {
+      return res.status(404).json({ error: "PIX ainda não disponível" });
+    }
+
+    res.json({
+      qr: pix.qr_code_base64,
+      copia: pix.qr_code
+    });
+
+  } catch (err) {
+    console.error("Erro payment-info:", err.message);
+    res.status(500).json({ error: "Erro ao buscar PIX" });
+  }
+});
 /* =====================
    WEBHOOK MERCADO PAGO
 ===================== */
