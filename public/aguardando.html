@@ -107,78 +107,66 @@ button{
 </div>
 
 <script>
-/* =========================
-   CARREGAR PIX COM FALLBACK
-========================= */
-const qrBase64 = sessionStorage.getItem("pix_qr");
-const pixCopia = sessionStorage.getItem("pix_copia");
-
-const qrEl  = document.getElementById("qr");
-const pixEl = document.getElementById("pix");
-
-if (qrBase64) {
-  qrEl.src = "data:image/png;base64," + qrBase64;
-} else {
-  qrEl.alt = "QR Code indisponível. Recarregue a página anterior.";
-}
-
-if (pixCopia) {
-  pixEl.innerText = pixCopia;
-} else {
-  pixEl.innerText =
-    "Código PIX não encontrado. Volte e gere novamente.";
-}
-
-/* =========================
-   COPIAR PIX
-========================= */
-function copiarPix(){
-  if (!pixCopia) return alert("Código PIX indisponível.");
-  navigator.clipboard.writeText(pixCopia);
-  alert("Código PIX copiado!");
-}
-
-/* =========================
-   VERIFICAR PAGAMENTO (ROBUSTO)
-========================= */
 const params = new URLSearchParams(window.location.search);
 const paymentId = params.get("payment_id");
 
+const qrImg = document.getElementById("qr");
+const pixBox = document.getElementById("pix");
+
 if (!paymentId) {
-  alert("Erro: pagamento não identificado. Gere um novo pagamento.");
+  alert("Pagamento não identificado. Gere um novo pagamento.");
+  throw new Error("Sem payment_id");
 }
 
-/* evita múltiplos redirects */
-let liberado = false;
-
-async function verificarPagamento() {
-  if (!paymentId || liberado) return;
-
+/* ==========================
+   BUSCAR PIX DO BACKEND
+========================== */
+async function carregarPix() {
   try {
-    const res = await fetch(
-      `/check-payment?payment_id=${paymentId}`,
-      { cache: "no-store" }
-    );
-
-    if (!res.ok) return;
-
+    const res = await fetch(`/payment-info?payment_id=${paymentId}`);
     const data = await res.json();
 
-    if (
-      data.status === "approved" ||
-      data.status === "authorized"
-    ) {
-      liberado = true;
-      window.location.href =
-        `/success.html?payment_id=${paymentId}`;
+    if (!data.qr_base64 || !data.copia_cola) {
+      throw new Error("PIX não disponível");
     }
 
+    qrImg.src = "data:image/png;base64," + data.qr_base64;
+    pixBox.innerText = data.copia_cola;
+
   } catch (e) {
-    // silêncio proposital (evita spam de erro no mobile)
+    pixBox.innerText = "Erro ao carregar PIX. Aguarde...";
   }
 }
 
-/* checa a cada 3s */
+/* ==========================
+   COPIAR PIX
+========================== */
+function copiarPix() {
+  if (!pixBox.innerText) {
+    alert("Código PIX ainda não disponível");
+    return;
+  }
+
+  navigator.clipboard.writeText(pixBox.innerText);
+  alert("Código PIX copiado!");
+}
+
+/* ==========================
+   VERIFICAR PAGAMENTO
+========================== */
+async function verificarPagamento() {
+  try {
+    const res = await fetch(`/check-payment?payment_id=${paymentId}`);
+    const data = await res.json();
+
+    if (data.status === "approved") {
+      window.location.href = `/success.html?payment_id=${paymentId}`;
+    }
+  } catch {}
+}
+
+/* INIT */
+carregarPix();
 setInterval(verificarPagamento, 3000);
 </script>
 
