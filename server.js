@@ -100,8 +100,9 @@ app.post("/upload-music", upload.single("file"), (req, res) => {
     return res.status(400).json({ error: "Arquivo não enviado" });
   }
 
-  cloudinary.uploader.upload_stream(
-    { resource_type: "video", folder: "site-romantico/musicas" },
+cloudinary.uploader.upload_stream(
+  { resource_type: "auto", folder: "site-romantico/musicas" },
+
     (err, result) => {
       if (err) return res.status(500).json({ error: "Erro música" });
       res.json({ url: result.secure_url });
