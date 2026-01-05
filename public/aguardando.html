@@ -107,33 +107,79 @@ button{
 </div>
 
 <script>
-const pix = JSON.parse(sessionStorage.getItem("pix") || "{}");
+/* =========================
+   CARREGAR PIX COM FALLBACK
+========================= */
+const qrBase64 = sessionStorage.getItem("pix_qr");
+const pixCopia = sessionStorage.getItem("pix_copia");
 
-if (!pix.qr_base64) {
-  document.body.innerHTML = "Pagamento não encontrado.";
+const qrEl  = document.getElementById("qr");
+const pixEl = document.getElementById("pix");
+
+if (qrBase64) {
+  qrEl.src = "data:image/png;base64," + qrBase64;
 } else {
-  document.getElementById("qr").innerHTML =
-    `<img src="data:image/png;base64,${pix.qr_base64}">`;
-  document.getElementById("code").innerText = pix.copia_cola;
+  qrEl.alt = "QR Code indisponível. Recarregue a página anterior.";
 }
 
-function copiar() {
-  navigator.clipboard.writeText(pix.copia_cola);
-  document.getElementById("status").innerText = "✔ Código PIX copiado";
+if (pixCopia) {
+  pixEl.innerText = pixCopia;
+} else {
+  pixEl.innerText =
+    "Código PIX não encontrado. Volte e gere novamente.";
 }
 
-/* ==========================
-   VERIFICA PAGAMENTO
-========================== */
-async function check() {
-  const res = await fetch(`/check-payment?payment_id=${pix.payment_id}`);
-  const json = await res.json();
-  if (json.status === "approved") {
-    location.href = `/success.html?payment_id=${pix.payment_id}`;
+/* =========================
+   COPIAR PIX
+========================= */
+function copiarPix(){
+  if (!pixCopia) return alert("Código PIX indisponível.");
+  navigator.clipboard.writeText(pixCopia);
+  alert("Código PIX copiado!");
+}
+
+/* =========================
+   VERIFICAR PAGAMENTO (ROBUSTO)
+========================= */
+const params = new URLSearchParams(window.location.search);
+const paymentId = params.get("payment_id");
+
+if (!paymentId) {
+  alert("Erro: pagamento não identificado. Gere um novo pagamento.");
+}
+
+/* evita múltiplos redirects */
+let liberado = false;
+
+async function verificarPagamento() {
+  if (!paymentId || liberado) return;
+
+  try {
+    const res = await fetch(
+      `/check-payment?payment_id=${paymentId}`,
+      { cache: "no-store" }
+    );
+
+    if (!res.ok) return;
+
+    const data = await res.json();
+
+    if (
+      data.status === "approved" ||
+      data.status === "authorized"
+    ) {
+      liberado = true;
+      window.location.href =
+        `/success.html?payment_id=${paymentId}`;
+    }
+
+  } catch (e) {
+    // silêncio proposital (evita spam de erro no mobile)
   }
 }
 
-setInterval(check, 4000);
+/* checa a cada 3s */
+setInterval(verificarPagamento, 3000);
 </script>
 
 </body>
