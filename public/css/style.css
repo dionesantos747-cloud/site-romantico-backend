@@ -202,7 +202,11 @@ textarea.error {
   display: flex;
   justify-content: center;
 }
-
+.slide {
+  min-width: 100%;
+  display: flex;
+  justify-content: center;
+}
 /* ===== POLAROID REAL ===== */
 .polaroid {
   background: #fff;
@@ -214,8 +218,10 @@ textarea.error {
 }
 
 .polaroid img {
-  max-width: 85vw;
-  height: auto;
+  width: 100%;
+  max-width: 260px;
+  max-height: 360px;
+  object-fit: cover;
   border-radius: 4px;
 }
 
@@ -346,6 +352,7 @@ body.final .music-box,
 body.final .remove-music {
   display: none !important;
 }
+
 
 
 
