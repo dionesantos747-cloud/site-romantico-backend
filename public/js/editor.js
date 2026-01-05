@@ -111,64 +111,69 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   });
 
-  /* =====================
-     FOTOS (POLAROID + MINIATURAS)
-  ===================== */
-  document.querySelectorAll(".photo-slot").forEach(slot => {
-    slot.onclick = () => {
-      fotoInput.dataset.slot = slot.dataset.slot;
-      fotoInput.click();
-    };
-  });
+/* =====================
+   FOTOS (POLAROID + MINIATURAS)
+===================== */
+document.querySelectorAll(".photo-slot").forEach(slot => {
+  slot.onclick = () => {
+    fotoInput.dataset.slot = slot.dataset.slot;
+    fotoInput.click();
+  };
+});
 
-  fotoInput.onchange = async () => {
-    const file = fotoInput.files[0];
-    if (!file) return;
+fotoInput.onchange = async () => {
+  const file = fotoInput.files[0];
+  if (!file) return;
 
-    const slot = Number(fotoInput.dataset.slot);
-    const form = new FormData();
-    form.append("file", file);
+  const slot = Number(fotoInput.dataset.slot);
+  const form = new FormData();
+  form.append("file", file);
 
-    try {
-      const res = await fetch("/upload-image", {
-        method: "POST",
-        body: form
-      });
+  try {
+    const res = await fetch("/upload-image", {
+      method: "POST",
+      body: form
+    });
 
-      const data = await res.json();
-      if (!data.url) throw new Error();
+    const data = await res.json();
+    if (!data.url) throw new Error();
 
     fotos[slot] = data.url;
 
-const slotEl = document.querySelector(
-  `.photo-slot[data-slot="${slot}"]`
-);
-slotEl.classList.add("filled");
-slotEl.innerHTML = `<img src="${data.url}">`;
+    const slotEl = document.querySelector(
+      `.photo-slot[data-slot="${slot}"]`
+    );
+    slotEl.classList.add("filled");
+    slotEl.innerHTML = `<img src="${data.url}">`;
 
-const thumbs = document.getElementById("thumbs");
+    const thumbs = document.getElementById("thumbs");
+    if (thumbs) {
+      const thumb = document.createElement("div");
+      thumb.className = "photo-slot filled";
+      thumb.innerHTML = `
+        <img src="${data.url}">
+        <div class="photo-remove">×</div>
+      `;
 
-const thumb = document.createElement("div");
-thumb.className = "photo-slot filled";
-thumb.innerHTML = `
-  <img src="${data.url}">
-  <div class="photo-remove">×</div>
-`;
+      thumb.querySelector(".photo-remove").onclick = () => {
+        fotos[slot] = null;
+        thumb.remove();
+        slotEl.innerHTML = "+";
+        slotEl.classList.remove("filled");
+        atualizarMidias();
+      };
 
-thumb.querySelector(".photo-remove").onclick = () => {
-  fotos[slot] = null;
-  thumb.remove();
-  slotEl.innerHTML = "+";
-  slotEl.classList.remove("filled");
-  atualizarMidias();
-};
+      thumbs.appendChild(thumb);
+    }
 
-thumbs.appendChild(thumb);
+    atualizarMidias();
+    fotoInput.value = "";
 
-atualizarMidias();
-
+  } catch {
+    alert("Erro ao enviar imagem");
   }
-function atualizarMidias() {
+};
+  function atualizarMidias() {
   midias.innerHTML = "";
 
   fotos.filter(Boolean).forEach(url => {
@@ -296,6 +301,7 @@ musicaInput.onchange = async () => {
   };
 
 });
+
 
 
 
