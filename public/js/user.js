@@ -95,19 +95,27 @@ lerBtn.onclick = () => {
 function criarPolaroids(fotos) {
   if (!fotos.length) return;
 
-  midiasEl.innerHTML = "";
+  midiasEl.innerHTML = `
+    <div class="slider">
+      <div class="slider-track">
+        ${fotos.map(url => `
+          <div class="slide">
+            <div class="polaroid">
+              <img src="${url}">
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `;
 
-  fotos.forEach((url, i) => {
-    const wrap = document.createElement("div");
-    wrap.className = "photo polaroid";
-    if (i === 0) wrap.classList.add("active");
+  let index = 0;
+  const track = midiasEl.querySelector(".slider-track");
 
-    wrap.innerHTML = `
-      <img src="${url}" loading="lazy">
-    `;
-
-    midiasEl.appendChild(wrap);
-  });
+  setInterval(() => {
+    index = (index + 1) % fotos.length;
+    track.style.transform = `translateX(-${index * 100}%)`;
+  }, 4000);
 }
 
 /* ==========================
