@@ -186,55 +186,48 @@ fotos.filter(Boolean).forEach((url, i) => {
   /* =====================
      MÚSICA
   ===================== */
-  musicBox.onclick = () => musicaInput.click();
+musicBox.onclick = () => musicaInput.click();
 
-  musicaInput.onchange = async () => {
-    const file = musicaInput.files[0];
-    if (!file) return;
+musicaInput.onchange = async () => {
+  const file = musicaInput.files[0];
+  if (!file) return;
 
-    if (file.size > 10 * 1024 * 1024) {
-      alert("A música deve ter até 1 minuto.");
-      musicaInput.value = "";
-      return;
-    }
+  // 🔒 limite realista (15MB)
+  if (file.size > 15 * 1024 * 1024) {
+    alert("A música deve ter no máximo 1 minuto.");
+    musicaInput.value = "";
+    return;
+  }
 
-    const form = new FormData();
-    form.append("file", file);
+  const form = new FormData();
+  form.append("file", file);
 
-    musicBox.innerText = "⏳ Enviando música...";
-    musicBox.classList.add("disabled");
+  musicBox.innerText = "⏳ Música carregando...";
+  musicBox.classList.add("disabled");
 
-    try {
-      const res = await fetch("/upload-music", {
-        method: "POST",
-        body: form
-      });
+  try {
+    const res = await fetch("/upload-music", {
+      method: "POST",
+      body: form
+    });
 
-      const data = await res.json();
-      if (!data.url) throw new Error();
+    const data = await res.json();
+    if (!data.url) throw new Error();
 
-      musicaUrl = data.url;
-      audio.src = musicaUrl;
-      audio.style.display = "block";
+    musicaUrl = data.url;
+    audio.src = musicaUrl;
+    audio.style.display = "block";
 
-      musicBox.innerText = "🎶 Música pronta";
-      removeMusic.style.display = "block";
+    musicBox.innerText = "🎶 Música adicionada";
+    removeMusic.style.display = "block";
 
-    } catch {
-      alert("Erro ao enviar música");
-      musicBox.innerText = "Adicionar música 🎵";
-    }
-
-    musicBox.classList.remove("disabled");
-  };
-
-  removeMusic.onclick = () => {
-    musicaUrl = null;
-    audio.src = "";
-    audio.style.display = "none";
+  } catch {
+    alert("Erro ao enviar música");
     musicBox.innerText = "Adicionar música 🎵";
-    removeMusic.style.display = "none";
-  };
+  }
+
+  musicBox.classList.remove("disabled");
+};
 
   /* =====================
      CONTADOR
@@ -308,6 +301,7 @@ fotos.filter(Boolean).forEach((url, i) => {
   };
 
 });
+
 
 
 
