@@ -143,9 +143,6 @@ fotoInput.onchange = async () => {
     fotos[slot] = data.url;
 
     const slotEl = document.querySelector(
-      `.photo-slot[data-slot="${slot}"]`
-    );
-   const slotEl = document.querySelector(
   `.photo-slot[data-slot="${slot}"]`
 );
 
@@ -163,38 +160,6 @@ slotEl.querySelector(".photo-remove").onclick = () => {
 };
 
 
-    const thumbs = document.getElementById("thumbs");
-    if (thumbs) {
-      const thumb = document.createElement("div");
-      thumb.className = "photo-slot filled";
-      thumb.innerHTML = `
-        <img src="${data.url}">
-        <div class="photo-remove">×</div>
-      `;
-
-      thumb.querySelector(".photo-remove").onclick = () => {
-        fotos[slot] = null;
-        thumb.remove();
-        slotEl.innerHTML = "+";
-        slotEl.classList.remove("filled");
-        atualizarMidias();
-      };
-
-     slotEl.innerHTML = `
-  <img src="${data.url}">
-  <div class="photo-remove">×</div>
-`;
-slotEl.classList.add("filled");
-
-slotEl.querySelector(".photo-remove").onclick = () => {
-  fotos[slot] = null;
-  slotEl.innerHTML = "+";
-  slotEl.classList.remove("filled");
-  atualizarMidias();
-};
-
-    }
-
     atualizarMidias();
     fotoInput.value = "";
 
@@ -202,12 +167,12 @@ slotEl.querySelector(".photo-remove").onclick = () => {
     alert("Erro ao enviar imagem");
   }
 };
- function atualizarMidias() {
+function atualizarMidias() {
   midias.innerHTML = "";
 
   fotos.filter(Boolean).forEach(url => {
     const slide = document.createElement("div");
-    slide.className = "slide";
+    slide.className = "photo";
     slide.innerHTML = `
       <div class="polaroid">
         <img src="${url}">
@@ -218,19 +183,25 @@ slotEl.querySelector(".photo-remove").onclick = () => {
 
   iniciarSlider();
 }
+
 let slideIndex = 0;
+let sliderTimer = null;
 
 function iniciarSlider() {
-  const track = document.querySelector(".slider-track");
-  const slides = document.querySelectorAll(".slide");
-  if (!slides.length) return;
+  const slides = midias.children;
+  if (slides.length <= 1) return;
 
-  setInterval(() => {
+  clearInterval(sliderTimer);
+  slideIndex = 0;
+  midias.style.transform = "translateX(0)";
+
+  sliderTimer = setInterval(() => {
     slideIndex = (slideIndex + 1) % slides.length;
-    track.style.transform =
+    midias.style.transform =
       `translateX(-${slideIndex * 100}%)`;
   }, 3500);
 }
+
 
   /* =====================
      MÚSICA
@@ -351,6 +322,7 @@ if (file.size > 15 * 1024 * 1024 || !file.type.startsWith("audio")) {
   };
 
 });
+
 
 
 
