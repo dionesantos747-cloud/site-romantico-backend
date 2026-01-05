@@ -188,12 +188,10 @@ let slideIndex = 0;
 let sliderTimer = null;
 
 function iniciarSlider() {
-  const slides = midias.children;
-  if (slides.length <= 1) return;
+  const slides = midias.querySelectorAll(".slide");
+  if (!slides.length) return;
 
-  clearInterval(sliderTimer);
-  slideIndex = 0;
-  midias.style.transform = "translateX(0)";
+  if (sliderTimer) clearInterval(sliderTimer);
 
   sliderTimer = setInterval(() => {
     slideIndex = (slideIndex + 1) % slides.length;
@@ -322,6 +320,7 @@ if (file.size > 15 * 1024 * 1024 || !file.type.startsWith("audio")) {
   };
 
 });
+
 
 
 
