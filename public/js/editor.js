@@ -210,12 +210,17 @@ musicaInput.onchange = async () => {
   const file = musicaInput.files[0];
   if (!file) return;
 
-  // 🔒 limite realista (15MB)
-if (file.size > 15 * 1024 * 1024 || !file.type.startsWith("audio")) {
-  alert("Use apenas MP3 até 1 minuto.");
+ const maxSize = 25 * 1024 * 1024; // ~3 minutos MP3/MP4
+
+if (
+  file.size > maxSize ||
+  (!file.type.startsWith("audio") && !file.type.startsWith("video"))
+) {
+  alert("Envie MP3 ou MP4 de até 3 minutos.");
   musicaInput.value = "";
   return;
 }
+
 
 
   const form = new FormData();
@@ -318,8 +323,23 @@ if (file.size > 15 * 1024 * 1024 || !file.type.startsWith("audio")) {
       alert("Erro ao gerar pagamento");
     }
   };
+function criarCoracoesPreview() {
+  document.querySelectorAll(".heart").forEach(h => h.remove());
+
+  for (let i = 0; i < 10; i++) {
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.innerText = "❤️";
+    h.style.left = Math.random() * 100 + "%";
+    h.style.animationDuration = 6 + Math.random() * 6 + "s";
+    preview.appendChild(h);
+  }
+}
+
+criarCoracoesPreview();
 
 });
+
 
 
 
