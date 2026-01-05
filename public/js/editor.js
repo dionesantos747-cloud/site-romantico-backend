@@ -138,48 +138,34 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await res.json();
       if (!data.url) throw new Error();
 
-      fotos[slot] = data.url;
+    fotos[slot] = data.url;
 
-      const slotEl = document.querySelector(
-        `.photo-slot[data-slot="${slot}"]`
-      );
+const slotEl = document.querySelector(
+  `.photo-slot[data-slot="${slot}"]`
+);
+slotEl.classList.add("filled");
+slotEl.innerHTML = `<img src="${data.url}">`;
 
-      slotEl.classList.add("filled");
-      slotEl.innerHTML = `
-        <img src="${data.url}">
-        <div class="photo-remove">✕</div>
-      `;
+const thumbs = document.getElementById("thumbs");
 
-      slotEl.querySelector(".photo-remove").onclick = (e) => {
-        e.stopPropagation();
-        fotos[slot] = null;
-        slotEl.classList.remove("filled");
-        slotEl.innerHTML = "+";
-        renderMidias();
-      };
+const thumb = document.createElement("div");
+thumb.className = "photo-slot filled";
+thumb.innerHTML = `
+  <img src="${data.url}">
+  <div class="photo-remove">×</div>
+`;
 
-      renderMidias();
-      fotoInput.value = "";
+thumb.querySelector(".photo-remove").onclick = () => {
+  fotos[slot] = null;
+  thumb.remove();
+  slotEl.innerHTML = "+";
+  slotEl.classList.remove("filled");
+  atualizarMidias();
+};
 
-    } catch {
-      alert("Erro ao enviar imagem");
-    }
-  };
+thumbs.appendChild(thumb);
 
-  function renderMidias() {
-  midias.innerHTML = "";
-
-fotos.filter(Boolean).forEach((url, i) => {
-  const div = document.createElement("div");
-  div.className = "photo";
-  div.style.transform = `rotate(${i % 2 === 0 ? -2 : 2}deg)`;
-
-  const img = document.createElement("img");
-  img.src = url;
-
-  div.appendChild(img);
-  midias.appendChild(div);
-});
+atualizarMidias();
 
   }
 
@@ -301,6 +287,7 @@ musicaInput.onchange = async () => {
   };
 
 });
+
 
 
 
