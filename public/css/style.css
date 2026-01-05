@@ -116,12 +116,22 @@ input.error, textarea.error {
 
 /* ===== PREVIEW ===== */
 .preview {
-  min-height: 100vh;
-  padding: 40px 16px 160px;
-  text-align: center;
-  position: relative;
+  width: 360px;
+  max-width: 92vw;
+  aspect-ratio: 9/19.5;
+
+  border-radius: 34px;
+  background: #000;
+
+  border: 10px solid #111;
+  box-shadow:
+    0 0 0 4px #000,
+    0 25px 60px rgba(0,0,0,.8);
+
   overflow: hidden;
+  position: relative;
 }
+
 
 .nome {
   font-size: 2.5em;
@@ -434,6 +444,11 @@ button.pay {
   height: auto;
   border-radius: 4px;
 }
+.preview.azul  { background: radial-gradient(#2f6cff,#050b1a); }
+.preview.roxo  { background: radial-gradient(#7a4cff,#12071a); }
+.preview.rosa  { background: radial-gradient(#ff5ca8,#1a050f); }
+.preview.preto { background: radial-gradient(#444,#000); }
+
 
 
 
