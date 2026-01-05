@@ -12,7 +12,7 @@ const msgEl    = document.getElementById("mensagem");
 const cartaEl  = document.getElementById("carta");
 const tempoEl  = document.getElementById("tempo");
 const midiasEl = document.getElementById("midias");
-const musicaEl = document.getElementById("musica");
+const musicaEl = document.getElementById("audioPlayer");
 const lerBtn   = document.getElementById("lerBtn");
 
 /* ==========================
@@ -28,31 +28,29 @@ async function carregar() {
   const res = await fetch(`/user-data?id=${userId}`);
   const data = await res.json();
 
-  if (data.status === "pending") {
-    document.body.innerHTML = "Pagamento em processamento...";
+  if (!data || data.status !== "approved") {
+    document.body.innerHTML = `
+      <div style="text-align:center;padding:40px">
+        <h2>💔 Site ainda não disponível</h2>
+      </div>`;
     return;
   }
 
   aplicarFundo(data.fundo);
 
-  nomeEl.innerText = data.nome;
-  textoCompleto = data.mensagem;
+  nomeEl.innerText = data.nome || "";
 
-  if (textoCompleto.length > 500) {
-    msgEl.innerText = textoCompleto.slice(0, 500) + "...";
-    lerBtn.style.display = "block";
-    lerBtn.innerText = "Continuar lendo";
-  } else {
-    msgEl.innerText = textoCompleto;
-  }
+  textoCompleto = data.mensagem || "";
+  atualizarTexto();
 
-  cartaEl.innerText = data.carta;
+  cartaEl.innerText = data.carta || "";
 
   criarPolaroids(data.fotos || []);
 
   if (data.musica) {
     musicaEl.src = data.musica;
-    musicaEl.volume = 0.6;
+    musicaEl.volume = 0.7;
+    musicaEl.style.display = "block";
     musicaEl.play().catch(()=>{});
   }
 
@@ -61,28 +59,38 @@ async function carregar() {
 }
 
 /* ==========================
-   FUNDO (IGUAL AO EDITOR)
+   FUNDO (MESMO DO EDITOR)
 ========================== */
 function aplicarFundo(fundo) {
-  document.body.className = fundo || "azul";
+  const preview = document.getElementById("preview");
+  preview.className = "preview " + (fundo || "azul");
 }
 
 /* ==========================
-   LER MAIS
+   TEXTO + CONTINUAR LENDO
 ========================== */
+function atualizarTexto() {
+  if (textoCompleto.length > 500) {
+    msgEl.innerText = textoExpandido
+      ? textoCompleto
+      : textoCompleto.slice(0, 500) + "...";
+    lerBtn.style.display = "block";
+    lerBtn.innerText = textoExpandido
+      ? "Ler menos"
+      : "Continuar lendo";
+  } else {
+    msgEl.innerText = textoCompleto;
+    lerBtn.style.display = "none";
+  }
+}
+
 lerBtn.onclick = () => {
   textoExpandido = !textoExpandido;
-  msgEl.innerText = textoExpandido
-    ? textoCompleto
-    : textoCompleto.slice(0, 500) + "...";
-
-  lerBtn.innerText = textoExpandido
-    ? "Ler menos"
-    : "Continuar lendo";
+  atualizarTexto();
 };
 
 /* ==========================
-   POLAROID STACK (SEM SLIDER)
+   POLAROID STACK (SEM CORTAR)
 ========================== */
 function criarPolaroids(fotos) {
   if (!fotos.length) return;
@@ -90,11 +98,15 @@ function criarPolaroids(fotos) {
   midiasEl.innerHTML = "";
 
   fotos.forEach((url, i) => {
-    const div = document.createElement("div");
-    div.className = "photo";
-    if (i === 0) div.classList.add("active");
-    div.innerHTML = `<img src="${url}">`;
-    midiasEl.appendChild(div);
+    const wrap = document.createElement("div");
+    wrap.className = "photo polaroid";
+    if (i === 0) wrap.classList.add("active");
+
+    wrap.innerHTML = `
+      <img src="${url}" loading="lazy">
+    `;
+
+    midiasEl.appendChild(wrap);
   });
 }
 
@@ -110,10 +122,13 @@ function toggleCarta() {
    TEMPO JUNTOS (COMPLETO)
 ========================== */
 function iniciarTempo(dataInicio) {
+  if (!dataInicio) return;
+
   function atualizar() {
     const inicio = new Date(dataInicio);
     const agora = new Date();
     const diff = agora - inicio;
+    if (diff < 0) return;
 
     const s = Math.floor(diff / 1000) % 60;
     const m = Math.floor(diff / 60000) % 60;
@@ -138,19 +153,21 @@ function iniciarTempo(dataInicio) {
 }
 
 /* ==========================
-   CORAÇÕES
+   CORAÇÕES (FUNDO)
 ========================== */
 function criarCorações() {
-  for (let i = 0; i < 12; i++) {
+  const preview = document.getElementById("preview");
+  preview.querySelectorAll(".heart").forEach(h => h.remove());
+
+  for (let i = 0; i < 14; i++) {
     const h = document.createElement("div");
     h.className = "heart";
     h.innerText = "❤️";
     h.style.left = Math.random() * 100 + "%";
-    h.style.animationDuration = 10 + Math.random() * 10 + "s";
-    document.body.appendChild(h);
+    h.style.animationDuration = 8 + Math.random() * 8 + "s";
+    preview.appendChild(h);
   }
 }
 
 /* INIT */
 carregar();
-
