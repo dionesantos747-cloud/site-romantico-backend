@@ -1,335 +1,325 @@
-/* ==========================
-   ESTADO GLOBAL (ALINHADO AO BACKEND)
-========================== */
-const state = {
-  nome: "",
-  mensagem: "",
-  carta: "",
-  dataInicio: "",
-  fotos: [],
-  musica: null,
-  fundo: "azul"
-};
+document.addEventListener("DOMContentLoaded", () => {
 
-/* ==========================
-   ELEMENTOS
-========================== */
-const previewFrame = document.getElementById("previewFrame");
+  const isEditor = !!document.getElementById("editor");
+  if (!isEditor) return;
 
-const nomeInput = document.getElementById("nomeInput");
-const msgInput = document.getElementById("msgInput");
-const cartaInput = document.getElementById("cartaInput");
-const dataInput = document.getElementById("dataInput");
+  /* =====================
+     ELEMENTOS
+  ===================== */
+  const nomeInput  = document.getElementById("nomeInput");
+  const msgInput   = document.getElementById("msgInput");
+  const cartaInput = document.getElementById("cartaInput");
+  const dataInput  = document.getElementById("dataInput");
 
-const fotoInput = document.getElementById("fotoInput");
-const musicaInput = document.getElementById("musicaInput");
+  const nome     = document.getElementById("nome");
+  const mensagem = document.getElementById("mensagem");
+  const carta    = document.getElementById("carta");
+  const tempo    = document.getElementById("tempo");
+  const preview  = document.getElementById("preview");
 
-const miniaturas = document.getElementById("miniaturas");
-const comprarBtn = document.getElementById("comprarBtn");
-const removeMusicBtn = document.getElementById("removeMusic");
+  const btnCarta   = document.getElementById("btnCarta");
+  const btnComprar = document.getElementById("btnComprar");
+  const btnContinuarMensagem = document.getElementById("btnContinuarMensagem");
 
-/* ==========================
-   PREVIEW HTML (MOBILE REAL)
-========================== */
-function renderPreview() {
-  previewFrame.srcdoc = `
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:${bgColor()};
-  color:${state.fundo === "branco" ? "#000" : "#fff"};
-}
-.container{
-  padding:16px;
-}
-h1{
-  text-align:center;
-  margin-bottom:12px;
-}
-.texto{
-  font-size:.95em;
-  line-height:1.45;
-}
-.slider{
-  margin:16px 0;
-  overflow:hidden;
-}
-.slider-track{
-  display:flex;
-  transition:transform .7s ease;
-}
-.slide{
-  min-width:100%;
-  padding:6px;
-}
-.polaroid{
-  background:#fff;
-  padding:8px;
-  border-radius:6px;
-}
-.polaroid img{
-  width:100%;
-  height:220px;
-  object-fit:cover;
-  border-radius:4px;
-}
-.dots{text-align:center;margin-top:6px}
-.dot{
-  width:6px;height:6px;
-  background:#ccc;border-radius:50%;
-  display:inline-block;margin:0 3px;
-}
-.dot.active{background:#ffd400}
-.btn{
-  margin:16px 0;
-  background:#ffd400;
-  color:#000;
-  padding:12px;
-  border-radius:14px;
-  text-align:center;
-}
-.carta{display:none;font-size:.9em}
-.tempo{text-align:center;font-size:.85em;margin-top:10px}
-</style>
-</head>
-<body>
+  const fotoInput = document.getElementById("fotoInput");
+  const midias    = document.getElementById("midias");
 
-<div class="container">
-  <h1>${state.nome || "Título do site"}</h1>
+  const musicBox    = document.getElementById("musicBox");
+  const musicaInput = document.getElementById("musicaInput");
+  const audio       = document.getElementById("audioPlayer");
+  const removeMusic = document.getElementById("removeMusic");
 
-  <div class="texto">
-    ${textoLimitado(state.mensagem)}
-  </div>
+  /* =====================
+     ESTADO
+  ===================== */
+  let fotos = [null, null, null];
+  let musicaUrl = null;
+  let contadorInterval = null;
 
-  ${sliderHTML()}
+  /* =====================
+     FIX: PREVIEW NO MOLDE
+  ===================== */
+  preview.style.minHeight = "auto";
 
-  <div class="btn" onclick="toggleCarta()">Abrir carta 💌</div>
-  <div class="carta" id="carta">${state.carta || ""}</div>
+  /* =====================
+     HELPERS
+  ===================== */
+  function erro(input) {
+    input.classList.add("error");
+    input.scrollIntoView({ behavior: "smooth", block: "center" });
+    input.focus();
+  }
 
-  <div class="tempo">${tempoJuntos()}</div>
+  function limparErro(input) {
+    input.classList.remove("error");
+  }
 
-  ${state.musica ? `<audio src="${state.musica}" autoplay loop></audio>` : ""}
-</div>
-
-<script>
-let i=0;
-const slides=document.querySelectorAll('.slide');
-const dots=document.querySelectorAll('.dot');
-
-setInterval(()=>{
-  if(slides.length<=1)return;
-  i=(i+1)%slides.length;
-  document.querySelector('.slider-track').style.transform=
-    'translateX(-'+i*100+'%)';
-  dots.forEach(d=>d.classList.remove('active'));
-  dots[i].classList.add('active');
-},4000);
-
-function toggleCarta(){
-  const c=document.getElementById('carta');
-  c.style.display=c.style.display==='block'?'none':'block';
-}
-</script>
-
-</body>
-</html>
-`;
-}
-
-/* ==========================
-   AUX
-========================== */
-function bgColor(){
-  return {
-    rosa:"linear-gradient(#ff8fc7,#ff5fa2)",
-    azul:"linear-gradient(#4da6ff,#1c3faa)",
-    vermelho:"linear-gradient(#ff6b6b,#b30000)",
-    preto:"#000",
-    branco:"#fff"
-  }[state.fundo];
-}
-
-function textoLimitado(txt){
-  if(!txt) return "";
-  if(txt.length<=500) return txt;
-  return txt.slice(0,500)+"...";
-}
-
-function sliderHTML(){
-  if(!state.fotos.length) return "";
-  return `
-  <div class="slider">
-    <div class="slider-track">
-      ${state.fotos.map(f=>`
-        <div class="slide">
-          <div class="polaroid">
-            <img src="${f}">
-          </div>
-        </div>`).join("")}
-    </div>
-  </div>
-  ${state.fotos.length>1?
-    `<div class="dots">${state.fotos.map((_,i)=>
-      `<span class="dot ${i===0?'active':''}"></span>`).join("")}</div>`:""}
-  `;
-}
-
-function tempoJuntos(){
-  if(!state.dataInicio) return "";
-  const ini=new Date(state.dataInicio);
-  const dias=Math.floor((Date.now()-ini)/(1000*60*60*24));
-  return `⏳ ${dias} dias juntos`;
-}
-
-/* ==========================
-   INPUTS (CORRIGIDOS)
-========================== */
-nomeInput.oninput = () => {
-  state.nome = nomeInput.value;
-  nomeInput.classList.remove("erro");
-  renderPreview();
-};
-
-msgInput.oninput = () => {
-  state.mensagem = msgInput.value;
-  msgInput.classList.remove("erro");
-  renderPreview();
-};
-
-cartaInput.oninput = () => {
-  state.carta = cartaInput.value;
-  cartaInput.classList.remove("erro");
-  renderPreview();
-};
-
-dataInput.oninput = () => {
-  state.dataInicio = dataInput.value;
-  dataInput.classList.remove("erro");
-  renderPreview();
-};
-
-/* ==========================
-   CORES FUNDO (INDICADOR)
-========================== */
-document.querySelectorAll(".cores button").forEach(btn=>{
-  btn.onclick=()=>{
-    document.querySelectorAll(".cores button")
-      .forEach(b=>b.classList.remove("ativo"));
-    btn.classList.add("ativo");
-    state.fundo=btn.dataset.cor;
-    renderPreview();
+  /* =====================
+     TEXTO AO VIVO
+  ===================== */
+  nomeInput.oninput = () => {
+    nome.innerText = nomeInput.value;
+    limparErro(nomeInput);
   };
+
+  msgInput.oninput = () => {
+    mensagem.innerText = msgInput.value;
+    limparErro(msgInput);
+    ajustarMensagem();
+  };
+
+  function ajustarMensagem() {
+    const limite = 500;
+    if (mensagem.innerText.length > limite) {
+      mensagem.classList.add("limitada");
+      mensagem.style.maxHeight = "180px";
+      mensagem.style.overflow = "hidden";
+      btnContinuarMensagem.style.display = "block";
+    } else {
+      mensagem.classList.remove("limitada");
+      mensagem.style.maxHeight = "";
+      mensagem.style.overflow = "";
+      btnContinuarMensagem.style.display = "none";
+    }
+  }
+
+  btnContinuarMensagem.onclick = () => {
+    mensagem.classList.remove("limitada");
+    mensagem.style.maxHeight = "";
+    mensagem.style.overflow = "";
+    btnContinuarMensagem.style.display = "none";
+  };
+
+  /* =====================
+     CARTA
+  ===================== */
+  cartaInput.oninput = () => {
+    carta.innerText = cartaInput.value;
+    limparErro(cartaInput);
+    btnCarta.style.display = cartaInput.value.trim() ? "block" : "none";
+  };
+
+  btnCarta.onclick = () => {
+    carta.style.display =
+      carta.style.display === "block" ? "none" : "block";
+  };
+
+  /* =====================
+     FUNDOS
+  ===================== */
+  document.querySelectorAll(".bg-card").forEach(card => {
+    card.onclick = () => {
+      document.querySelectorAll(".bg-card")
+        .forEach(c => c.classList.remove("selected"));
+      card.classList.add("selected");
+      preview.className = "preview " + card.dataset.bg;
+    };
+  });
+
+  /* =====================
+     FOTOS (POLAROID + REMOVER)
+  ===================== */
+  document.querySelectorAll(".photo-slot").forEach(slot => {
+    slot.onclick = () => {
+      if (slot.classList.contains("filled")) return;
+      fotoInput.dataset.slot = slot.dataset.slot;
+      fotoInput.click();
+    };
+  });
+
+  fotoInput.onchange = async () => {
+    const file = fotoInput.files[0];
+    if (!file) return;
+
+    const slot = Number(fotoInput.dataset.slot);
+    const form = new FormData();
+    form.append("file", file);
+
+    try {
+      const res = await fetch("/upload-image", { method: "POST", body: form });
+      const data = await res.json();
+      if (!data.url) throw new Error();
+
+      fotos[slot] = data.url;
+
+      const slotEl = document.querySelector(`.photo-slot[data-slot="${slot}"]`);
+      slotEl.classList.add("filled");
+      slotEl.innerHTML = `
+        <img src="${data.url}" style="width:100%;height:100%;object-fit:cover;border-radius:14px">
+        <div class="photo-remove">✕</div>
+      `;
+
+      slotEl.querySelector(".photo-remove").onclick = (e) => {
+        e.stopPropagation();
+        fotos[slot] = null;
+        slotEl.classList.remove("filled");
+        slotEl.innerHTML = "+";
+        renderMidias();
+      };
+
+      renderMidias();
+      fotoInput.value = "";
+
+    } catch {
+      alert("Erro ao enviar imagem");
+    }
+  };
+
+  function renderMidias() {
+    midias.innerHTML = "";
+    fotos.filter(Boolean).forEach(url => {
+      const div = document.createElement("div");
+      div.className = "photo";
+      div.innerHTML = `<img src="${url}">`;
+      midias.appendChild(div);
+    });
+    atualizarStack();
+  }
+
+  function atualizarStack() {
+    const cards = document.querySelectorAll("#midias .photo");
+    cards.forEach((c, i) => {
+      c.classList.remove("active");
+      if (i === 0) c.classList.add("active");
+    });
+  }
+
+  /* =====================
+     MÚSICA (ROBUSTA)
+  ===================== */
+  musicBox.onclick = () => musicaInput.click();
+
+  musicaInput.onchange = async () => {
+    const file = musicaInput.files[0];
+    if (!file) return;
+
+    if (file.size > 10 * 1024 * 1024) {
+      alert("A música deve ter até 1 minuto.");
+      musicaInput.value = "";
+      return;
+    }
+
+    const form = new FormData();
+    form.append("file", file);
+
+    musicBox.innerText = "⏳ Enviando música...";
+    musicBox.classList.add("disabled");
+
+    try {
+      const res = await fetch("/upload-music", { method: "POST", body: form });
+      const data = await res.json();
+      if (!data.url) throw new Error();
+
+      musicaUrl = data.url;
+      audio.src = musicaUrl;
+      audio.style.display = "block";
+      musicBox.innerText = "🎶 Música pronta";
+      removeMusic.style.display = "block";
+
+    } catch {
+      alert("Erro ao enviar música");
+      musicBox.innerText = "Adicionar música 🎵";
+      musicaUrl = null;
+    }
+
+    musicBox.classList.remove("disabled");
+  };
+
+  removeMusic.onclick = () => {
+    musicaUrl = null;
+    audio.src = "";
+    audio.style.display = "none";
+    musicBox.innerText = "Adicionar música 🎵";
+    removeMusic.style.display = "none";
+  };
+
+  /* =====================
+     CONTADOR
+  ===================== */
+  dataInput.onchange = () => {
+    limparErro(dataInput);
+    if (contadorInterval) clearInterval(contadorInterval);
+
+    contadorInterval = setInterval(() => {
+      const inicio = new Date(dataInput.value);
+      const agora = new Date();
+      const diff = agora - inicio;
+      if (diff < 0) return;
+
+      const s = Math.floor(diff / 1000) % 60;
+      const m = Math.floor(diff / 60000) % 60;
+      const h = Math.floor(diff / 3600000) % 24;
+      const d = Math.floor(diff / 86400000) % 30;
+      const mo = Math.floor(diff / 2592000000) % 12;
+      const a = Math.floor(diff / 31536000000);
+
+      tempo.innerHTML = `
+        <span class="titulo">Já estamos juntos há</span>
+        <div class="contador">
+          <div class="item">${a} anos</div>
+          <div class="item">${mo} meses</div>
+          <div class="item">${d} dias</div>
+          <div class="item">${h}h ${m}m ${s}s</div>
+        </div>
+      `;
+    }, 1000);
+  };
+
+  /* =====================
+     PIX
+  ===================== */
+  btnComprar.onclick = async () => {
+    if (!nomeInput.value.trim()) return erro(nomeInput);
+    if (!msgInput.value.trim()) return erro(msgInput);
+    if (!cartaInput.value.trim()) return erro(cartaInput);
+    if (!dataInput.value) return erro(dataInput);
+
+    const payload = {
+      nome: nomeInput.value.trim(),
+      mensagem: msgInput.value.trim(),
+      carta: cartaInput.value.trim(),
+      dataInicio: dataInput.value,
+      fotos: fotos.filter(Boolean),
+      musica: musicaUrl,
+      fundo: document.querySelector(".bg-card.selected")?.dataset.bg || "azul"
+    };
+
+    try {
+      const res = await fetch("/create-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+      if (!data.payment_id) throw new Error();
+
+      sessionStorage.setItem("pix_qr", data.qr_base64);
+      sessionStorage.setItem("pix_copia", data.copia_cola);
+
+      window.location.href = `/aguardando.html?payment_id=${data.payment_id}`;
+
+    } catch {
+      alert("Erro ao gerar pagamento");
+    }
+  };
+
+  /* =====================
+     CORAÇÕES
+  ===================== */
+  preview.querySelectorAll(".heart").forEach(h => h.remove());
+  for (let i = 0; i < 12; i++) {
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.innerText = "❤️";
+    h.style.left = Math.random() * 100 + "%";
+    h.style.animationDuration = 6 + Math.random() * 6 + "s";
+    preview.appendChild(h);
+  }
+
 });
 
-/* ==========================
-   FOTOS
-========================== */
-fotoInput.onchange = async e => {
-  const files=[...e.target.files];
 
-  if(files.length+state.fotos.length>10){
-    alert("Máximo de 10 fotos 💖");
-    fotoInput.value="";
-    return;
-  }
-
-  for(const file of files){
-    const fd=new FormData();
-    fd.append("file",file);
-    const res=await fetch("/upload-image",{method:"POST",body:fd});
-    const json=await res.json();
-    state.fotos.push(json.url);
-  }
-
-  renderMiniaturas();
-  renderPreview();
-};
-
-function renderMiniaturas(){
-  miniaturas.innerHTML="";
-  state.fotos.forEach((f,i)=>{
-    const d=document.createElement("div");
-    d.className="thumb";
-    d.innerHTML=`<img src="${f}"><button>×</button>`;
-    d.querySelector("button").onclick=()=>{
-      state.fotos.splice(i,1);
-      renderMiniaturas();
-      renderPreview();
-    };
-    miniaturas.appendChild(d);
-  });
-}
-
-/* ==========================
-   MÚSICA
-========================== */
-musicaInput.onchange = async e => {
-  comprarBtn.innerText="Carregando música...";
-  const fd=new FormData();
-  fd.append("file",e.target.files[0]);
-
-  const res=await fetch("/upload-music",{method:"POST",body:fd});
-  const json=await res.json();
-
-  state.musica=json.url;
-  removeMusicBtn.style.display="block";
-  comprarBtn.innerText="Gerar QR Code por R$ 9,99";
-  renderPreview();
-};
-
-removeMusicBtn.onclick=()=>{
-  state.musica=null;
-  musicaInput.value="";
-  removeMusicBtn.style.display="none";
-  renderPreview();
-};
-
-/* ==========================
-   COMPRA (FUNCIONANDO)
-========================== */
-comprarBtn.onclick = async () => {
-  let erro=false;
-  [nomeInput,msgInput,cartaInput,dataInput].forEach(el=>{
-    if(!el.value){
-      el.classList.add("erro");
-      el.scrollIntoView({behavior:"smooth",block:"center"});
-      erro=true;
-    }
-  });
-
-  if(!state.fotos.length){
-    alert("Adicione pelo menos uma foto 💖");
-    erro=true;
-  }
-
-  if(erro) return;
-
-  const res=await fetch("/create-payment",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(state)
-  });
-
-  const json=await res.json();
-
-  if(!res.ok){
-    alert(json.error||"Erro ao gerar pagamento");
-    return;
-  }
-
-  sessionStorage.setItem("pix",JSON.stringify(json));
-  location.href="/aguardando.html";
-};
-
-/* INIT */
-renderPreview();
-removeMusicBtn.style.display="none";
 
 
 
