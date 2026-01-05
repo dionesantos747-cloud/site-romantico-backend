@@ -419,7 +419,12 @@ button.pay {
 .bg-card.rosa  { background: radial-gradient(#ff5fa2,#000); }
 .bg-card.preto { background: #000; }
 
-
+button.pay {
+  background: #ffd400 !important;
+  color: #000 !important;
+  font-weight: bold;
+  animation: pulseBuy 1.8s infinite;
+}
 
 
 
