@@ -212,10 +212,10 @@ app.get("/payment-info", async (req, res) => {
       return res.status(404).json({ error: "PIX ainda não disponível" });
     }
 
-    res.json({
-      qr: pix.qr_code_base64,
-      copia: pix.qr_code
-    });
+   res.json({
+  qr_base64: pix.qr_code_base64,
+  copia_cola: pix.qr_code
+});
 
   } catch (err) {
     console.error("Erro payment-info:", err.message);
