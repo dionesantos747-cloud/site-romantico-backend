@@ -106,12 +106,13 @@ button{
 
 </div>
 
+
 <script>
 const params = new URLSearchParams(window.location.search);
 const paymentId = params.get("payment_id");
 
 const qrImg = document.getElementById("qr");
-const pixBox = document.getElementById("pix");
+const pixBox = document.getElementById("code");
 
 if (!paymentId) {
   alert("Pagamento não identificado. Gere um novo pagamento.");
@@ -119,22 +120,22 @@ if (!paymentId) {
 }
 
 /* ==========================
-   BUSCAR PIX DO BACKEND
+   BUSCAR PIX
 ========================== */
 async function carregarPix() {
   try {
     const res = await fetch(`/payment-info?payment_id=${paymentId}`);
     const data = await res.json();
 
-    if (!data.qr_base64 || !data.copia_cola) {
+    if (!data.qr || !data.copia) {
       throw new Error("PIX não disponível");
     }
 
-    qrImg.src = "data:image/png;base64," + data.qr_base64;
-    pixBox.innerText = data.copia_cola;
+    qrImg.src = "data:image/png;base64," + data.qr;
+    pixBox.innerText = data.copia;
 
-  } catch (e) {
-    pixBox.innerText = "Erro ao carregar PIX. Aguarde...";
+  } catch {
+    pixBox.innerText = "Aguardando geração do PIX...";
   }
 }
 
@@ -169,6 +170,5 @@ async function verificarPagamento() {
 carregarPix();
 setInterval(verificarPagamento, 3000);
 </script>
-
 </body>
 </html>
