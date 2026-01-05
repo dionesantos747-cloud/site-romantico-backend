@@ -230,11 +230,12 @@ musicaInput.onchange = async () => {
   if (!file) return;
 
   // 🔒 limite realista (15MB)
-  if (file.size > 15 * 1024 * 1024) {
-    alert("A música deve ter no máximo 1 minuto.");
-    musicaInput.value = "";
-    return;
-  }
+if (file.size > 15 * 1024 * 1024 || !file.type.startsWith("audio")) {
+  alert("Use apenas MP3 até 1 minuto.");
+  musicaInput.value = "";
+  return;
+}
+
 
   const form = new FormData();
   form.append("file", file);
@@ -338,6 +339,7 @@ musicaInput.onchange = async () => {
   };
 
 });
+
 
 
 
