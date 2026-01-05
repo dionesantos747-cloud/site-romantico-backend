@@ -5,164 +5,43 @@
 <title>Nosso Amor 💖</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-
-body{
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
-  background:#000;
-  color:#fff;
-  min-height:100vh;
-  overflow-x:hidden;
-}
-
-.container{
-  padding:18px;
-  max-width:520px;
-  margin:auto;
-}
-
-h1{
-  text-align:center;
-  margin-bottom:14px;
-  font-size:1.5em;
-}
-
-.texto{
-  font-size:0.95em;
-  line-height:1.45;
-}
-
-.ler-btn{
-  color:#ffd400;
-  text-align:center;
-  margin-top:10px;
-  cursor:pointer;
-  font-size:.9em;
-}
-
-.slider{
-  margin:18px 0;
-  overflow:hidden;
-  position:relative;
-}
-
-.slider-track{
-  display:flex;
-  transition:transform .7s ease;
-}
-
-.slide{
-  min-width:100%;
-  padding:6px;
-}
-
-.polaroid{
-  background:#fff;
-  padding:8px;
-  border-radius:6px;
-  box-shadow:0 6px 14px rgba(0,0,0,.35);
-}
-
-.polaroid img{
-  width:100%;
-  height:240px;
-  object-fit:cover;
-  border-radius:4px;
-}
-
-.dots{
-  text-align:center;
-  margin-top:8px;
-}
-
-.dot{
-  width:7px;
-  height:7px;
-  background:#ccc;
-  border-radius:50%;
-  display:inline-block;
-  margin:0 4px;
-}
-
-.dot.active{background:#ffd400}
-
-.carta-btn{
-  margin:18px 0;
-  background:#ffd400;
-  color:#000;
-  padding:12px;
-  border-radius:14px;
-  text-align:center;
-  font-weight:bold;
-}
-
-.carta{
-  display:none;
-  margin-top:10px;
-  font-size:.9em;
-  line-height:1.4;
-}
-
-.tempo{
-  text-align:center;
-  margin-top:14px;
-  font-size:.85em;
-  opacity:.85;
-}
-
-footer{
-  margin-top:28px;
-  text-align:center;
-  font-size:.75em;
-  opacity:.7;
-}
-
-.hearts{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  overflow:hidden;
-}
-
-.heart{
-  position:absolute;
-  color:rgba(255,255,255,.12);
-  animation:float 14s linear infinite;
-}
-
-@keyframes float{
-  from{transform:translateY(100vh)}
-  to{transform:translateY(-10vh)}
-}
-</style>
+<link rel="stylesheet" href="/css/style.css">
 </head>
 
-<body>
+<body class="final">
 
-<div class="hearts" id="hearts"></div>
+<!-- =====================
+     PREVIEW / SITE FINAL
+===================== -->
+<div class="preview azul" id="preview">
 
-<div class="container">
+  <!-- Música -->
+  <audio id="audioPlayer" controls style="display:none"></audio>
 
-  <h1 id="nome"></h1>
+  <!-- Nome -->
+  <div class="nome" id="nome"></div>
 
-  <div class="texto" id="mensagem"></div>
-  <div class="ler-btn" id="lerBtn" style="display:none"></div>
+  <!-- Mensagem -->
+  <div class="mensagem" id="mensagem"></div>
+  <button id="lerBtn" class="ler-mais" style="display:none">
+    Continuar lendo ⬇️
+  </button>
 
-  <div id="sliderArea"></div>
+  <!-- Fotos Polaroid -->
+  <div id="midias"></div>
 
-  <div class="carta-btn" onclick="toggleCarta()">Abrir carta 💌</div>
+  <!-- Tempo juntos -->
+  <div id="tempo"></div>
+
+  <!-- Carta -->
+  <button id="btnCarta" onclick="toggleCarta()">💌 Abrir carta</button>
   <div class="carta" id="carta"></div>
 
-  <div class="tempo" id="tempo"></div>
-
-  <audio id="musica" loop></audio>
-
-  <footer>
-    💖 Criado com carinho • Site Romântico
-  </footer>
-
 </div>
+
+<script src="/js/user.js"></script>
+</body>
+</html>
 
 <script src="/js/user.js"></script>
 </body>
