@@ -188,12 +188,13 @@ app.post("/create-payment", async (req, res) => {
 /* =====================
    PAYMENT INFO (PIX)
 ===================== */
-app.get("/check-payment", async (req, res) => {
+app.get("/payment-info", async (req, res) => {
   try {
     const paymentId = String(req.query.payment_id);
-    if (!paymentId) return res.json({ status: "pending" });
+    if (!paymentId) {
+      return res.status(400).json({});
+    }
 
-    // Consulta DIRETA no Mercado Pago
     const mp = await axios.get(
       `https://api.mercadopago.com/v1/payments/${paymentId}`,
       {
@@ -203,31 +204,19 @@ app.get("/check-payment", async (req, res) => {
       }
     );
 
-    if (mp.data.status === "approved") {
-      const userId = mp.data.metadata?.userId;
-
-      // garante update no banco
-      await payments.updateOne(
-        { paymentId },
-        { $set: { status: "approved", approvedAt: new Date() } },
-        { upsert: true }
-      );
-
-      if (userId) {
-        await users.updateOne(
-          { _id: userId },
-          { $set: { status: "approved", activatedAt: new Date() } }
-        );
-      }
-
-      return res.json({ status: "approved" });
+    const pix = mp.data.point_of_interaction?.transaction_data;
+    if (!pix) {
+      return res.status(404).json({});
     }
 
-    res.json({ status: "pending" });
+    res.json({
+      qr_base64: pix.qr_code_base64,
+      copia_cola: pix.qr_code
+    });
 
   } catch (err) {
-    console.error("Erro check-payment:", err.message);
-    res.json({ status: "pending" });
+    console.error("Erro payment-info:", err.message);
+    res.status(500).json({});
   }
 });
 /* =====================
