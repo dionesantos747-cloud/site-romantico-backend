@@ -7,14 +7,13 @@ const userId = params.get("id");
 /* ==========================
    ELEMENTOS
 ========================== */
-const nomeEl = document.getElementById("nome");
-const msgEl = document.getElementById("mensagem");
-const cartaEl = document.getElementById("carta");
-const tempoEl = document.getElementById("tempo");
-const sliderArea = document.getElementById("sliderArea");
+const nomeEl   = document.getElementById("nome");
+const msgEl    = document.getElementById("mensagem");
+const cartaEl  = document.getElementById("carta");
+const tempoEl  = document.getElementById("tempo");
+const midiasEl = document.getElementById("midias");
 const musicaEl = document.getElementById("musica");
-const lerBtn = document.getElementById("lerBtn");
-const hearts = document.getElementById("hearts");
+const lerBtn   = document.getElementById("lerBtn");
 
 /* ==========================
    STATE
@@ -49,7 +48,7 @@ async function carregar() {
 
   cartaEl.innerText = data.carta;
 
-  criarSlider(data.fotos || []);
+  criarPolaroids(data.fotos || []);
 
   if (data.musica) {
     musicaEl.src = data.musica;
@@ -62,18 +61,10 @@ async function carregar() {
 }
 
 /* ==========================
-   FUNDO
+   FUNDO (IGUAL AO EDITOR)
 ========================== */
 function aplicarFundo(fundo) {
-  const cores = {
-    rosa: "linear-gradient(#ff8fc7,#ff5fa2)",
-    azul: "linear-gradient(#4da6ff,#1c3faa)",
-    vermelho: "linear-gradient(#ff6b6b,#b30000)",
-    preto: "#000",
-    branco: "#fff"
-  };
-  document.body.style.background = cores[fundo] || "#000";
-  if (fundo === "branco") document.body.style.color = "#000";
+  document.body.className = fundo || "azul";
 }
 
 /* ==========================
@@ -81,50 +72,30 @@ function aplicarFundo(fundo) {
 ========================== */
 lerBtn.onclick = () => {
   textoExpandido = !textoExpandido;
-  msgEl.innerText = textoExpandido ? textoCompleto : textoCompleto.slice(0, 500) + "...";
-  lerBtn.innerText = textoExpandido ? "Ler menos" : "Continuar lendo";
+  msgEl.innerText = textoExpandido
+    ? textoCompleto
+    : textoCompleto.slice(0, 500) + "...";
+
+  lerBtn.innerText = textoExpandido
+    ? "Ler menos"
+    : "Continuar lendo";
 };
 
 /* ==========================
-   SLIDER
+   POLAROID STACK (SEM SLIDER)
 ========================== */
-function criarSlider(fotos) {
+function criarPolaroids(fotos) {
   if (!fotos.length) return;
 
-  let html = `
-  <div class="slider">
-    <div class="slider-track">
-      ${fotos.map(f => `
-        <div class="slide">
-          <div class="polaroid">
-            <img src="${f}">
-          </div>
-        </div>
-      `).join("")}
-    </div>
-  </div>
-  `;
+  midiasEl.innerHTML = "";
 
-  if (fotos.length > 1) {
-    html += `
-    <div class="dots">
-      ${fotos.map((_,i)=>`<span class="dot ${i===0?'active':''}"></span>`).join("")}
-    </div>`;
-  }
-
-  sliderArea.innerHTML = html;
-
-  let index = 0;
-  const track = sliderArea.querySelector(".slider-track");
-  const dots = sliderArea.querySelectorAll(".dot");
-
-  setInterval(() => {
-    if (fotos.length <= 1) return;
-    index = (index + 1) % fotos.length;
-    track.style.transform = `translateX(-${index * 100}%)`;
-    dots.forEach(d => d.classList.remove("active"));
-    dots[index].classList.add("active");
-  }, 4200);
+  fotos.forEach((url, i) => {
+    const div = document.createElement("div");
+    div.className = "photo";
+    if (i === 0) div.classList.add("active");
+    div.innerHTML = `<img src="${url}">`;
+    midiasEl.appendChild(div);
+  });
 }
 
 /* ==========================
@@ -136,17 +107,34 @@ function toggleCarta() {
 }
 
 /* ==========================
-   TEMPO JUNTOS
+   TEMPO JUNTOS (COMPLETO)
 ========================== */
 function iniciarTempo(dataInicio) {
   function atualizar() {
-    const ini = new Date(dataInicio);
-    const diff = Date.now() - ini.getTime();
-    const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
-    tempoEl.innerText = `⏳ ${dias} dias juntos`;
+    const inicio = new Date(dataInicio);
+    const agora = new Date();
+    const diff = agora - inicio;
+
+    const s = Math.floor(diff / 1000) % 60;
+    const m = Math.floor(diff / 60000) % 60;
+    const h = Math.floor(diff / 3600000) % 24;
+    const d = Math.floor(diff / 86400000) % 30;
+    const mo = Math.floor(diff / 2592000000) % 12;
+    const a = Math.floor(diff / 31536000000);
+
+    tempoEl.innerHTML = `
+      <span class="titulo">Já estamos juntos há</span>
+      <div class="contador">
+        <div class="item">${a} anos</div>
+        <div class="item">${mo} meses</div>
+        <div class="item">${d} dias</div>
+        <div class="item">${h}h ${m}m ${s}s</div>
+      </div>
+    `;
   }
+
   atualizar();
-  setInterval(atualizar, 60000);
+  setInterval(atualizar, 1000);
 }
 
 /* ==========================
@@ -156,11 +144,10 @@ function criarCorações() {
   for (let i = 0; i < 12; i++) {
     const h = document.createElement("div");
     h.className = "heart";
-    h.innerText = "❤";
+    h.innerText = "❤️";
     h.style.left = Math.random() * 100 + "%";
-    h.style.animationDuration = 12 + Math.random() * 10 + "s";
-    h.style.fontSize = 12 + Math.random() * 14 + "px";
-    hearts.appendChild(h);
+    h.style.animationDuration = 10 + Math.random() * 10 + "s";
+    document.body.appendChild(h);
   }
 }
 
