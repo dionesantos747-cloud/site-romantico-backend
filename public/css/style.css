@@ -414,11 +414,10 @@ button.pay {
   height: auto;
   border-radius: 4px;
 }
-.preview.azul  { background: radial-gradient(#2f6cff,#050b1a); }
-.preview.roxo  { background: radial-gradient(#7a4cff,#12071a); }
-.preview.rosa  { background: radial-gradient(#ff5ca8,#1a050f); }
-.preview.preto { background: radial-gradient(#444,#000); }
-
+.bg-card.azul  { background: radial-gradient(#2b6cff,#000); }
+.bg-card.roxo  { background: radial-gradient(#8a5cff,#000); }
+.bg-card.rosa  { background: radial-gradient(#ff5fa2,#000); }
+.bg-card.preto { background: #000; }
 
 
 
