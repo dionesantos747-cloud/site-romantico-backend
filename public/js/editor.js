@@ -167,13 +167,20 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   function renderMidias() {
-    midias.innerHTML = "";
-    fotos.filter(Boolean).forEach(url => {
-      const div = document.createElement("div");
-      div.className = "photo";
-      div.innerHTML = `<img src="${url}">`;
-      midias.appendChild(div);
-    });
+  midias.innerHTML = "";
+
+fotos.filter(Boolean).forEach((url, i) => {
+  const div = document.createElement("div");
+  div.className = "photo";
+  div.style.transform = `rotate(${i % 2 === 0 ? -2 : 2}deg)`;
+
+  const img = document.createElement("img");
+  img.src = url;
+
+  div.appendChild(img);
+  midias.appendChild(div);
+});
+
   }
 
   /* =====================
@@ -301,6 +308,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
 });
+
 
 
 
