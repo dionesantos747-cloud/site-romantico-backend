@@ -180,7 +180,19 @@ slotEl.querySelector(".photo-remove").onclick = () => {
         atualizarMidias();
       };
 
-      thumbs.appendChild(thumb);
+     slotEl.innerHTML = `
+  <img src="${data.url}">
+  <div class="photo-remove">×</div>
+`;
+slotEl.classList.add("filled");
+
+slotEl.querySelector(".photo-remove").onclick = () => {
+  fotos[slot] = null;
+  slotEl.innerHTML = "+";
+  slotEl.classList.remove("filled");
+  atualizarMidias();
+};
+
     }
 
     atualizarMidias();
@@ -339,6 +351,7 @@ if (file.size > 15 * 1024 * 1024 || !file.type.startsWith("audio")) {
   };
 
 });
+
 
 
 
