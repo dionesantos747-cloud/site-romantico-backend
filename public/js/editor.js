@@ -262,16 +262,69 @@ musicaInput.onchange = async () => {
 
  const maxSize = 25 * 1024 * 1024; // ~3 minutos MP3/MP4
 
-if (
-  file.size > maxSize ||
-  (!file.type.startsWith("audio") && !file.type.startsWith("video"))
-) {
-  alert("Envie MP3 ou MP4 de até 3 minutos.");
+const allowedTypes = [
+  "audio/mpeg",
+  "audio/mp3",
+  "audio/mp4",
+  "video/mp4",
+  "audio/x-m4a",
+  "application/octet-stream"
+];
+
+if (!allowedTypes.includes(file.type)) {
+  alert("Envie um arquivo MP3 ou MP4.");
   musicaInput.value = "";
   return;
 }
 
+// validar duração real
+const audioTest = document.createElement("audio");
+audioTest.preload = "metadata";
+audioTest.src = URL.createObjectURL(file);
 
+audioTest.onloadedmetadata = () => {
+  URL.revokeObjectURL(audioTest.src);
+
+  if (audioTest.duration > 180) {
+    alert("A música deve ter no máximo 3 minutos.");
+    musicaInput.value = "";
+    return;
+  }
+
+  // ✅ passou na validação → segue upload
+  enviarMusica(file);
+};
+
+async function enviarMusica(file) {
+  const form = new FormData();
+  form.append("file", file);
+
+  musicBox.innerText = "⏳ Música carregando...";
+  musicBox.classList.add("disabled");
+
+  try {
+    const res = await fetch("/upload-music", {
+      method: "POST",
+      body: form
+    });
+
+    const data = await res.json();
+    if (!data.url) throw new Error();
+
+    musicaUrl = data.url;
+    audio.src = musicaUrl;
+    audio.style.display = "block";
+
+    musicBox.innerText = "🎶 Música adicionada";
+    removeMusic.style.display = "block";
+
+  } catch {
+    alert("Erro ao enviar música");
+    musicBox.innerText = "Adicionar música 🎵";
+  }
+
+  musicBox.classList.remove("disabled");
+}
 
   const form = new FormData();
   form.append("file", file);
@@ -394,6 +447,7 @@ function criarCoracoesPreview() {
 criarCoracoesPreview();
 
 });
+
 
 
 
