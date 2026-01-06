@@ -26,6 +26,8 @@ let sliderInterval = null;
    FETCH USER DATA
 ========================== */
 async function carregar() {
+   document.body.classList.add("final");
+
   const res = await fetch(`/user-data?id=${userId}`);
   const data = await res.json();
 
