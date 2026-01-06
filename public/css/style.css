@@ -163,6 +163,8 @@ textarea.error {
   color: #ffd400;
   text-shadow: 0 0 8px #ffd400;
   animation: pulse 2.5s infinite alternate;
+  text-align: center;
+  margin: 20px 16px 10px;
 }
 
 @keyframes pulse {
@@ -173,6 +175,8 @@ textarea.error {
 .mensagem {
   font-size: 1.4em;
   line-height: 1.4;
+  text-align: center;
+  margin: 0 16px;
 }
 
 .mensagem.limitada {
@@ -261,6 +265,7 @@ textarea.error {
   border-radius: 20px;
   margin-top: 20px;
   display: none;
+  text-align: center;
 }
 
 /* ===== Música ===== */
@@ -355,6 +360,7 @@ body.final .music-box,
 body.final .remove-music {
   display: none !important;
 }
+
 
 
 
