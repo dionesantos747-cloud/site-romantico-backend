@@ -172,12 +172,14 @@ function atualizarMidias() {
 
   fotos.filter(Boolean).forEach(url => {
     const slide = document.createElement("div");
-    slide.className = "photo";
+    slide.className = "slide";
+
     slide.innerHTML = `
       <div class="polaroid">
         <img src="${url}">
       </div>
     `;
+
     midias.appendChild(slide);
   });
 
@@ -185,18 +187,19 @@ function atualizarMidias() {
 }
 
 let slideIndex = 0;
-let sliderTimer = null;
+let sliderInterval = null;
 
 function iniciarSlider() {
-  const slides = midias.querySelectorAll(".slide");
-  if (!slides.length) return;
+  const track = document.getElementById("midias");
+  const slides = track.querySelectorAll(".slide");
 
-  if (sliderTimer) clearInterval(sliderTimer);
+  if (slides.length <= 1) return;
 
-  sliderTimer = setInterval(() => {
+  if (sliderInterval) clearInterval(sliderInterval);
+
+  sliderInterval = setInterval(() => {
     slideIndex = (slideIndex + 1) % slides.length;
-    midias.style.transform =
-      `translateX(-${slideIndex * 100}%)`;
+    track.style.transform = `translateX(-${slideIndex * 100}%)`;
   }, 3500);
 }
 
@@ -339,6 +342,7 @@ function criarCoracoesPreview() {
 criarCoracoesPreview();
 
 });
+
 
 
 
