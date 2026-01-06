@@ -20,6 +20,7 @@ const lerBtn   = document.getElementById("lerBtn");
 ========================== */
 let textoCompleto = "";
 let textoExpandido = false;
+let sliderInterval = null;
 
 /* ==========================
    FETCH USER DATA
@@ -43,9 +44,14 @@ async function carregar() {
   textoCompleto = data.mensagem || "";
   atualizarTexto();
 
-  cartaEl.innerText = data.carta || "";
+  cartaEl.innerHTML = `
+    ${data.carta || ""}
+    <div style="margin-top:16px">
+      <button onclick="toggleCarta()" class="ler-btn">Fechar carta</button>
+    </div>
+  `;
 
-  criarPolaroids(data.fotos || []);
+  criarSliderPolaroid(data.fotos || []);
 
   if (data.musica) {
     musicaEl.src = data.musica;
@@ -59,7 +65,7 @@ async function carregar() {
 }
 
 /* ==========================
-   FUNDO (MESMO DO EDITOR)
+   FUNDO
 ========================== */
 function aplicarFundo(fundo) {
   const preview = document.getElementById("preview");
@@ -67,17 +73,16 @@ function aplicarFundo(fundo) {
 }
 
 /* ==========================
-   TEXTO + CONTINUAR LENDO
+   TEXTO + LER MAIS / MENOS
 ========================== */
 function atualizarTexto() {
   if (textoCompleto.length > 500) {
     msgEl.innerText = textoExpandido
       ? textoCompleto
       : textoCompleto.slice(0, 500) + "...";
+
     lerBtn.style.display = "block";
-    lerBtn.innerText = textoExpandido
-      ? "Ler menos"
-      : "Continuar lendo";
+    lerBtn.innerText = textoExpandido ? "Ler menos" : "Continuar lendo";
   } else {
     msgEl.innerText = textoCompleto;
     lerBtn.style.display = "none";
@@ -87,17 +92,22 @@ function atualizarTexto() {
 lerBtn.onclick = () => {
   textoExpandido = !textoExpandido;
   atualizarTexto();
+
+  msgEl.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
 };
 
 /* ==========================
-   POLAROID STACK (SEM CORTAR)
+   SLIDER POLAROID (LOOP REAL)
 ========================== */
-function criarPolaroids(fotos) {
+function criarSliderPolaroid(fotos) {
   if (!fotos.length) return;
 
   midiasEl.innerHTML = `
     <div class="slider">
-      <div class="slider-track">
+      <div class="slider-track" id="sliderTrack">
         ${fotos.map(url => `
           <div class="slide">
             <div class="polaroid">
@@ -109,12 +119,35 @@ function criarPolaroids(fotos) {
     </div>
   `;
 
-  let index = 0;
-  const track = midiasEl.querySelector(".slider-track");
+  if (fotos.length === 1) return;
 
-  setInterval(() => {
-    index = (index + 1) % fotos.length;
+  const track = document.getElementById("sliderTrack");
+  const slides = track.querySelectorAll(".slide");
+
+  const clone = slides[0].cloneNode(true);
+  track.appendChild(clone);
+
+  let index = 0;
+  const total = slides.length + 1;
+
+  track.style.transform = "translateX(0)";
+  track.style.transition = "transform .8s ease";
+
+  if (sliderInterval) clearInterval(sliderInterval);
+
+  sliderInterval = setInterval(() => {
+    index++;
     track.style.transform = `translateX(-${index * 100}%)`;
+
+    if (index === total - 1) {
+      setTimeout(() => {
+        track.style.transition = "none";
+        index = 0;
+        track.style.transform = "translateX(0)";
+        track.offsetHeight;
+        track.style.transition = "transform .8s ease";
+      }, 850);
+    }
   }, 4000);
 }
 
@@ -124,18 +157,29 @@ function criarPolaroids(fotos) {
 function toggleCarta() {
   cartaEl.style.display =
     cartaEl.style.display === "block" ? "none" : "block";
+
+  cartaEl.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
 }
 
 /* ==========================
-   TEMPO JUNTOS (COMPLETO)
+   PLURAL
+========================== */
+function plural(v, s, p) {
+  return v === 1 ? s : p;
+}
+
+/* ==========================
+   TEMPO JUNTOS
 ========================== */
 function iniciarTempo(dataInicio) {
   if (!dataInicio) return;
 
   function atualizar() {
     const inicio = new Date(dataInicio);
-    const agora = new Date();
-    const diff = agora - inicio;
+    const diff = Date.now() - inicio.getTime();
     if (diff < 0) return;
 
     const s = Math.floor(diff / 1000) % 60;
@@ -148,9 +192,9 @@ function iniciarTempo(dataInicio) {
     tempoEl.innerHTML = `
       <span class="titulo">Já estamos juntos há</span>
       <div class="contador">
-        <div class="item">${a} anos</div>
-        <div class="item">${mo} meses</div>
-        <div class="item">${d} dias</div>
+        <div class="item">${a} ${plural(a,"ano","anos")}</div>
+        <div class="item">${mo} ${plural(mo,"mês","meses")}</div>
+        <div class="item">${d} ${plural(d,"dia","dias")}</div>
         <div class="item">${h}h ${m}m ${s}s</div>
       </div>
     `;
@@ -161,7 +205,7 @@ function iniciarTempo(dataInicio) {
 }
 
 /* ==========================
-   CORAÇÕES (FUNDO)
+   CORAÇÕES
 ========================== */
 function criarCorações() {
   const preview = document.getElementById("preview");
@@ -179,3 +223,5 @@ function criarCorações() {
 
 /* INIT */
 carregar();
+
+
