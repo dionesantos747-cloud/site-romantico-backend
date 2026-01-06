@@ -326,35 +326,7 @@ async function enviarMusica(file) {
   musicBox.classList.remove("disabled");
 }
 
-  const form = new FormData();
-  form.append("file", file);
-
-  musicBox.innerText = "⏳ Música carregando...";
-  musicBox.classList.add("disabled");
-
-  try {
-    const res = await fetch("/upload-music", {
-      method: "POST",
-      body: form
-    });
-
-    const data = await res.json();
-    if (!data.url) throw new Error();
-
-    musicaUrl = data.url;
-    audio.src = musicaUrl;
-    audio.style.display = "block";
-
-    musicBox.innerText = "🎶 Música adicionada";
-    removeMusic.style.display = "block";
-
-  } catch {
-    alert("Erro ao enviar música");
-    musicBox.innerText = "Adicionar música 🎵";
-  }
-
-  musicBox.classList.remove("disabled");
-};
+  
 
 function plural(valor, singular, pluralTxt) {
   return valor === 1 ? singular : pluralTxt;
@@ -447,6 +419,7 @@ function criarCoracoesPreview() {
 criarCoracoesPreview();
 
 });
+
 
 
 
