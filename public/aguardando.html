@@ -113,6 +113,16 @@ button{
 const params = new URLSearchParams(window.location.search);
 const paymentId = params.get("payment_id");
 
+if (!paymentId) {
+  document.body.innerHTML = `
+    <div style="color:#fff;text-align:center;padding:40px">
+      <h2>❌ Pagamento inválido</h2>
+      <p>Link incorreto ou expirado.</p>
+    </div>
+  `;
+  throw new Error("payment_id ausente");
+}
+
 const qrImg = document.getElementById("qr");
 const pixBox = document.getElementById("code");
 
@@ -129,11 +139,38 @@ async function carregarPix() {
 }
 
 function copiar() {
-  navigator.clipboard.writeText(pixBox.innerText);
+  if (!pixBox.innerText) return;
+
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(pixBox.innerText)
+      .then(() => alert("Código PIX copiado!"))
+      .catch(fallbackCopy);
+  } else {
+    fallbackCopy();
+  }
+}
+
+function fallbackCopy() {
+  const temp = document.createElement("textarea");
+  temp.value = pixBox.innerText;
+  document.body.appendChild(temp);
+  temp.select();
+  document.execCommand("copy");
+  document.body.removeChild(temp);
   alert("Código PIX copiado!");
 }
 
+
 async function verificarPagamento() {
+  const statusEl = document.getElementById("status");
+
+if (data.status === "approved") {
+  statusEl.innerText = "✅ Pagamento aprovado! Redirecionando...";
+  setTimeout(() => {
+    window.location.href = `/success.html?payment_id=${paymentId}`;
+  }, 1200);
+}
+
   const res = await fetch(`/check-payment?payment_id=${paymentId}`);
   const data = await res.json();
 
