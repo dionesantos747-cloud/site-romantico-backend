@@ -83,10 +83,17 @@ document.addEventListener("DOMContentLoaded", () => {
 };
 
   btnContinuarMensagem.onclick = () => {
-    mensagem.classList.remove("limitada");
-    btnContinuarMensagem.style.display = "none";
-  };
+  mensagem.classList.remove("limitada");
+  btnContinuarMensagem.style.display = "none";
+  btnLerMenos.style.display = "block";
+};
+btnLerMenos.onclick = () => {
+  mensagem.classList.add("limitada");
+  btnLerMenos.style.display = "none";
+  btnContinuarMensagem.style.display = "block";
 
+  mensagem.scrollIntoView({ behavior: "smooth", block: "center" });
+};
   /* =====================
      CARTA
   ===================== */
@@ -365,6 +372,7 @@ function criarCoracoesPreview() {
 criarCoracoesPreview();
 
 });
+
 
 
 
