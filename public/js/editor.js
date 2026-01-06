@@ -213,24 +213,24 @@ let slideIndex = 0;
 let sliderInterval = null;
 
 function iniciarSlider() {
-  track.querySelectorAll(".clone").forEach(el => el.remove());
   const track = document.getElementById("midias");
   const slides = track.querySelectorAll(".slide");
 
   if (slides.length <= 1) return;
 
-  // clona o primeiro slide para efeito loop
-const firstClone = slides[0].cloneNode(true);
-firstClone.classList.add("clone");
+  // remove clones antigos
+  track.querySelectorAll(".clone").forEach(el => el.remove());
 
-
+  // clona o primeiro slide para loop
+  const firstClone = slides[0].cloneNode(true);
+  firstClone.classList.add("clone");
   track.appendChild(firstClone);
 
-  const totalSlides = slides.length + 1;
   let index = 0;
+  const total = slides.length + 1;
 
-  track.style.transform = "translateX(0)";
   track.style.transition = "transform .8s ease";
+  track.style.transform = "translateX(0)";
 
   if (sliderInterval) clearInterval(sliderInterval);
 
@@ -238,7 +238,7 @@ firstClone.classList.add("clone");
     index++;
     track.style.transform = `translateX(-${index * 100}%)`;
 
-    if (index === totalSlides - 1) {
+    if (index === total - 1) {
       setTimeout(() => {
         track.style.transition = "none";
         index = 0;
@@ -394,6 +394,7 @@ function criarCoracoesPreview() {
 criarCoracoesPreview();
 
 });
+
 
 
 
