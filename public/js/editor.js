@@ -317,9 +317,19 @@ if (
       tempo.innerHTML = `
         <span class="titulo">Já estamos juntos há</span>
         <div class="contador">
-          <div class="item">${a} anos</div>
-          <div class="item">${mo} meses</div>
-          <div class="item">${d} dias</div>
+          function plural(valor, singular, plural) {
+  return valor === 1 ? singular : plural;
+}
+
+tempo.innerHTML = `
+  <span class="titulo">Já estamos juntos há</span>
+  <div class="contador">
+    <div class="item">${a} ${plural(a,"ano","anos")}</div>
+    <div class="item">${mo} ${plural(mo,"mês","meses")}</div>
+    <div class="item">${d} ${plural(d,"dia","dias")}</div>
+    <div class="item">${h}h ${m}m ${s}s</div>
+  </div>
+`;
           <div class="item">${h}h ${m}m ${s}s</div>
         </div>
       `;
@@ -381,6 +391,7 @@ function criarCoracoesPreview() {
 criarCoracoesPreview();
 
 });
+
 
 
 
