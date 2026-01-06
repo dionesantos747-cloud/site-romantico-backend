@@ -174,8 +174,8 @@ if (data.status === "approved") {
   const res = await fetch(`/check-payment?payment_id=${paymentId}`);
   const data = await res.json();
 
-  if (data.status === "approved") {
-    window.location.href = `/success.html?payment_id=${paymentId}`;
+if (data.status === "approved" && data.siteId) {
+  window.location.href = `/success.html?id=${data.siteId}`;
   }
 }
 
