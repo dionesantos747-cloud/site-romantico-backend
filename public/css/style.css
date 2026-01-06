@@ -147,7 +147,9 @@ textarea.error {
   box-shadow:
     0 0 0 4px #000,
     0 25px 60px rgba(0,0,0,.8);
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
   position: relative;
 }
 
@@ -352,6 +354,7 @@ body.final .music-box,
 body.final .remove-music {
   display: none !important;
 }
+
 
 
 
