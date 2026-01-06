@@ -69,15 +69,17 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   msgInput.oninput = () => {
-    mensagem.innerText = msgInput.value;
-    limparErro(msgInput);
+  mensagem.innerText = msgInput.value;
+  limparErro(msgInput);
 
-    if (mensagem.innerText.length > 500) {
-      btnContinuarMensagem.style.display = "block";
-    } else {
-      btnContinuarMensagem.style.display = "none";
-    }
-  };
+  if (mensagem.innerText.length > 500) {
+    mensagem.classList.add("limitada");
+    btnContinuarMensagem.style.display = "block";
+  } else {
+    mensagem.classList.remove("limitada");
+    btnContinuarMensagem.style.display = "none";
+  }
+};
 
   btnContinuarMensagem.onclick = () => {
     mensagem.classList.remove("limitada");
@@ -195,11 +197,31 @@ function iniciarSlider() {
 
   if (slides.length <= 1) return;
 
+  // clona o primeiro slide para efeito loop
+  const firstClone = slides[0].cloneNode(true);
+  track.appendChild(firstClone);
+
+  const totalSlides = slides.length + 1;
+  let index = 0;
+
+  track.style.transform = "translateX(0)";
+  track.style.transition = "transform .8s ease";
+
   if (sliderInterval) clearInterval(sliderInterval);
 
   sliderInterval = setInterval(() => {
-    slideIndex = (slideIndex + 1) % slides.length;
-    track.style.transform = `translateX(-${slideIndex * 100}%)`;
+    index++;
+    track.style.transform = `translateX(-${index * 100}%)`;
+
+    if (index === totalSlides - 1) {
+      setTimeout(() => {
+        track.style.transition = "none";
+        index = 0;
+        track.style.transform = "translateX(0)";
+        track.offsetHeight; // força reflow
+        track.style.transition = "transform .8s ease";
+      }, 850);
+    }
   }, 3500);
 }
 
@@ -342,6 +364,7 @@ function criarCoracoesPreview() {
 criarCoracoesPreview();
 
 });
+
 
 
 
