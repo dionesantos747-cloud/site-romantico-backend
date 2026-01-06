@@ -196,6 +196,7 @@ textarea.error {
 
 #midias {
   display: flex;
+  width: 100%;
   transition: transform .8s ease;
 }
 
@@ -354,6 +355,7 @@ body.final .music-box,
 body.final .remove-music {
   display: none !important;
 }
+
 
 
 
