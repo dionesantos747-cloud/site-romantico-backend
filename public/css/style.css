@@ -362,6 +362,71 @@ body.final .remove-music {
 }
 
 
+/* ==========================
+   MOLDE IPHONE 15 REAL
+========================== */
+
+.device-preview {
+  max-width: 390px;
+  margin: 0 auto 40px;
+  background: #000;
+  border-radius: 44px;
+  padding: 14px;
+  box-shadow:
+    0 0 0 6px #111,
+    0 30px 80px rgba(0,0,0,.9);
+}
+
+/* Notch / Ilha dinâmica */
+.device-top {
+  height: 34px;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.device-top::before {
+  content: "";
+  width: 120px;
+  height: 22px;
+  background: #000;
+  border-radius: 16px;
+  position: absolute;
+  top: 6px;
+}
+
+/* URL Chrome */
+.chrome-url {
+  font-size: .75em;
+  color: #bbb;
+  background: #111;
+  padding: 6px 14px;
+  border-radius: 12px;
+}
+
+/* Tela real */
+.device-screen {
+  background: #000;
+  border-radius: 32px;
+  overflow: hidden;
+  height: 720px;
+}
+
+/* Scroll real */
+.preview {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 40px;
+}
+
+/* esconder scrollbar feia */
+.preview::-webkit-scrollbar {
+  width: 0;
+}
 
 
 
