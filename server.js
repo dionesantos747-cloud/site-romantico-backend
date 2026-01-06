@@ -266,18 +266,57 @@ app.post("/webhook", async (req, res) => {
 app.get("/check-payment", async (req, res) => {
   try {
     const paymentId = String(req.query.payment_id);
-    const pay = await payments.findOne({ paymentId });
 
-    if (!pay || pay.status !== "approved") {
+    const pagamento = await payments.findOne({ paymentId });
+    if (!pagamento) {
       return res.json({ status: "pending" });
     }
 
-    return res.json({ status: "approved" });
+    const mp = await axios.get(
+      `https://api.mercadopago.com/v1/payments/${paymentId}`,
+      { headers: { Authorization: `Bearer ${MP_ACCESS_TOKEN}` } }
+    );
 
-  } catch {
+    const status = mp.data.status;
+
+    // ✅ SE PAGAMENTO APROVADO E AINDA NÃO PROCESSADO
+    if (status === "approved" && !pagamento.siteId) {
+
+      const siteId = crypto.randomUUID();
+
+      await payments.updateOne(
+        { paymentId },
+        {
+          $set: {
+            status: "approved",
+            siteId,
+            aprovadoEm: new Date()
+          }
+        }
+      );
+
+      return res.json({
+        status: "approved",
+        siteId
+      });
+    }
+
+    // já aprovado anteriormente
+    if (pagamento.siteId) {
+      return res.json({
+        status: "approved",
+        siteId: pagamento.siteId
+      });
+    }
+
+    res.json({ status });
+
+  } catch (e) {
+    console.error(e);
     res.json({ status: "pending" });
   }
 });
+
 
 /* =====================
    SUCCESS
