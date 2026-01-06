@@ -260,8 +260,6 @@ musicaInput.onchange = async () => {
   const file = musicaInput.files[0];
   if (!file) return;
 
- const maxSize = 25 * 1024 * 1024; // ~3 minutos MP3/MP4
-
 const allowedTypes = [
   "audio/mpeg",
   "audio/mp3",
@@ -419,6 +417,7 @@ function criarCoracoesPreview() {
 criarCoracoesPreview();
 
 });
+
 
 
 
