@@ -20,6 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnCarta   = document.getElementById("btnCarta");
   const btnComprar = document.getElementById("btnComprar");
   const btnContinuarMensagem = document.getElementById("btnContinuarMensagem");
+const btnLerMenos = document.getElementById("btnLerMenos");
+const btnFecharCarta = document.getElementById("btnFecharCarta");
 
   const fotoInput = document.getElementById("fotoInput");
   const midias    = document.getElementById("midias");
@@ -81,11 +83,20 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 };
 
-  btnContinuarMensagem.onclick = () => {
+ btnContinuarMensagem.onclick = () => {
   mensagem.classList.remove("limitada");
   btnContinuarMensagem.style.display = "none";
   btnLerMenos.style.display = "block";
 };
+
+btnLerMenos.onclick = () => {
+  mensagem.classList.add("limitada");
+  btnLerMenos.style.display = "none";
+  btnContinuarMensagem.style.display = "block";
+
+  mensagem.scrollIntoView({ behavior: "smooth", block: "center" });
+};
+
 
   /* =====================
      CARTA
@@ -96,10 +107,19 @@ document.addEventListener("DOMContentLoaded", () => {
     btnCarta.style.display = cartaInput.value.trim() ? "block" : "none";
   };
 
-  btnCarta.onclick = () => {
+btnCarta.onclick = () => {
   carta.style.display = "block";
   btnCarta.style.display = "none";
 };
+
+btnFecharCarta.onclick = () => {
+  carta.style.display = "none";
+  btnCarta.style.display = "block";
+
+  btnCarta.scrollIntoView({ behavior: "smooth", block: "center" });
+};
+
+
 
   /* =====================
      FUNDOS
@@ -374,6 +394,7 @@ function criarCoracoesPreview() {
 criarCoracoesPreview();
 
 });
+
 
 
 
