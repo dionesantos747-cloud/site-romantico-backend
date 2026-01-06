@@ -20,7 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnCarta   = document.getElementById("btnCarta");
   const btnComprar = document.getElementById("btnComprar");
   const btnContinuarMensagem = document.getElementById("btnContinuarMensagem");
-
+ const btnLerMenos = document.getElementById("btnLerMenos");
+  
   const fotoInput = document.getElementById("fotoInput");
   const midias    = document.getElementById("midias");
 
@@ -364,6 +365,7 @@ function criarCoracoesPreview() {
 criarCoracoesPreview();
 
 });
+
 
 
 
