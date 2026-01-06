@@ -239,7 +239,7 @@ textarea.error {
 }
 #tempo .titulo {
   font-size: 2.2em;
-  color: #611135;
+  color: #ffd400;
 }
 
 #tempo .contador {
@@ -431,6 +431,7 @@ body.final .remove-music {
 .preview::-webkit-scrollbar {
   width: 0;
 }
+
 
 
 
