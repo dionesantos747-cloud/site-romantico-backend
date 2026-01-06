@@ -20,9 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnCarta   = document.getElementById("btnCarta");
   const btnComprar = document.getElementById("btnComprar");
   const btnContinuarMensagem = document.getElementById("btnContinuarMensagem");
- const btnLerMenos = document.getElementById("btnLerMenos");
-  const btnFecharCarta = document.getElementById("btnFecharCarta");
-  
+
   const fotoInput = document.getElementById("fotoInput");
   const midias    = document.getElementById("midias");
 
@@ -88,19 +86,13 @@ document.addEventListener("DOMContentLoaded", () => {
   btnContinuarMensagem.style.display = "none";
   btnLerMenos.style.display = "block";
 };
-btnLerMenos.onclick = () => {
-  mensagem.classList.add("limitada");
-  btnLerMenos.style.display = "none";
-  btnContinuarMensagem.style.display = "block";
 
-  mensagem.scrollIntoView({ behavior: "smooth", block: "center" });
-};
   /* =====================
      CARTA
   ===================== */
   cartaInput.oninput = () => {
-    document.getElementById("cartaTexto").innerText = cartaInput.value;
-    limparErro(cartaInput);
+    carta.innerText = cartaInput.value;
+ limparErro(cartaInput);
     btnCarta.style.display = cartaInput.value.trim() ? "block" : "none";
   };
 
@@ -108,15 +100,7 @@ btnLerMenos.onclick = () => {
   carta.style.display = "block";
   btnCarta.style.display = "none";
 };
-btnFecharCarta.onclick = () => {
-  carta.style.display = "none";
-  btnCarta.style.display = "block";
 
-  btnCarta.scrollIntoView({
-    behavior: "smooth",
-    block: "center"
-  });
-};
   /* =====================
      FUNDOS
   ===================== */
@@ -209,13 +193,17 @@ let slideIndex = 0;
 let sliderInterval = null;
 
 function iniciarSlider() {
+  track.querySelectorAll(".clone").forEach(el => el.remove());
   const track = document.getElementById("midias");
   const slides = track.querySelectorAll(".slide");
 
   if (slides.length <= 1) return;
 
   // clona o primeiro slide para efeito loop
-  const firstClone = slides[0].cloneNode(true);
+const firstClone = slides[0].cloneNode(true);
+firstClone.classList.add("clone");
+
+
   track.appendChild(firstClone);
 
   const totalSlides = slides.length + 1;
@@ -295,6 +283,10 @@ if (
   musicBox.classList.remove("disabled");
 };
 
+function plural(valor, singular, pluralTxt) {
+  return valor === 1 ? singular : pluralTxt;
+}
+
   /* =====================
      CONTADOR
   ===================== */
@@ -314,14 +306,7 @@ if (
       const mo = Math.floor(diff / 2592000000) % 12;
       const a = Math.floor(diff / 31536000000);
 
-      tempo.innerHTML = `
-        <span class="titulo">Já estamos juntos há</span>
-        <div class="contador">
-          function plural(valor, singular, plural) {
-  return valor === 1 ? singular : plural;
-}
-
-tempo.innerHTML = `
+   tempo.innerHTML = `
   <span class="titulo">Já estamos juntos há</span>
   <div class="contador">
     <div class="item">${a} ${plural(a,"ano","anos")}</div>
@@ -330,9 +315,7 @@ tempo.innerHTML = `
     <div class="item">${h}h ${m}m ${s}s</div>
   </div>
 `;
-          <div class="item">${h}h ${m}m ${s}s</div>
-        </div>
-      `;
+
     }, 1000);
   };
 
@@ -391,6 +374,7 @@ function criarCoracoesPreview() {
 criarCoracoesPreview();
 
 });
+
 
 
 
