@@ -282,27 +282,38 @@ app.get("/check-payment", async (req, res) => {
 
     if (status === "approved") {
 
-      // gera site apenas 1 vez
-      if (!pagamento.siteId) {
-        const siteId = crypto.randomUUID();
+  // cria site se ainda não existir
+  if (!pagamento.siteId) {
+    const siteId = crypto.randomUUID();
 
-        await payments.updateOne(
-          { paymentId },
-          {
-            $set: {
-              status: "approved",
-              siteId,
-              aprovadoEm: new Date()
-            }
-          }
-        );
+    await payments.updateOne(
+      { paymentId },
+      {
+        $set: {
+          status: "approved",
+          siteId,
+          aprovadoEm: new Date()
+        }
       }
+    );
 
-      return res.json({
-        status: "approved",
-        siteId: pagamento.siteId
-      });
-    }
+    // 🔥 GARANTE LIBERAÇÃO DO USUÁRIO
+    await users.updateOne(
+      { _id: pagamento.userId },
+      {
+        $set: {
+          status: "approved",
+          activatedAt: new Date()
+        }
+      }
+    );
+  }
+
+  return res.json({
+    status: "approved",
+    siteId: pagamento.siteId
+  });
+}
 
     res.json({ status });
 
