@@ -110,10 +110,12 @@ if (btnContinuarMensagem && btnLerMenos) {
     btnCarta.style.display = cartaInput.value.trim() ? "block" : "none";
   };
 
-btnCarta.onclick = () => {
-  carta.style.display = "block";
-  btnCarta.style.display = "none";
-};
+if (btnCarta) {
+  btnCarta.onclick = () => {
+    carta.style.display = "block";
+    btnCarta.style.display = "none";
+  };
+}
 
 if (btnFecharCarta) {
   btnFecharCarta.onclick = () => {
@@ -295,9 +297,7 @@ audioTest.onloadedmetadata = () => {
   enviarMusica(file);
 };
 
-function plural(valor, singular, pluralTxt) {
-  return valor === 1 ? singular : pluralTxt;
-}
+
 async function enviarMusica(file) {
   const form = new FormData();
   form.append("file", file);
@@ -332,6 +332,10 @@ async function enviarMusica(file) {
   /* =====================
      CONTADOR
   ===================== */
+function plural(valor, singular, pluralTxt) {
+  return valor === 1 ? singular : pluralTxt;
+}
+  
   dataInput.onchange = () => {
     limparErro(dataInput);
     if (contadorInterval) clearInterval(contadorInterval);
@@ -416,6 +420,7 @@ function criarCoracoesPreview() {
 criarCoracoesPreview();
 
 });
+
 
 
 
