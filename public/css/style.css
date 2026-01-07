@@ -30,7 +30,7 @@ button {
 /* ===== Editor ===== */
 .editor {
   padding: 20px;
-  background: #0d0f18;
+  background: #000;
 }
 
 label {
@@ -415,6 +415,10 @@ body.final .remove-music {
   width: 0;
 }
 
+.editor,
+.editor * {
+  background-color: transparent;
+}
 
 
 
