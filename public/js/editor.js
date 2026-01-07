@@ -284,6 +284,14 @@ const audioTest = document.createElement("audio");
 audioTest.preload = "metadata";
 audioTest.src = URL.createObjectURL(file);
 
+/* 🔴 ERRO AO LER METADADOS */
+audioTest.onerror = () => {
+  URL.revokeObjectURL(audioTest.src);
+  alert("Não foi possível validar a duração do áudio.");
+  musicaInput.value = "";
+};
+
+/* ✅ METADADOS OK */
 audioTest.onloadedmetadata = () => {
   URL.revokeObjectURL(audioTest.src);
 
@@ -293,7 +301,7 @@ audioTest.onloadedmetadata = () => {
     return;
   }
 
-  // ✅ passou na validação → segue upload
+  // passou na validação
   enviarMusica(file);
 };
 
@@ -420,6 +428,7 @@ function criarCoracoesPreview() {
 criarCoracoesPreview();
 
 });
+
 
 
 
