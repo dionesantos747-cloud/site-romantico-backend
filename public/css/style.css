@@ -203,7 +203,6 @@ textarea.error {
   width: 100%;
   transition: transform .8s ease; 
   will-change: transform;
-  overflow: hidden;
 }
 
 #midias .photo {
@@ -415,6 +414,7 @@ body.final .remove-music {
 .preview::-webkit-scrollbar {
   width: 0;
 }
+
 
 
 
