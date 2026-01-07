@@ -435,6 +435,24 @@ body.final .remove-music {
   background-color: transparent;
 }
 
+/* ===== SITE FINAL LIMPO ===== */
+
+body.final .device-preview,
+body.final .device-top,
+body.final .chrome-url,
+body.final .slider,
+body.final #midias {
+  all: unset;
+}
+
+body.final .preview {
+  width: 100%;
+max-width: 100%;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  background: inherit;
+}
 
 
 
