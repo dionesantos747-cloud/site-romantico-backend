@@ -220,12 +220,17 @@ function iniciarSlider() {
   const track = document.getElementById("midias");
   const slides = track.querySelectorAll(".slide");
 
-  if (slides.length <= 1) return;
-
-  // remove clones antigos
+  // limpa clones e intervalos antigos
   track.querySelectorAll(".clone").forEach(el => el.remove());
+  if (sliderInterval) clearInterval(sliderInterval);
 
-  // clona o primeiro slide para loop
+  // 🔴 0 ou 1 foto → NÃO ativa slider
+  if (slides.length <= 1) {
+    track.style.transform = "translateX(0)";
+    return;
+  }
+
+  // ✅ 2 ou mais fotos → slider com loop
   const firstClone = slides[0].cloneNode(true);
   firstClone.classList.add("clone");
   track.appendChild(firstClone);
@@ -235,8 +240,6 @@ function iniciarSlider() {
 
   track.style.transition = "transform .8s ease";
   track.style.transform = "translateX(0)";
-
-  if (sliderInterval) clearInterval(sliderInterval);
 
   sliderInterval = setInterval(() => {
     index++;
@@ -428,6 +431,7 @@ function criarCoracoesPreview() {
 criarCoracoesPreview();
 
 });
+
 
 
 
