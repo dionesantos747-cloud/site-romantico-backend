@@ -162,20 +162,21 @@ function fallbackCopy() {
 
 
 async function verificarPagamento() {
-  const statusEl = document.getElementById("status");
+  try {
+    const res = await fetch(`/check-payment?payment_id=${paymentId}`);
+    const data = await res.json();
 
-if (data.status === "approved") {
-  statusEl.innerText = "✅ Pagamento aprovado! Redirecionando...";
-  setTimeout(() => {
-    window.location.href = `/success.html?payment_id=${paymentId}`;
-  }, 1200);
-}
+    if (data.status === "approved") {
+      document.getElementById("status").innerText =
+        "✅ Pagamento aprovado! Redirecionando...";
 
-  const res = await fetch(`/check-payment?payment_id=${paymentId}`);
-  const data = await res.json();
-
-if (data.status === "approved" && data.siteId) {
-  window.location.href = `/success.html?id=${data.siteId}`;
+      setTimeout(() => {
+        window.location.href =
+          `/success.html?payment_id=${paymentId}`;
+      }, 1200);
+    }
+  } catch {
+    // silencioso para não quebrar
   }
 }
 
