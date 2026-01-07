@@ -83,19 +83,22 @@ const btnFecharCarta = document.getElementById("btnFecharCarta");
   }
 };
 
- btnContinuarMensagem.onclick = () => {
-  mensagem.classList.remove("limitada");
-  btnContinuarMensagem.style.display = "none";
-  btnLerMenos.style.display = "block";
-};
+if (btnContinuarMensagem && btnLerMenos) {
+  btnContinuarMensagem.onclick = () => {
+    mensagem.classList.remove("limitada");
+    btnContinuarMensagem.style.display = "none";
+    btnLerMenos.style.display = "block";
+  };
 
-btnLerMenos.onclick = () => {
-  mensagem.classList.add("limitada");
-  btnLerMenos.style.display = "none";
-  btnContinuarMensagem.style.display = "block";
+  btnLerMenos.onclick = () => {
+    mensagem.classList.add("limitada");
+    btnLerMenos.style.display = "none";
+    btnContinuarMensagem.style.display = "block";
+      mensagem.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+}
 
-  mensagem.scrollIntoView({ behavior: "smooth", block: "center" });
-};
+
 
 
   /* =====================
@@ -112,14 +115,13 @@ btnCarta.onclick = () => {
   btnCarta.style.display = "none";
 };
 
-btnFecharCarta.onclick = () => {
-  carta.style.display = "none";
-  btnCarta.style.display = "block";
-
-  btnCarta.scrollIntoView({ behavior: "smooth", block: "center" });
-};
-
-
+if (btnFecharCarta) {
+  btnFecharCarta.onclick = () => {
+    carta.style.display = "none";
+    btnCarta.style.display = "block";
+    btnCarta.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+}
 
   /* =====================
      FUNDOS
@@ -218,21 +220,20 @@ function iniciarSlider() {
 
   if (slides.length <= 1) return;
 
-  // remove clones antigos
+  // limpa tudo
   track.querySelectorAll(".clone").forEach(el => el.remove());
+  if (sliderInterval) clearInterval(sliderInterval);
 
-  // clona o primeiro slide para loop
-  const firstClone = slides[0].cloneNode(true);
-  firstClone.classList.add("clone");
-  track.appendChild(firstClone);
+  // clona primeiro slide
+  const clone = slides[0].cloneNode(true);
+  clone.classList.add("clone");
+  track.appendChild(clone);
 
   let index = 0;
   const total = slides.length + 1;
 
   track.style.transition = "transform .8s ease";
   track.style.transform = "translateX(0)";
-
-  if (sliderInterval) clearInterval(sliderInterval);
 
   sliderInterval = setInterval(() => {
     index++;
@@ -243,12 +244,13 @@ function iniciarSlider() {
         track.style.transition = "none";
         index = 0;
         track.style.transform = "translateX(0)";
-        track.offsetHeight; // força reflow
+        track.offsetHeight;
         track.style.transition = "transform .8s ease";
       }, 850);
     }
   }, 3500);
 }
+
 
 
   /* =====================
@@ -293,6 +295,9 @@ audioTest.onloadedmetadata = () => {
   enviarMusica(file);
 };
 
+function plural(valor, singular, pluralTxt) {
+  return valor === 1 ? singular : pluralTxt;
+}
 async function enviarMusica(file) {
   const form = new FormData();
   form.append("file", file);
@@ -322,12 +327,6 @@ async function enviarMusica(file) {
   }
 
   musicBox.classList.remove("disabled");
-}
-
-  
-
-function plural(valor, singular, pluralTxt) {
-  return valor === 1 ? singular : pluralTxt;
 }
 
   /* =====================
@@ -417,6 +416,7 @@ function criarCoracoesPreview() {
 criarCoracoesPreview();
 
 });
+
 
 
 
