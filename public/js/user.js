@@ -53,8 +53,6 @@ async function carregar() {
     </div>
   `;
 
-  criarSliderPolaroid(data.fotos || []);
-
   if (data.musica) {
     musicaEl.src = data.musica;
     musicaEl.volume = 0.7;
@@ -104,53 +102,25 @@ lerBtn.onclick = () => {
 /* ==========================
    SLIDER POLAROID (LOOP REAL)
 ========================== */
-function criarSliderPolaroid(fotos) {
+function criarPolaroids(fotos) {
   if (!fotos.length) return;
 
-  midiasEl.innerHTML = `
-    <div class="slider">
-      <div class="slider-track" id="sliderTrack">
-        ${fotos.map(url => `
-          <div class="slide">
-            <div class="polaroid">
-              <img src="${url}">
-            </div>
-          </div>
-        `).join("")}
+  midiasEl.innerHTML = "";
+
+  fotos.forEach(url => {
+    const wrap = document.createElement("div");
+    wrap.style.display = "flex";
+    wrap.style.justifyContent = "center";
+    wrap.style.margin = "30px 0";
+
+    wrap.innerHTML = `
+      <div class="polaroid">
+        <img src="${url}">
       </div>
-    </div>
-  `;
+    `;
 
-  if (fotos.length === 1) return;
-
-  const track = document.getElementById("sliderTrack");
-  const slides = track.querySelectorAll(".slide");
-
-  const clone = slides[0].cloneNode(true);
-  track.appendChild(clone);
-
-  let index = 0;
-  const total = slides.length + 1;
-
-  track.style.transform = "translateX(0)";
-  track.style.transition = "transform .8s ease";
-
-  if (sliderInterval) clearInterval(sliderInterval);
-
-  sliderInterval = setInterval(() => {
-    index++;
-    track.style.transform = `translateX(-${index * 100}%)`;
-
-    if (index === total - 1) {
-      setTimeout(() => {
-        track.style.transition = "none";
-        index = 0;
-        track.style.transform = "translateX(0)";
-        track.offsetHeight;
-        track.style.transition = "transform .8s ease";
-      }, 850);
-    }
-  }, 4000);
+    midiasEl.appendChild(wrap);
+  });
 }
 
 /* ==========================
