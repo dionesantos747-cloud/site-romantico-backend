@@ -222,20 +222,21 @@ function iniciarSlider() {
 
   if (slides.length <= 1) return;
 
-  // limpa tudo
+  // remove clones antigos
   track.querySelectorAll(".clone").forEach(el => el.remove());
-  if (sliderInterval) clearInterval(sliderInterval);
 
-  // clona primeiro slide
-  const clone = slides[0].cloneNode(true);
-  clone.classList.add("clone");
-  track.appendChild(clone);
+  // clona o primeiro slide para loop
+  const firstClone = slides[0].cloneNode(true);
+  firstClone.classList.add("clone");
+  track.appendChild(firstClone);
 
   let index = 0;
   const total = slides.length + 1;
 
   track.style.transition = "transform .8s ease";
   track.style.transform = "translateX(0)";
+
+  if (sliderInterval) clearInterval(sliderInterval);
 
   sliderInterval = setInterval(() => {
     index++;
@@ -246,7 +247,7 @@ function iniciarSlider() {
         track.style.transition = "none";
         index = 0;
         track.style.transform = "translateX(0)";
-        track.offsetHeight;
+        track.offsetHeight; // força reflow
         track.style.transition = "transform .8s ease";
       }, 850);
     }
@@ -427,6 +428,7 @@ function criarCoracoesPreview() {
 criarCoracoesPreview();
 
 });
+
 
 
 
