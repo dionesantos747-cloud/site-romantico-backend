@@ -362,16 +362,21 @@ body.final .remove-music {
   box-shadow:
     0 0 0 6px #111,
     0 30px 80px rgba(0,0,0,.9);
+  position: relative;
 }
 
 /* Notch / Ilha dinâmica */
 .device-top {
-  height: 34px;
+  height: 44px;
   background: #000;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  z-index: 20;
 }
 
 .device-top::before {
@@ -386,11 +391,20 @@ body.final .remove-music {
 
 /* URL Chrome */
 .chrome-url {
-  font-size: .75em;
-  color: #bbb;
+  font-size: 0.75em;
+  color: #ccc;
   background: #111;
-  padding: 6px 14px;
-  border-radius: 12px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  max-width: 85%;
+  text-align: center;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.08);
 }
 
 /* Tela real */
@@ -399,6 +413,7 @@ body.final .remove-music {
   border-radius: 32px;
   overflow: hidden;
   height: 720px;
+  padding-top: 44px; /* altura do Chrome */
 }
 
 /* Scroll real */
@@ -419,6 +434,7 @@ body.final .remove-music {
 .editor * {
   background-color: transparent;
 }
+
 
 
 
