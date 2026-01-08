@@ -43,8 +43,11 @@ async function carregar() {
 
   nomeEl.innerText = data.nome || "";
 
-  textoCompleto = data.mensagem || "";
-  atualizarTexto();
+// 🔥 AQUI → CHAMA O SLIDER DO SITE FINAL
+criarPolaroids(data.fotos);
+
+textoCompleto = data.mensagem || "";
+atualizarTexto();
 
   cartaEl.innerHTML = `
     ${data.carta || ""}
