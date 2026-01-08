@@ -198,6 +198,12 @@ textarea.error {
   margin: 30px 0;
 }
 
+.slider-track {
+  display: flex;
+  width: 100%;
+  transition: transform .8s ease;
+}
+
 #midias {
   display: flex;
   width: 100%;
@@ -453,6 +459,7 @@ max-width: 100%;
   border-radius: 0;
   background: inherit;
 }
+
 
 
 
