@@ -103,26 +103,65 @@ lerBtn.onclick = () => {
    SLIDER POLAROID (LOOP REAL)
 ========================== */
 function criarPolaroids(fotos) {
-  if (!fotos.length) return;
+  if (!fotos || fotos.length === 0) return;
 
-  midiasEl.innerHTML = "";
-
-  fotos.forEach(url => {
-    const wrap = document.createElement("div");
-    wrap.style.display = "flex";
-    wrap.style.justifyContent = "center";
-    wrap.style.margin = "30px 0";
-
-    wrap.innerHTML = `
-      <div class="polaroid">
-        <img src="${url}">
+  // 🔒 1 FOTO → SEM SLIDE (evita bug)
+  if (fotos.length === 1) {
+    midiasEl.innerHTML = `
+      <div class="slider">
+        <div class="slider-track">
+          <div class="slide">
+            <div class="polaroid">
+              <img src="${fotos[0]}" />
+            </div>
+          </div>
+        </div>
       </div>
     `;
+    return;
+  }
 
-    midiasEl.appendChild(wrap);
-  });
+  // 🔥 2+ FOTOS → SLIDE AUTOMÁTICO COM LOOP
+  midiasEl.innerHTML = `
+    <div class="slider">
+      <div class="slider-track" id="sliderTrack">
+        ${fotos.map(url => `
+          <div class="slide">
+            <div class="polaroid">
+              <img src="${url}" />
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `;
+
+  const track = document.getElementById("sliderTrack");
+  const slides = track.querySelectorAll(".slide");
+
+  // clona o primeiro slide (loop infinito)
+  const clone = slides[0].cloneNode(true);
+  clone.classList.add("clone");
+  track.appendChild(clone);
+
+  let index = 0;
+  const total = slides.length + 1;
+
+  setInterval(() => {
+    index++;
+    track.style.transition = "transform .8s ease";
+    track.style.transform = `translateX(-${index * 100}%)`;
+
+    // quando chega no clone → volta sem animação
+    if (index === total - 1) {
+      setTimeout(() => {
+        track.style.transition = "none";
+        index = 0;
+        track.style.transform = "translateX(0)";
+      }, 850);
+    }
+  }, 3500);
 }
-
 /* ==========================
    CARTA
 ========================== */
