@@ -435,31 +435,46 @@ body.final .remove-music {
   background-color: transparent;
 }
 
-/* ===== SITE FINAL LIMPO ===== */
+/* ===== SITE FINAL LIMPO (SEM QUEBRAR SLIDER) ===== */
 
+body.final .editor,
+body.final .photo-grid,
+body.final .music-box,
+body.final .remove-music,
 body.final .device-preview,
 body.final .device-top,
 body.final .chrome-url {
-  display: none;
-}
-body.final .slider {
-  overflow: hidden;
-  width: 100%;
-}
-
-body.final .slider-track {
-  display: flex;
-  width: 100%;
+  display: none !important;
 }
 
 body.final .preview {
   width: 100%;
-max-width: 100%;
+  max-width: 100%;
   border: none;
   box-shadow: none;
   border-radius: 0;
   background: inherit;
 }
+
+/* 🔥 SLIDER PRECISA EXISTIR */
+body.final .slider {
+  overflow: hidden;
+  width: 100%;
+  margin: 30px 0;
+}
+
+body.final .slider-track {
+  display: flex;
+  width: 100%;
+  transition: transform .8s ease;
+}
+
+body.final .slide {
+  min-width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 
 
 
