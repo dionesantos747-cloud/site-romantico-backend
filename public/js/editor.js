@@ -19,8 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const btnCarta   = document.getElementById("btnCarta");
   const btnComprar = document.getElementById("btnComprar");
-  const btnContinuarMensagem = document.getElementById("btnContinuarMensagem");
-const btnLerMenos = document.getElementById("btnLerMenos");
+  const lerBtn = document.getElementById("lerBtn");
 const btnFecharCarta = document.getElementById("btnFecharCarta");
 
   const fotoInput = document.getElementById("fotoInput");
@@ -74,29 +73,34 @@ const btnFecharCarta = document.getElementById("btnFecharCarta");
   mensagem.innerText = msgInput.value;
   limparErro(msgInput);
 
+  msgInput.oninput = () => {
+  mensagem.innerText = msgInput.value;
+  limparErro(msgInput);
+
   if (mensagem.innerText.length > 500) {
     mensagem.classList.add("limitada");
-    btnContinuarMensagem.style.display = "block";
+    lerBtn.style.display = "block";
+    lerBtn.innerText = "Continuar lendo ⬇️";
   } else {
     mensagem.classList.remove("limitada");
-    btnContinuarMensagem.style.display = "none";
+    lerBtn.style.display = "none";
   }
 };
 
-if (btnContinuarMensagem && btnLerMenos) {
-  btnContinuarMensagem.onclick = () => {
-    mensagem.classList.remove("limitada");
-    btnContinuarMensagem.style.display = "none";
-    btnLerMenos.style.display = "block";
-  };
+let textoExpandido = false;
 
-  btnLerMenos.onclick = () => {
+lerBtn.onclick = () => {
+  textoExpandido = !textoExpandido;
+
+  if (textoExpandido) {
+    mensagem.classList.remove("limitada");
+    lerBtn.innerText = "Ler menos ⬆️";
+  } else {
     mensagem.classList.add("limitada");
-    btnLerMenos.style.display = "none";
-    btnContinuarMensagem.style.display = "block";
-      mensagem.scrollIntoView({ behavior: "smooth", block: "center" });
-  };
-}
+    lerBtn.innerText = "Continuar lendo ⬇️";
+    mensagem.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+};
 
 
 
@@ -154,6 +158,12 @@ fotoInput.onchange = async () => {
   const file = fotoInput.files[0];
   if (!file) return;
 
+  if (file.size > 8 * 1024 * 1024) {
+  alert("A imagem deve ter no máximo 8MB.");
+  fotoInput.value = "";
+  return;
+}
+
   const slot = Number(fotoInput.dataset.slot);
   const form = new FormData();
   form.append("file", file);
@@ -197,27 +207,33 @@ slotEl.querySelector(".photo-remove").onclick = () => {
 function atualizarMidias() {
   midias.innerHTML = "";
 
+  const slider = document.createElement("div");
+  slider.className = "slider";
+
+  const track = document.createElement("div");
+  track.className = "slider-track";
+
   fotos.filter(Boolean).forEach(url => {
     const slide = document.createElement("div");
     slide.className = "slide";
-
     slide.innerHTML = `
       <div class="polaroid">
         <img src="${url}">
       </div>
     `;
-
-    midias.appendChild(slide);
+    track.appendChild(slide);
   });
 
-  iniciarSlider();
+  slider.appendChild(track);
+  midias.appendChild(slider);
+
+  iniciarSlider(track);
 }
 
 let slideIndex = 0;
 let sliderInterval = null;
 
-function iniciarSlider() {
-  const track = document.getElementById("midias");
+function iniciarSlider(track) {
   const slides = track.querySelectorAll(".slide");
 
   // limpa clones e intervalos antigos
@@ -273,8 +289,7 @@ musicaInput.onchange = () => {
     "audio/mp3",
     "audio/mp4",
     "video/mp4",
-    "audio/x-m4a",
-    "application/octet-stream"
+    "audio/x-m4a"
   ];
 
   if (!allowedTypes.includes(file.type)) {
@@ -431,6 +446,7 @@ function criarCoracoesPreview() {
 criarCoracoesPreview();
 
 });
+
 
 
 
