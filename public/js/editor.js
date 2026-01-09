@@ -164,7 +164,8 @@ fotoInput.onchange = async () => {
   return;
 }
 
-  const slot = Number(fotoInput.dataset.slot);
+  const slot = Number(fotoInput.dataset.slot ?? -1);
+if (slot < 0) return;
   const form = new FormData();
   form.append("file", file);
 
@@ -278,7 +279,9 @@ function iniciarSlider(track) {
   /* =====================
      MÚSICA
 ===================== */
-musicBox.onclick = () => musicaInput.click();
+if (musicBox && musicaInput) {
+  musicBox.onclick = () => musicaInput.click();
+}
 
 musicaInput.onchange = () => {
   const file = musicaInput.files[0];
@@ -394,6 +397,7 @@ function plural(valor, singular, pluralTxt) {
   /* =====================
      COMPRA (PIX)
   ===================== */
+    if (btnComprar) {
   btnComprar.onclick = async () => {
     if (!nomeInput.value.trim()) return erro(nomeInput);
     if (!msgInput.value.trim()) return erro(msgInput);
@@ -446,6 +450,7 @@ function criarCoracoesPreview() {
 criarCoracoesPreview();
 
 });
+
 
 
 
