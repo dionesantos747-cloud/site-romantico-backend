@@ -31,6 +31,18 @@ button {
 .editor {
   padding: 20px;
   background: #000;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.editor input,
+.editor textarea {
+  background: #fff;
+  color: #000;
+}
+
+.editor input::placeholder,
+.editor textarea::placeholder {
+  color: #777;
 }
 
 label {
@@ -413,7 +425,7 @@ body.final .remove-music {
   border-radius: 32px;
   overflow: hidden;
   height: 720px;
-  padding-top: 44px; /* altura do Chrome */
+  padding-top: 64px; /* altura do Chrome */
 }
 
 /* Scroll real */
@@ -433,6 +445,11 @@ body.final .remove-music {
 .editor,
 .editor * {
   background-color: transparent;
+}
+
+/* 🔥 NÃO APLICAR NO SITE FINAL */
+body.final .polaroid {
+  background: #fff !important;
 }
 
 /* ===== SITE FINAL LIMPO (SEM QUEBRAR SLIDER) ===== */
@@ -465,7 +482,7 @@ body.final .slider {
 
 body.final .slider-track {
   display: flex;
-  width: 100%;
+  width: max-content;
   transition: transform .8s ease;
 }
 
@@ -475,6 +492,19 @@ body.final .slide {
   justify-content: center;
 }
 
+/* 🔥 FUNDO REAL NO SITE FINAL */
+body.final .preview.azul {
+  background: radial-gradient(#2f6cff, #050b1a) !important;
+}
+body.final .preview.roxo {
+  background: radial-gradient(#7a4cff, #12071a) !important;
+}
+body.final .preview.rosa {
+  background: radial-gradient(#ff5ca8, #1a050f) !important;
+}
+body.final .preview.preto {
+  background: radial-gradient(#444, #000) !important;
+}
 
 
 
