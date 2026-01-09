@@ -19,7 +19,7 @@
 <div class="editor" id="editor">
 
   <label>Nome</label>
-  <input id="nomeInput" placeholder="Ex: Maria ❤️">
+  <input type="text" id="nomeInput" placeholder="Ex: Maria ❤️">
   <div class="error-text">Campo não preenchido</div>
 
   <label>Mensagem principal</label>
@@ -89,21 +89,17 @@
       <div class="nome" id="nome"></div>
 
       <div class="mensagem" id="mensagem"></div>
-      <button id="btnContinuarMensagem" class="ler-mais" style="display:none">
-        Continuar lendo ⬇️
-      </button>
-<button id="btnLerMenos" class="ler-mais" style="display:none">
-  Ler menos ⬆️
+      <button id="lerBtn" class="ler-mais" style="display:none">
+  Continuar lendo ⬇️
 </button>
-      <div class="slider">
-  <div class="slider-track" id="midias"></div>
-</div>
+      <div id="midias"></div>
 
-      <div class="dots" id="dots"></div>
 
       <div id="tempo"></div>
 
-     <button id="btnCarta" style="display:none">💌 Abrir carta</button>
+     <button id="btnCarta" class="ler-mais" style="display:none">
+  💌 Abrir carta
+</button>
 
 <div class="carta" id="carta">
   <button id="btnFecharCarta" class="ler-mais" style="margin-bottom:12px">
@@ -138,6 +134,7 @@
 
 </body>
 </html>
+
 
 
 
