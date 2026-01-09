@@ -64,43 +64,38 @@ const btnFecharCarta = document.getElementById("btnFecharCarta");
   /* =====================
      TEXTO AO VIVO
   ===================== */
-  nomeInput.oninput = () => {
-    nome.innerText = nomeInput.value;
-    limparErro(nomeInput);
-  };
+  let textoExpandido = false;
 
-  msgInput.oninput = () => {
-  mensagem.innerText = msgInput.value;
-  limparErro(msgInput);
-
-  msgInput.oninput = () => {
+msgInput.oninput = () => {
   mensagem.innerText = msgInput.value;
   limparErro(msgInput);
 
   if (mensagem.innerText.length > 500) {
     mensagem.classList.add("limitada");
     lerBtn.style.display = "block";
-    lerBtn.innerText = "Continuar lendo ⬇️";
+    lerBtn.innerText = textoExpandido
+      ? "Ler menos ⬆️"
+      : "Continuar lendo ⬇️";
   } else {
     mensagem.classList.remove("limitada");
     lerBtn.style.display = "none";
   }
 };
 
-let textoExpandido = false;
+if (lerBtn) {
+  lerBtn.onclick = () => {
+    textoExpandido = !textoExpandido;
 
-lerBtn.onclick = () => {
-  textoExpandido = !textoExpandido;
-
-  if (textoExpandido) {
-    mensagem.classList.remove("limitada");
-    lerBtn.innerText = "Ler menos ⬆️";
-  } else {
-    mensagem.classList.add("limitada");
-    lerBtn.innerText = "Continuar lendo ⬇️";
-    mensagem.scrollIntoView({ behavior: "smooth", block: "center" });
-  }
-};
+    if (textoExpandido) {
+      mensagem.classList.remove("limitada");
+      lerBtn.innerText = "Ler menos ⬆️";
+    } else {
+      mensagem.classList.add("limitada");
+      lerBtn.innerText = "Continuar lendo ⬇️";
+      mensagem.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+}
 
 
 
@@ -206,6 +201,7 @@ slotEl.querySelector(".photo-remove").onclick = () => {
   }
 };
 function atualizarMidias() {
+  if (!midias) return;
   midias.innerHTML = "";
 
   const slider = document.createElement("div");
@@ -283,7 +279,8 @@ if (musicBox && musicaInput) {
   musicBox.onclick = () => musicaInput.click();
 }
 
-musicaInput.onchange = () => {
+if (musicaInput) {
+  musicaInput.onchange = () => {
   const file = musicaInput.files[0];
   if (!file) return;
 
@@ -357,7 +354,8 @@ async function enviarMusica(file) {
 
   musicBox.classList.remove("disabled");
 }
-  
+  };
+}
   /* =====================
      CONTADOR
   ===================== */
@@ -450,6 +448,7 @@ function criarCoracoesPreview() {
 criarCoracoesPreview();
 
 });
+
 
 
 
