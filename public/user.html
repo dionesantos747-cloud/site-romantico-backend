@@ -13,11 +13,9 @@
 <!-- =====================
      PREVIEW / SITE FINAL
 ===================== -->
-<div class="preview azul" id="preview">
-
+<div class="preview" id="preview">
   <!-- Música -->
-  <audio id="audioPlayer" controls style="display:none"></audio>
-
+  <audio id="audioPlayer" controls style="opacity:0;height:0"></audio>
   <!-- Nome -->
   <div class="nome" id="nome"></div>
 
@@ -28,20 +26,18 @@
   </button>
 
   <!-- Fotos Polaroid -->
-  <div id="midias"></div>
+  <div class="slider">
+  <div class="slider-track" id="midias"></div>
+</div>
 
   <!-- Tempo juntos -->
   <div id="tempo"></div>
 
   <!-- Carta -->
-  <button id="btnCarta" onclick="toggleCarta()">💌 Abrir carta</button>
-  <div class="carta" id="carta"></div>
+  <button id="btnCarta">💌 Abrir carta</button>
+<div class="carta" id="carta" style="display:none"></div>
 
 </div>
-
-<script src="/js/user.js"></script>
-</body>
-</html>
 
 <script src="/js/user.js"></script>
 </body>
