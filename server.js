@@ -44,7 +44,9 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-const upload = multer({ limits: { fileSize: 10 * 1024 * 1024 } });
+const upload = multer({
+  limits: { fileSize: 25 * 1024 * 1024 } // 25MB
+});
 
 /* =====================
    VARIÁVEIS
@@ -282,9 +284,10 @@ app.get("/check-payment", async (req, res) => {
 
     if (status === "approved") {
 
-  // cria site se ainda não existir
-  if (!pagamento.siteId) {
-    const siteId = crypto.randomUUID();
+  let siteId = pagamento.siteId;
+
+  if (!siteId) {
+    siteId = crypto.randomUUID();
 
     await payments.updateOne(
       { paymentId },
@@ -297,7 +300,6 @@ app.get("/check-payment", async (req, res) => {
       }
     );
 
-    // 🔥 GARANTE LIBERAÇÃO DO USUÁRIO
     await users.updateOne(
       { _id: pagamento.userId },
       {
@@ -311,7 +313,7 @@ app.get("/check-payment", async (req, res) => {
 
   return res.json({
     status: "approved",
-    siteId: pagamento.siteId
+    siteId
   });
 }
 
@@ -330,15 +332,14 @@ app.get("/success.html", async (req, res) => {
   const paymentId = String(req.query.payment_id);
 
   const pay = await payments.findOne({
-    paymentId,
-    status: "approved"
-  });
-
-  if (!pay) {
-    return res.sendFile(
-      path.join(__dirname, "public/aguardando.html")
-    );
-  }
+  paymentId
+});
+  
+if (!pay || pay.status !== "approved") {
+  return res.sendFile(
+    path.join(__dirname, "public/aguardando.html")
+  );
+}
 
   const user = await users.findOne({ _id: pay.userId });
   if (!user) return res.status(404).send("Usuário não encontrado");
