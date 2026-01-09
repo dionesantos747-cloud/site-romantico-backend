@@ -354,8 +354,7 @@ async function enviarMusica(file) {
 
   musicBox.classList.remove("disabled");
 }
-  };
-}
+  
   /* =====================
      CONTADOR
   ===================== */
@@ -448,6 +447,7 @@ function criarCoracoesPreview() {
 criarCoracoesPreview();
 
 });
+
 
 
 
