@@ -131,8 +131,12 @@ async function carregarPix() {
     const res = await fetch(`/payment-info?payment_id=${paymentId}`);
     const data = await res.json();
 
-    qrImg.src = "data:image/png;base64," + data.qr_base64;
-    pixBox.innerText = data.copia_cola;
+    if (data.qr_base64 && data.copia_cola) {
+  qrImg.src = "data:image/png;base64," + data.qr_base64;
+  pixBox.innerText = data.copia_cola;
+} else {
+  pixBox.innerText = "Gerando PIX, aguarde alguns segundos...";
+}
   } catch {
     pixBox.innerText = "Erro ao carregar PIX. Aguarde...";
   }
@@ -162,11 +166,15 @@ function fallbackCopy() {
 
 
 async function verificarPagamento() {
+  if (!polling) return;
+
   try {
     const res = await fetch(`/check-payment?payment_id=${paymentId}`);
     const data = await res.json();
 
     if (data.status === "approved") {
+      polling = false;
+
       document.getElementById("status").innerText =
         "✅ Pagamento aprovado! Redirecionando...";
 
@@ -176,7 +184,7 @@ async function verificarPagamento() {
       }, 1200);
     }
   } catch {
-    // silencioso para não quebrar
+    // silencioso
   }
 }
 
