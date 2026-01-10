@@ -277,53 +277,49 @@ function iniciarSlider(track) {
 ===================== */
 if (musicBox && musicaInput) {
   musicBox.onclick = () => musicaInput.click();
-}
 
-if (musicaInput) {
   musicaInput.onchange = () => {
-  const file = musicaInput.files[0];
-  if (!file) return;
+    const file = musicaInput.files[0];
+    if (!file) return;
 
-  const allowedTypes = [
-    "audio/mpeg",
-    "audio/mp3",
-    "audio/mp4",
-    "video/mp4",
-    "audio/x-m4a"
-  ];
+    const allowedTypes = [
+      "audio/mpeg",
+      "audio/mp3",
+      "audio/mp4",
+      "video/mp4",
+      "audio/x-m4a"
+    ];
 
-  if (!allowedTypes.includes(file.type)) {
-    alert("Envie um arquivo MP3 ou MP4.");
-    musicaInput.value = "";
-    return;
-  }
-
-  // validar duração real
-  const audioTest = document.createElement("audio");
-  audioTest.preload = "metadata";
-  audioTest.src = URL.createObjectURL(file);
-
-  /* 🔴 ERRO AO LER METADADOS */
-  audioTest.onerror = () => {
-    URL.revokeObjectURL(audioTest.src);
-    alert("Não foi possível validar a duração do áudio.");
-    musicaInput.value = "";
-  };
-
-  /* ✅ METADADOS OK */
-  audioTest.onloadedmetadata = () => {
-    URL.revokeObjectURL(audioTest.src);
-
-    if (audioTest.duration > 180) {
-      alert("A música deve ter no máximo 3 minutos.");
+    if (!allowedTypes.includes(file.type)) {
+      alert("Envie um arquivo MP3 ou MP4.");
       musicaInput.value = "";
       return;
     }
 
-    // passou na validação
-    enviarMusica(file);
+    const audioTest = document.createElement("audio");
+    audioTest.preload = "metadata";
+    audioTest.src = URL.createObjectURL(file);
+
+    audioTest.onerror = () => {
+      URL.revokeObjectURL(audioTest.src);
+      alert("Não foi possível validar a duração do áudio.");
+      musicaInput.value = "";
+    };
+
+    audioTest.onloadedmetadata = () => {
+      URL.revokeObjectURL(audioTest.src);
+
+      if (audioTest.duration > 180) {
+        alert("A música deve ter no máximo 3 minutos.");
+        musicaInput.value = "";
+        return;
+      }
+
+      enviarMusica(file);
+    };
   };
-};
+}
+
 async function enviarMusica(file) {
   const form = new FormData();
   form.append("file", file);
@@ -354,7 +350,6 @@ async function enviarMusica(file) {
 
   musicBox.classList.remove("disabled");
 }
-  
   /* =====================
      CONTADOR
   ===================== */
@@ -447,6 +442,7 @@ function criarCoracoesPreview() {
 criarCoracoesPreview();
 
 });
+
 
 
 
