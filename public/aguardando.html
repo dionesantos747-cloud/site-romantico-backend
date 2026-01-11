@@ -125,7 +125,9 @@ if (!paymentId) {
 
 const qrImg = document.getElementById("qr");
 const pixBox = document.getElementById("code");
-
+  
+let polling = true;
+  
 async function carregarPix() {
   try {
     const res = await fetch(`/payment-info?payment_id=${paymentId}`);
