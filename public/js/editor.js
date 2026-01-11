@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let contadorInterval = null;
 
   /* =====================
-     HELPERS (VALIDAÇÃO)
+     HELPERS
   ===================== */
   function erro(input) {
     input.classList.add("error");
@@ -62,9 +62,10 @@ document.addEventListener("DOMContentLoaded", () => {
      TEXTO AO VIVO
   ===================== */
   nomeInput.oninput = () => {
-  nome.innerText = nomeInput.value;
-  limparErro(nomeInput);
-};
+    nome.innerText = nomeInput.value;
+    limparErro(nomeInput);
+  };
+
   let textoExpandido = false;
 
   msgInput.oninput = () => {
@@ -74,9 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (mensagem.innerText.length > 500) {
       mensagem.classList.add("limitada");
       lerBtn.style.display = "block";
-      lerBtn.innerText = textoExpandido
-        ? "Ler menos ⬆️"
-        : "Continuar lendo ⬇️";
+      lerBtn.innerText = textoExpandido ? "Ler menos ⬆️" : "Continuar lendo ⬇️";
     } else {
       mensagem.classList.remove("limitada");
       lerBtn.style.display = "none";
@@ -85,14 +84,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   lerBtn.onclick = () => {
     textoExpandido = !textoExpandido;
-    if (textoExpandido) {
-      mensagem.classList.remove("limitada");
-      lerBtn.innerText = "Ler menos ⬆️";
-    } else {
-      mensagem.classList.add("limitada");
-      lerBtn.innerText = "Continuar lendo ⬇️";
-      mensagem.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
+    mensagem.classList.toggle("limitada", !textoExpandido);
+    lerBtn.innerText = textoExpandido ? "Ler menos ⬆️" : "Continuar lendo ⬇️";
   };
 
   /* =====================
@@ -112,7 +105,6 @@ document.addEventListener("DOMContentLoaded", () => {
   btnFecharCarta.onclick = () => {
     carta.style.display = "none";
     btnCarta.style.display = "block";
-    btnCarta.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
   /* =====================
@@ -120,9 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ===================== */
   document.querySelectorAll(".bg-card").forEach(card => {
     card.onclick = () => {
-      document.querySelectorAll(".bg-card").forEach(c =>
-        c.classList.remove("selected")
-      );
+      document.querySelectorAll(".bg-card").forEach(c => c.classList.remove("selected"));
       card.classList.add("selected");
       preview.className = "preview " + card.dataset.bg;
     };
@@ -156,24 +146,15 @@ document.addEventListener("DOMContentLoaded", () => {
     form.append("file", file);
 
     try {
-      const res = await fetch("/upload-image", {
-        method: "POST",
-        body: form
-      });
+      const res = await fetch("/upload-image", { method: "POST", body: form });
       const data = await res.json();
       if (!data.url) throw new Error();
 
       fotos[slot] = data.url;
 
-      const slotEl = document.querySelector(
-        `.photo-slot[data-slot="${slot}"]`
-      );
-
+      const slotEl = document.querySelector(`.photo-slot[data-slot="${slot}"]`);
       slotEl.classList.add("filled");
-      slotEl.innerHTML = `
-        <img src="${data.url}">
-        <div class="photo-remove">×</div>
-      `;
+      slotEl.innerHTML = `<img src="${data.url}"><div class="photo-remove">×</div>`;
 
       slotEl.querySelector(".photo-remove").onclick = () => {
         fotos[slot] = null;
@@ -184,7 +165,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       atualizarMidias();
       fotoInput.value = "";
-
     } catch {
       alert("Erro ao enviar imagem");
     }
@@ -192,58 +172,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function atualizarMidias() {
     midias.innerHTML = "";
-
     const slider = document.createElement("div");
     slider.className = "slider";
-
     const track = document.createElement("div");
     track.className = "slider-track";
 
     fotos.filter(Boolean).forEach(url => {
       const slide = document.createElement("div");
       slide.className = "slide";
-      slide.innerHTML = `
-        <div class="polaroid">
-          <img src="${url}">
-        </div>
-      `;
+      slide.innerHTML = `<div class="polaroid"><img src="${url}"></div>`;
       track.appendChild(slide);
     });
 
     slider.appendChild(track);
     midias.appendChild(slider);
-
-    iniciarSlider(track);
-  }
-
-  let sliderInterval = null;
-
-  function iniciarSlider(track) {
-    const slides = track.querySelectorAll(".slide");
-    if (sliderInterval) clearInterval(sliderInterval);
-
-    if (slides.length <= 1) return;
-
-    const clone = slides[0].cloneNode(true);
-    clone.classList.add("clone");
-    track.appendChild(clone);
-
-    let index = 0;
-
-    sliderInterval = setInterval(() => {
-      index++;
-      track.style.transform = `translateX(-${index * 100}%)`;
-
-      if (index === slides.length) {
-        setTimeout(() => {
-          track.style.transition = "none";
-          index = 0;
-          track.style.transform = "translateX(0)";
-          track.offsetHeight;
-          track.style.transition = "transform .8s ease";
-        }, 800);
-      }
-    }, 3500);
   }
 
   /* =====================
@@ -271,59 +213,51 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = new FormData();
     form.append("file", file);
 
-    try {
-      const res = await fetch("/upload-music", {
-        method: "POST",
-        body: form
-      });
-      const data = await res.json();
+    const res = await fetch("/upload-music", { method: "POST", body: form });
+    const data = await res.json();
 
-      musicaUrl = data.url;
-      audio.src = musicaUrl;
-      audio.style.display = "block";
-      removeMusic.style.display = "block";
-      musicBox.innerText = "🎶 Música adicionada";
-
-    } catch {
-      alert("Erro ao enviar música");
-    }
+    musicaUrl = data.url;
+    audio.src = musicaUrl;
+    audio.style.display = "block";
+    removeMusic.style.display = "block";
+    musicBox.innerText = "🎶 Música adicionada";
   }
 
   /* =====================
-     CONTADOR
+     CONTADOR (AGORA FECHADO CORRETAMENTE)
   ===================== */
   dataInput.onchange = () => {
     limparErro(dataInput);
     if (contadorInterval) clearInterval(contadorInterval);
 
     contadorInterval = setInterval(() => {
-  const inicio = new Date(dataInput.value);
-  const diff = Date.now() - inicio.getTime();
-  if (diff < 0) return;
+      const inicio = new Date(dataInput.value);
+      const diff = Date.now() - inicio.getTime();
+      if (diff < 0) return;
 
-  const s = Math.floor(diff / 1000) % 60;
-  const m = Math.floor(diff / 60000) % 60;
-  const h = Math.floor(diff / 3600000) % 24;
-  const d = Math.floor(diff / 86400000) % 30;
-  const mo = Math.floor(diff / 2592000000) % 12;
-  const a = Math.floor(diff / 31536000000);
+      const s = Math.floor(diff / 1000) % 60;
+      const m = Math.floor(diff / 60000) % 60;
+      const h = Math.floor(diff / 3600000) % 24;
+      const d = Math.floor(diff / 86400000) % 30;
+      const mo = Math.floor(diff / 2592000000) % 12;
+      const a = Math.floor(diff / 31536000000);
 
-  tempo.innerHTML = `
-    <span class="titulo">Já estamos juntos há</span>
-    <div class="contador">
-      <div class="item">${a} ano(s)</div>
-      <div class="item">${mo} mês(es)</div>
-      <div class="item">${d} dia(s)</div>
-      <div class="item">${h}h ${m}m ${s}s</div>
-    </div>
-  `;
-}, 1000);
-/* =====================
-   COMPRA
-===================== */
-if (btnComprar) {
+      tempo.innerHTML = `
+        <span class="titulo">Já estamos juntos há</span>
+        <div class="contador">
+          <div class="item">${a} ano(s)</div>
+          <div class="item">${mo} mês(es)</div>
+          <div class="item">${d} dia(s)</div>
+          <div class="item">${h}h ${m}m ${s}s</div>
+        </div>
+      `;
+    }, 1000);
+  };
+
+  /* =====================
+     COMPRA (PIX)
+  ===================== */
   btnComprar.onclick = async () => {
-
     if (!nomeInput.value.trim()) return erro(nomeInput);
     if (!msgInput.value.trim()) return erro(msgInput);
     if (!cartaInput.value.trim()) return erro(cartaInput);
@@ -339,28 +273,18 @@ if (btnComprar) {
       fundo: document.querySelector(".bg-card.selected")?.dataset.bg || "azul"
     };
 
-    try {
-      const res = await fetch("/create-payment", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
+    const res = await fetch("/create-payment", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
 
-      const data = await res.json();
+    const data = await res.json();
+    if (!data.payment_id) return alert("Erro ao gerar pagamento");
 
-      if (!data.payment_id) {
-        alert("Erro ao gerar pagamento");
-        return;
-      }
-
-      window.location.href =
-        `/aguardando.html?payment_id=${data.payment_id}`;
-
-    } catch {
-      alert("Erro ao gerar pagamento");
-    }
+    window.location.href = `/aguardando.html?payment_id=${data.payment_id}`;
   };
-}
+
   /* =====================
      CORAÇÕES
   ===================== */
@@ -379,6 +303,7 @@ if (btnComprar) {
   criarCoracoesPreview();
 
 });
+
 
 
 
