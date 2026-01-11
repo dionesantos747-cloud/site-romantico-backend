@@ -300,10 +300,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 1000);
   };
 
-  /* =====================
-     COMPRA
-  ===================== */
+/* =====================
+   COMPRA
+===================== */
+if (btnComprar) {
   btnComprar.onclick = async () => {
+
     if (!nomeInput.value.trim()) return erro(nomeInput);
     if (!msgInput.value.trim()) return erro(msgInput);
     if (!cartaInput.value.trim()) return erro(cartaInput);
@@ -319,13 +321,28 @@ document.addEventListener("DOMContentLoaded", () => {
       fundo: document.querySelector(".bg-card.selected")?.dataset.bg || "azul"
     };
 
-    await fetch("/create-payment", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-  };
+    try {
+      const res = await fetch("/create-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
 
+      const data = await res.json();
+
+      if (!data.payment_id) {
+        alert("Erro ao gerar pagamento");
+        return;
+      }
+
+      window.location.href =
+        `/aguardando.html?payment_id=${data.payment_id}`;
+
+    } catch {
+      alert("Erro ao gerar pagamento");
+    }
+  };
+}
   /* =====================
      CORAÇÕES
   ===================== */
@@ -344,6 +361,7 @@ document.addEventListener("DOMContentLoaded", () => {
   criarCoracoesPreview();
 
 });
+
 
 
 
