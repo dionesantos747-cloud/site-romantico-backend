@@ -61,6 +61,10 @@ document.addEventListener("DOMContentLoaded", () => {
   /* =====================
      TEXTO AO VIVO
   ===================== */
+  nomeInput.oninput = () => {
+  nome.innerText = nomeInput.value;
+  limparErro(nomeInput);
+};
   let textoExpandido = false;
 
   msgInput.oninput = () => {
@@ -293,13 +297,27 @@ document.addEventListener("DOMContentLoaded", () => {
     if (contadorInterval) clearInterval(contadorInterval);
 
     contadorInterval = setInterval(() => {
-      const diff = Date.now() - new Date(dataInput.value).getTime();
-      if (diff < 0) return;
+  const inicio = new Date(dataInput.value);
+  const diff = Date.now() - inicio.getTime();
+  if (diff < 0) return;
 
-      tempo.innerHTML = `<span class="titulo">Já estamos juntos 💖</span>`;
-    }, 1000);
-  };
+  const s = Math.floor(diff / 1000) % 60;
+  const m = Math.floor(diff / 60000) % 60;
+  const h = Math.floor(diff / 3600000) % 24;
+  const d = Math.floor(diff / 86400000) % 30;
+  const mo = Math.floor(diff / 2592000000) % 12;
+  const a = Math.floor(diff / 31536000000);
 
+  tempo.innerHTML = `
+    <span class="titulo">Já estamos juntos há</span>
+    <div class="contador">
+      <div class="item">${a} ano(s)</div>
+      <div class="item">${mo} mês(es)</div>
+      <div class="item">${d} dia(s)</div>
+      <div class="item">${h}h ${m}m ${s}s</div>
+    </div>
+  `;
+}, 1000);
 /* =====================
    COMPRA
 ===================== */
@@ -361,6 +379,7 @@ if (btnComprar) {
   criarCoracoesPreview();
 
 });
+
 
 
 
