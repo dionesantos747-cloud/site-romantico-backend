@@ -482,7 +482,7 @@ body.final .slider {
 
 body.final .slider-track {
   display: flex;
-  width: max-content;
+  width: 100%;
   transition: transform .8s ease;
 }
 
@@ -505,6 +505,7 @@ body.final .preview.rosa {
 body.final .preview.preto {
   background: radial-gradient(#444, #000) !important;
 }
+
 
 
 
