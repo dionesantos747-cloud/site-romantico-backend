@@ -506,6 +506,14 @@ body.final .preview.preto {
   background: radial-gradient(#444, #000) !important;
 }
 
+body.final {
+  color-scheme: light !important;
+  background: #000 !important;
+}
+
+body.final * {
+  forced-color-adjust: none !important;
+}
 
 
 
