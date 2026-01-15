@@ -171,23 +171,25 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   function atualizarMidias() {
-    midias.innerHTML = "";
-    const slider = document.createElement("div");
-    slider.className = "slider";
-    const track = document.createElement("div");
-    track.className = "slider-track";
+  if (!midias) return;
 
-    fotos.filter(Boolean).forEach(url => {
-      const slide = document.createElement("div");
-      slide.className = "slide";
-      slide.innerHTML = `<div class="polaroid"><img src="${url}"></div>`;
-      track.appendChild(slide);
-    });
+  midias.innerHTML = `
+    <div class="slider">
+      <div class="slider-track" id="editorSliderTrack">
+        ${fotos.filter(Boolean).map(url => `
+          <div class="slide">
+            <div class="polaroid">
+              <img src="${url}">
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `;
 
-    slider.appendChild(track);
-    midias.appendChild(slider);
-  }
-
+  const track = document.getElementById("editorSliderTrack");
+  iniciarSlider(track);
+}
   /* =====================
      MÚSICA
   ===================== */
@@ -243,14 +245,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const a = Math.floor(diff / 31536000000);
 
       tempo.innerHTML = `
-        <span class="titulo">Já estamos juntos há</span>
-        <div class="contador">
-          <div class="item">${a} ano(s)</div>
-          <div class="item">${mo} mês(es)</div>
-          <div class="item">${d} dia(s)</div>
-          <div class="item">${h}h ${m}m ${s}s</div>
-        </div>
-      `;
+  <span class="titulo">Já estamos juntos há</span>
+  <div class="contador">
+    <div class="item">${a} ${plural(a,"ano","anos")}</div>
+    <div class="item">${mo} ${plural(mo,"mês","meses")}</div>
+    <div class="item">${d} ${plural(d,"dia","dias")}</div>
+    <div class="item">${h}h ${m}m ${s}s</div>
+  </div>
+`;
     }, 1000);
   };
 
@@ -262,7 +264,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!msgInput.value.trim()) return erro(msgInput);
     if (!cartaInput.value.trim()) return erro(cartaInput);
     if (!dataInput.value) return erro(dataInput);
-
+    
+musica: musicaUrl || null,
     const payload = {
       nome: nomeInput.value,
       mensagem: msgInput.value,
@@ -303,6 +306,7 @@ document.addEventListener("DOMContentLoaded", () => {
   criarCoracoesPreview();
 
 });
+
 
 
 
