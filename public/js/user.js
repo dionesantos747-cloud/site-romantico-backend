@@ -1,3 +1,54 @@
+function montarSliderFotos(fotos) {
+  const midias = document.getElementById("midias");
+  if (!midias || !fotos || fotos.length === 0) return;
+
+  midias.innerHTML = "";
+
+  const slider = document.createElement("div");
+  slider.className = "slider";
+
+  const track = document.createElement("div");
+  track.className = "slider-track";
+
+  fotos.forEach(url => {
+    const slide = document.createElement("div");
+    slide.className = "slide";
+    slide.innerHTML = `
+      <div class="polaroid">
+        <img src="${url}">
+      </div>
+    `;
+    track.appendChild(slide);
+  });
+
+  slider.appendChild(track);
+  midias.appendChild(slider);
+
+  iniciarSliderFinal(track);
+}
+
+function iniciarSliderFinal(track) {
+  const slides = track.querySelectorAll(".slide");
+  if (slides.length <= 1) return;
+
+  let index = 0;
+
+  setInterval(() => {
+    index++;
+    track.style.transform = `translateX(-${index * 100}%)`;
+
+    if (index === slides.length) {
+      setTimeout(() => {
+        track.style.transition = "none";
+        index = 0;
+        track.style.transform = "translateX(0)";
+        track.offsetHeight;
+        track.style.transition = "transform .8s ease";
+      }, 800);
+    }
+  }, 3500);
+}
+
 /* ==========================
    GET USER ID
 ========================== */
