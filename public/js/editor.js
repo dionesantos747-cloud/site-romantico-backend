@@ -133,8 +133,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const file = fotoInput.files[0];
     if (!file) return;
 
-    if (file.size > 8 * 1024 * 1024) {
-      alert("A imagem deve ter no máximo 8MB.");
+    if (file.size > 20 * 1024 * 1024) {
+      alert("A imagem deve ter no máximo 20MB.");
       fotoInput.value = "";
       return;
     }
@@ -306,6 +306,7 @@ musica: musicaUrl || null,
   criarCoracoesPreview();
 
 });
+
 
 
 
