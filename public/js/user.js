@@ -1,54 +1,3 @@
-function montarSliderFotos(fotos) {
-  const midias = document.getElementById("midias");
-  if (!midias || !fotos || fotos.length === 0) return;
-
-  midias.innerHTML = "";
-
-  const slider = document.createElement("div");
-  slider.className = "slider";
-
-  const track = document.createElement("div");
-  track.className = "slider-track";
-
-  fotos.forEach(url => {
-    const slide = document.createElement("div");
-    slide.className = "slide";
-    slide.innerHTML = `
-      <div class="polaroid">
-        <img src="${url}">
-      </div>
-    `;
-    track.appendChild(slide);
-  });
-
-  slider.appendChild(track);
-  midias.appendChild(slider);
-
-  iniciarSliderFinal(track);
-}
-
-function iniciarSliderFinal(track) {
-  const slides = track.querySelectorAll(".slide");
-  if (slides.length <= 1) return;
-
-  let index = 0;
-
-  setInterval(() => {
-    index++;
-    track.style.transform = `translateX(-${index * 100}%)`;
-
-    if (index === slides.length) {
-      setTimeout(() => {
-        track.style.transition = "none";
-        index = 0;
-        track.style.transform = "translateX(0)";
-        track.offsetHeight;
-        track.style.transition = "transform .8s ease";
-      }, 800);
-    }
-  }, 3500);
-}
-
 /* ==========================
    GET USER ID
 ========================== */
@@ -71,13 +20,12 @@ const lerBtn   = document.getElementById("lerBtn");
 ========================== */
 let textoCompleto = "";
 let textoExpandido = false;
-let sliderInterval = null;
 
 /* ==========================
-   FETCH USER DATA
+   INIT
 ========================== */
 async function carregar() {
-   document.body.classList.add("final");
+  document.body.classList.add("final");
 
   const res = await fetch(`/user-data?id=${userId}`);
   const data = await res.json();
@@ -94,29 +42,26 @@ async function carregar() {
 
   nomeEl.innerText = data.nome || "";
 
-// 🔥 AQUI → CHAMA O SLIDER DO SITE FINAL
-criarPolaroids(data.fotos);
+  // 🔥 SLIDER AUTOMÁTICO (CORRETO)
+  montarSliderFotos(data.fotos);
 
-textoCompleto = data.mensagem || "";
-atualizarTexto();
+  textoCompleto = data.mensagem || "";
+  atualizarTexto();
 
-  cartaEl.innerHTML = `
-    ${data.carta || ""}
-    <div style="margin-top:16px">
-      <button onclick="toggleCarta()" class="ler-btn">Fechar carta</button>
-    </div>
-  `;
+  cartaEl.innerHTML = data.carta || "";
 
   if (data.musica) {
     musicaEl.src = data.musica;
     musicaEl.volume = 0.7;
     musicaEl.style.display = "block";
-    musicaEl.play().catch(()=>{});
+    musicaEl.play().catch(() => {});
   }
 
   iniciarTempo(data.dataInicio);
   criarCorações();
 }
+
+carregar();
 
 /* ==========================
    FUNDO
@@ -136,7 +81,9 @@ function atualizarTexto() {
       : textoCompleto.slice(0, 500) + "...";
 
     lerBtn.style.display = "block";
-    lerBtn.innerText = textoExpandido ? "Ler menos" : "Continuar lendo";
+    lerBtn.innerText = textoExpandido
+      ? "Ler menos ⬆️"
+      : "Continuar lendo ⬇️";
   } else {
     msgEl.innerText = textoCompleto;
     lerBtn.style.display = "none";
@@ -146,27 +93,22 @@ function atualizarTexto() {
 lerBtn.onclick = () => {
   textoExpandido = !textoExpandido;
   atualizarTexto();
-
-  msgEl.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-  });
 };
 
 /* ==========================
-   SLIDER POLAROID (LOOP REAL)
+   SLIDER POLAROID (FINAL)
 ========================== */
-function criarPolaroids(fotos) {
-  if (!fotos || fotos.length === 0) return;
+function montarSliderFotos(fotos) {
+  if (!midiasEl || !fotos || fotos.length === 0) return;
 
-  // 🔒 1 FOTO → SEM SLIDE (evita bug)
+  // 🔒 1 FOTO → SEM SLIDE (EVITA BUG)
   if (fotos.length === 1) {
     midiasEl.innerHTML = `
       <div class="slider">
         <div class="slider-track">
           <div class="slide">
             <div class="polaroid">
-              <img src="${fotos[0]}" />
+              <img src="${fotos[0]}">
             </div>
           </div>
         </div>
@@ -175,14 +117,14 @@ function criarPolaroids(fotos) {
     return;
   }
 
-  // 🔥 2+ FOTOS → SLIDE AUTOMÁTICO COM LOOP
+  // 🔥 2+ FOTOS → SLIDE AUTOMÁTICO
   midiasEl.innerHTML = `
     <div class="slider">
       <div class="slider-track" id="sliderTrack">
         ${fotos.map(url => `
           <div class="slide">
             <div class="polaroid">
-              <img src="${url}" />
+              <img src="${url}">
             </div>
           </div>
         `).join("")}
@@ -193,7 +135,7 @@ function criarPolaroids(fotos) {
   const track = document.getElementById("sliderTrack");
   const slides = track.querySelectorAll(".slide");
 
-  // clona o primeiro slide (loop infinito)
+  // clone para loop infinito
   const clone = slides[0].cloneNode(true);
   clone.classList.add("clone");
   track.appendChild(clone);
@@ -206,7 +148,6 @@ function criarPolaroids(fotos) {
     track.style.transition = "transform .8s ease";
     track.style.transform = `translateX(-${index * 100}%)`;
 
-    // quando chega no clone → volta sem animação
     if (index === total - 1) {
       setTimeout(() => {
         track.style.transition = "none";
@@ -216,6 +157,7 @@ function criarPolaroids(fotos) {
     }
   }, 3500);
 }
+
 /* ==========================
    CARTA
 ========================== */
@@ -237,7 +179,7 @@ function plural(v, s, p) {
 }
 
 /* ==========================
-   TEMPO JUNTOS
+   TEMPO JUNTOS (CORRIGIDO)
 ========================== */
 function iniciarTempo(dataInicio) {
   if (!dataInicio) return;
@@ -247,12 +189,12 @@ function iniciarTempo(dataInicio) {
     const diff = Date.now() - inicio.getTime();
     if (diff < 0) return;
 
-    const s = Math.floor(diff / 1000) % 60;
-    const m = Math.floor(diff / 60000) % 60;
-    const h = Math.floor(diff / 3600000) % 24;
-    const d = Math.floor(diff / 86400000) % 30;
+    const s  = Math.floor(diff / 1000) % 60;
+    const m  = Math.floor(diff / 60000) % 60;
+    const h  = Math.floor(diff / 3600000) % 24;
+    const d  = Math.floor(diff / 86400000) % 30;
     const mo = Math.floor(diff / 2592000000) % 12;
-    const a = Math.floor(diff / 31536000000);
+    const a  = Math.floor(diff / 31536000000);
 
     tempoEl.innerHTML = `
       <span class="titulo">Já estamos juntos há</span>
@@ -285,8 +227,6 @@ function criarCorações() {
     preview.appendChild(h);
   }
 }
-
-/* INIT */
-carregar();
+          
 
 
