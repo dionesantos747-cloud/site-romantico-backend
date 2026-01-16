@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let fotos = [null, null, null];
   let musicaUrl = null;
   let contadorInterval = null;
+  let sliderInterval = null;
 
   /* =====================
      HELPERS
@@ -56,6 +57,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (txt && txt.classList.contains("error-text")) {
       txt.style.display = "none";
     }
+  }
+
+  function plural(v, s, p) {
+    return v === 1 ? s : p;
   }
 
   /* =====================
@@ -119,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* =====================
-     FOTOS
+     FOTOS + SLIDER
   ===================== */
   document.querySelectorAll(".photo-slot").forEach(slot => {
     slot.onclick = () => {
@@ -171,25 +176,46 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   function atualizarMidias() {
-  if (!midias) return;
-
-  midias.innerHTML = `
-    <div class="slider">
-      <div class="slider-track" id="editorSliderTrack">
-        ${fotos.filter(Boolean).map(url => `
-          <div class="slide">
-            <div class="polaroid">
-              <img src="${url}">
+    midias.innerHTML = `
+      <div class="slider">
+        <div class="slider-track" id="editorSliderTrack">
+          ${fotos.filter(Boolean).map(url => `
+            <div class="slide">
+              <div class="polaroid">
+                <img src="${url}">
+              </div>
             </div>
-          </div>
-        `).join("")}
+          `).join("")}
+        </div>
       </div>
-    </div>
-  `;
+    `;
 
-  const track = document.getElementById("editorSliderTrack");
-  iniciarSlider(track);
-}
+    iniciarSlider(document.getElementById("editorSliderTrack"));
+  }
+
+  function iniciarSlider(track) {
+    const slides = track.querySelectorAll(".slide");
+    if (sliderInterval) clearInterval(sliderInterval);
+    if (slides.length <= 1) return;
+
+    let index = 0;
+
+    sliderInterval = setInterval(() => {
+      index++;
+      track.style.transform = `translateX(-${index * 100}%)`;
+
+      if (index === slides.length) {
+        setTimeout(() => {
+          track.style.transition = "none";
+          index = 0;
+          track.style.transform = "translateX(0)";
+          track.offsetHeight;
+          track.style.transition = "transform .8s ease";
+        }, 800);
+      }
+    }, 3500);
+  }
+
   /* =====================
      MÚSICA
   ===================== */
@@ -226,7 +252,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* =====================
-     CONTADOR (AGORA FECHADO CORRETAMENTE)
+     CONTADOR
   ===================== */
   dataInput.onchange = () => {
     limparErro(dataInput);
@@ -245,34 +271,33 @@ document.addEventListener("DOMContentLoaded", () => {
       const a = Math.floor(diff / 31536000000);
 
       tempo.innerHTML = `
-  <span class="titulo">Já estamos juntos há</span>
-  <div class="contador">
-    <div class="item">${a} ${plural(a,"ano","anos")}</div>
-    <div class="item">${mo} ${plural(mo,"mês","meses")}</div>
-    <div class="item">${d} ${plural(d,"dia","dias")}</div>
-    <div class="item">${h}h ${m}m ${s}s</div>
-  </div>
-`;
+        <span class="titulo">Já estamos juntos há</span>
+        <div class="contador">
+          <div class="item">${a} ${plural(a,"ano","anos")}</div>
+          <div class="item">${mo} ${plural(mo,"mês","meses")}</div>
+          <div class="item">${d} ${plural(d,"dia","dias")}</div>
+          <div class="item">${h}h ${m}m ${s}s</div>
+        </div>
+      `;
     }, 1000);
   };
 
   /* =====================
-     COMPRA (PIX)
+     COMPRA
   ===================== */
   btnComprar.onclick = async () => {
     if (!nomeInput.value.trim()) return erro(nomeInput);
     if (!msgInput.value.trim()) return erro(msgInput);
     if (!cartaInput.value.trim()) return erro(cartaInput);
     if (!dataInput.value) return erro(dataInput);
-    
-musica: musicaUrl || null,
+
     const payload = {
       nome: nomeInput.value,
       mensagem: msgInput.value,
       carta: cartaInput.value,
       dataInicio: dataInput.value,
       fotos: fotos.filter(Boolean),
-      musica: musicaUrl,
+      musica: musicaUrl || null,
       fundo: document.querySelector(".bg-card.selected")?.dataset.bg || "azul"
     };
 
@@ -306,6 +331,7 @@ musica: musicaUrl || null,
   criarCoracoesPreview();
 
 });
+    
 
 
 
@@ -318,26 +344,7 @@ musica: musicaUrl || null,
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+h
 
 
 
