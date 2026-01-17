@@ -126,6 +126,45 @@ document.addEventListener("DOMContentLoaded", () => {
   /* =====================
      FOTOS + SLIDER
   ===================== */
+  async function reduzirImagem(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const reader = new FileReader();
+
+    reader.onload = e => {
+      img.onload = () => {
+        const MAX = 1600; // resolução segura
+        let { width, height } = img;
+
+        if (width > height && width > MAX) {
+          height *= MAX / width;
+          width = MAX;
+        } else if (height > MAX) {
+          width *= MAX / height;
+          height = MAX;
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+
+        canvas.toBlob(
+          blob => resolve(blob),
+          "image/jpeg",
+          0.8 // qualidade ótima
+        );
+      };
+
+      img.src = e.target.result;
+    };
+
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
   document.querySelectorAll(".photo-slot").forEach(slot => {
     slot.onclick = () => {
       if (slot.classList.contains("filled")) return;
@@ -136,7 +175,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   fotoInput.onchange = async () => {
     const file = fotoInput.files[0];
-    if (!file) return;
+if (!file) return;
+
+const imagemReduzida = await reduzirImagem(file);
+
+const form = new FormData();
+form.append("file", imagemReduzida, "foto.jpg");
 
     if (file.size > 20 * 1024 * 1024) {
       alert("A imagem deve ter no máximo 20MB.");
@@ -147,8 +191,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const slot = Number(fotoInput.dataset.slot);
     if (slot < 0) return;
 
-    const form = new FormData();
-    form.append("file", file);
 
     try {
       const res = await fetch("/upload-image", { method: "POST", body: form });
@@ -204,15 +246,15 @@ document.addEventListener("DOMContentLoaded", () => {
       index++;
       track.style.transform = `translateX(-${index * 100}%)`;
 
-      if (index === slides.length) {
-        setTimeout(() => {
-          track.style.transition = "none";
-          index = 0;
-          track.style.transform = "translateX(0)";
-          track.offsetHeight;
-          track.style.transition = "transform .8s ease";
-        }, 800);
-      }
+      track.addEventListener("transitionend", () => {
+  if (index === slides.length) {
+    track.style.transition = "none";
+    index = 0;
+    track.style.transform = "translateX(0)";
+    track.offsetHeight; // força reflow
+    track.style.transition = "transform .8s ease";
+  }
+});
     }, 3500);
   }
 
@@ -345,6 +387,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 h
+
 
 
 
