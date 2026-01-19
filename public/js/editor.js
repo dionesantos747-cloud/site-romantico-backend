@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     reader.onload = e => {
       img.onload = () => {
-        const MAX = 1600; // resolução segura
+        const MAX = 1600;
         let { width, height } = img;
 
         if (width > height && width > MAX) {
@@ -151,11 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, width, height);
 
-        canvas.toBlob(
-          blob => resolve(blob),
-          "image/jpeg",
-          0.8 // qualidade ótima
-        );
+        canvas.toBlob(blob => resolve(blob), "image/jpeg", 0.8);
       };
 
       img.src = e.target.result;
@@ -177,12 +173,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const file = fotoInput.files[0];
 if (!file) return;
 
+// valida tamanho original antes de reduzir
+if (file.size > 20 * 1024 * 1024) {
+  alert("A imagem deve ter no máximo 20MB.");
+  fotoInput.value = "";
+  return;
+}
+
 const imagemReduzida = await reduzirImagem(file);
 
 const form = new FormData();
 form.append("file", imagemReduzida, "foto.jpg");
-
-    if (file.size > 20 * 1024 * 1024) {
       alert("A imagem deve ter no máximo 20MB.");
       fotoInput.value = "";
       return;
@@ -236,27 +237,27 @@ form.append("file", imagemReduzida, "foto.jpg");
   }
 
   function iniciarSlider(track) {
-    const slides = track.querySelectorAll(".slide");
-    if (sliderInterval) clearInterval(sliderInterval);
-    if (slides.length <= 1) return;
+  const slides = track.querySelectorAll(".slide");
+  if (sliderInterval) clearInterval(sliderInterval);
+  if (slides.length <= 1) return;
 
-    let index = 0;
+  let index = 0;
 
-    sliderInterval = setInterval(() => {
-      index++;
-      track.style.transform = `translateX(-${index * 100}%)`;
+  sliderInterval = setInterval(() => {
+    index++;
+    track.style.transform = `translateX(-${index * 100}%)`;
 
-      track.addEventListener("transitionend", () => {
-  if (index === slides.length) {
-    track.style.transition = "none";
-    index = 0;
-    track.style.transform = "translateX(0)";
-    track.offsetHeight; // força reflow
-    track.style.transition = "transform .8s ease";
-  }
-});
-    }, 3500);
-  }
+    if (index === slides.length) {
+      setTimeout(() => {
+        track.style.transition = "none";
+        index = 0;
+        track.style.transform = "translateX(0)";
+        track.offsetHeight;
+        track.style.transition = "transform .8s ease";
+      }, 800);
+    }
+  }, 3500);
+}
 
   /* =====================
      MÚSICA
@@ -386,7 +387,7 @@ form.append("file", imagemReduzida, "foto.jpg");
 
 
 
-h
+
 
 
 
