@@ -161,6 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
     reader.readAsDataURL(file);
   });
 }
+  
   document.querySelectorAll(".photo-slot").forEach(slot => {
     slot.onclick = () => {
       if (slot.classList.contains("filled")) return;
@@ -170,53 +171,59 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   fotoInput.onchange = async () => {
-    const file = fotoInput.files[0];
-if (!file) return;
+  const file = fotoInput.files[0];
+  if (!file) return;
 
-// valida tamanho original antes de reduzir
-if (file.size > 20 * 1024 * 1024) {
-  alert("A imagem deve ter no máximo 20MB.");
-  fotoInput.value = "";
-  return;
-}
+  // valida tamanho original antes de reduzir
+  if (file.size > 20 * 1024 * 1024) {
+    alert("A imagem deve ter no máximo 20MB.");
+    fotoInput.value = "";
+    return;
+  }
 
-const imagemReduzida = await reduzirImagem(file);
+  const imagemReduzida = await reduzirImagem(file);
 
-const form = new FormData();
-form.append("file", imagemReduzida, "foto.jpg");
-      alert("A imagem deve ter no máximo 20MB.");
-      fotoInput.value = "";
-      return;
-    }
+  const form = new FormData();
+  form.append("file", imagemReduzida, "foto.jpg");
 
-    const slot = Number(fotoInput.dataset.slot);
-    if (slot < 0) return;
+  const slot = Number(fotoInput.dataset.slot);
+  if (slot < 0) return;
 
+  try {
+    const res = await fetch("/upload-image", {
+      method: "POST",
+      body: form
+    });
 
-    try {
-      const res = await fetch("/upload-image", { method: "POST", body: form });
-      const data = await res.json();
-      if (!data.url) throw new Error();
+    const data = await res.json();
+    if (!data.url) throw new Error();
 
-      fotos[slot] = data.url;
+    fotos[slot] = data.url;
 
-      const slotEl = document.querySelector(`.photo-slot[data-slot="${slot}"]`);
-      slotEl.classList.add("filled");
-      slotEl.innerHTML = `<img src="${data.url}"><div class="photo-remove">×</div>`;
+    const slotEl = document.querySelector(
+      `.photo-slot[data-slot="${slot}"]`
+    );
 
-      slotEl.querySelector(".photo-remove").onclick = () => {
-        fotos[slot] = null;
-        slotEl.classList.remove("filled");
-        slotEl.innerHTML = "+";
-        atualizarMidias();
-      };
+    slotEl.classList.add("filled");
+    slotEl.innerHTML = `
+      <img src="${data.url}">
+      <div class="photo-remove">×</div>
+    `;
 
+    slotEl.querySelector(".photo-remove").onclick = () => {
+      fotos[slot] = null;
+      slotEl.classList.remove("filled");
+      slotEl.innerHTML = "+";
       atualizarMidias();
-      fotoInput.value = "";
-    } catch {
-      alert("Erro ao enviar imagem");
-    }
-  };
+    };
+
+    atualizarMidias();
+    fotoInput.value = "";
+
+  } catch {
+    alert("Erro ao enviar imagem");
+  }
+};
 
   function atualizarMidias() {
     midias.innerHTML = `
@@ -375,6 +382,7 @@ form.append("file", imagemReduzida, "foto.jpg");
 
 });
     
+
 
 
 
