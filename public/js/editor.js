@@ -127,33 +127,37 @@ document.addEventListener("DOMContentLoaded", () => {
      FOTOS + SLIDER
   ===================== */
   async function reduzirImagem(file) {
+  async function reduzirImagem(file) {
   return new Promise((resolve, reject) => {
-    const img = new Image();
     const reader = new FileReader();
+    const img = new Image();
 
     reader.onload = e => {
       img.onload = () => {
-        const MAX = 1600;
-        let { width, height } = img;
+        const MAX = 1400;
+        let w = img.width;
+        let h = img.height;
 
-        if (width > height && width > MAX) {
-          height *= MAX / width;
-          width = MAX;
-        } else if (height > MAX) {
-          width *= MAX / height;
-          height = MAX;
+        if (w > MAX || h > MAX) {
+          const scale = MAX / Math.max(w, h);
+          w = Math.floor(w * scale);
+          h = Math.floor(h * scale);
         }
 
         const canvas = document.createElement("canvas");
-        canvas.width = width;
-        canvas.height = height;
+        canvas.width = w;
+        canvas.height = h;
 
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0, width, height);
+        const ctx = canvas.getContext("2d", { alpha: false });
+        ctx.drawImage(img, 0, 0, w, h);
 
-        canvas.toBlob(blob => resolve(blob), "image/jpeg", 0.8);
+        canvas.toBlob(blob => {
+          if (!blob) reject("Falha ao comprimir");
+          else resolve(blob);
+        }, "image/jpeg", 0.85);
       };
 
+      img.onerror = () => reject("Erro ao carregar imagem");
       img.src = e.target.result;
     };
 
@@ -245,25 +249,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function iniciarSlider(track) {
   const slides = track.querySelectorAll(".slide");
+
   if (sliderInterval) clearInterval(sliderInterval);
+
   if (slides.length <= 1) return;
 
+  // remove clones antigos
+  track.querySelectorAll(".clone").forEach(el => el.remove());
+
+  // clona o primeiro
+  const clone = slides[0].cloneNode(true);
+  clone.classList.add("clone");
+  track.appendChild(clone);
+
   let index = 0;
+  const total = slides.length + 1;
+
+  track.style.transition = "transform .7s ease";
 
   sliderInterval = setInterval(() => {
     index++;
+
     track.style.transform = `translateX(-${index * 100}%)`;
 
-    if (index === slides.length) {
+    // chegou no clone → volta instantâneo
+    if (index === total - 1) {
       setTimeout(() => {
         track.style.transition = "none";
         index = 0;
         track.style.transform = "translateX(0)";
         track.offsetHeight;
-        track.style.transition = "transform .8s ease";
-      }, 800);
+        track.style.transition = "transform .7s ease";
+      }, 750);
     }
-  }, 3500);
+
+  }, 3000);
 }
 
   /* =====================
@@ -382,6 +402,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
     
+
 
 
 
