@@ -285,7 +285,7 @@ sliderInterval = setInterval(() => {
     }, 850);
   }
 }, 3500);
-
+  }
 
   /* =====================
      MÚSICA
@@ -408,6 +408,7 @@ musicBox.style.pointerEvents = "auto";
 
 });
     
+
 
 
 
