@@ -2,11 +2,13 @@
 :root {
   color-scheme: light;
 }
+html, body {
+  color-scheme: light !important;
+}
 
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  forced-color-adjust: none;
 }
 
 html, body {
@@ -514,6 +516,13 @@ body.final {
 body.final * {
   forced-color-adjust: none !important;
 }
+input,
+textarea,
+button,
+select {
+  color-scheme: light !important;
+}
+
 
 
 
