@@ -126,8 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
   /* =====================
      FOTOS + SLIDER
   ===================== */
-  async function reduzirImagem(file) {
-  async function reduzirImagem(file) {
+   async function reduzirImagem(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     const img = new Image();
@@ -185,7 +184,12 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  const imagemReduzida = await reduzirImagem(file);
+ let imagemReduzida;
+try {
+  imagemReduzida = await reduzirImagem(file);
+} catch {
+  imagemReduzida = file; // fallback
+}
 
   const form = new FormData();
   form.append("file", imagemReduzida, "foto.jpg");
@@ -265,26 +269,23 @@ document.addEventListener("DOMContentLoaded", () => {
   let index = 0;
   const total = slides.length + 1;
 
-  track.style.transition = "transform .7s ease";
+track.style.transition = "transform .8s ease";
 
-  sliderInterval = setInterval(() => {
-    index++;
+sliderInterval = setInterval(() => {
+  index++;
+  track.style.transform = `translateX(-${index * 100}%)`;
 
-    track.style.transform = `translateX(-${index * 100}%)`;
+  if (index === total - 1) {
+    setTimeout(() => {
+      track.style.transition = "none";
+      index = 0;
+      track.style.transform = "translateX(0)";
+      track.offsetHeight; // força repaint
+      track.style.transition = "transform .8s ease";
+    }, 850);
+  }
+}, 3500);
 
-    // chegou no clone → volta instantâneo
-    if (index === total - 1) {
-      setTimeout(() => {
-        track.style.transition = "none";
-        index = 0;
-        track.style.transform = "translateX(0)";
-        track.offsetHeight;
-        track.style.transition = "transform .7s ease";
-      }, 750);
-    }
-
-  }, 3000);
-}
 
   /* =====================
      MÚSICA
@@ -294,14 +295,19 @@ document.addEventListener("DOMContentLoaded", () => {
   musicaInput.onchange = () => {
     const file = musicaInput.files[0];
     if (!file) return;
-
+    
+musicBox.innerText = "⏳ Carregando música...";
+musicBox.style.pointerEvents = "none";
+    
     const audioTest = document.createElement("audio");
     audioTest.src = URL.createObjectURL(file);
-    audioTest.onloadedmetadata = () => {
-      if (audioTest.duration > 180) {
+    audioTest.oncanplaythrough = () => {
+     if (audioTest.duration > 180) {
         alert("A música deve ter no máximo 3 minutos.");
         musicaInput.value = "";
-        return;
+       musicBox.innerText = "🎶 Música adicionada";
+musicBox.style.pointerEvents = "auto";
+  return;
       }
       enviarMusica(file);
     };
@@ -402,6 +408,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
     
+
 
 
 
