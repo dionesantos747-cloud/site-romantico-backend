@@ -49,6 +49,18 @@ async function carregar() {
   atualizarTexto();
 
   cartaEl.innerHTML = data.carta || "";
+const secretLetter = document.getElementById("secretLetter");
+const letterText   = document.getElementById("letterText");
+
+if (!data.carta || data.carta.length < 50) {
+  secretLetter.style.display = "none";
+} else {
+  letterText.innerText = data.carta;
+}
+
+secretLetter.onclick = () => {
+  secretLetter.classList.toggle("open");
+};
 
   if (data.musica) {
     musicaEl.src = data.musica;
