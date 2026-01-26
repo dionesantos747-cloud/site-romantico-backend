@@ -17,8 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const tempo    = document.getElementById("tempo");
   const preview  = document.getElementById("preview");
 
-  const btnCarta   = document.getElementById("btnCarta");
-  const btnComprar = document.getElementById("btnComprar");
+   const btnComprar = document.getElementById("btnComprar");
   const lerBtn     = document.getElementById("lerBtn");
   const btnFecharCarta = document.getElementById("btnFecharCarta");
 
@@ -97,20 +96,27 @@ document.addEventListener("DOMContentLoaded", () => {
      CARTA
   ===================== */
   cartaInput.oninput = () => {
-    carta.innerText = cartaInput.value;
-    limparErro(cartaInput);
-    btnCarta.style.display = cartaInput.value.trim() ? "block" : "none";
-  };
+  const secretLetter = document.getElementById("secretLetter");
+const letterText   = document.getElementById("letterText");
 
-  btnCarta.onclick = () => {
-    carta.style.display = "block";
-    btnCarta.style.display = "none";
-  };
+cartaInput.oninput = () => {
+  const texto = cartaInput.value.trim();
 
-  btnFecharCarta.onclick = () => {
-    carta.style.display = "none";
-    btnCarta.style.display = "block";
-  };
+  limparErro(cartaInput);
+
+  if (texto.length < 50) {
+    secretLetter.style.display = "none";
+    return;
+  }
+
+  secretLetter.style.display = "flex";
+  letterText.innerText = texto;
+};
+
+secretLetter.onclick = () => {
+  secretLetter.classList.toggle("open");
+};
+
 
   /* =====================
      FUNDOS
@@ -408,6 +414,7 @@ musicBox.style.pointerEvents = "auto";
 
 });
     
+
 
 
 
