@@ -92,31 +92,6 @@ document.addEventListener("DOMContentLoaded", () => {
     lerBtn.innerText = textoExpandido ? "Ler menos ⬆️" : "Continuar lendo ⬇️";
   };
 
-  /* =====================
-     CARTA
-  ===================== */
-  cartaInput.oninput = () => {
-  const secretLetter = document.getElementById("secretLetter");
-const letterText   = document.getElementById("letterText");
-
-cartaInput.oninput = () => {
-  const texto = cartaInput.value.trim();
-
-  limparErro(cartaInput);
-
-  if (texto.length < 50) {
-    secretLetter.style.display = "none";
-    return;
-  }
-
-  secretLetter.style.display = "flex";
-  letterText.innerText = texto;
-};
-
-secretLetter.onclick = () => {
-  secretLetter.classList.toggle("open");
-};
-
 
   /* =====================
      FUNDOS
@@ -414,6 +389,7 @@ musicBox.style.pointerEvents = "auto";
 
 });
     
+
 
 
 
