@@ -280,17 +280,6 @@ textarea.error {
     0 8px 16px rgba(0,0,0,.25);
 }
 
-/* ===== Carta ===== */
-.carta {
-  background: #fff;
-  color: #333;
-  padding: 22px;
-  border-radius: 20px;
-  margin-top: 20px;
-  display: none;
-  text-align: center;
-}
-
 /* ===== Música ===== */
 .music-box {
   background: #222;
@@ -523,6 +512,7 @@ button,
 select {
   color-scheme: light !important;
 }
+
 
 
 
