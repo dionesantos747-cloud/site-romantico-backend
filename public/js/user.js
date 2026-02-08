@@ -9,7 +9,6 @@ const userId = params.get("id");
 ========================== */
 const nomeEl   = document.getElementById("nome");
 const msgEl    = document.getElementById("mensagem");
-const cartaEl  = document.getElementById("carta");
 const tempoEl  = document.getElementById("tempo");
 const midiasEl = document.getElementById("midias");
 const musicaEl = document.getElementById("audioPlayer");
@@ -48,19 +47,6 @@ async function carregar() {
   textoCompleto = data.mensagem || "";
   atualizarTexto();
 
-  cartaEl.innerHTML = data.carta || "";
-const secretLetter = document.getElementById("secretLetter");
-const letterText   = document.getElementById("letterText");
-
-if (!data.carta || data.carta.length < 50) {
-  secretLetter.style.display = "none";
-} else {
-  letterText.innerText = data.carta;
-}
-
-secretLetter.onclick = () => {
-  secretLetter.classList.toggle("open");
-};
 
   if (data.musica) {
     musicaEl.src = data.musica;
@@ -170,18 +156,6 @@ function montarSliderFotos(fotos) {
   }, 3500);
 }
 
-/* ==========================
-   CARTA
-========================== */
-function toggleCarta() {
-  cartaEl.style.display =
-    cartaEl.style.display === "block" ? "none" : "block";
-
-  cartaEl.scrollIntoView({
-    behavior: "smooth",
-    block: "center"
-  });
-}
 
 /* ==========================
    PLURAL
