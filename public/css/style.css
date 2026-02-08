@@ -507,85 +507,7 @@ body.final .preview.rosa {
 body.final .preview.preto {
   background: radial-gradient(#444, #000) !important;
 }
-/* ==========================
-   CARTA SECRETA ANIMADA
-========================== */
 
-.secret-letter {
-  display: flex;
-  justify-content: center;
-  margin: 40px 0;
-  cursor: pointer;
-}
-
-.envelope {
-  position: relative;
-  width: 280px;
-  height: 180px;
-  perspective: 1200px;
-}
-
-.envelope-back,
-.envelope-front {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: #f2f2f2;
-  border-radius: 6px;
-}
-
-.envelope-front {
-  background: #e8e8e8;
-  z-index: 3;
-}
-
-.envelope-back {
-  z-index: 1;
-}
-
-.envelope-flap {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 50%;
-  background: #ddd;
-  transform-origin: top;
-  transition: transform .8s ease;
-  z-index: 4;
-  border-radius: 6px 6px 0 0;
-}
-
-.paper {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  width: 260px;
-  height: 0;
-  background: #fffdf8;
-  border-radius: 4px;
-  overflow: hidden;
-  z-index: 2;
-  transition: height 1s ease;
-  box-shadow: 0 6px 16px rgba(0,0,0,.25);
-}
-
-.paper-content {
-  padding: 20px;
-  font-family: 'Playfair Display', 'Dancing Script', cursive;
-  text-align: center;
-  color: #333;
-  line-height: 1.4;
-  font-size: clamp(14px, 2.8vw, 18px);
-}
-
-/* ESTADO ABERTO */
-.secret-letter.open .envelope-flap {
-  transform: rotateX(-180deg);
-}
-
-.secret-letter.open .paper {
-  height: 220px;
-}
 
 body.final {
   color-scheme: light !important;
@@ -601,6 +523,7 @@ button,
 select {
   color-scheme: light !important;
 }
+
 
 
 
