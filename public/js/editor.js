@@ -8,19 +8,16 @@ document.addEventListener("DOMContentLoaded", () => {
   ===================== */
   const nomeInput  = document.getElementById("nomeInput");
   const msgInput   = document.getElementById("msgInput");
-  const cartaInput = document.getElementById("cartaInput");
   const dataInput  = document.getElementById("dataInput");
 
   const nome     = document.getElementById("nome");
   const mensagem = document.getElementById("mensagem");
-  const carta    = document.getElementById("carta");
   const tempo    = document.getElementById("tempo");
   const preview  = document.getElementById("preview");
 
    const btnComprar = document.getElementById("btnComprar");
   const lerBtn     = document.getElementById("lerBtn");
-  const btnFecharCarta = document.getElementById("btnFecharCarta");
-
+ 
   const fotoInput = document.getElementById("fotoInput");
   const midias    = document.getElementById("midias");
 
@@ -345,13 +342,11 @@ musicBox.style.pointerEvents = "auto";
   btnComprar.onclick = async () => {
     if (!nomeInput.value.trim()) return erro(nomeInput);
     if (!msgInput.value.trim()) return erro(msgInput);
-    if (!cartaInput.value.trim()) return erro(cartaInput);
     if (!dataInput.value) return erro(dataInput);
 
     const payload = {
       nome: nomeInput.value,
       mensagem: msgInput.value,
-      carta: cartaInput.value,
       dataInicio: dataInput.value,
       fotos: fotos.filter(Boolean),
       musica: musicaUrl || null,
@@ -389,6 +384,7 @@ musicBox.style.pointerEvents = "auto";
 
 });
     
+
 
 
 
