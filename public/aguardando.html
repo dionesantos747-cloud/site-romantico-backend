@@ -125,7 +125,8 @@ if (!paymentId) {
 
 const qrImg = document.getElementById("qr");
 const pixBox = document.getElementById("code");
-  
+  const copyBtn = document.getElementById("copyBtn");
+copyBtn.disabled = true;
 let polling = true;
   
 async function carregarPix() {
@@ -138,6 +139,7 @@ async function carregarPix() {
   pixBox.innerText = data.copia_cola;
 } else {
   pixBox.innerText = "Gerando PIX, aguarde alguns segundos...";
+      copyBtn.disabled = true;
 }
   } catch {
     pixBox.innerText = "Erro ao carregar PIX. Aguarde...";
