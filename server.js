@@ -118,36 +118,34 @@ cloudinary.uploader.upload_stream(
 app.post("/create-payment", async (req, res) => {
   try {
     const {
-      nome,
-      mensagem,
-      carta,
-      dataInicio,
-      fotos = [],
-      musica = null,
-      fundo = "azul"
-    } = req.body;
+  nome,
+  mensagem,
+  dataInicio,
+  fotos = [],
+  musica = null,
+  fundo = "azul"
+} = req.body;
 
-    /* 🔒 VALIDAÇÃO OBRIGATÓRIA */
-    if (!nome || !mensagem || !carta || !dataInicio) {
-      return res.status(400).json({
-        error: "Dados obrigatórios não preenchidos"
-      });
-    }
+/* 🔒 VALIDAÇÃO OBRIGATÓRIA */
+if (!nome || !mensagem || !dataInicio) {
+  return res.status(400).json({
+    error: "Dados obrigatórios não preenchidos"
+  });
+}
 
     const tempId = uuidv4();
 
     await users.insertOne({
-      _id: tempId,
-      nome,
-      mensagem,
-      carta,
-      dataInicio,
-      fotos,
-      musica,
-      fundo,
-      status: "pending",
-      createdAt: new Date()
-    });
+  _id: tempId,
+  nome,
+  mensagem,
+  dataInicio,
+  fotos,
+  musica,
+  fundo,
+  status: "pending",
+  createdAt: new Date()
+});
 
     const mp = await axios.post(
       "https://api.mercadopago.com/v1/payments",
