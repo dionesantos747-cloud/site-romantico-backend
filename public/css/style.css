@@ -513,6 +513,9 @@ select {
   color-scheme: light !important;
 }
 
+html {
+  background-color: #000 !important;
+}
 
 
 
