@@ -304,7 +304,19 @@ musicBox.style.pointerEvents = "auto";
     removeMusic.style.display = "block";
     musicBox.innerText = "🎶 Música adicionada";
   }
+removeMusic.onclick = () => {
+  musicaUrl = null;
 
+  audio.pause();
+  audio.src = "";
+  audio.style.display = "none";
+
+  musicaInput.value = "";
+  removeMusic.style.display = "none";
+
+  musicBox.innerText = "🎶 Adicionar música";
+  musicBox.style.pointerEvents = "auto";
+};
   /* =====================
      CONTADOR
   ===================== */
@@ -384,6 +396,7 @@ musicBox.style.pointerEvents = "auto";
 
 });
     
+
 
 
 
