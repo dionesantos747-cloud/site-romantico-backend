@@ -376,7 +376,7 @@ body.final .remove-music {
   align-items: center;
   justify-content: center;
   position: absolute;
-  top: 18px;
+  top: 0px;
   left: 14px;
   right: 14px;
   z-index: 20;
@@ -516,6 +516,7 @@ select {
 html {
   background-color: #000 !important;
 }
+
 
 
 
