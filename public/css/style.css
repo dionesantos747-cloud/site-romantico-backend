@@ -371,7 +371,7 @@ body.final .remove-music {
 /* Notch / Ilha dinâmica */
 .device-top {
   height: 70px;
-  background: #000;
+  background: #000; /* importante */
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -382,7 +382,7 @@ body.final .remove-music {
   left: 0;
   right: 0;
 
-  z-index: 20;
+  z-index: 50; /* 🔥 aumente isso */
 }
 
 .device-top::before {
@@ -430,6 +430,8 @@ body.final .remove-music {
   -webkit-overflow-scrolling: touch;
   padding-top: 70px;
   padding-bottom: 40px;
+  position: relative;
+  z-index: 1;
 }
 
 /* esconder scrollbar feia */
@@ -520,6 +522,7 @@ select {
 html {
   background-color: #000 !important;
 }
+
 
 
 
