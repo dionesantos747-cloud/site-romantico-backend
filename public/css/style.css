@@ -370,13 +370,13 @@ body.final .remove-music {
 
 /* Notch / Ilha dinâmica */
 .device-top {
-  height: 80px;
+  height: 56px;
   background: #000;
   display: flex;
   align-items: center;
   justify-content: center;
   position: absolute;
-  top: 25px;
+  top: 38px;
   left: 14px;
   right: 14px;
   z-index: 20;
@@ -416,7 +416,7 @@ body.final .remove-music {
   border-radius: 32px;
   overflow: hidden;
   height: 720px;
-  padding-top: 32px; /* altura do Chrome */
+  padding-top: 105px; /* altura do Chrome */
 }
 
 /* Scroll real */
@@ -516,6 +516,7 @@ select {
 html {
   background-color: #000 !important;
 }
+
 
 
 
