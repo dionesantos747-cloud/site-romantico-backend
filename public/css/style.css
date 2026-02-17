@@ -370,13 +370,13 @@ body.final .remove-music {
 
 /* Notch / Ilha dinâmica */
 .device-top {
-  height: 50px;
+  height: 80px;
   background: #000;
   display: flex;
   align-items: center;
   justify-content: center;
   position: absolute;
-  top: 30px;
+  top: 14px;
   left: 14px;
   right: 14px;
   z-index: 20;
@@ -516,6 +516,7 @@ select {
 html {
   background-color: #000 !important;
 }
+
 
 
 
