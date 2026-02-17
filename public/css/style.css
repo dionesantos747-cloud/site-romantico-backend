@@ -416,7 +416,7 @@ body.final .remove-music {
   border-radius: 32px;
   overflow: hidden;
   height: 720px;
-  padding-top: 72px; /* altura do Chrome */
+  padding-top: 92px; /* altura do Chrome */
 }
 
 /* Scroll real */
@@ -516,6 +516,7 @@ select {
 html {
   background-color: #000 !important;
 }
+
 
 
 
