@@ -371,7 +371,8 @@ body.final .remove-music {
 /* Notch / Ilha dinâmica */
 .device-top {
   height: 70px;
-  background: #000; /* importante */
+  background: transparent;
+  backdrop-filter: blur(10px);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -382,14 +383,14 @@ body.final .remove-music {
   left: 0;
   right: 0;
 
-  z-index: 50; /* 🔥 aumente isso */
+  z-index: 10; /* 🔥 aumente isso */
 }
 
 .device-top::before {
   content: "";
   width: 120px;
   height: 22px;
-  background: #000;
+  background: rgba(0,0,0,0.9);
   border-radius: 16px;
   position: absolute;
   top: 6px;
@@ -399,7 +400,8 @@ body.final .remove-music {
 .chrome-url {
   font-size: 0.75em;
   color: #ccc;
-  background: #111;
+  background: rgba(20,20,20,0.6);
+  backdrop-filter: blur(12px);
   padding: 6px 16px;
   border-radius: 999px;
   max-width: 85%;
@@ -522,6 +524,7 @@ select {
 html {
   background-color: #000 !important;
 }
+
 
 
 
