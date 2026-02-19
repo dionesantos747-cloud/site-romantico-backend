@@ -1094,6 +1094,54 @@ div[style*="Veja como vai ficar"] {
   -webkit-text-fill-color: transparent;
 }
 
+/* =========================
+   CORREÇÃO MOBILE DEFINITIVA
+========================= */
+
+/* Garante que nada ultrapasse a tela */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove qualquer estouro lateral */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden !important;
+}
+
+/* Editor 100% responsivo */
+.editor {
+  width: 100%;
+  max-width: 520px;
+  padding: 20px;
+}
+
+/* Inputs não podem ultrapassar */
+.editor input,
+.editor textarea,
+button {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Preview nunca ultrapassa */
+.preview {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Corrige fundos */
+.bg-options {
+  flex-wrap: wrap;
+  padding: 0 10px;
+}
+
+/* Fotos responsivas */
+.photo-grid {
+  flex-wrap: wrap;
+}
 
 
 
