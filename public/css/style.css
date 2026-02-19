@@ -1005,6 +1005,190 @@ textarea.error {
   text-shadow: 0 0 8px #7b4cff;
 }
 
+/* =========================
+   FUNDO GALÁXIA
+========================= */
+
+body {
+  background: radial-gradient(circle at 30% 20%, #2b0a3d, #0b0015 60%);
+  background-color: #0b0015;
+  color: #fff;
+}
+
+/* =========================
+   EDITOR CENTRALIZADO
+========================= */
+
+.editor {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  text-align: center;
+}
+
+/* =========================
+   TÍTULOS CENTRALIZADOS
+========================= */
+
+.editor label {
+  display: block;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.4rem;
+  margin: 28px 0 10px;
+  text-align: center;
+  background: linear-gradient(90deg,#ff00cc,#7b2cff,#00d4ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* =========================
+   INPUTS NEON
+========================= */
+
+.editor input,
+.editor textarea {
+  width: 100%;
+  padding: 16px 18px;
+  border-radius: 18px;
+  border: 2px solid rgba(255,0,255,.6);
+  background: rgba(0,0,0,.6);
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  transition: .3s;
+  box-shadow: 0 0 15px rgba(255,0,255,.3);
+}
+
+.editor textarea {
+  min-height: 140px;
+  resize: none;
+}
+
+.editor input:focus,
+.editor textarea:focus {
+  border-color: #ff00cc;
+  box-shadow: 0 0 20px #ff00cc, 0 0 40px rgba(255,0,255,.4);
+}
+
+/* =========================
+   ERRO
+========================= */
+
+.error-text {
+  color: #ff4d4d;
+  font-size: .9rem;
+  margin-top: 6px;
+  text-align: left;
+}
+
+/* =========================
+   FOTOS NEON
+========================= */
+
+.photo-grid {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 15px;
+}
+
+.photo-slot {
+  width: 90px;
+  height: 90px;
+  border-radius: 20px;
+  border: 2px dashed rgba(255,0,255,.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  cursor: pointer;
+  background: rgba(0,0,0,.5);
+  transition: .3s;
+}
+
+.photo-slot:hover {
+  box-shadow: 0 0 20px #ff00cc;
+}
+
+/* =========================
+   BOTÃO MÚSICA NEON
+========================= */
+
+.music-box {
+  margin: 20px auto;
+  padding: 14px 25px;
+  border-radius: 30px;
+  border: 2px solid #ff00cc;
+  background: linear-gradient(90deg,#1a0033,#330033);
+  font-family: 'Orbitron', sans-serif;
+  cursor: pointer;
+  transition: .3s;
+  box-shadow: 0 0 15px rgba(255,0,255,.4);
+}
+
+.music-box:hover {
+  box-shadow: 0 0 25px #ff00cc, 0 0 50px rgba(255,0,255,.5);
+  transform: scale(1.03);
+}
+
+/* =========================
+   FUNDO CORES (QUADRADOS)
+========================= */
+
+.bg-options {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 15px;
+}
+
+.bg-card {
+  width: 70px;
+  height: 70px;
+  border-radius: 18px;
+  border: 2px solid #ff00cc;
+  cursor: pointer;
+  transition: .3s;
+  box-shadow: 0 0 15px rgba(255,0,255,.3);
+}
+
+.bg-card:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 25px #ff00cc;
+}
+
+/* CORES */
+
+.bg-card.azul {
+  background: radial-gradient(circle,#008cff,#001b3d);
+}
+
+.bg-card.roxo {
+  background: radial-gradient(circle,#7b2cff,#1a0033);
+}
+
+.bg-card.rosa {
+  background: radial-gradient(circle,#ff00cc,#330033);
+}
+
+.bg-card.preto {
+  background: radial-gradient(circle,#000,#111);
+}
+
+/* =========================
+   TEXTO VEJA COMO VAI FICAR
+========================= */
+
+.device-preview + div,
+div[style*="Veja como vai ficar"] {
+  font-family: 'Orbitron', sans-serif !important;
+  font-size: 1.4rem !important;
+  text-align: center;
+  background: linear-gradient(90deg,#ffd400,#ffae00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 
 
 
