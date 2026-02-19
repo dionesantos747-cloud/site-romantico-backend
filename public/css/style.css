@@ -167,10 +167,10 @@ textarea.error {
   position: relative;
 }
 
-.preview.azul  { background: radial-gradient(#2f6cff,#050b1a); }
-.preview.roxo  { background: radial-gradient(#7a4cff,#12071a); }
-.preview.rosa  { background: radial-gradient(#ff5ca8,#1a050f); }
-.preview.preto { background: radial-gradient(#444,#000); }
+.device-screen.azul  { background: radial-gradient(#2f6cff,#050b1a); }
+.device-screen.roxo  { background: radial-gradient(#7a4cff,#12071a); }
+.device-screen.rosa  { background: radial-gradient(#ff5ca8,#1a050f); }
+.device-screen.preto { background: radial-gradient(#444,#000); }
 
 .nome {
   font-size: 2.5em;
@@ -491,19 +491,10 @@ body.final .slide {
 }
 
 /* 🔥 FUNDO REAL NO SITE FINAL */
-body.final .preview.azul {
-  background: radial-gradient(#2f6cff, #050b1a) !important;
-}
-body.final .preview.roxo {
-  background: radial-gradient(#7a4cff, #12071a) !important;
-}
-body.final .preview.rosa {
-  background: radial-gradient(#ff5ca8, #1a050f) !important;
-}
-body.final .preview.preto {
-  background: radial-gradient(#444, #000) !important;
-}
-
+body.final .device-screen.azul  { background: radial-gradient(#2f6cff,#050b1a) !important; }
+body.final .device-screen.roxo  { background: radial-gradient(#7a4cff,#12071a) !important; }
+body.final .device-screen.rosa  { background: radial-gradient(#ff5ca8,#1a050f) !important; }
+body.final .device-screen.preto { background: radial-gradient(#444,#000) !important; }
 
 body.final {
   color-scheme: light !important;
@@ -523,6 +514,7 @@ select {
 html {
   background-color: #000 !important;
 }
+
 
 
 
