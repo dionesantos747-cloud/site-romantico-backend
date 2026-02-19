@@ -372,7 +372,6 @@ body.final .remove-music {
 .device-top {
   height: 70px;
   background: transparent;
-  backdrop-filter: blur(10px);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -524,6 +523,7 @@ select {
 html {
   background-color: #000 !important;
 }
+
 
 
 
