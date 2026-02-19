@@ -909,101 +909,6 @@ background-color: #000 !important;
 
 }
 
-/* ==============================
-   🌌 DARK NEON EDITOR PREMIUM
-   ============================== */
-
-.editor {
-  background: radial-gradient(circle at top, #0f0f1f, #000);
-}
-
-/* Títulos do editor */
-.editor label {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 0.95rem;
-  letter-spacing: 1px;
-  color: #ff4fd8;
-  text-shadow: 0 0 8px #ff4fd8;
-}
-
-/* Inputs Dark Neon */
-.editor input,
-.editor textarea {
-  background: #0d0d18 !important;
-  color: #fff !important;
-  border: 1px solid #2a2a40;
-  transition: 0.3s;
-}
-
-.editor input::placeholder,
-.editor textarea::placeholder {
-  color: #888;
-}
-
-.editor input:focus,
-.editor textarea:focus {
-  border-color: #7b4cff;
-  box-shadow: 0 0 15px rgba(123,76,255,0.6);
-  outline: none;
-}
-
-/* Erro Neon */
-input.error,
-textarea.error {
-  border: 2px solid #ff2d6f !important;
-  box-shadow: 0 0 10px rgba(255,45,111,0.7);
-}
-
-/* Fundo selecionado com glow */
-.bg-card.selected {
-  border-color: #7b4cff !important;
-  box-shadow: 0 0 18px #7b4cff;
-}
-
-/* Slots de foto neon */
-.photo-slot {
-  border: 2px dashed #444;
-  transition: 0.3s;
-}
-
-.photo-slot:hover {
-  border-color: #ff4fd8;
-  box-shadow: 0 0 15px rgba(255,79,216,0.6);
-}
-
-/* Botão música Dark Neon */
-.music-box {
-  background: linear-gradient(135deg, #ff4fd8, #7b4cff) !important;
-  color: #fff !important;
-  font-weight: 600;
-  border-radius: 16px;
-  box-shadow: 0 0 20px rgba(123,76,255,0.6);
-  transition: 0.3s;
-}
-
-.music-box:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 30px rgba(255,79,216,0.8);
-}
-
-/* Data com ícone */
-.date-wrapper {
-  position: relative;
-}
-
-.date-wrapper input {
-  padding-right: 40px !important;
-}
-
-.date-wrapper::after {
-  content: "📅";
-  position: absolute;
-  right: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-  text-shadow: 0 0 8px #7b4cff;
-}
 
 /* =========================
    FUNDO GALÁXIA
@@ -1188,6 +1093,7 @@ div[style*="Veja como vai ficar"] {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
 
 
 
