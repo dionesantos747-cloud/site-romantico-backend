@@ -1,519 +1,914 @@
 /* 🔒 BLOQUEIA MODO ESCURO DO SISTEMA */
+
 :root {
-  color-scheme: light;
-}
-html, body {
-  color-scheme: light !important;
-}
 
-* {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
+color-scheme: light;
+
 }
 
 html, body {
-  margin: 0;
-  background: #000 !important;
-  color: #fff !important;
-  font-family: 'Playfair Display', serif;
-  overflow-x: hidden;
+
+color-scheme: light !important;
+
+}
+
+{
+
+box-sizing: border-box;
+
+-webkit-tap-highlight-color: transparent;
+
+
+}
+
+html, body {
+
+margin: 0;
+
+background: #000 !important;
+
+color: #fff !important;
+
+font-family: 'Playfair Display', serif;
+
+overflow-x: hidden;
+
 }
 
 /* ===== Inputs ===== */
+
 input,
+
 textarea,
+
 button {
-  background-color: #fff;
-  color: #000;
-  appearance: none;
-  -webkit-appearance: none;
+
+background-color: #fff;
+
+color: #000;
+
+appearance: none;
+
+-webkit-appearance: none;
+
 }
 
 /* ===== Editor ===== */
+
 .editor {
-  padding: 20px;
-  background: #000;
-  max-width: 520px;
-  margin: 0 auto;
+
+padding: 20px;
+
+background: #000;
+
+max-width: 520px;
+
+margin: 0 auto;
+
 }
+
 .editor input,
+
 .editor textarea {
-  background: #fff;
-  color: #000;
+
+background: #fff;
+
+color: #000;
+
 }
 
 .editor input::placeholder,
+
 .editor textarea::placeholder {
-  color: #777;
+
+color: #777;
+
 }
 
 label {
-  color: #ffb3d9;
-  display: block;
-  margin: 14px 0 6px;
+
+color: #ffb3d9;
+
+display: block;
+
+margin: 14px 0 6px;
+
 }
 
 input, textarea {
-  width: 100%;
-  padding: 14px;
-  border-radius: 14px;
-  border: none;
-  font-size: 1em;
+
+width: 100%;
+
+padding: 14px;
+
+border-radius: 14px;
+
+border: none;
+
+font-size: 1em;
+
 }
 
 textarea {
-  min-height: 90px;
+
+min-height: 90px;
+
 }
 
 input.error,
+
 textarea.error {
-  border: 2px solid red;
+
+border: 2px solid red;
+
 }
 
 .error-text {
-  display: none;
-  color: red;
-  font-size: .9em;
+
+display: none;
+
+color: red;
+
+font-size: .9em;
+
 }
 
 /* ===== Fundos ===== */
+
 .bg-options {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
+
+display: flex;
+
+gap: 12px;
+
+justify-content: center;
+
 }
 
 .bg-card {
-  width: 60px;
-  height: 60px;
-  border-radius: 14px;
-  border: 3px solid rgba(255,255,255,.25);
-  cursor: pointer;
+
+width: 60px;
+
+height: 60px;
+
+border-radius: 14px;
+
+border: 3px solid rgba(255,255,255,.25);
+
+cursor: pointer;
+
 }
 
 .bg-card.selected {
-  border-color: #fff;
+
+border-color: #fff;
+
 }
 
 .bg-card.azul  { background: radial-gradient(#2b6cff,#000); }
+
 .bg-card.roxo  { background: radial-gradient(#8a5cff,#000); }
+
 .bg-card.rosa  { background: radial-gradient(#ff5fa2,#000); }
+
 .bg-card.preto { background: #000; }
 
 /* ===== Fotos (Slots Editor) ===== */
+
 .photo-grid {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
+
+display: flex;
+
+gap: 10px;
+
+justify-content: center;
+
 }
 
 .photo-slot {
-  width: 90px;
-  height: 90px;
-  border-radius: 18px;
-  border: 2px dashed #777;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2em;
-  cursor: pointer;
-  position: relative;
+
+width: 90px;
+
+height: 90px;
+
+border-radius: 18px;
+
+border: 2px dashed #777;
+
+display: flex;
+
+align-items: center;
+
+justify-content: center;
+
+font-size: 2em;
+
+cursor: pointer;
+
+position: relative;
+
 }
 
 .photo-slot.filled {
-  border: none;
+
+border: none;
+
 }
 
 .photo-slot.filled img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 14px;
-  pointer-events: none;
+
+width: 100%;
+
+height: 100%;
+
+object-fit: cover;
+
+border-radius: 14px;
+
+pointer-events: none;
+
 }
 
 .photo-remove {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 26px;
-  height: 26px;
-  background: rgba(0,0,0,.75);
-  color: #fff;
-  border-radius: 50%;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 5;
-  pointer-events: all;
+
+position: absolute;
+
+top: 6px;
+
+right: 6px;
+
+width: 26px;
+
+height: 26px;
+
+background: rgba(0,0,0,.75);
+
+color: #fff;
+
+border-radius: 50%;
+
+font-size: 16px;
+
+display: flex;
+
+align-items: center;
+
+justify-content: center;
+
+cursor: pointer;
+
+z-index: 5;
+
+pointer-events: all;
+
 }
 
 /* ===== Preview (Molde Celular) ===== */
+
 .preview {
-  width: 360px;
-  max-width: 92vw;
-  aspect-ratio: 9 / 19.5;
-  border-radius: 34px;
-  background: #000;
-  border: 10px solid #111;
-  box-shadow:
-    0 0 0 4px #000,
-    0 25px 60px rgba(0,0,0,.8);
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  position: relative;
+
+width: 360px;
+
+max-width: 92vw;
+
+aspect-ratio: 9 / 19.5;
+
+border-radius: 34px;
+
+background: #000;
+
+border: 10px solid #111;
+
+box-shadow:
+
+0 0 0 4px #000,
+
+0 25px 60px rgba(0,0,0,.8);
+
+overflow-y: auto;
+
+overflow-x: hidden;
+
+-webkit-overflow-scrolling: touch;
+
+position: relative;
+
 }
 
-.device-screen.azul  { background: radial-gradient(#2f6cff,#050b1a); }
-.device-screen.roxo  { background: radial-gradient(#7a4cff,#12071a); }
-.device-screen.rosa  { background: radial-gradient(#ff5ca8,#1a050f); }
-.device-screen.preto { background: radial-gradient(#444,#000); }
+.preview.azul  { background: radial-gradient(#2f6cff,#050b1a); }
+
+.preview.roxo  { background: radial-gradient(#7a4cff,#12071a); }
+
+.preview.rosa  { background: radial-gradient(#ff5ca8,#1a050f); }
+
+.preview.preto { background: radial-gradient(#444,#000); }
 
 .nome {
-  font-size: 2.5em;
-  color: #ffd400;
-  text-shadow: 0 0 8px #ffd400;
-  animation: pulse 2.5s infinite alternate;
-  text-align: center;
-  margin: 20px 16px 10px;
+
+font-size: 2.5em;
+
+color: #ffd400;
+
+text-shadow: 0 0 8px #ffd400;
+
+animation: pulse 2.5s infinite alternate;
+
+text-align: center;
+
+margin: 20px 16px 10px;
+
 }
 
 @keyframes pulse {
-  from { transform: scale(1); }
-  to   { transform: scale(1.05); }
+
+from { transform: scale(1); }
+
+to   { transform: scale(1.05); }
+
 }
 
 .mensagem {
-  font-size: 1.4em;
-  line-height: 1.4;
-  text-align: center;
-  margin: 0 16px;
+
+font-size: 1.4em;
+
+line-height: 1.4;
+
+text-align: center;
+
+margin: 0 16px;
+
 }
 
 .mensagem.limitada {
-  max-height: 180px;
-  overflow: hidden;
+
+max-height: 180px;
+
+overflow: hidden;
+
 }
 
 .ler-mais {
-  background: transparent;
-  color: #ffd400;
-  border: none;
-  font-size: 1em;
+
+background: transparent;
+
+color: #ffd400;
+
+border: none;
+
+font-size: 1em;
+
 }
 
 /* ===== SLIDER POLAROID (EDITOR) ===== */
+
 .slider {
-  overflow: hidden;
-  width: 100%;
-  margin: 30px 0;
+
+overflow: hidden;
+
+width: 100%;
+
+margin: 30px 0;
+
 }
 
 .slider-track {
-  display: flex;
-  width: 100%;
-  transition: transform .8s ease;
-  will-change: transform;
+
+display: flex;
+
+width: 100%;
+
+transition: transform .8s ease;
+
+will-change: transform;
+
 }
 
 #midias .photo {
-  min-width: 100%;
-  display: flex;
-  justify-content: center;
-}
-.slide {
-  min-width: 100%;
-  display: flex;
-  justify-content: center;
-  flex-shrink: 0;
-}
-/* ===== POLAROID REAL ===== */
-.polaroid {
-  background: #fff;
-  padding: 12px 12px 36px;
-  border-radius: 6px;
-  max-width: 280px;
-  width: 85vw;
-  box-shadow:
-    0 12px 25px rgba(0,0,0,.35),
-    0 4px 10px rgba(0,0,0,.25);
+
+min-width: 100%;
+
+display: flex;
+
+justify-content: center;
+
 }
 
+.slide {
+
+min-width: 100%;
+
+display: flex;
+
+justify-content: center;
+
+flex-shrink: 0;
+
+}
+
+/* ===== POLAROID REAL ===== */
+
+.polaroid {
+
+background: #fff;
+
+padding: 12px 12px 36px;
+
+border-radius: 6px;
+
+max-width: 280px;
+
+width: 85vw;
+
+box-shadow:
+
+0 12px 25px rgba(0,0,0,.35),
+
+0 4px 10px rgba(0,0,0,.25);
+
+}
 
 .polaroid img {
-  width: 100%;
-  max-width: 260px;
-  max-height: 360px;
-  object-fit: cover;
-  border-radius: 4px;
+
+width: 100%;
+
+max-width: 260px;
+
+max-height: 360px;
+
+object-fit: cover;
+
+border-radius: 4px;
+
 }
 
 /* ===== Contador ===== */
+
 #tempo {
-  margin: 50px 0 30px;
-  text-align: center;
+
+margin: 50px 0 30px;
+
+text-align: center;
+
 }
+
 #tempo .titulo {
-  font-size: 2.2em;
-  color: #1f0d36;
+
+font-size: 2.2em;
+
+color: #1f0d36;
+
 }
 
 #tempo .contador {
-  display: flex;
-  gap: 14px;
-  justify-content: center;
-  flex-wrap: wrap;
+
+display: flex;
+
+gap: 14px;
+
+justify-content: center;
+
+flex-wrap: wrap;
+
 }
 
 #tempo .item {
-  background: #fff;
-  color: #000;
-  padding: 14px 16px;
-  border-radius: 12px;
-  font-size: 1.1em;
-  min-width: 90px;
-  box-shadow:
-    0 4px 0 #ccc,
-    0 8px 16px rgba(0,0,0,.25);
+
+background: #fff;
+
+color: #000;
+
+padding: 14px 16px;
+
+border-radius: 12px;
+
+font-size: 1.1em;
+
+min-width: 90px;
+
+box-shadow:
+
+0 4px 0 #ccc,
+
+0 8px 16px rgba(0,0,0,.25);
+
 }
 
 /* ===== Música ===== */
+
 .music-box {
-  background: #222;
-  padding: 14px;
-  border-radius: 14px;
-  text-align: center;
-  cursor: pointer;
+
+background: #222;
+
+padding: 14px;
+
+border-radius: 14px;
+
+text-align: center;
+
+cursor: pointer;
+
 }
 
 .music-box.disabled {
-  opacity: .6;
+
+opacity: .6;
+
 }
 
 .remove-music {
-  display: none;
-  color: #ff4b4b;
-  text-align: center;
-  margin-top: 8px;
+
+display: none;
+
+color: #ff4b4b;
+
+text-align: center;
+
+margin-top: 8px;
+
 }
 
 /* ===== Player ===== */
+
 #audioPlayer {
-  display: block;
-  margin: 20px auto;
-  width: 80%;
-  max-width: 320px;
+
+display: block;
+
+margin: 20px auto;
+
+width: 80%;
+
+max-width: 320px;
+
 }
 
 /* ===== Botão Compra ===== */
+
 button {
-  width: 100%;
-  padding: 18px;
-  border-radius: 18px;
-  font-size: 1.1em;
-  border: none;
+
+width: 100%;
+
+padding: 18px;
+
+border-radius: 18px;
+
+font-size: 1.1em;
+
+border: none;
+
 }
 
 button.pay {
-  background: #ffd400 !important;
-  color: #000 !important;
-  font-weight: bold;
-  animation: pulseBuy 1.8s infinite;
+
+background: #ffd400 !important;
+
+color: #000 !important;
+
+font-weight: bold;
+
+animation: pulseBuy 1.8s infinite;
+
 }
 
 @keyframes pulseBuy {
-  0%   { box-shadow: 0 0 0 0 rgba(255,212,0,.6); }
-  70%  { box-shadow: 0 0 0 14px rgba(255,212,0,0); }
-  100% { box-shadow: 0 0 0 0 rgba(255,212,0,0); }
+
+0%   { box-shadow: 0 0 0 0 rgba(255,212,0,.6); }
+
+70%  { box-shadow: 0 0 0 14px rgba(255,212,0,0); }
+
+100% { box-shadow: 0 0 0 0 rgba(255,212,0,0); }
+
 }
 
 /* ===== Corações ===== */
+
 .heart {
-  position: absolute;
-  bottom: -20px;
-  font-size: 18px;
-  opacity: .6;
-  animation: float 8s linear infinite;
+
+position: absolute;
+
+bottom: -20px;
+
+font-size: 18px;
+
+opacity: .6;
+
+animation: float 8s linear infinite;
+
 }
 
 @keyframes float {
-  to { transform: translateY(-120vh); opacity: 0; }
+
+to { transform: translateY(-120vh); opacity: 0; }
+
 }
 
 /* ===== Segurança Site Final ===== */
+
 body.final .editor,
+
 body.final .photo-grid,
+
 body.final .music-box,
+
 body.final .remove-music {
-  display: none !important;
+
+display: none !important;
+
 }
 
-
 /* ==========================
-   MOLDE IPHONE 15 REAL
+
+MOLDE IPHONE 15 REAL
+
 ========================== */
 
 .device-preview {
-  max-width: 390px;
-  margin: 0 auto 40px;
-  background: #000;
-  border-radius: 44px;
-  padding: 14px;
-  box-shadow:
-    0 0 0 6px #111,
-    0 30px 80px rgba(0,0,0,.9);
-  position: relative;
+
+max-width: 390px;
+
+margin: 0 auto 40px;
+
+background: #000;
+
+border-radius: 44px;
+
+padding: 14px;
+
+box-shadow:
+
+0 0 0 6px #111,
+
+0 30px 80px rgba(0,0,0,.9);
+
+position: relative;
+
 }
 
 /* Notch / Ilha dinâmica */
+
 .device-top {
-  height: 70px;
-  background: transparent;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding-bottom: 8px;
 
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+height: 70px;
 
-  z-index: 10; /* 🔥 aumente isso */
+background: transparent;
+
+display: flex;
+
+align-items: flex-end;
+
+justify-content: center;
+
+padding-bottom: 8px;
+
+position: absolute;
+
+top: 0;
+
+left: 0;
+
+right: 0;
+
+z-index: 10; /* 🔥 aumente isso */
+
 }
 
 .device-top::before {
-  content: "";
-  width: 120px;
-  height: 22px;
-  background: rgba(0,0,0,0.9);
-  border-radius: 16px;
-  position: absolute;
-  top: 6px;
+
+content: "";
+
+width: 120px;
+
+height: 22px;
+
+background: rgba(0,0,0,0.9);
+
+border-radius: 16px;
+
+position: absolute;
+
+top: 6px;
+
 }
 
 /* URL Chrome */
+
 .chrome-url {
-  font-size: 0.75em;
-  color: #ccc;
-  background: rgba(20,20,20,0.6);
-  backdrop-filter: blur(12px);
-  padding: 6px 16px;
-  border-radius: 999px;
-  max-width: 85%;
-  text-align: center;
 
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+font-size: 0.75em;
 
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.08);
+color: #ccc;
+
+background: rgba(20,20,20,0.6);
+
+backdrop-filter: blur(12px);
+
+padding: 6px 16px;
+
+border-radius: 999px;
+
+max-width: 85%;
+
+text-align: center;
+
+white-space: nowrap;
+
+overflow: hidden;
+
+text-overflow: ellipsis;
+
+box-shadow:
+
+inset 0 0 0 1px rgba(255,255,255,.08);
+
 }
 
 /* Tela real */
+
 .device-screen {
-  background: #000;
-  border-radius: 32px;
-  overflow: hidden;
-  height: 720px;
-  position: relative;
+
+background: #000;
+
+border-radius: 32px;
+
+overflow: hidden;
+
+height: 720px;
+
+position: relative;
+
 }
 
 /* Scroll real */
+
 .preview {
-  height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  padding-top: 70px;
-  padding-bottom: 40px;
-  position: relative;
-  z-index: 1;
+
+height: 100%;
+
+overflow-y: auto;
+
+overflow-x: hidden;
+
+-webkit-overflow-scrolling: touch;
+
+padding-top: 70px;
+
+padding-bottom: 40px;
+
+position: relative;
+
+z-index: 1;
+
 }
 
 /* esconder scrollbar feia */
+
 .preview::-webkit-scrollbar {
-  width: 0;
+
+width: 0;
+
 }
 
 .editor,
+
 .editor * {
-  background-color: transparent;
+
+background-color: transparent;
+
 }
 
 /* 🔥 NÃO APLICAR NO SITE FINAL */
+
 body.final .polaroid {
-  background: #fff !important;
+
+background: #fff !important;
+
 }
 
 /* ===== SITE FINAL LIMPO (SEM QUEBRAR SLIDER) ===== */
 
 body.final .editor,
+
 body.final .photo-grid,
+
 body.final .music-box,
+
 body.final .remove-music,
+
 body.final .device-preview,
+
 body.final .device-top,
+
 body.final .chrome-url {
-  display: none !important;
+
+display: none !important;
+
 }
 
 body.final .preview {
-  width: 100%;
-  max-width: 100%;
-  border: none;
-  box-shadow: none;
-  border-radius: 0;
-  background: inherit;
+
+width: 100%;
+
+max-width: 100%;
+
+border: none;
+
+box-shadow: none;
+
+border-radius: 0;
+
+background: inherit;
+
 }
 
 /* 🔥 SLIDER PRECISA EXISTIR */
+
 body.final .slider {
-  overflow: hidden;
-  width: 100%;
-  margin: 30px 0;
+
+overflow: hidden;
+
+width: 100%;
+
+margin: 30px 0;
+
 }
 
 body.final .slider-track {
-  display: flex;
-  width: 100%;
-  transition: transform .8s ease;
+
+display: flex;
+
+width: 100%;
+
+transition: transform .8s ease;
+
 }
 
 body.final .slide {
-  min-width: 100%;
-  display: flex;
-  justify-content: center;
+
+min-width: 100%;
+
+display: flex;
+
+justify-content: center;
+
 }
 
 /* 🔥 FUNDO REAL NO SITE FINAL */
-body.final .device-screen.azul  { background: radial-gradient(#2f6cff,#050b1a) !important; }
-body.final .device-screen.roxo  { background: radial-gradient(#7a4cff,#12071a) !important; }
-body.final .device-screen.rosa  { background: radial-gradient(#ff5ca8,#1a050f) !important; }
-body.final .device-screen.preto { background: radial-gradient(#444,#000) !important; }
+
+body.final .preview.azul {
+
+background: radial-gradient(#2f6cff, #050b1a) !important;
+
+}
+
+body.final .preview.roxo {
+
+background: radial-gradient(#7a4cff, #12071a) !important;
+
+}
+
+body.final .preview.rosa {
+
+background: radial-gradient(#ff5ca8, #1a050f) !important;
+
+}
+
+body.final .preview.preto {
+
+background: radial-gradient(#444, #000) !important;
+
+}
 
 body.final {
-  color-scheme: light !important;
-  background: #000 !important;
+
+color-scheme: light !important;
+
+background: #000 !important;
+
 }
 
 body.final * {
-  forced-color-adjust: none !important;
+
+forced-color-adjust: none !important;
+
 }
+
 input,
+
 textarea,
+
 button,
+
 select {
-  color-scheme: light !important;
+
+color-scheme: light !important;
+
 }
 
 html {
-  background-color: #000 !important;
+
+background-color: #000 !important;
+
 }
+
 
 
 
