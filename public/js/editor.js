@@ -275,7 +275,7 @@ sliderInterval = setInterval(() => {
     const file = musicaInput.files[0];
     if (!file) return;
     
-musicBox.innerText = "⏳ Carregando música...";
+musicBox.innerHTML = "⏳ Carregando música...";
 musicBox.style.pointerEvents = "none";
     
     const audioTest = document.createElement("audio");
@@ -397,6 +397,7 @@ removeMusic.onclick = () => {
 
 });
     
+
 
 
 
