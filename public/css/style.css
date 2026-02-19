@@ -258,7 +258,7 @@ textarea.error {
 }
 #tempo .titulo {
   font-size: 2.2em;
-  color: #ffd400;
+  color: #1f0d36;
 }
 
 #tempo .contador {
@@ -523,6 +523,7 @@ select {
 html {
   background-color: #000 !important;
 }
+
 
 
 
