@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const mensagem = document.getElementById("mensagem");
   const tempo    = document.getElementById("tempo");
   const preview  = document.getElementById("preview");
-  const deviceScreen = document.querySelector(".device-screen");
 
    const btnComprar = document.getElementById("btnComprar");
   const lerBtn     = document.getElementById("lerBtn");
@@ -99,14 +98,10 @@ document.querySelectorAll(".bg-card").forEach(card => {
     document.querySelectorAll(".bg-card").forEach(c => c.classList.remove("selected"));
     card.classList.add("selected");
 
-    // remove fundos antigos
-    deviceScreen.classList.remove("azul","roxo","rosa","preto");
-
-    // aplica novo fundo
-    deviceScreen.classList.add(card.dataset.bg);
+    preview.classList.remove("azul","roxo","rosa","preto");
+    preview.classList.add(card.dataset.bg);
   };
 });
-
   /* =====================
      FOTOS + SLIDER
   ===================== */
@@ -402,6 +397,7 @@ removeMusic.onclick = () => {
 
 });
     
+
 
 
 
