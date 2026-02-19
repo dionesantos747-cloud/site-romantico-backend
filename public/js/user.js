@@ -183,7 +183,7 @@ function iniciarTempo(dataInicio) {
     const a  = Math.floor(diff / 31536000000);
 
     tempoEl.innerHTML = `
-      <span class="titulo">Já estamos juntos há</span>
+      <span class="titulo">compartilhamos a vida há:</span>
       <div class="contador">
         <div class="item">${a} ${plural(a,"ano","anos")}</div>
         <div class="item">${mo} ${plural(mo,"mês","meses")}</div>
