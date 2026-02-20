@@ -411,6 +411,23 @@ if (dataInput) {
   });
 }
 
+const dataVisual = document.getElementById("dataVisual");
+const dataReal = document.getElementById("dataInput");
+
+// Quando clicar no campo bonito → abre calendário
+dataVisual.addEventListener("click", () => {
+  dataReal.showPicker(); // Android moderno
+});
+
+// Quando escolher a data
+dataReal.addEventListener("change", () => {
+  const data = dataReal.value; // formato yyyy-mm-dd
+
+  if (data) {
+    const [ano, mes, dia] = data.split("-");
+    dataVisual.value = `${dia}/${mes}/${ano}`;
+  }
+});
 
 
 
