@@ -181,17 +181,24 @@ function handleMusicSelect(e) {
   musicBox.innerHTML = "⏳ Carregando...";
   cancelMusic.style.display = "block";
 
+  if (currentObjectURL) {
+    URL.revokeObjectURL(currentObjectURL);
+  }
+
   currentObjectURL = URL.createObjectURL(file);
   audio.src = currentObjectURL;
 
-  audio.onloadedmetadata = () => {
+  audio.load();
+
+  audio.addEventListener("loadeddata", function onLoad() {
     musicBox.innerHTML = "🎵 Música adicionada";
     musicPlayer.style.display = "flex";
     cancelMusic.style.display = "none";
     removeMusic.style.display = "block";
-  };
-}
 
+    audio.removeEventListener("loadeddata", onLoad);
+  });
+}
 musicaInput.addEventListener("change", handleMusicSelect);
 
 /* =========================
@@ -263,6 +270,7 @@ audio.addEventListener("timeupdate", () => {
 </script>
 </body>
 </html>
+
 
 
 
