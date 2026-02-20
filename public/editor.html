@@ -142,10 +142,30 @@
      SCRIPT PRINCIPAL
 ===================== -->
 <script src="/js/editor.js"></script>
+<script>
+const audio = document.getElementById("audio");
+const playBtn = document.getElementById("playBtn");
+const progress = document.querySelector(".progress");
 
+playBtn.addEventListener("click", () => {
+  if (audio.paused) {
+    audio.play();
+    playBtn.innerHTML = "❚❚";
+  } else {
+    audio.pause();
+    playBtn.innerHTML = "▶";
+  }
+});
+
+audio.addEventListener("timeupdate", () => {
+  const percent = (audio.currentTime / audio.duration) * 100;
+  progress.style.width = percent + "%";
+});
+</script>
 
 </body>
 </html>
+
 
 
 
