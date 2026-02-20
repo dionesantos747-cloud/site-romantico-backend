@@ -112,7 +112,6 @@
 </div>
 
 <audio id="audio">
-  <source src="SUA_MUSICA.mp3" type="audio/mpeg">
 </audio>
       <div class="nome" id="nome"></div>
       <div class="mensagem" id="mensagem"></div>
@@ -154,7 +153,8 @@ const musicaInput = document.getElementById("musicaInput");
 const musicPlayer = document.getElementById("musicPlayer");
 const musicBox = document.getElementById("musicBox");
 const cancelMusic = document.getElementById("cancelMusic");
-
+const removeMusic = document.getElementById("removeMusic");
+  removeMusic.style.display = "none";
 let currentObjectURL = null;
 
 // Selecionar música
@@ -171,12 +171,13 @@ musicaInput.addEventListener("change", function() {
     // Progresso real
     audio.addEventListener("progress", updateProgress);
 
-    audio.addEventListener("canplaythrough", () => {
-      musicBox.innerHTML = "🎵 Música adicionada 💖";
-      musicPlayer.style.display = "flex";
-      cancelMusic.style.display = "none";
-      audio.removeEventListener("progress", updateProgress);
-    });
+   audio.addEventListener("canplaythrough", () => {
+  musicBox.innerHTML = "🎵 Música adicionada";
+  musicPlayer.style.display = "flex";
+  cancelMusic.style.display = "none";
+  removeMusic.style.display = "block";
+  audio.removeEventListener("progress", updateProgress);
+});
   }
 });
 
@@ -231,6 +232,7 @@ audio.addEventListener("timeupdate", () => {
 
 </body>
 </html>
+
 
 
 
