@@ -219,7 +219,25 @@ removeMusic.addEventListener("click", () => {
     currentObjectURL = null;
   }
 
-  musicaInput.value = "";
+  // Remove input antigo
+  musicaInput.remove();
+
+  // Cria novo input
+  const newInput = document.createElement("input");
+  newInput.type = "file";
+  newInput.id = "musicaInput";
+  newInput.accept = ".mp3,.mp4,audio/*,video/mp4";
+  newInput.hidden = true;
+
+  document.body.appendChild(newInput);
+
+  // Atualiza referência
+  musicaInput = newInput;
+
+  // Reativa listener
+  musicaInput.addEventListener("change", handleMusicSelect);
+
+  // Reset visual
   musicBox.innerHTML = "🎵 Adicionar música";
   cancelMusic.style.display = "none";
   musicPlayer.style.display = "none";
@@ -247,6 +265,7 @@ audio.addEventListener("timeupdate", () => {
 
 </body>
 </html>
+
 
 
 
