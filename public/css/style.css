@@ -1175,10 +1175,9 @@ button {
 
 /* ===== CORREÇÃO TEXTO BOTÃO FINAL ===== */
 
-body.final button {
+body.final button.pay {
   color: #000 !important;
   -webkit-text-fill-color: #000 !important;
-  font-weight: 700;
 }
 
 
@@ -1217,6 +1216,7 @@ textarea:-webkit-autofill {
   font-size: 16px;
   cursor: pointer;
 }
+
 
 
 
