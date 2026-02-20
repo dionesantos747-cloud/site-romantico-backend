@@ -146,7 +146,20 @@
 const audio = document.getElementById("audio");
 const playBtn = document.getElementById("playBtn");
 const progress = document.querySelector(".progress");
+const musicaInput = document.getElementById("musicaInput");
+const musicPlayer = document.getElementById("musicPlayer");
 
+// Quando escolher música
+musicaInput.addEventListener("change", function() {
+  const file = this.files[0];
+  if (file) {
+    const url = URL.createObjectURL(file);
+    audio.src = url;
+    musicPlayer.style.display = "flex"; // mostra player
+  }
+});
+
+// Play / Pause
 playBtn.addEventListener("click", () => {
   if (audio.paused) {
     audio.play();
@@ -157,14 +170,18 @@ playBtn.addEventListener("click", () => {
   }
 });
 
+// Atualizar barra
 audio.addEventListener("timeupdate", () => {
-  const percent = (audio.currentTime / audio.duration) * 100;
-  progress.style.width = percent + "%";
+  if (audio.duration) {
+    const percent = (audio.currentTime / audio.duration) * 100;
+    progress.style.width = percent + "%";
+  }
 });
 </script>
 
 </body>
 </html>
+
 
 
 
