@@ -134,12 +134,14 @@ async function carregarPix() {
     const res = await fetch(`/payment-info?payment_id=${paymentId}`);
     const data = await res.json();
 
-    if (data.qr_base64 && data.copia_cola) {
+  if (data.qr_base64 && data.copia_cola) {
   qrImg.src = "data:image/png;base64," + data.qr_base64;
   pixBox.innerText = data.copia_cola;
+
+  copyBtn.disabled = false; // ✅ HABILITA O BOTÃO
 } else {
   pixBox.innerText = "Gerando PIX, aguarde alguns segundos...";
-      copyBtn.disabled = true;
+  copyBtn.disabled = true;
 }
   } catch {
     pixBox.innerText = "Erro ao carregar PIX. Aguarde...";
