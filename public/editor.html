@@ -54,7 +54,11 @@
  <div class="music-box" id="musicBox">
   🎵 Adicionar música
 </div>
-
+  
+<div id="cancelMusic" style="display:none; color:#ff4d88; margin-top:8px; cursor:pointer;">
+  ❌ Cancelar carregamento
+</div>
+  
   <div class="remove-music" id="removeMusic">Remover música</div>
   <input
   type="file"
@@ -148,24 +152,45 @@ const playBtn = document.getElementById("playBtn");
 const progress = document.querySelector(".progress");
 const musicaInput = document.getElementById("musicaInput");
 const musicPlayer = document.getElementById("musicPlayer");
-
-// Quando escolher música
 const musicBox = document.getElementById("musicBox");
+const cancelMusic = document.getElementById("cancelMusic");
 
+let currentObjectURL = null;
+
+// Selecionar música
 musicaInput.addEventListener("change", function() {
   const file = this.files[0];
 
   if (file) {
     musicBox.innerHTML = "⏳ Carregando música...";
+    cancelMusic.style.display = "block";
 
-    const url = URL.createObjectURL(file);
-    audio.src = url;
+    currentObjectURL = URL.createObjectURL(file);
+    audio.src = currentObjectURL;
 
     audio.onloadeddata = function() {
-      musicBox.innerHTML = "🎵 Música adicionada ";
+      musicBox.innerHTML = "🎵 Música adicionada 💖";
       musicPlayer.style.display = "flex";
+      cancelMusic.style.display = "none";
     };
   }
+});
+
+// Cancelar carregamento
+cancelMusic.addEventListener("click", () => {
+  audio.pause();
+  audio.removeAttribute("src");
+  audio.load();
+
+  if (currentObjectURL) {
+    URL.revokeObjectURL(currentObjectURL);
+    currentObjectURL = null;
+  }
+
+  musicaInput.value = "";
+  musicBox.innerHTML = "🎵 Adicionar música";
+  cancelMusic.style.display = "none";
+  musicPlayer.style.display = "none";
 });
 
 // Play / Pause
@@ -179,7 +204,7 @@ playBtn.addEventListener("click", () => {
   }
 });
 
-// Atualizar barra
+// Barra progresso
 audio.addEventListener("timeupdate", () => {
   if (audio.duration) {
     const percent = (audio.currentTime / audio.duration) * 100;
@@ -190,6 +215,7 @@ audio.addEventListener("timeupdate", () => {
 
 </body>
 </html>
+
 
 
 
