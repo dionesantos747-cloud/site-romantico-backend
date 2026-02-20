@@ -1288,6 +1288,10 @@ textarea:-webkit-autofill {
   transition: width 0.2s;
 }
 
+.music-box.disabled {
+  pointer-events: none;
+  opacity: 0.6;
+}
 
 
 
