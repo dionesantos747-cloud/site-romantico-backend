@@ -1171,26 +1171,6 @@ button {
     0 0 25px rgba(255,0,200,.2);
 }
 
-#qrBtn {
-  color: #000 !important;
-  -webkit-text-fill-color: #000 !important;
-  font-weight: 700;
-}
-/* ===== CORREÇÃO INPUT EDITOR DEFINITIVA ===== */
-
-.editor input,
-.editor textarea {
-  background: rgba(0,0,0,.6) !important;
-  color: #fff !important;
-  -webkit-text-fill-color: #fff !important;
-}
-
-.editor input:focus,
-.editor textarea:focus {
-  background: rgba(0,0,0,.6) !important;
-  color: #fff !important;
-  -webkit-text-fill-color: #fff !important;
-}
 
 /* ===== INPUT DATA COM ÍCONE ===== */
 
@@ -1213,6 +1193,13 @@ button {
   pointer-events: none;
 }
 
+/* ===== CORREÇÃO TEXTO BOTÃO FINAL ===== */
+
+body.final button {
+  color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
+  font-weight: 700;
+}
 
 
 
