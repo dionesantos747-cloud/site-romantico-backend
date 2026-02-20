@@ -156,28 +156,34 @@ const musicBox = document.getElementById("musicBox");
 const cancelMusic = document.getElementById("cancelMusic");
 const removeMusic = document.getElementById("removeMusic");
 
-removeMusic.style.display = "none";
-
 let currentObjectURL = null;
 let hasMusic = false;
-let isLoadingMusic = false;
 
 /* =========================
-   ABRIR INPUT
+   CLICK ÚNICO (ANTI BUG MOBILE)
 ========================= */
-musicBox.addEventListener("click", () => {
-  if (hasMusic || isLoadingMusic) return;
+musicBox.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+
+  if (hasMusic) return;
+
+  // 🔒 trava imediatamente
+  musicBox.classList.add("disabled");
+
   musicaInput.click();
 });
 
 /* =========================
-   SELECIONAR MÚSICA
+   SELEÇÃO DA MÚSICA
 ========================= */
-function handleMusicSelect(e) {
-  const file = e.target.files[0];
-  if (!file) return;
+musicaInput.addEventListener("change", function () {
+  const file = this.files[0];
 
-  isLoadingMusic = true;
+  if (!file) {
+    musicBox.classList.remove("disabled");
+    return;
+  }
 
   musicBox.innerHTML = "⏳ Carregando...";
   cancelMusic.style.display = "block";
@@ -190,52 +196,38 @@ function handleMusicSelect(e) {
   audio.src = currentObjectURL;
   audio.load();
 
-  audio.addEventListener("loadeddata", function onLoad() {
-    audio.removeEventListener("loadeddata", onLoad);
-
+  audio.onloadeddata = () => {
     hasMusic = true;
-    isLoadingMusic = false;
 
     musicBox.innerHTML = "🎵 Música adicionada";
     musicPlayer.style.display = "flex";
     cancelMusic.style.display = "none";
     removeMusic.style.display = "block";
-  });
-}
-
-musicaInput.addEventListener("change", handleMusicSelect);
+  };
+});
 
 /* =========================
-   RESET
+   RESET TOTAL
 ========================= */
 function resetMusic() {
   audio.pause();
-  audio.removeAttribute("src");
+  audio.src = "";
   audio.load();
-
-  hasMusic = false;
-  isLoadingMusic = false;
 
   if (currentObjectURL) {
     URL.revokeObjectURL(currentObjectURL);
     currentObjectURL = null;
   }
 
-  musicaInput.remove();
+  hasMusic = false;
 
-  const newInput = document.createElement("input");
-  newInput.type = "file";
-  newInput.id = "musicaInput";
-  newInput.accept = ".mp3,.mp4,audio/*,video/mp4";
-  newInput.hidden = true;
-
-  document.body.appendChild(newInput);
-  musicaInput = newInput;
-  musicaInput.addEventListener("change", handleMusicSelect);
+  musicaInput.value = "";
 
   musicBox.innerHTML = "🎵 Adicionar música";
-  cancelMusic.style.display = "none";
+  musicBox.classList.remove("disabled");
+
   musicPlayer.style.display = "none";
+  cancelMusic.style.display = "none";
   removeMusic.style.display = "none";
 }
 
@@ -266,6 +258,7 @@ audio.addEventListener("timeupdate", () => {
 </script>
 </body>
 </html>
+
 
 
 
