@@ -27,23 +27,17 @@
   <textarea id="msgInput" placeholder="Escreva algo especial..."></textarea>
   <div class="error-text">Campo não preenchido</div>
 
-  <label>Data de início do namoro ou amizade</label>
+ <label>Data de início do namoro ou amizade</label>
 
-<div class="input-date">
-
-  <input 
-    type="text" 
-    id="dataVisual" 
-    placeholder="dd/mm/aaaa"
-    readonly
-  >
-
-  <input 
-    type="date" 
-    id="dataInput"
-  >
-
+<div class="date-box" id="dateBox">
+  📅 Selecionar data
 </div>
+
+<input 
+  type="date" 
+  id="dataInput"
+  hidden
+>
 
 <div class="error-text">Campo não preenchido</div>
   <label>Fotos</label>
@@ -139,6 +133,7 @@
 
 </body>
 </html>
+
 
 
 
