@@ -27,10 +27,20 @@
   <textarea id="msgInput" placeholder="Escreva algo especial..."></textarea>
   <div class="error-text">Campo não preenchido</div>
 
-   <label>Data de início do namoro</label>
-  <input type="date" id="dataInput">
-  <div class="error-text">Campo não preenchido</div>
+  <label>Data de início do namoro ou amizade</label>
 
+<div class="input-date">
+  <input 
+    type="text" 
+    id="dataInput" 
+    placeholder="dd/mm/aaaa"
+    inputmode="numeric"
+    maxlength="10"
+  >
+  <span class="calendar-icon">📅</span>
+</div>
+
+<div class="error-text">Campo não preenchido</div>
   <label>Fotos</label>
   <div class="photo-grid">
     <div class="photo-slot" data-slot="0">+</div>
@@ -124,6 +134,7 @@
 
 </body>
 </html>
+
 
 
 
