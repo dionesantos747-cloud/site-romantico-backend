@@ -1172,26 +1172,6 @@ button {
 }
 
 
-/* ===== INPUT DATA COM ÍCONE ===== */
-
-.input-date {
-  position: relative;
-  width: 100%;
-}
-
-.input-date input {
-  padding-right: 45px !important;
-}
-
-.calendar-icon {
-  position: absolute;
-  right: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.2em;
-  opacity: 0.8;
-  pointer-events: none;
-}
 
 /* ===== CORREÇÃO TEXTO BOTÃO FINAL ===== */
 
@@ -1221,6 +1201,10 @@ textarea:-webkit-autofill {
   -webkit-box-shadow: 0 0 0px 1000px #000 inset !important;
   -webkit-text-fill-color: #fff !important;
   transition: background-color 5000s ease-in-out 0s;
+}
+
+.input-date {
+  position: relative;
 }
 
 #dataVisual {
