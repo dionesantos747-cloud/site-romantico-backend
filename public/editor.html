@@ -162,21 +162,37 @@ musicaInput.addEventListener("change", function() {
   const file = this.files[0];
 
   if (file) {
-    musicBox.innerHTML = "⏳ Carregando música...";
+    musicBox.innerHTML = "⏳ 0% carregando...";
     cancelMusic.style.display = "block";
 
     currentObjectURL = URL.createObjectURL(file);
     audio.src = currentObjectURL;
 
-    audio.onloadeddata = function() {
+    // Progresso real
+    audio.addEventListener("progress", updateProgress);
+
+    audio.addEventListener("canplaythrough", () => {
       musicBox.innerHTML = "🎵 Música adicionada 💖";
       musicPlayer.style.display = "flex";
       cancelMusic.style.display = "none";
-    };
+      audio.removeEventListener("progress", updateProgress);
+    });
   }
 });
 
-// Cancelar carregamento
+function updateProgress() {
+  if (audio.buffered.length > 0) {
+    const bufferedEnd = audio.buffered.end(0);
+    const duration = audio.duration;
+
+    if (duration > 0) {
+      const percent = Math.min((bufferedEnd / duration) * 100, 100);
+      musicBox.innerHTML = `⏳ ${Math.floor(percent)}% carregando...`;
+    }
+  }
+}
+
+// Cancelar
 cancelMusic.addEventListener("click", () => {
   audio.pause();
   audio.removeAttribute("src");
@@ -204,7 +220,7 @@ playBtn.addEventListener("click", () => {
   }
 });
 
-// Barra progresso
+// Barra progresso reprodução
 audio.addEventListener("timeupdate", () => {
   if (audio.duration) {
     const percent = (audio.currentTime / audio.duration) * 100;
@@ -215,6 +231,7 @@ audio.addEventListener("timeupdate", () => {
 
 </body>
 </html>
+
 
 
 
