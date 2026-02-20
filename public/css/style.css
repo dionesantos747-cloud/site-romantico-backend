@@ -1202,20 +1202,6 @@ textarea:-webkit-autofill {
   transition: background-color 5000s ease-in-out 0s;
 }
 
-.input-date {
-  position: relative;
-}
-
-#dataVisual {
-  width: 100%;
-  padding: 15px;
-  background: #000;
-  color: #fff;
-  border: 2px solid #ff00c8;
-  border-radius: 14px;
-  font-size: 16px;
-  cursor: pointer;
-}
 .date-box {
   margin: 20px auto;
   padding: 14px 25px;
@@ -1233,6 +1219,7 @@ textarea:-webkit-autofill {
   box-shadow: 0 0 25px #ff00cc, 0 0 50px rgba(255,0,255,.5);
   transform: scale(1.03);
 }
+
 
 
 
