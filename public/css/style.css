@@ -1192,6 +1192,26 @@ button {
   -webkit-text-fill-color: #fff !important;
 }
 
+/* ===== INPUT DATA COM ÍCONE ===== */
+
+.input-date {
+  position: relative;
+  width: 100%;
+}
+
+.input-date input {
+  padding-right: 45px !important;
+}
+
+.calendar-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2em;
+  opacity: 0.8;
+  pointer-events: none;
+}
 
 
 
