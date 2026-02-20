@@ -1220,6 +1220,11 @@ textarea:-webkit-autofill {
   transform: scale(1.03);
 }
 
+#btnComprar {
+  color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
+  font-weight: bold !important;
+}
 
 
 
