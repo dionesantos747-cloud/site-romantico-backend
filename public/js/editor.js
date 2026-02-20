@@ -411,23 +411,28 @@ if (dataInput) {
   });
 }
 
-const dataVisual = document.getElementById("dataVisual");
-const dataReal = document.getElementById("dataInput");
+const dateBox = document.getElementById("dateBox");
+const dataInput = document.getElementById("dataInput");
 
-// Quando clicar no campo bonito → abre calendário
-dataVisual.addEventListener("click", () => {
-  dataReal.showPicker(); // Android moderno
+// Abrir calendário ao clicar
+dateBox.addEventListener("click", () => {
+  if (dataInput.showPicker) {
+    dataInput.showPicker();
+  } else {
+    dataInput.click();
+  }
 });
 
-// Quando escolher a data
-dataReal.addEventListener("change", () => {
-  const data = dataReal.value; // formato yyyy-mm-dd
+// Quando escolher data
+dataInput.addEventListener("change", () => {
+  const data = dataInput.value;
 
   if (data) {
     const [ano, mes, dia] = data.split("-");
-    dataVisual.value = `${dia}/${mes}/${ano}`;
+    dateBox.innerHTML = `📆 ${dia}/${mes}/${ano}`;
   }
 });
+
 
 
 
