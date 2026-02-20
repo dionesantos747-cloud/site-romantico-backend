@@ -150,6 +150,7 @@ const audio = document.getElementById("audio");
 const playBtn = document.getElementById("playBtn");
 const progress = document.querySelector(".progress");
 let musicaInput = document.getElementById("musicaInput");
+
 const musicPlayer = document.getElementById("musicPlayer");
 const musicBox = document.getElementById("musicBox");
 const cancelMusic = document.getElementById("cancelMusic");
@@ -159,22 +160,24 @@ removeMusic.style.display = "none";
 
 let currentObjectURL = null;
 let hasMusic = false;
-/* =========================
-   ABRIR INPUT AO CLICAR
-========================= */
+let isLoadingMusic = false;
 
+/* =========================
+   ABRIR INPUT
+========================= */
 musicBox.addEventListener("click", () => {
-  if (!hasMusic) {
-    musicaInput.click();
-  }
+  if (hasMusic || isLoadingMusic) return;
+  musicaInput.click();
 });
+
 /* =========================
    SELECIONAR MÚSICA
 ========================= */
-
 function handleMusicSelect(e) {
   const file = e.target.files[0];
   if (!file) return;
+
+  isLoadingMusic = true;
 
   musicBox.innerHTML = "⏳ Carregando...";
   cancelMusic.style.display = "block";
@@ -185,40 +188,41 @@ function handleMusicSelect(e) {
 
   currentObjectURL = URL.createObjectURL(file);
   audio.src = currentObjectURL;
-
   audio.load();
 
   audio.addEventListener("loadeddata", function onLoad() {
+    audio.removeEventListener("loadeddata", onLoad);
+
+    hasMusic = true;
+    isLoadingMusic = false;
+
     musicBox.innerHTML = "🎵 Música adicionada";
     musicPlayer.style.display = "flex";
     cancelMusic.style.display = "none";
     removeMusic.style.display = "block";
-    
-hasMusic = true;
-    
-    audio.removeEventListener("loadeddata", onLoad);
   });
 }
+
 musicaInput.addEventListener("change", handleMusicSelect);
 
 /* =========================
-   RESET COMPLETO
+   RESET
 ========================= */
-
 function resetMusic() {
   audio.pause();
   audio.removeAttribute("src");
   audio.load();
-hasMusic = false;
+
+  hasMusic = false;
+  isLoadingMusic = false;
+
   if (currentObjectURL) {
     URL.revokeObjectURL(currentObjectURL);
     currentObjectURL = null;
   }
 
-  // REMOVE INPUT ANTIGO
   musicaInput.remove();
 
-  // CRIA NOVO INPUT LIMPO
   const newInput = document.createElement("input");
   newInput.type = "file";
   newInput.id = "musicaInput";
@@ -226,14 +230,9 @@ hasMusic = false;
   newInput.hidden = true;
 
   document.body.appendChild(newInput);
-
-  // ATUALIZA REFERÊNCIA GLOBAL
   musicaInput = newInput;
-
-  // REANEXA EVENTO
   musicaInput.addEventListener("change", handleMusicSelect);
 
-  // RESET VISUAL
   musicBox.innerHTML = "🎵 Adicionar música";
   cancelMusic.style.display = "none";
   musicPlayer.style.display = "none";
@@ -246,7 +245,6 @@ removeMusic.addEventListener("click", resetMusic);
 /* =========================
    PLAY / PAUSE
 ========================= */
-
 playBtn.addEventListener("click", () => {
   if (audio.paused) {
     audio.play();
@@ -258,18 +256,17 @@ playBtn.addEventListener("click", () => {
 });
 
 /* =========================
-   BARRA DE PROGRESSO
+   PROGRESSO
 ========================= */
-
 audio.addEventListener("timeupdate", () => {
-  if (audio.duration) {
-    const percent = (audio.currentTime / audio.duration) * 100;
-    progress.style.width = percent + "%";
-  }
+  if (!audio.duration) return;
+  progress.style.width =
+    (audio.currentTime / audio.duration) * 100 + "%";
 });
 </script>
 </body>
 </html>
+
 
 
 
