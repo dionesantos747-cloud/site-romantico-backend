@@ -158,7 +158,14 @@ const removeMusic = document.getElementById("removeMusic");
 let currentObjectURL = null;
 
 // Selecionar música
-musicaInput.addEventListener("change", function() {
+function handleMusicSelect() {
+  const file = this.files[0];
+  if (!file) return;
+
+  // resto do código de upload aqui
+}
+
+musicaInput.addEventListener("change", handleMusicSelect);
   const file = this.files[0];
 
   if (file) {
@@ -265,6 +272,7 @@ audio.addEventListener("timeupdate", () => {
 
 </body>
 </html>
+
 
 
 
