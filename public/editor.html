@@ -100,7 +100,7 @@
   <button id="playBtn" class="play-btn">▶</button>
   
   <div class="music-info">
-    <span class="music-title">Nossa Música 💖</span>
+    <span class="music-title">Nossa Música </span>
     <div class="progress-bar">
       <div class="progress"></div>
     </div>
@@ -150,12 +150,21 @@ const musicaInput = document.getElementById("musicaInput");
 const musicPlayer = document.getElementById("musicPlayer");
 
 // Quando escolher música
+const musicBox = document.getElementById("musicBox");
+
 musicaInput.addEventListener("change", function() {
   const file = this.files[0];
+
   if (file) {
+    musicBox.innerHTML = "⏳ Carregando música...";
+
     const url = URL.createObjectURL(file);
     audio.src = url;
-    musicPlayer.style.display = "flex"; // mostra player
+
+    audio.onloadeddata = function() {
+      musicBox.innerHTML = "🎵 Música adicionada ";
+      musicPlayer.style.display = "flex";
+    };
   }
 });
 
@@ -181,6 +190,7 @@ audio.addEventListener("timeupdate", () => {
 
 </body>
 </html>
+
 
 
 
