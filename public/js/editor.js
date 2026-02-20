@@ -291,67 +291,7 @@ sliderInterval = setInterval(() => {
 }, 3500);
   }
 
-/* =====================
-   MÚSICA (ANTI BUG MOBILE)
-===================== */
 
-let hasMusic = false;
-
-musicBox.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  if (hasMusic) return;
-  musicaInput.click();
-});
-
-musicaInput.addEventListener("change", async () => {
-  const file = musicaInput.files[0];
-  if (!file) return;
-
-  musicBox.innerHTML = "⏳ Enviando música...";
-  musicBox.style.pointerEvents = "none";
-
-  const form = new FormData();
-  form.append("file", file);
-
-  try {
-    const res = await fetch("/upload-music", {
-      method: "POST",
-      body: form
-    });
-
-    const data = await res.json();
-    if (!data.url) throw new Error();
-
-    musicaUrl = data.url;
-    audio.src = musicaUrl;
-    audio.style.display = "block";
-
-    hasMusic = true;
-    removeMusic.style.display = "block";
-    musicBox.innerText = "🎵 Música adicionada";
-
-  } catch {
-    alert("Erro ao enviar música");
-    musicBox.innerText = "🎵 Adicionar música";
-    musicBox.style.pointerEvents = "auto";
-  }
-});
-
-removeMusic.onclick = () => {
-  hasMusic = false;
-  musicaUrl = null;
-
-  audio.pause();
-  audio.src = "";
-  audio.style.display = "none";
-
-  musicaInput.value = "";
-  removeMusic.style.display = "none";
-
-  musicBox.innerText = "🎵 Adicionar música";
-  musicBox.style.pointerEvents = "auto";
-};
   /* =====================
      CONTADOR
   ===================== */
@@ -431,6 +371,7 @@ removeMusic.onclick = () => {
 
 });
     
+
 
 
 
