@@ -164,12 +164,10 @@ let currentObjectURL = null;
 ========================= */
 
 musicBox.addEventListener("click", () => {
-  // Só abre seletor se NÃO tiver música
-  if (!audio.src) {
+  if (!hasMusic) {
     musicaInput.click();
   }
 });
-
 /* =========================
    SELECIONAR MÚSICA
 ========================= */
@@ -195,7 +193,9 @@ function handleMusicSelect(e) {
     musicPlayer.style.display = "flex";
     cancelMusic.style.display = "none";
     removeMusic.style.display = "block";
-
+    
+hasMusic = true;
+    
     audio.removeEventListener("loadeddata", onLoad);
   });
 }
@@ -209,7 +209,7 @@ function resetMusic() {
   audio.pause();
   audio.removeAttribute("src");
   audio.load();
-
+hasMusic = false;
   if (currentObjectURL) {
     URL.revokeObjectURL(currentObjectURL);
     currentObjectURL = null;
@@ -270,6 +270,7 @@ audio.addEventListener("timeupdate", () => {
 </script>
 </body>
 </html>
+
 
 
 
