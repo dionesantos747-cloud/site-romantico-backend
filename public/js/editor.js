@@ -422,41 +422,6 @@ removeMusic.onclick = () => {
 
 });
     
-// ===== MÁSCARA DE DATA =====
-const dataInput = document.getElementById("dataInput");
-
-if (dataInput) {
-  dataInput.addEventListener("input", (e) => {
-    let v = e.target.value.replace(/\D/g, "");
-
-    if (v.length > 2) v = v.slice(0,2) + "/" + v.slice(2);
-    if (v.length > 5) v = v.slice(0,5) + "/" + v.slice(5,9);
-
-    e.target.value = v;
-  });
-}
-
-const dateBox = document.getElementById("dateBox");
-const dataInput = document.getElementById("dataInput");
-
-// Abrir calendário ao clicar
-dateBox.addEventListener("click", () => {
-  if (dataInput.showPicker) {
-    dataInput.showPicker();
-  } else {
-    dataInput.click();
-  }
-});
-
-// Quando escolher data
-dataInput.addEventListener("change", () => {
-  const data = dataInput.value;
-
-  if (data) {
-    const [ano, mes, dia] = data.split("-");
-    dateBox.innerHTML = `📆 ${dia}/${mes}/${ano}`;
-  }
-});
 
 
 
