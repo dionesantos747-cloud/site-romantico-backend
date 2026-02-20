@@ -96,8 +96,20 @@
 
     <div class="preview azul" id="preview">
 
-      <audio id="audioPlayer" controls style="display:none;"></audio>
+     <div class="music-player">
+  <button id="playBtn" class="play-btn">▶</button>
+  
+  <div class="music-info">
+    <span class="music-title">Nossa Música 💖</span>
+    <div class="progress-bar">
+      <div class="progress"></div>
+    </div>
+  </div>
+</div>
 
+<audio id="audio">
+  <source src="SUA_MUSICA.mp3" type="audio/mpeg">
+</audio>
       <div class="nome" id="nome"></div>
       <div class="mensagem" id="mensagem"></div>
 
@@ -134,6 +146,7 @@
 
 </body>
 </html>
+
 
 
 
