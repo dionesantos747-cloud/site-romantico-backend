@@ -149,7 +149,7 @@
 const audio = document.getElementById("audio");
 const playBtn = document.getElementById("playBtn");
 const progress = document.querySelector(".progress");
-let musicaInput = document.getElementById("musicaInput");
+const musicaInput = document.getElementById("musicaInput");
 const musicPlayer = document.getElementById("musicPlayer");
 const musicBox = document.getElementById("musicBox");
 const cancelMusic = document.getElementById("cancelMusic");
@@ -158,6 +158,14 @@ const removeMusic = document.getElementById("removeMusic");
 removeMusic.style.display = "none";
 
 let currentObjectURL = null;
+
+/* =========================
+   ABRIR INPUT AO CLICAR NA CAIXA
+========================= */
+
+musicBox.addEventListener("click", () => {
+  musicaInput.click();
+});
 
 /* =========================
    SELECIONAR MÚSICA
@@ -222,7 +230,9 @@ function resetMusic() {
     currentObjectURL = null;
   }
 
-  musicaInput.value = "";
+  // RESET REAL DO INPUT (permite escolher o mesmo arquivo novamente)
+  musicaInput.type = "text";
+  musicaInput.type = "file";
 
   musicBox.innerHTML = "🎵 Adicionar música";
   cancelMusic.style.display = "none";
@@ -255,9 +265,9 @@ audio.addEventListener("timeupdate", () => {
   }
 });
 </script>
-
 </body>
 </html>
+
 
 
 
