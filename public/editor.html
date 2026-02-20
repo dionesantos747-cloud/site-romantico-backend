@@ -146,118 +146,94 @@
 ===================== -->
 <script src="/js/editor.js"></script>
 <script>
-const audio = document.getElementById("audio");
-const playBtn = document.getElementById("playBtn");
-const progress = document.querySelector(".progress");
-let musicaInput = document.getElementById("musicaInput");
-
-const musicPlayer = document.getElementById("musicPlayer");
 const musicBox = document.getElementById("musicBox");
-const cancelMusic = document.getElementById("cancelMusic");
+const musicaInput = document.getElementById("musicaInput");
+const audio = document.getElementById("audioPlayer");
 const removeMusic = document.getElementById("removeMusic");
 
-let currentObjectURL = null;
-let hasMusic = false;
+let musicaUrl = null;
+let isPickingMusic = false;
 
 /* =========================
-   CLICK ÚNICO (ANTI BUG MOBILE)
+   ABRIR SELETOR (ANTI BUG MOBILE)
 ========================= */
 musicBox.addEventListener("click", (e) => {
   e.preventDefault();
   e.stopPropagation();
 
-  if (hasMusic) return;
+  if (isPickingMusic || musicaUrl) return;
 
-  // 🔒 trava imediatamente
-  musicBox.classList.add("disabled");
-
+  isPickingMusic = true;
   musicaInput.click();
 });
 
 /* =========================
-   SELEÇÃO DA MÚSICA
+   SELEÇÃO DE MÚSICA
 ========================= */
-musicaInput.addEventListener("change", function () {
-  const file = this.files[0];
+musicaInput.addEventListener("change", async () => {
+  const file = musicaInput.files[0];
 
+  // Usuário cancelou
   if (!file) {
-    musicBox.classList.remove("disabled");
+    isPickingMusic = false;
     return;
   }
 
-  musicBox.innerHTML = "⏳ Carregando...";
-  cancelMusic.style.display = "block";
+  musicBox.innerText = "⏳ Enviando música...";
+  musicBox.style.pointerEvents = "none";
 
-  if (currentObjectURL) {
-    URL.revokeObjectURL(currentObjectURL);
+  const form = new FormData();
+  form.append("file", file);
+
+  try {
+    const res = await fetch("/upload-music", {
+      method: "POST",
+      body: form
+    });
+
+    const data = await res.json();
+    if (!data.url) throw new Error();
+
+    musicaUrl = data.url;
+    audio.src = musicaUrl;
+    audio.style.display = "block";
+
+    musicBox.innerText = "🎵 Música adicionada";
+    removeMusic.style.display = "block";
+
+  } catch (err) {
+    alert("Erro ao enviar música");
+    musicBox.innerText = "🎵 Adicionar música";
+    musicBox.style.pointerEvents = "auto";
+    musicaInput.value = "";
   }
 
-  currentObjectURL = URL.createObjectURL(file);
-  audio.src = currentObjectURL;
-  audio.load();
-
-  audio.onloadeddata = () => {
-    hasMusic = true;
-
-    musicBox.innerHTML = "🎵 Música adicionada";
-    musicPlayer.style.display = "flex";
-    cancelMusic.style.display = "none";
-    removeMusic.style.display = "block";
-  };
+  // 🔥 LIBERA CLIQUE APÓS O CICLO COMPLETO
+  setTimeout(() => {
+    isPickingMusic = false;
+    musicBox.style.pointerEvents = "auto";
+  }, 300);
 });
 
 /* =========================
-   RESET TOTAL
+   REMOVER MÚSICA
 ========================= */
-function resetMusic() {
+removeMusic.addEventListener("click", () => {
+  musicaUrl = null;
+
   audio.pause();
   audio.src = "";
-  audio.load();
-
-  if (currentObjectURL) {
-    URL.revokeObjectURL(currentObjectURL);
-    currentObjectURL = null;
-  }
-
-  hasMusic = false;
+  audio.style.display = "none";
 
   musicaInput.value = "";
-
-  musicBox.innerHTML = "🎵 Adicionar música";
-  musicBox.classList.remove("disabled");
-
-  musicPlayer.style.display = "none";
-  cancelMusic.style.display = "none";
   removeMusic.style.display = "none";
-}
 
-cancelMusic.addEventListener("click", resetMusic);
-removeMusic.addEventListener("click", resetMusic);
-
-/* =========================
-   PLAY / PAUSE
-========================= */
-playBtn.addEventListener("click", () => {
-  if (audio.paused) {
-    audio.play();
-    playBtn.innerHTML = "❚❚";
-  } else {
-    audio.pause();
-    playBtn.innerHTML = "▶";
-  }
-});
-
-/* =========================
-   PROGRESSO
-========================= */
-audio.addEventListener("timeupdate", () => {
-  if (!audio.duration) return;
-  progress.style.width =
-    (audio.currentTime / audio.duration) * 100 + "%";
+  musicBox.innerText = "🎵 Adicionar música";
 });
 </script>
 </body>
 </html>
+
 
 
 
