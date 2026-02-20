@@ -25,7 +25,32 @@ document.addEventListener("DOMContentLoaded", () => {
   const musicaInput = document.getElementById("musicaInput");
   const audio       = document.getElementById("audioPlayer");
   const removeMusic = document.getElementById("removeMusic");
+/* =====================
+   DATA
+===================== */
 
+const dateBox = document.getElementById("dateBox");
+
+if (dateBox && dataInput) {
+
+  dateBox.addEventListener("click", () => {
+    if (dataInput.showPicker) {
+      dataInput.showPicker();
+    } else {
+      dataInput.click();
+    }
+  });
+
+  dataInput.addEventListener("change", () => {
+    const data = dataInput.value;
+
+    if (data) {
+      const [ano, mes, dia] = data.split("-");
+      dateBox.innerHTML = `📆 ${dia}/${mes}/${ano}`;
+    }
+  });
+
+}
   /* =====================
      ESTADO
   ===================== */
@@ -432,6 +457,7 @@ dataInput.addEventListener("change", () => {
     dateBox.innerHTML = `📆 ${dia}/${mes}/${ano}`;
   }
 });
+
 
 
 
