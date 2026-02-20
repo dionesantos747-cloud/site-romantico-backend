@@ -149,7 +149,7 @@
 const audio = document.getElementById("audio");
 const playBtn = document.getElementById("playBtn");
 const progress = document.querySelector(".progress");
-const musicaInput = document.getElementById("musicaInput");
+let musicaInput = document.getElementById("musicaInput");
 const musicPlayer = document.getElementById("musicPlayer");
 const musicBox = document.getElementById("musicBox");
 const cancelMusic = document.getElementById("cancelMusic");
@@ -160,7 +160,7 @@ removeMusic.style.display = "none";
 let currentObjectURL = null;
 
 /* =========================
-   ABRIR INPUT AO CLICAR NA CAIXA
+   ABRIR INPUT AO CLICAR
 ========================= */
 
 musicBox.addEventListener("click", () => {
@@ -175,50 +175,25 @@ function handleMusicSelect(e) {
   const file = e.target.files[0];
   if (!file) return;
 
-  musicBox.innerHTML = "⏳ 0% carregando...";
+  musicBox.innerHTML = "⏳ Carregando...";
   cancelMusic.style.display = "block";
 
   currentObjectURL = URL.createObjectURL(file);
   audio.src = currentObjectURL;
 
-  audio.addEventListener("progress", updateProgress);
-
-  audio.addEventListener("canplaythrough", () => {
+  audio.onloadedmetadata = () => {
     musicBox.innerHTML = "🎵 Música adicionada";
     musicPlayer.style.display = "flex";
     cancelMusic.style.display = "none";
     removeMusic.style.display = "block";
-    audio.removeEventListener("progress", updateProgress);
-  }, { once: true });
+  };
 }
 
 musicaInput.addEventListener("change", handleMusicSelect);
 
 /* =========================
-   PROGRESSO REAL
+   RESET COMPLETO
 ========================= */
-
-function updateProgress() {
-  if (audio.buffered.length > 0 && audio.duration > 0) {
-    const percent = Math.min(
-      (audio.buffered.end(0) / audio.duration) * 100,
-      100
-    );
-    musicBox.innerHTML = `⏳ ${Math.floor(percent)}% carregando...`;
-  }
-}
-
-/* =========================
-   CANCELAR
-========================= */
-
-cancelMusic.addEventListener("click", resetMusic);
-
-/* =========================
-   REMOVER
-========================= */
-
-removeMusic.addEventListener("click", resetMusic);
 
 function resetMusic() {
   audio.pause();
@@ -230,15 +205,33 @@ function resetMusic() {
     currentObjectURL = null;
   }
 
-  // RESET REAL DO INPUT (permite escolher o mesmo arquivo novamente)
-  musicaInput.type = "text";
-  musicaInput.type = "file";
+  // REMOVE INPUT ANTIGO
+  musicaInput.remove();
 
+  // CRIA NOVO INPUT LIMPO
+  const newInput = document.createElement("input");
+  newInput.type = "file";
+  newInput.id = "musicaInput";
+  newInput.accept = ".mp3,.mp4,audio/*,video/mp4";
+  newInput.hidden = true;
+
+  document.body.appendChild(newInput);
+
+  // ATUALIZA REFERÊNCIA GLOBAL
+  musicaInput = newInput;
+
+  // REANEXA EVENTO
+  musicaInput.addEventListener("change", handleMusicSelect);
+
+  // RESET VISUAL
   musicBox.innerHTML = "🎵 Adicionar música";
   cancelMusic.style.display = "none";
   musicPlayer.style.display = "none";
   removeMusic.style.display = "none";
 }
+
+cancelMusic.addEventListener("click", resetMusic);
+removeMusic.addEventListener("click", resetMusic);
 
 /* =========================
    PLAY / PAUSE
@@ -255,7 +248,7 @@ playBtn.addEventListener("click", () => {
 });
 
 /* =========================
-   BARRA DE REPRODUÇÃO
+   BARRA DE PROGRESSO
 ========================= */
 
 audio.addEventListener("timeupdate", () => {
@@ -267,6 +260,7 @@ audio.addEventListener("timeupdate", () => {
 </script>
 </body>
 </html>
+
 
 
 
