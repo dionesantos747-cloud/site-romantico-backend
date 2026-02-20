@@ -291,46 +291,55 @@ sliderInterval = setInterval(() => {
 }, 3500);
   }
 
-  /* =====================
-     MÚSICA
-  ===================== */
-  musicBox.onclick = () => musicaInput.click();
+/* =====================
+   MÚSICA (ANTI BUG MOBILE)
+===================== */
 
-  musicaInput.onchange = () => {
-    const file = musicaInput.files[0];
-    if (!file) return;
-    
-musicBox.innerHTML = "⏳ Carregando música...";
-musicBox.style.pointerEvents = "none";
-    
-    const audioTest = document.createElement("audio");
-    audioTest.src = URL.createObjectURL(file);
-    audioTest.oncanplaythrough = () => {
-     if (audioTest.duration > 180) {
-        alert("A música deve ter no máximo 3 minutos.");
-        musicaInput.value = "";
-       musicBox.innerText = "🎶 Música adicionada";
-musicBox.style.pointerEvents = "auto";
-  return;
-      }
-      enviarMusica(file);
-    };
-  };
+let hasMusic = false;
 
-  async function enviarMusica(file) {
-    const form = new FormData();
-    form.append("file", file);
+musicBox.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  if (hasMusic) return;
+  musicaInput.click();
+});
 
-    const res = await fetch("/upload-music", { method: "POST", body: form });
+musicaInput.addEventListener("change", async () => {
+  const file = musicaInput.files[0];
+  if (!file) return;
+
+  musicBox.innerHTML = "⏳ Enviando música...";
+  musicBox.style.pointerEvents = "none";
+
+  const form = new FormData();
+  form.append("file", file);
+
+  try {
+    const res = await fetch("/upload-music", {
+      method: "POST",
+      body: form
+    });
+
     const data = await res.json();
+    if (!data.url) throw new Error();
 
     musicaUrl = data.url;
     audio.src = musicaUrl;
     audio.style.display = "block";
+
+    hasMusic = true;
     removeMusic.style.display = "block";
-    musicBox.innerText = "🎶 Música adicionada";
+    musicBox.innerText = "🎵 Música adicionada";
+
+  } catch {
+    alert("Erro ao enviar música");
+    musicBox.innerText = "🎵 Adicionar música";
+    musicBox.style.pointerEvents = "auto";
   }
+});
+
 removeMusic.onclick = () => {
+  hasMusic = false;
   musicaUrl = null;
 
   audio.pause();
@@ -340,7 +349,7 @@ removeMusic.onclick = () => {
   musicaInput.value = "";
   removeMusic.style.display = "none";
 
-  musicBox.innerText = "🎶 Adicionar música";
+  musicBox.innerText = "🎵 Adicionar música";
   musicBox.style.pointerEvents = "auto";
 };
   /* =====================
@@ -422,6 +431,7 @@ removeMusic.onclick = () => {
 
 });
     
+
 
 
 
