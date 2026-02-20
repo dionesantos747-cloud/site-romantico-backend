@@ -209,7 +209,22 @@ cancelMusic.addEventListener("click", () => {
   cancelMusic.style.display = "none";
   musicPlayer.style.display = "none";
 });
+removeMusic.addEventListener("click", () => {
+  audio.pause();
+  audio.removeAttribute("src");
+  audio.load();
 
+  if (currentObjectURL) {
+    URL.revokeObjectURL(currentObjectURL);
+    currentObjectURL = null;
+  }
+
+  musicaInput.value = "";
+  musicBox.innerHTML = "🎵 Adicionar música";
+  cancelMusic.style.display = "none";
+  musicPlayer.style.display = "none";
+  removeMusic.style.display = "none";
+});
 // Play / Pause
 playBtn.addEventListener("click", () => {
   if (audio.paused) {
@@ -232,6 +247,7 @@ audio.addEventListener("timeupdate", () => {
 
 </body>
 </html>
+
 
 
 
