@@ -295,30 +295,43 @@ position: relative;
 
 }
 
-.preview.azul  { background: radial-gradient(#2f6cff,#050b1a); }
-
-.preview.roxo  { background: radial-gradient(#7a4cff,#12071a); }
-
-.preview.rosa  { background: radial-gradient(#ff5ca8,#1a050f); }
-
-.preview.preto { background: radial-gradient(#444,#000); }
-
-.nome {
-
-font-size: 2.5em;
-
-color: #ffd400;
-
-text-shadow: 0 0 8px #ffd400;
-
-animation: pulse 2.5s infinite alternate;
-
-text-align: center;
-
-margin: 20px 16px 10px;
-
+.preview.azul {
+  background:
+    radial-gradient(circle at 30% 20%, #3aa0ff, #050b1a 70%),
+    radial-gradient(circle at 80% 80%, rgba(0,150,255,.3), transparent 60%);
 }
 
+.preview.roxo {
+  background:
+    radial-gradient(circle at 30% 20%, #9b4dff, #12071a 70%),
+    radial-gradient(circle at 80% 80%, rgba(150,0,255,.3), transparent 60%);
+}
+
+.preview.rosa {
+  background:
+    radial-gradient(circle at 30% 20%, #ff4fd8, #1a050f 70%),
+    radial-gradient(circle at 80% 80%, rgba(255,0,150,.3), transparent 60%);
+}
+
+.preview.preto {
+  background:
+    radial-gradient(circle at 30% 20%, #333, #000 70%),
+    radial-gradient(circle at 80% 80%, rgba(255,255,255,.05), transparent 60%);
+}
+/* ===== NOME PREMIUM ===== */
+
+.nome {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.8em;
+  font-weight: 700;
+  background: linear-gradient(90deg,#ffd700,#ff00cc,#7b2cff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow:
+    0 0 10px rgba(255,0,200,.6),
+    0 0 20px rgba(123,76,255,.6);
+  letter-spacing: 2px;
+}
 @keyframes pulse {
 
 from { transform: scale(1); }
@@ -327,18 +340,17 @@ to   { transform: scale(1.05); }
 
 }
 
+/* ===== MENSAGEM PREMIUM ===== */
+
 .mensagem {
-
-font-size: 1.4em;
-
-line-height: 1.4;
-
-text-align: center;
-
-margin: 0 16px;
-
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35em;
+  line-height: 1.6;
+  color: #ffffff;
+  text-align: center;
+  margin: 10px 22px;
+  text-shadow: 0 0 8px rgba(255,255,255,.2);
 }
-
 .mensagem.limitada {
 
 max-height: 180px;
@@ -452,11 +464,13 @@ text-align: center;
 }
 
 #tempo .titulo {
-
-font-size: 2.2em;
-
-color: #1f0d36;
-
+  font-size: 1.8em;
+  font-weight: 600;
+  background: linear-gradient(90deg,#ffd700,#ff00cc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+  margin-bottom: 15px;
 }
 
 #tempo .contador {
@@ -1143,6 +1157,18 @@ button {
   flex-wrap: wrap;
 }
 
+/* ===== PREVIEW PREMIUM ===== */
+
+.preview {
+  backdrop-filter: blur(6px);
+}
+
+.polaroid {
+  border-radius: 10px;
+  box-shadow:
+    0 15px 35px rgba(0,0,0,.5),
+    0 0 25px rgba(255,0,200,.2);
+}
 
 
 
