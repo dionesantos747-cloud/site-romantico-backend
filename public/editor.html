@@ -149,59 +149,70 @@
 const audio = document.getElementById("audio");
 const playBtn = document.getElementById("playBtn");
 const progress = document.querySelector(".progress");
-const musicaInput = document.getElementById("musicaInput");
+let musicaInput = document.getElementById("musicaInput");
 const musicPlayer = document.getElementById("musicPlayer");
 const musicBox = document.getElementById("musicBox");
 const cancelMusic = document.getElementById("cancelMusic");
 const removeMusic = document.getElementById("removeMusic");
-  removeMusic.style.display = "none";
+
+removeMusic.style.display = "none";
+
 let currentObjectURL = null;
 
-// Selecionar música
-function handleMusicSelect() {
-  const file = this.files[0];
+/* =========================
+   SELECIONAR MÚSICA
+========================= */
+
+function handleMusicSelect(e) {
+  const file = e.target.files[0];
   if (!file) return;
 
-  // resto do código de upload aqui
+  musicBox.innerHTML = "⏳ 0% carregando...";
+  cancelMusic.style.display = "block";
+
+  currentObjectURL = URL.createObjectURL(file);
+  audio.src = currentObjectURL;
+
+  audio.addEventListener("progress", updateProgress);
+
+  audio.addEventListener("canplaythrough", () => {
+    musicBox.innerHTML = "🎵 Música adicionada";
+    musicPlayer.style.display = "flex";
+    cancelMusic.style.display = "none";
+    removeMusic.style.display = "block";
+    audio.removeEventListener("progress", updateProgress);
+  }, { once: true });
 }
 
 musicaInput.addEventListener("change", handleMusicSelect);
-  const file = this.files[0];
 
-  if (file) {
-    musicBox.innerHTML = "⏳ 0% carregando...";
-    cancelMusic.style.display = "block";
-
-    currentObjectURL = URL.createObjectURL(file);
-    audio.src = currentObjectURL;
-
-    // Progresso real
-    audio.addEventListener("progress", updateProgress);
-
-   audio.addEventListener("canplaythrough", () => {
-  musicBox.innerHTML = "🎵 Música adicionada";
-  musicPlayer.style.display = "flex";
-  cancelMusic.style.display = "none";
-  removeMusic.style.display = "block";
-  audio.removeEventListener("progress", updateProgress);
-});
-  }
-});
+/* =========================
+   PROGRESSO REAL
+========================= */
 
 function updateProgress() {
-  if (audio.buffered.length > 0) {
-    const bufferedEnd = audio.buffered.end(0);
-    const duration = audio.duration;
-
-    if (duration > 0) {
-      const percent = Math.min((bufferedEnd / duration) * 100, 100);
-      musicBox.innerHTML = `⏳ ${Math.floor(percent)}% carregando...`;
-    }
+  if (audio.buffered.length > 0 && audio.duration > 0) {
+    const percent = Math.min(
+      (audio.buffered.end(0) / audio.duration) * 100,
+      100
+    );
+    musicBox.innerHTML = `⏳ ${Math.floor(percent)}% carregando...`;
   }
 }
 
-// Cancelar
-cancelMusic.addEventListener("click", () => {
+/* =========================
+   CANCELAR
+========================= */
+
+cancelMusic.addEventListener("click", resetMusic);
+
+/* =========================
+   REMOVER
+========================= */
+
+removeMusic.addEventListener("click", resetMusic);
+
+function resetMusic() {
   audio.pause();
   audio.removeAttribute("src");
   audio.load();
@@ -212,45 +223,17 @@ cancelMusic.addEventListener("click", () => {
   }
 
   musicaInput.value = "";
-  musicBox.innerHTML = "🎵 Adicionar música";
-  cancelMusic.style.display = "none";
-  musicPlayer.style.display = "none";
-});
-removeMusic.addEventListener("click", () => {
-  audio.pause();
-  audio.removeAttribute("src");
-  audio.load();
 
-  if (currentObjectURL) {
-    URL.revokeObjectURL(currentObjectURL);
-    currentObjectURL = null;
-  }
-
-  // Remove input antigo
-  musicaInput.remove();
-
-  // Cria novo input
-  const newInput = document.createElement("input");
-  newInput.type = "file";
-  newInput.id = "musicaInput";
-  newInput.accept = ".mp3,.mp4,audio/*,video/mp4";
-  newInput.hidden = true;
-
-  document.body.appendChild(newInput);
-
-  // Atualiza referência
-  musicaInput = newInput;
-
-  // Reativa listener
-  musicaInput.addEventListener("change", handleMusicSelect);
-
-  // Reset visual
   musicBox.innerHTML = "🎵 Adicionar música";
   cancelMusic.style.display = "none";
   musicPlayer.style.display = "none";
   removeMusic.style.display = "none";
-});
-// Play / Pause
+}
+
+/* =========================
+   PLAY / PAUSE
+========================= */
+
 playBtn.addEventListener("click", () => {
   if (audio.paused) {
     audio.play();
@@ -261,7 +244,10 @@ playBtn.addEventListener("click", () => {
   }
 });
 
-// Barra progresso reprodução
+/* =========================
+   BARRA DE REPRODUÇÃO
+========================= */
+
 audio.addEventListener("timeupdate", () => {
   if (audio.duration) {
     const percent = (audio.currentTime / audio.duration) * 100;
@@ -272,6 +258,7 @@ audio.addEventListener("timeupdate", () => {
 
 </body>
 </html>
+
 
 
 
