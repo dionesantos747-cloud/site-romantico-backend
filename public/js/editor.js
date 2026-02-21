@@ -294,7 +294,6 @@ sliderInterval = setInterval(() => {
 /* =====================
    MÚSICA (FIX DEFINITIVO)
 ===================== */
-let musicaUrl = null;
 let isPickingMusic = false;
 
 // abrir seletor
@@ -446,6 +445,7 @@ removeMusic.addEventListener("click", () => {
 
 });
     
+
 
 
 
