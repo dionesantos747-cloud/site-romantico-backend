@@ -340,8 +340,10 @@ musicaInput.addEventListener("change", async () => {
 
     // 🔥 MOSTRA PLAYER PREMIUM
     musicPlayer.style.display = "flex";
+    audio.style.display = "block"; // 🔥 ESSENCIAL
     removeMusic.style.display = "block";
     musicBox.innerText = "🎵 Música adicionada";
+  
 
   } catch (err) {
     alert("Erro ao enviar música");
@@ -362,6 +364,7 @@ removeMusic.addEventListener("click", () => {
 
   audio.pause();
   audio.src = "";
+  audio.style.display = "none";
 
   musicaInput.value = "";
   removeMusic.style.display = "none";
@@ -469,6 +472,7 @@ audio.addEventListener("timeupdate", () => {
 
 });
     
+
 
 
 
