@@ -25,6 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const musicaInput = document.getElementById("musicaInput");
   const audio       = document.getElementById("audioPlayer");
   const removeMusic = document.getElementById("removeMusic");
+  const musicPlayer = document.getElementById("musicPlayer");
+  const playBtn = document.getElementById("playBtn");
+  const progress = document.querySelector(".progress");
 /* =====================
    DATA
 ===================== */
@@ -334,9 +337,10 @@ musicaInput.addEventListener("change", async () => {
 
     musicaUrl = data.url;
     audio.src = musicaUrl;
-    audio.style.display = "block";
-    removeMusic.style.display = "block";
 
+    // 🔥 MOSTRA PLAYER PREMIUM
+    musicPlayer.style.display = "flex";
+    removeMusic.style.display = "block";
     musicBox.innerText = "🎵 Música adicionada";
 
   } catch (err) {
@@ -346,7 +350,6 @@ musicaInput.addEventListener("change", async () => {
     musicBox.innerText = "🎵 Adicionar música";
   }
 
-  // libera clique novamente
   setTimeout(() => {
     isPickingMusic = false;
     musicBox.style.pointerEvents = "auto";
@@ -359,12 +362,33 @@ removeMusic.addEventListener("click", () => {
 
   audio.pause();
   audio.src = "";
-  audio.style.display = "none";
 
   musicaInput.value = "";
   removeMusic.style.display = "none";
+  musicPlayer.style.display = "none";
+
+  playBtn.innerHTML = "▶";
+  progress.style.width = "0%";
 
   musicBox.innerText = "🎵 Adicionar música";
+});
+
+// play / pause
+playBtn.addEventListener("click", () => {
+  if (audio.paused) {
+    audio.play();
+    playBtn.innerHTML = "❚❚";
+  } else {
+    audio.pause();
+    playBtn.innerHTML = "▶";
+  }
+});
+
+// progresso
+audio.addEventListener("timeupdate", () => {
+  if (!audio.duration) return;
+  const percent = (audio.currentTime / audio.duration) * 100;
+  progress.style.width = percent + "%";
 });
   /* =====================
      CONTADOR
@@ -445,6 +469,7 @@ removeMusic.addEventListener("click", () => {
 
 });
     
+
 
 
 
