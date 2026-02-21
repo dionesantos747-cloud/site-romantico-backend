@@ -291,7 +291,82 @@ sliderInterval = setInterval(() => {
 }, 3500);
   }
 
+/* =====================
+   MÚSICA (FIX DEFINITIVO)
+===================== */
+let musicaUrl = null;
+let isPickingMusic = false;
 
+// abrir seletor
+musicBox.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+
+  if (isPickingMusic || musicaUrl) return;
+
+  isPickingMusic = true;
+  musicaInput.click();
+});
+
+// seleção da música
+musicaInput.addEventListener("change", async () => {
+  const file = musicaInput.files[0];
+
+  // usuário cancelou
+  if (!file) {
+    isPickingMusic = false;
+    return;
+  }
+
+  musicBox.innerText = "⏳ Enviando música...";
+  musicBox.style.pointerEvents = "none";
+
+  const form = new FormData();
+  form.append("file", file);
+
+  try {
+    const res = await fetch("/upload-music", {
+      method: "POST",
+      body: form
+    });
+
+    const data = await res.json();
+    if (!data.url) throw new Error();
+
+    musicaUrl = data.url;
+    audio.src = musicaUrl;
+    audio.style.display = "block";
+    removeMusic.style.display = "block";
+
+    musicBox.innerText = "🎵 Música adicionada";
+
+  } catch (err) {
+    alert("Erro ao enviar música");
+    musicaUrl = null;
+    musicaInput.value = "";
+    musicBox.innerText = "🎵 Adicionar música";
+  }
+
+  // libera clique novamente
+  setTimeout(() => {
+    isPickingMusic = false;
+    musicBox.style.pointerEvents = "auto";
+  }, 300);
+});
+
+// remover música
+removeMusic.addEventListener("click", () => {
+  musicaUrl = null;
+
+  audio.pause();
+  audio.src = "";
+  audio.style.display = "none";
+
+  musicaInput.value = "";
+  removeMusic.style.display = "none";
+
+  musicBox.innerText = "🎵 Adicionar música";
+});
   /* =====================
      CONTADOR
   ===================== */
@@ -371,6 +446,7 @@ sliderInterval = setInterval(() => {
 
 });
     
+
 
 
 
