@@ -502,7 +502,51 @@ audio.addEventListener("timeupdate", () => {
 
     window.location.href = `/aguardando.html?payment_id=${data.payment_id}`;
   };
+/* =========================
+   NOME PULSANTE + CORAÇÕES
+========================= */
 
+const nomeAnimado = document.getElementById("nome");
+
+/* Pulso suave no nome */
+nomeAnimado.style.animation = "nomePulse 3s ease-in-out infinite";
+
+/* Cores dinâmicas conforme fundo */
+function getCoresCoracaoNome() {
+  if (preview.classList.contains("azul")) {
+    return ["rgba(180,220,255,0.5)", "rgba(210,235,255,0.35)"];
+  }
+  if (preview.classList.contains("roxo")) {
+    return ["rgba(210,180,255,0.5)", "rgba(190,160,255,0.35)"];
+  }
+  if (preview.classList.contains("rosa")) {
+    return ["rgba(255,180,210,0.5)", "rgba(255,210,225,0.35)"];
+  }
+  return ["rgba(255,255,255,0.4)", "rgba(220,220,220,0.3)"];
+}
+
+/* Cria coração flutuante */
+function criarCoracaoNome() {
+  if (!nomeAnimado.innerText.trim()) return;
+
+  const heart = document.createElement("span");
+  heart.className = "nome-heart";
+  heart.innerText = "❤️";
+
+  const cores = getCoresCoracaoNome();
+  heart.style.color = cores[Math.floor(Math.random() * cores.length)];
+
+  heart.style.left = "50%";
+  heart.style.fontSize = 14 + Math.random() * 10 + "px";
+  heart.style.transform = `translateX(${Math.random() * 80 - 40}px)`;
+
+  nomeAnimado.appendChild(heart);
+
+  setTimeout(() => heart.remove(), 2200);
+}
+
+/* Ritmo elegante */
+setInterval(criarCoracaoNome, 1100);
   /* =====================
      CORAÇÕES
   ===================== */
@@ -522,6 +566,7 @@ audio.addEventListener("timeupdate", () => {
 
 });
     
+
 
 
 
