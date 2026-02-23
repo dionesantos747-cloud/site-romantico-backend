@@ -523,22 +523,36 @@ audio.addEventListener("ended", () => {
   /* =====================
      CORAÇÕES
   ===================== */
-  function criarCoracoesPreview() {
-    document.querySelectorAll(".heart").forEach(h => h.remove());
-    for (let i = 0; i < 10; i++) {
-      const h = document.createElement("div");
-      h.className = "heart";
-      h.innerText = "❤️";
-      h.style.left = Math.random() * 100 + "%";
-      h.style.animationDuration = 6 + Math.random() * 6 + "s";
-      preview.appendChild(h);
-    }
+ function criarCoracoesPreview() {
+  // remove corações antigos
+  document.querySelectorAll(".heart").forEach(h => h.remove());
+
+  // cria novos corações
+  for (let i = 0; i < 10; i++) {
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.innerText = "❤️";
+    h.style.left = Math.random() * 100 + "%";
+    h.style.animationDuration = 6 + Math.random() * 6 + "s";
+    preview.appendChild(h);
   }
+
+  // 🔥 SINCRONIZA CAPSULAS DO TEMPO COM OS CORAÇÕES
+  if (!window.__tempoPulseInterval) {
+    window.__tempoPulseInterval = setInterval(() => {
+      tempo.classList.add("pulse");
+      setTimeout(() => {
+        tempo.classList.remove("pulse");
+      }, 800);
+    }, 1600);
+  }
+}
 
   criarCoracoesPreview();
 
 });
     
+
 
 
 
