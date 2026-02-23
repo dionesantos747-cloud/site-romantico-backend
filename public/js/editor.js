@@ -523,7 +523,7 @@ audio.addEventListener("ended", () => {
   /* =====================
      CORAÇÕES
   ===================== */
- function criarCoracoesPreview() {
+function criarCoracoesPreview() {
   // remove corações antigos
   document.querySelectorAll(".heart").forEach(h => h.remove());
 
@@ -536,22 +536,12 @@ audio.addEventListener("ended", () => {
     h.style.animationDuration = 6 + Math.random() * 6 + "s";
     preview.appendChild(h);
   }
-
-  // 🔥 SINCRONIZA CAPSULAS DO TEMPO COM OS CORAÇÕES
-  if (!window.__tempoPulseInterval) {
-    window.__tempoPulseInterval = setInterval(() => {
-      tempo.classList.add("pulse");
-      setTimeout(() => {
-        tempo.classList.remove("pulse");
-      }, 800);
-    }, 1600);
-  }
 }
 
-  criarCoracoesPreview();
-
+criarCoracoesPreview();
 });
     
+
 
 
 
