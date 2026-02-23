@@ -297,6 +297,7 @@ sliderInterval = setInterval(() => {
 /* =====================
    MÚSICA (FIX DEFINITIVO)
 ===================== */
+
 let isPickingMusic = false;
 
 // abrir seletor
@@ -307,7 +308,19 @@ musicBox.addEventListener("click", (e) => {
   if (isPickingMusic || musicaUrl) return;
 
   isPickingMusic = true;
+  musicBox.classList.add("disabled");
+
+  // 🔥 abre o seletor
   musicaInput.click();
+
+  // 🔥 FALLBACK MOBILE:
+  // se o usuário cancelar, o change não dispara
+  setTimeout(() => {
+    if (!musicaInput.files || musicaInput.files.length === 0) {
+      isPickingMusic = false;
+      musicBox.classList.remove("disabled");
+    }
+  }, 800);
 });
 
 // seleção da música
@@ -317,6 +330,7 @@ musicaInput.addEventListener("change", async () => {
   // usuário cancelou
   if (!file) {
     isPickingMusic = false;
+    musicBox.classList.remove("disabled");
     return;
   }
 
@@ -338,12 +352,10 @@ musicaInput.addEventListener("change", async () => {
     musicaUrl = data.url;
     audio.src = musicaUrl;
 
-    // 🔥 MOSTRA PLAYER PREMIUM
+    // mostra player
     musicPlayer.style.display = "flex";
-    audio.style.display = "block"; // 🔥 ESSENCIAL
     removeMusic.style.display = "block";
     musicBox.innerText = "🎵 Música adicionada";
-  
 
   } catch (err) {
     alert("Erro ao enviar música");
@@ -352,10 +364,10 @@ musicaInput.addEventListener("change", async () => {
     musicBox.innerText = "🎵 Adicionar música";
   }
 
-  setTimeout(() => {
-    isPickingMusic = false;
-    musicBox.style.pointerEvents = "auto";
-  }, 300);
+  // 🔓 libera novamente
+  isPickingMusic = false;
+  musicBox.classList.remove("disabled");
+  musicBox.style.pointerEvents = "auto";
 });
 
 // remover música
@@ -364,7 +376,6 @@ removeMusic.addEventListener("click", () => {
 
   audio.pause();
   audio.src = "";
-  audio.style.display = "none";
 
   musicaInput.value = "";
   removeMusic.style.display = "none";
@@ -373,25 +384,9 @@ removeMusic.addEventListener("click", () => {
   playBtn.innerHTML = "▶";
   progress.style.width = "0%";
 
+  isPickingMusic = false;
+  musicBox.classList.remove("disabled");
   musicBox.innerText = "🎵 Adicionar música";
-});
-
-// play / pause
-playBtn.addEventListener("click", () => {
-  if (audio.paused) {
-    audio.play();
-    playBtn.innerHTML = "❚❚";
-  } else {
-    audio.pause();
-    playBtn.innerHTML = "▶";
-  }
-});
-
-// progresso
-audio.addEventListener("timeupdate", () => {
-  if (!audio.duration) return;
-  const percent = (audio.currentTime / audio.duration) * 100;
-  progress.style.width = percent + "%";
 });
   /* =====================
      CONTADOR
@@ -472,6 +467,7 @@ audio.addEventListener("timeupdate", () => {
 
 });
     
+
 
 
 
