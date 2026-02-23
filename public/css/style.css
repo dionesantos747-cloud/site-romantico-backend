@@ -466,13 +466,12 @@ border-radius: 4px;
 }
 
 /* =========================
-   TEMPO – PREMIUM BRANCO
+   TEMPO – PREMIUM ESTÁTICO
 ========================= */
 
 #tempo {
   margin: 50px 0 30px;
   text-align: center;
-  animation: tempoPulse 4s ease-in-out infinite;
 }
 
 /* Título */
@@ -486,8 +485,7 @@ border-radius: 4px;
 
   margin-bottom: 22px;
 
-  text-shadow:
-    0 1px 4px rgba(0,0,0,0.8);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.75);
 }
 
 /* Container */
@@ -498,7 +496,7 @@ border-radius: 4px;
   flex-wrap: wrap;
 }
 
-/* CÁPSULAS */
+/* Cápsulas */
 #tempo .item {
   padding: 14px 22px;
   border-radius: 999px;
@@ -509,28 +507,14 @@ border-radius: 4px;
 
   color: rgba(255,255,255,0.9);
 
-  background: rgba(255,255,255,0.12);
-  backdrop-filter: blur(10px);
+  background: rgba(255,255,255,0.10);
+  backdrop-filter: blur(8px);
 
-  border: 1px solid rgba(255,255,255,0.25);
+  border: 1px solid rgba(255,255,255,0.22);
 
   box-shadow:
-    0 8px 25px rgba(0,0,0,0.45),
-    inset 0 0 0 1px rgba(255,255,255,0.08);
-
-  transition: transform .3s ease;
-}
-/* Pulso branco suave */
-@keyframes tempoPulse {
-  0% {
-    filter: brightness(1);
-  }
-  50% {
-    filter: brightness(1.08);
-  }
-  100% {
-    filter: brightness(1);
-  }
+    0 6px 18px rgba(0,0,0,0.45),
+    inset 0 0 0 1px rgba(255,255,255,0.06);
 }
 /* ===== Música ===== */
 
@@ -1417,5 +1401,6 @@ textarea:-webkit-autofill {
 #tempo.pulse .item {
   animation: pulseCapsule 1.6s ease-in-out;
 }
+
 
 
