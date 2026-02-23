@@ -319,7 +319,7 @@ sliderInterval = setInterval(() => {
   }
 
 /* =====================
-   MÚSICA (FIX DEFINITIVO)
+   MÚSICA (FIX FINAL ESTÁVEL)
 ===================== */
 
 let isPickingMusic = false;
@@ -333,28 +333,28 @@ musicBox.addEventListener("click", (e) => {
 
   isPickingMusic = true;
   musicBox.classList.add("disabled");
+  musicBox.style.pointerEvents = "none";
 
-  // 🔥 abre o seletor
   musicaInput.click();
 
-  // 🔥 FALLBACK MOBILE:
-  // se o usuário cancelar, o change não dispara
+  // fallback mobile (cancelar seleção)
   setTimeout(() => {
     if (!musicaInput.files || musicaInput.files.length === 0) {
       isPickingMusic = false;
       musicBox.classList.remove("disabled");
+      musicBox.style.pointerEvents = "auto";
     }
-  }, 800);
+  }, 900);
 });
 
 // seleção da música
 musicaInput.addEventListener("change", async () => {
   const file = musicaInput.files[0];
 
-  // usuário cancelou
   if (!file) {
     isPickingMusic = false;
     musicBox.classList.remove("disabled");
+    musicBox.style.pointerEvents = "auto";
     return;
   }
 
@@ -374,21 +374,29 @@ musicaInput.addEventListener("change", async () => {
     if (!data.url) throw new Error();
 
     musicaUrl = data.url;
+
+    // prepara áudio corretamente
+    audio.pause();
     audio.src = musicaUrl;
+    audio.load();
 
     // mostra player
     musicPlayer.style.display = "flex";
     removeMusic.style.display = "block";
+
+    playBtn.innerHTML = "▶";
+    progress.style.width = "0%";
+
     musicBox.innerText = "🎵 Música adicionada";
 
   } catch (err) {
     alert("Erro ao enviar música");
+
     musicaUrl = null;
     musicaInput.value = "";
     musicBox.innerText = "🎵 Adicionar música";
   }
 
-  // 🔓 libera novamente
   isPickingMusic = false;
   musicBox.classList.remove("disabled");
   musicBox.style.pointerEvents = "auto";
@@ -400,17 +408,40 @@ removeMusic.addEventListener("click", () => {
 
   audio.pause();
   audio.src = "";
+  audio.load();
 
   musicaInput.value = "";
-  removeMusic.style.display = "none";
+
   musicPlayer.style.display = "none";
+  removeMusic.style.display = "none";
 
   playBtn.innerHTML = "▶";
   progress.style.width = "0%";
 
   isPickingMusic = false;
   musicBox.classList.remove("disabled");
+  musicBox.style.pointerEvents = "auto";
   musicBox.innerText = "🎵 Adicionar música";
+});
+
+// play / pause
+playBtn.addEventListener("click", () => {
+  if (!audio.src) return;
+
+  if (audio.paused) {
+    audio.play().catch(() => {});
+    playBtn.innerHTML = "❚❚";
+  } else {
+    audio.pause();
+    playBtn.innerHTML = "▶";
+  }
+});
+
+// progresso
+audio.addEventListener("timeupdate", () => {
+  if (!audio.duration) return;
+  const percent = (audio.currentTime / audio.duration) * 100;
+  progress.style.width = percent + "%";
 });
   /* =====================
      CONTADOR
@@ -491,6 +522,7 @@ removeMusic.addEventListener("click", () => {
 
 });
     
+
 
 
 
