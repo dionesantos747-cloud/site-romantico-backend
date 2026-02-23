@@ -101,7 +101,7 @@ if (dateBox && dataInput) {
     mensagem.innerText = msgInput.value;
     limparErro(msgInput);
 
-    if (mensagem.innerText.length > 500) {
+   if (mensagem.innerText.length > 900) {
       mensagem.classList.add("limitada");
       lerBtn.style.display = "block";
       lerBtn.innerText = textoExpandido ? "Ler menos ⬆️" : "Continuar lendo ⬇️";
@@ -472,6 +472,7 @@ audio.addEventListener("timeupdate", () => {
 
 });
     
+
 
 
 
