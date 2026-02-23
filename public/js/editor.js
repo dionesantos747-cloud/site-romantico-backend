@@ -104,7 +104,19 @@ if (dateBox && dataInput) {
    if (mensagem.innerText.length > 300) {
       mensagem.classList.add("limitada");
       lerBtn.style.display = "block";
-      lerBtn.innerText = textoExpandido ? "Ler menos ⬆️" : "Continuar lendo ⬇️";
+     if (textoExpandido) {
+  lerBtn.innerHTML = `
+    <span class="ler-text">Ler menos</span>
+    <span class="ler-icon up">⌃</span>
+    <span class="ler-icon up">⌃</span>
+  `;
+} else {
+  lerBtn.innerHTML = `
+    <span class="ler-text">Continuar lendo</span>
+    <span class="ler-icon down">⌄</span>
+    <span class="ler-icon down">⌄</span>
+  `;
+}
     } else {
       mensagem.classList.remove("limitada");
       lerBtn.style.display = "none";
@@ -114,7 +126,19 @@ if (dateBox && dataInput) {
   lerBtn.onclick = () => {
     textoExpandido = !textoExpandido;
     mensagem.classList.toggle("limitada", !textoExpandido);
-    lerBtn.innerText = textoExpandido ? "Ler menos ⬆️" : "Continuar lendo ⬇️";
+   if (textoExpandido) {
+  lerBtn.innerHTML = `
+    <span class="ler-text">Ler menos</span>
+    <span class="ler-icon up">⌃</span>
+    <span class="ler-icon up">⌃</span>
+  `;
+} else {
+  lerBtn.innerHTML = `
+    <span class="ler-text">Continuar lendo</span>
+    <span class="ler-icon down">⌄</span>
+    <span class="ler-icon down">⌄</span>
+  `;
+}
   };
 
 
@@ -467,6 +491,7 @@ removeMusic.addEventListener("click", () => {
 
 });
     
+
 
 
 
