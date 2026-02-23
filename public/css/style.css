@@ -497,22 +497,25 @@ border-radius: 4px;
 
 /* Cápsulas */
 #tempo .item {
-  background: rgba(255,255,255,0.12); /* cápsula translúcida */
-  color: #ffffff;
+  font-family: 'Manufacturing Consent', sans-serif;
 
-  padding: 16px 22px;
-  border-radius: 999px; /* cápsula perfeita */
+  font-size: 2.2em;          /* 🔥 números grandes */
+  font-weight: 400;
+  letter-spacing: 2px;
 
-  font-family: 'Playfair Display', serif;
-  font-size: 1.55em;          /* 🔥 LETRA GRANDE */
-  font-weight: 700;           /* 🔥 GROSSA */
-  letter-spacing: 0.5px;
+  color: #fff;
 
+  padding: 18px 28px;
   min-width: 120px;
-  text-align: center;
 
-  box-shadow: none;           /* ❌ sem efeito */
-  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 999px;      /* cápsula */
+
+  background: rgba(255,255,255,0.14); /* transparente */
+  backdrop-filter: blur(6px);
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.25),
+    0 8px 20px rgba(0,0,0,0.35);
 }
 /* ===== Música ===== */
 
@@ -1399,6 +1402,7 @@ textarea:-webkit-autofill {
 #tempo.pulse .item {
   animation: pulseCapsule 1.6s ease-in-out;
 }
+
 
 
 
