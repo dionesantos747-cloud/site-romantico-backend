@@ -520,6 +520,18 @@ border-radius: 4px;
 
   transition: transform .3s ease;
 }
+/* Pulso branco suave */
+@keyframes tempoPulse {
+  0% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.08);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
 /* ===== Música ===== */
 
 .music-box {
@@ -1405,4 +1417,5 @@ textarea:-webkit-autofill {
 #tempo.pulse .item {
   animation: pulseCapsule 1.6s ease-in-out;
 }
+
 
