@@ -1306,53 +1306,6 @@ textarea:-webkit-autofill {
 }
 
 /* =========================
-   ANIMAÇÃO PREMIUM DO NOME
-========================= */
-
-.nome {
-  opacity: 0;
-  transform: translateY(14px) scale(0.98);
-  animation: nomeEntrada 1.2s cubic-bezier(.22,1,.36,1) forwards;
-  animation-delay: 0.2s;
-}
-
-@keyframes nomeEntrada {
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* brilho sutil contínuo (bem leve) */
-.nome {
-  animation:
-    nomeEntrada 1.2s cubic-bezier(.22,1,.36,1) forwards,
-    nomeGlow 4.5s ease-in-out infinite alternate;
-}
-
-@keyframes nomeGlow {
-  from {
-    text-shadow:
-      0 1px 3px rgba(0,0,0,0.9),
-      0 0 12px rgba(255,215,200,0.12);
-  }
-  to {
-    text-shadow:
-      0 1px 4px rgba(0,0,0,0.95),
-      0 0 22px rgba(255,215,200,0.22);
-  }
-}
-
-/* acessibilidade: respeita usuários que não gostam de animação */
-@media (prefers-reduced-motion: reduce) {
-  .nome {
-    animation: none;
-    opacity: 1;
-    transform: none;
-  }
-}
-
-/* =========================
    LER MAIS / MENOS PREMIUM
 ========================= */
 
@@ -1459,6 +1412,7 @@ textarea:-webkit-autofill {
     opacity: 0;
   }
 }
+
 
 
 
