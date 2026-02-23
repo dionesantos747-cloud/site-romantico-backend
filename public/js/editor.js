@@ -428,6 +428,14 @@ removeMusic.addEventListener("click", () => {
 playBtn.addEventListener("click", () => {
   if (!audio.src) return;
 
+  // se terminou, reinicia
+  if (audio.ended) {
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+    playBtn.innerHTML = "❚❚";
+    return;
+  }
+
   if (audio.paused) {
     audio.play().catch(() => {});
     playBtn.innerHTML = "❚❚";
@@ -442,6 +450,15 @@ audio.addEventListener("timeupdate", () => {
   if (!audio.duration) return;
   const percent = (audio.currentTime / audio.duration) * 100;
   progress.style.width = percent + "%";
+});
+  /* =====================
+   FIM DA MÚSICA → RESET
+===================== */
+
+audio.addEventListener("ended", () => {
+  audio.currentTime = 0;
+  playBtn.innerHTML = "▶";
+  progress.style.width = "0%";
 });
   /* =====================
      CONTADOR
@@ -566,6 +583,7 @@ setInterval(criarCoracaoNome, 1100);
 
 });
     
+
 
 
 
