@@ -1423,6 +1423,42 @@ textarea:-webkit-autofill {
   100% { transform: translateY(0); opacity: 0.5; }
 }
 
+/* =========================
+   CORAÇÕES DO NOME (PULSO)
+========================= */
+
+.nome {
+  position: relative;
+  overflow: visible;
+}
+
+/* coração individual */
+.nome-heart {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  animation: heartFloat 2.2s ease-out forwards;
+  filter: blur(0.2px);
+}
+
+/* animação: sobe como balão e some */
+@keyframes heartFloat {
+  0% {
+    transform: translateX(-50%) translateY(0) scale(0.6);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateX(-50%) translateY(-60px) scale(1.1);
+    opacity: 0;
+  }
+}
 
 
 
