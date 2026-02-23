@@ -480,7 +480,7 @@ audio.addEventListener("ended", () => {
       const a = Math.floor(diff / 31536000000);
 
       tempo.innerHTML = `
-        <span class="titulo">compartilhamos a vida há:</span>
+        <span class="titulo">compartilhamos a vida ja faz:</span>
         <div class="contador">
           <div class="item">${a} ${plural(a,"ano","anos")}</div>
           <div class="item">${mo} ${plural(mo,"mês","meses")}</div>
@@ -552,6 +552,7 @@ audio.addEventListener("ended", () => {
 
 });
     
+
 
 
 
