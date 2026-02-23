@@ -477,15 +477,14 @@ border-radius: 4px;
 /* Título */
 #tempo .titulo {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1.45em;
-  letter-spacing: 2px;
+  font-size: 1.6em;       /* maior */
   font-weight: 600;
+  letter-spacing: 2px;
 
-  color: rgba(245,245,245,0.85);
+  color: rgba(255,255,255,0.75); /* branco suave */
+  text-transform: lowercase;
 
   margin-bottom: 22px;
-
-  text-shadow: 0 1px 4px rgba(0,0,0,0.75);
 }
 
 /* Container */
@@ -498,23 +497,22 @@ border-radius: 4px;
 
 /* Cápsulas */
 #tempo .item {
-  padding: 14px 22px;
-  border-radius: 999px;
+  background: rgba(255,255,255,0.12); /* cápsula translúcida */
+  color: #ffffff;
 
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.25em;
-  font-weight: 600;
+  padding: 16px 22px;
+  border-radius: 999px; /* cápsula perfeita */
 
-  color: rgba(255,255,255,0.9);
+  font-family: 'Playfair Display', serif;
+  font-size: 1.55em;          /* 🔥 LETRA GRANDE */
+  font-weight: 700;           /* 🔥 GROSSA */
+  letter-spacing: 0.5px;
 
-  background: rgba(255,255,255,0.10);
-  backdrop-filter: blur(8px);
+  min-width: 120px;
+  text-align: center;
 
-  border: 1px solid rgba(255,255,255,0.22);
-
-  box-shadow:
-    0 6px 18px rgba(0,0,0,0.45),
-    inset 0 0 0 1px rgba(255,255,255,0.06);
+  box-shadow: none;           /* ❌ sem efeito */
+  border: 1px solid rgba(255,255,255,0.25);
 }
 /* ===== Música ===== */
 
@@ -1401,6 +1399,7 @@ textarea:-webkit-autofill {
 #tempo.pulse .item {
   animation: pulseCapsule 1.6s ease-in-out;
 }
+
 
 
 
