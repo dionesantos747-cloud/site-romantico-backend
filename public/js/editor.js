@@ -463,35 +463,36 @@ audio.addEventListener("ended", () => {
   /* =====================
      CONTADOR
   ===================== */
-  dataInput.onchange = () => {
-    limparErro(dataInput);
-    if (contadorInterval) clearInterval(contadorInterval);
+ dataInput.onchange = () => {
+  limparErro(dataInput);
 
-    contadorInterval = setInterval(() => {
-      const inicio = new Date(dataInput.value);
-      const diff = Date.now() - inicio.getTime();
-      if (diff < 0) return;
+  if (!dataInput.value) return;
 
-      const s = Math.floor(diff / 1000) % 60;
-      const m = Math.floor(diff / 60000) % 60;
-      const h = Math.floor(diff / 3600000) % 24;
-      const d = Math.floor(diff / 86400000) % 30;
-      const mo = Math.floor(diff / 2592000000) % 12;
-      const a = Math.floor(diff / 31536000000);
+  if (contadorInterval) clearInterval(contadorInterval);
 
-      tempo.innerHTML = `
-        <span class="titulo">compartilhamos a vida ja faz:</span>
-        <div class="contador">
-          <div class="item">${a} ${plural(a,"ano","anos")}</div>
-          <div class="item">${mo} ${plural(mo,"mês","meses")}</div>
-          <div class="item">${d} ${plural(d,"dia","dias")}</div>
-          <div class="item tempo-hms">
-    ${h}h ${m}m ${s}s
-  </div>
-</div>
-      `;
-    }, 1000);
-  };
+  contadorInterval = setInterval(() => {
+    const inicio = new Date(dataInput.value);
+    const diff = Date.now() - inicio.getTime();
+    if (diff < 0) return;
+
+    const s = Math.floor(diff / 1000) % 60;
+    const m = Math.floor(diff / 60000) % 60;
+    const h = Math.floor(diff / 3600000) % 24;
+    const d = Math.floor(diff / 86400000) % 30;
+    const mo = Math.floor(diff / 2592000000) % 12;
+    const a = Math.floor(diff / 31536000000);
+
+    tempo.innerHTML = `
+      <span class="titulo">compartilhamos a vida já faz:</span>
+      <div class="contador">
+        <div class="item">${a} ${plural(a,"ano","anos")}</div>
+        <div class="item">${mo} ${plural(mo,"mês","meses")}</div>
+        <div class="item">${d} ${plural(d,"dia","dias")}</div>
+        <div class="item tempo-hms">${h}h ${m}m ${s}s</div>
+      </div>
+    `;
+  }, 1000);
+};
 
   /* =====================
      COMPRA
@@ -543,6 +544,7 @@ function criarCoracoesPreview() {
 criarCoracoesPreview();
 });
     
+
 
 
 
