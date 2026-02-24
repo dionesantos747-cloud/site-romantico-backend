@@ -1372,38 +1372,25 @@ textarea:-webkit-autofill {
   100% { transform: translateY(0); opacity: 0.5; }
 }
 
-/* =========================
-   SINCRONIA TEMPO + CORAÇÕES
-========================= */
-
-@keyframes pulseCapsule {
-  0% {
-    transform: scale(1);
-    box-shadow:
-      0 8px 25px rgba(0,0,0,0.35),
-      inset 0 0 0 1px rgba(255,255,255,0.08);
-  }
-  50% {
-    transform: scale(1.06);
-    box-shadow:
-      0 12px 38px rgba(0,0,0,0.45),
-      0 0 22px rgba(255,120,180,0.35),
-      inset 0 0 0 1px rgba(255,255,255,0.18);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow:
-      0 8px 25px rgba(0,0,0,0.35),
-      inset 0 0 0 1px rgba(255,255,255,0.08);
-  }
+.final-illustration {
+  margin: 40px auto 10px;
+  display: flex;
+  justify-content: center;
+  opacity: 0.85;
 }
 
-/* classe aplicada via JS */
-#tempo.pulse .item {
-  animation: pulseCapsule 1.6s ease-in-out;
+.final-illustration img {
+  width: 160px;
+  max-width: 60%;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.35));
+}
+.preview.preto .final-illustration img {
+  opacity: 0.9;
 }
 
-
-
-
+.preview.azul .final-illustration img,
+.preview.roxo .final-illustration img,
+.preview.rosa .final-illustration img {
+  opacity: 0.8;
+}
 
