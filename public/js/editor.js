@@ -485,8 +485,10 @@ audio.addEventListener("ended", () => {
           <div class="item">${a} ${plural(a,"ano","anos")}</div>
           <div class="item">${mo} ${plural(mo,"mês","meses")}</div>
           <div class="item">${d} ${plural(d,"dia","dias")}</div>
-          <div class="item">${h}h ${m}m ${s}s</div>
-        </div>
+          <div class="item tempo-hms">
+    ${h}h ${m}m ${s}s
+  </div>
+</div>
       `;
     }, 1000);
   };
@@ -541,6 +543,7 @@ function criarCoracoesPreview() {
 criarCoracoesPreview();
 });
     
+
 
 
 
