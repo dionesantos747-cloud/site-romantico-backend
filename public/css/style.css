@@ -489,10 +489,11 @@ border-radius: 4px;
 
 /* Container */
 #tempo .contador {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 14px;
-  justify-content: center;
-  flex-wrap: wrap;
+  justify-items: center;
+  margin-top: 20px;
 }
 
 /* Cápsulas */
@@ -512,10 +513,18 @@ border-radius: 4px;
 
   background: rgba(255,255,255,0.14); /* transparente */
   backdrop-filter: blur(6px);
-
+  text-align: center;
   box-shadow:
     inset 0 0 0 1px rgba(255,255,255,0.25),
     0 8px 20px rgba(0,0,0,0.35);
+}
+#tempo .tempo-hms {
+  grid-column: 1 / -1;   /* ocupa toda a linha */
+  justify-self: center;
+
+  font-size: 2em;
+  letter-spacing: 3px;
+  margin-top: 10px;
 }
 /* ===== Música ===== */
 
@@ -1371,6 +1380,7 @@ textarea:-webkit-autofill {
   50%  { transform: translateY(-4px); opacity: 1; }
   100% { transform: translateY(0); opacity: 0.5; }
 }
+
 
 
 
