@@ -1372,25 +1372,5 @@ textarea:-webkit-autofill {
   100% { transform: translateY(0); opacity: 0.5; }
 }
 
-.final-illustration {
-  margin: 40px auto 10px;
-  display: flex;
-  justify-content: center;
-  opacity: 0.85;
-}
 
-.final-illustration img {
-  width: 160px;
-  max-width: 60%;
-  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.35));
-}
-.preview.preto .final-illustration img {
-  opacity: 0.9;
-}
-
-.preview.azul .final-illustration img,
-.preview.roxo .final-illustration img,
-.preview.rosa .final-illustration img {
-  opacity: 0.8;
-}
 
