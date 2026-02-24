@@ -500,31 +500,32 @@ border-radius: 4px;
 #tempo .item {
   font-family: 'Manufacturing Consent', sans-serif;
 
-  font-size: 2.2em;          /* 🔥 números grandes */
+  font-size: 1.9em;          /* ⬇️ menor */
   font-weight: 400;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
 
   color: #fff;
 
-  padding: 18px 28px;
-  min-width: 120px;
+  padding: 14px 22px;        /* ⬇️ menos altura */
+  min-width: 100px;          /* ⬇️ não estoura */
 
-  border-radius: 999px;      /* cápsula */
+  border-radius: 999px;
 
-  background: rgba(255,255,255,0.14); /* transparente */
+  background: rgba(255,255,255,0.14);
   backdrop-filter: blur(6px);
   text-align: center;
+
   box-shadow:
     inset 0 0 0 1px rgba(255,255,255,0.25),
-    0 8px 20px rgba(0,0,0,0.35);
+    0 6px 16px rgba(0,0,0,0.35);
 }
 #tempo .tempo-hms {
-  grid-column: 1 / -1;   /* ocupa toda a linha */
+  grid-column: 1 / -1;
   justify-self: center;
 
-  font-size: 2em;
-  letter-spacing: 3px;
-  margin-top: 10px;
+  font-size: 1.7em;      /* ⬇️ menor que os de cima */
+  letter-spacing: 2px;
+  margin-top: 8px;
 }
 /* ===== Música ===== */
 
@@ -1379,6 +1380,28 @@ textarea:-webkit-autofill {
   0%   { transform: translateY(0); opacity: 0.5; }
   50%  { transform: translateY(-4px); opacity: 1; }
   100% { transform: translateY(0); opacity: 0.5; }
+}
+@media (max-width: 420px) {
+
+  #tempo {
+    margin: 35px 0 25px;
+  }
+
+  #tempo .contador {
+    gap: 10px;
+  }
+
+  #tempo .item {
+    font-size: 1.6em;
+    min-width: 88px;
+    padding: 12px 18px;
+  }
+
+  #tempo .tempo-hms {
+    font-size: 1.5em;
+    min-width: 140px;
+  }
+
 }
 
 
