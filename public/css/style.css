@@ -476,15 +476,17 @@ border-radius: 4px;
 
 /* Título */
 #tempo .titulo {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.6em;       /* maior */
-  font-weight: 600;
+  font-family: 'Ewert', cursive;
+
+  font-size: 1.9em;
   letter-spacing: 2px;
 
-  color: rgba(255,255,255,0.75); /* branco suave */
-  text-transform: lowercase;
+  color: #ffffff;
 
-  margin-bottom: 22px;
+  text-align: center;
+  margin-bottom: 24px;
+text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+  text-transform: lowercase;
 }
 
 /* Container */
@@ -1404,6 +1406,12 @@ textarea:-webkit-autofill {
 
 }
 
+@media (max-width: 420px) {
+  #tempo .titulo {
+    font-size: 1.5em;
+    letter-spacing: 1px;
+  }
+}
 
 
 
