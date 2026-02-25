@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>MemoryIt — Um site para eternizar o amor</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,129 +13,138 @@
 
 body {
   margin: 0;
-  background: #000;
-  color: #f5f5f5;
+  background: radial-gradient(circle at 30% 20%, #111, #000 70%);
+  color: #fff;
   font-family: 'Inter', sans-serif;
-  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
+/* ===== WRAPPER ===== */
 .wrapper {
   max-width: 480px;
   margin: auto;
-  padding: 48px 22px 60px;
+  padding: 50px 22px 80px;
   text-align: center;
 }
 
 /* ===== HERO ===== */
 h1 {
   font-family: 'Playfair Display', serif;
-  font-size: 2.2rem;
+  font-size: 2.3rem;
   font-weight: 600;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 .subtitle {
-  font-size: 1rem;
+  opacity: .75;
   line-height: 1.6;
-  opacity: 0.8;
-  margin-bottom: 36px;
+  margin-bottom: 40px;
 }
 
 /* ===== MOCKUP ===== */
-.mockup {
-  margin: 40px 0;
-  padding: 18px;
-  border-radius: 30px;
-  background: linear-gradient(180deg, #111, #000);
+.phone {
+  width: 220px;
+  height: 440px;
+  margin: 30px auto;
+  border-radius: 40px;
+  background: linear-gradient(180deg,#1a1a1a,#000);
   box-shadow:
-    0 30px 80px rgba(0,0,0,.9),
+    0 40px 90px rgba(0,0,0,.9),
     inset 0 0 0 1px rgba(255,255,255,.06);
+  position: relative;
+  animation: float 4s ease-in-out infinite;
 }
 
-.mockup span {
-  display: block;
-  font-family: 'Playfair Display', serif;
-  letter-spacing: 2px;
-  opacity: .6;
+.phone::before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  height: 18px;
+  background: #000;
+  border-radius: 20px;
 }
 
-/* ===== PROMO ===== */
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+/* ===== PROMO CARD ===== */
 .promo {
-  margin: 40px 0;
-  padding: 26px;
-  border-radius: 22px;
-  background: #0b0b0b;
+  margin-top: 50px;
+  padding: 28px;
+  border-radius: 24px;
+  background: rgba(20,20,20,.6);
+  backdrop-filter: blur(18px);
   box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.08),
-    0 20px 50px rgba(0,0,0,.8);
+    0 30px 80px rgba(0,0,0,.8),
+    inset 0 0 0 1px rgba(255,255,255,.08);
 }
 
 .old {
   text-decoration: line-through;
-  opacity: .5;
+  opacity: .4;
 }
 
 .price {
   font-family: 'Playfair Display', serif;
-  font-size: 2.6rem;
+  font-size: 2.8rem;
   color: #ffd400;
-  margin: 6px 0;
+  margin: 6px 0 10px;
 }
 
-/* ===== TIMER ===== */
-.timer {
-  margin-top: 16px;
-  font-size: .95rem;
-  opacity: .85;
+.timer-label {
+  font-size: .9rem;
+  opacity: .7;
 }
 
 .countdown {
-  margin-top: 6px;
+  margin-top: 8px;
   font-family: monospace;
-  font-size: 1.4rem;
-  letter-spacing: 2px;
-  color: #ff7aa2;
+  font-size: 1.5rem;
+  letter-spacing: 3px;
+  color: #ff4d88;
 }
 
-/* ===== FEATURES ===== */
-.features {
+/* ===== STEPS ===== */
+.steps {
+  margin: 60px 0 30px;
   text-align: left;
-  margin: 42px 0;
-  padding-left: 0;
-  list-style: none;
   font-size: .95rem;
 }
 
-.features li {
-  margin-bottom: 14px;
-  opacity: .85;
+.steps div {
+  margin-bottom: 16px;
+  opacity: .8;
 }
 
 /* ===== CTA ===== */
 .cta {
   display: block;
   width: 100%;
+  padding: 20px;
   margin-top: 40px;
-  padding: 18px;
   border-radius: 999px;
-  background: #ffd400;
+  background: linear-gradient(90deg,#ffd400,#ffae00);
   color: #000;
   font-weight: 600;
   text-decoration: none;
   font-size: 1.05rem;
-  box-shadow: 0 20px 40px rgba(255,212,0,.45);
+  box-shadow: 0 25px 50px rgba(255,212,0,.5);
   transition: .3s;
 }
 
 .cta:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
 
-/* ===== FOOTER ===== */
 .footer {
-  margin-top: 60px;
+  margin-top: 70px;
   font-size: .75rem;
-  opacity: .4;
+  opacity: .35;
 }
 </style>
 </head>
@@ -146,33 +154,25 @@ h1 {
 <div class="wrapper">
 
   <h1>Eternize sua história</h1>
-
   <p class="subtitle">
-    Crie um site romântico exclusivo com fotos, música, contador de tempo
-    e um link que dura para sempre.
+    Crie um site romântico exclusivo com fotos, música e contador de tempo.
   </p>
 
-  <div class="mockup">
-    <span>preview do seu site</span>
-  </div>
+  <div class="phone"></div>
 
   <div class="promo">
-    <div class="old">de R$ 25,00</div>
+    <div class="old">de R$ 30,00</div>
     <div class="price">R$ 9,99</div>
 
-    <div class="timer">
-      oferta por tempo limitado
-      <div id="timer" class="countdown">10:00</div>
-    </div>
+    <div class="timer-label">oferta termina em</div>
+    <div id="timer" class="countdown">10:00</div>
   </div>
 
-  <ul class="features">
-    <li>• Contador automático do tempo juntos</li>
-    <li>• Fotos estilo polaroid</li>
-    <li>• Música personalizada</li>
-    <li>• QR Code + link exclusivo</li>
-    <li>• Visual premium, sem anúncios</li>
-  </ul>
+  <div class="steps">
+    <div>1. Personalize nome, fotos e música</div>
+    <div>2. Gere seu link exclusivo</div>
+    <div>3. Receba QR Code e compartilhe</div>
+  </div>
 
   <a href="editor.html" class="cta">Começar a editar</a>
 
