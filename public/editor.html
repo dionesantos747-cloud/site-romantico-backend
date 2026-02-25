@@ -58,8 +58,13 @@
     <div class="photo-slot" data-slot="2">+</div>
   </div>
   <div id="thumbs" class="photo-grid"></div>
-  <input type="file" id="fotoInput" accept="image/*" hidden>
-
+ <input
+  type="file"
+  id="fotoInput"
+  accept="image/*"
+  capture="environment"
+  hidden
+>
   <label>Música</label>
  <div class="music-box" id="musicBox">
   🎵 Adicionar música
@@ -73,7 +78,7 @@
   <input
   type="file"
   id="musicaInput"
-  accept=".mp3,.mp4,audio/*,video/mp4"
+  accept="audio/*"
   hidden
 >
   <label>Fundo</label>
@@ -158,6 +163,7 @@
 
 </body>
 </html>
+
 
 
 
