@@ -1,169 +1,201 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MemoryIt | Surpreenda Quem Você Ama</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Orbitron:wght@600&display=swap" rel="stylesheet">
+<title>MemoryIt — Um site para eternizar o amor</title>
 
-  <link rel="stylesheet" href="css/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Cormorant Garamond', serif;
-      background: radial-gradient(circle at 30% 20%, #2b0a3d, #0b0015 60%);
-      color: #fff;
-      text-align: center;
-      padding: 40px 20px;
-      overflow-x: hidden;
-    }
+<style>
+* { box-sizing: border-box; }
 
-    .container {
-      max-width: 480px;
-      margin: auto;
-    }
+body {
+  margin: 0;
+  background: #000;
+  color: #f5f5f5;
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
 
-    h1 {
-      font-size: 2.2rem;
-      margin-bottom: 10px;
-      animation: fadeUp 1s ease forwards;
-    }
+.wrapper {
+  max-width: 480px;
+  margin: auto;
+  padding: 48px 22px 60px;
+  text-align: center;
+}
 
-    .highlight {
-      color: #ffd400;
-    }
+/* ===== HERO ===== */
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
 
-    .subtitle {
-      opacity: 0.85;
-      margin-bottom: 30px;
-      animation: fadeUp 1.3s ease forwards;
-    }
+.subtitle {
+  font-size: 1rem;
+  line-height: 1.6;
+  opacity: 0.8;
+  margin-bottom: 36px;
+}
 
-    .promo-box {
-      margin: 25px 0;
-      padding: 20px;
-      border-radius: 20px;
-      background: linear-gradient(135deg,#1a0033,#330033);
-      box-shadow: 0 0 25px rgba(255,0,200,.4);
-      animation: pulsePromo 2s infinite;
-    }
+/* ===== MOCKUP ===== */
+.mockup {
+  margin: 40px 0;
+  padding: 18px;
+  border-radius: 30px;
+  background: linear-gradient(180deg, #111, #000);
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.9),
+    inset 0 0 0 1px rgba(255,255,255,.06);
+}
 
-    .old-price {
-      text-decoration: line-through;
-      opacity: 0.6;
-    }
+.mockup span {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  letter-spacing: 2px;
+  opacity: .6;
+}
 
-    .new-price {
-      font-size: 2.2rem;
-      font-weight: bold;
-      color: #ffd400;
-    }
+/* ===== PROMO ===== */
+.promo {
+  margin: 40px 0;
+  padding: 26px;
+  border-radius: 22px;
+  background: #0b0b0b;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.08),
+    0 20px 50px rgba(0,0,0,.8);
+}
 
-    .timer {
-      margin-top: 15px;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.6rem;
-      color: #ff4d88;
-    }
+.old {
+  text-decoration: line-through;
+  opacity: .5;
+}
 
-    .features {
-      text-align: left;
-      margin: 30px 0;
-      font-size: 1rem;
-    }
+.price {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.6rem;
+  color: #ffd400;
+  margin: 6px 0;
+}
 
-    .features li {
-      margin-bottom: 10px;
-    }
+/* ===== TIMER ===== */
+.timer {
+  margin-top: 16px;
+  font-size: .95rem;
+  opacity: .85;
+}
 
-    .cta-btn {
-      display: inline-block;
-      margin-top: 25px;
-      padding: 18px 40px;
-      border-radius: 40px;
-      background: #ffd400;
-      color: #000;
-      font-weight: bold;
-      font-size: 1.2rem;
-      text-decoration: none;
-      box-shadow: 0 0 25px rgba(255,212,0,.6);
-      transition: .3s;
-    }
+.countdown {
+  margin-top: 6px;
+  font-family: monospace;
+  font-size: 1.4rem;
+  letter-spacing: 2px;
+  color: #ff7aa2;
+}
 
-    .cta-btn:hover {
-      transform: scale(1.05);
-    }
+/* ===== FEATURES ===== */
+.features {
+  text-align: left;
+  margin: 42px 0;
+  padding-left: 0;
+  list-style: none;
+  font-size: .95rem;
+}
 
-    @keyframes pulsePromo {
-      0% { box-shadow: 0 0 25px rgba(255,0,200,.4); }
-      50% { box-shadow: 0 0 45px rgba(255,0,200,.8); }
-      100% { box-shadow: 0 0 25px rgba(255,0,200,.4); }
-    }
+.features li {
+  margin-bottom: 14px;
+  opacity: .85;
+}
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+/* ===== CTA ===== */
+.cta {
+  display: block;
+  width: 100%;
+  margin-top: 40px;
+  padding: 18px;
+  border-radius: 999px;
+  background: #ffd400;
+  color: #000;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 1.05rem;
+  box-shadow: 0 20px 40px rgba(255,212,0,.45);
+  transition: .3s;
+}
+
+.cta:hover {
+  transform: translateY(-2px);
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  margin-top: 60px;
+  font-size: .75rem;
+  opacity: .4;
+}
+</style>
 </head>
+
 <body>
 
-  <div class="container">
+<div class="wrapper">
 
-    <h1>Crie um <span class="highlight">Site Romântico</span> Exclusivo 💖</h1>
+  <h1>Eternize sua história</h1>
 
-    <p class="subtitle">
-      Personalize nome, mensagem, fotos, música e gere um link com QR Code para surpreender.
-    </p>
+  <p class="subtitle">
+    Crie um site romântico exclusivo com fotos, música, contador de tempo
+    e um link que dura para sempre.
+  </p>
 
-    <div class="promo-box">
-      <div>De <span class="old-price">R$30,00</span> por apenas</div>
-      <div class="new-price">R$9,99</div>
-
-      <div class="timer">
-        Oferta termina em:
-        <div id="countdown">10:00</div>
-      </div>
-    </div>
-
-    <ul class="features">
-      <li>✔ Contador automático de tempo juntos</li>
-      <li>✔ Música personalizada</li>
-      <li>✔ Fotos estilo polaroid</li>
-      <li>✔ QR Code exclusivo</li>
-      <li>✔ Link permanente</li>
-    </ul>
-
-    <a href="editor.html" class="cta-btn">Começar a editar</a>
-
+  <div class="mockup">
+    <span>preview do seu site</span>
   </div>
 
-  <script>
-    const countdownEl = document.getElementById("countdown");
+  <div class="promo">
+    <div class="old">de R$ 25,00</div>
+    <div class="price">R$ 9,99</div>
 
-    let duration = 600; // 10 minutos
+    <div class="timer">
+      oferta por tempo limitado
+      <div id="timer" class="countdown">10:00</div>
+    </div>
+  </div>
 
-    function updateTimer() {
-      const minutes = Math.floor(duration / 60);
-      const seconds = duration % 60;
+  <ul class="features">
+    <li>• Contador automático do tempo juntos</li>
+    <li>• Fotos estilo polaroid</li>
+    <li>• Música personalizada</li>
+    <li>• QR Code + link exclusivo</li>
+    <li>• Visual premium, sem anúncios</li>
+  </ul>
 
-      countdownEl.textContent =
-        String(minutes).padStart(2, '0') + ":" +
-        String(seconds).padStart(2, '0');
+  <a href="editor.html" class="cta">Começar a editar</a>
 
-      if (duration > 0) {
-        duration--;
-      } else {
-        countdownEl.textContent = "Encerrado";
-      }
-    }
+  <div class="footer">
+    MemoryIt © Todos os direitos reservados
+  </div>
 
-    setInterval(updateTimer, 1000);
-    updateTimer();
-  </script>
+</div>
+
+<script>
+let time = 600;
+const el = document.getElementById("timer");
+
+function tick() {
+  const m = Math.floor(time / 60);
+  const s = time % 60;
+  el.textContent = `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+  if (time > 0) time--;
+}
+
+tick();
+setInterval(tick, 1000);
+</script>
 
 </body>
 </html>
