@@ -94,21 +94,22 @@ if (dateBox && dataInput) {
 const STORAGE_KEY = "romantico_editor_state";
 
 function salvarEstado() {
+  if (!nomeInput || !msgInput || !dataInput || !preview) return;
+
   const estado = {
-    nome: nomeInput.value,
-    mensagem: msgInput.value,
-    data: dataInput.value,
-    musica: musicaUrl,
+    nome: nomeInput.value || "",
+    mensagem: msgInput.value || "",
+    data: dataInput.value || "",
+    musica: audio?.src || null,
     fundo: preview.classList.contains("azul") ? "azul" :
            preview.classList.contains("roxo") ? "roxo" :
            preview.classList.contains("rosa") ? "rosa" :
            preview.classList.contains("preto") ? "preto" : "azul",
-    fotos
+    fotos: [...fotos]
   };
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(estado));
 }
-
 function carregarEstado() {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) return;
@@ -496,7 +497,6 @@ removeMusic.addEventListener("click", () => {
   musicBox.style.pointerEvents = "auto";
   musicBox.innerText = "🎵 Adicionar música";
 });
-salvarEstado();
 // play / pause
 playBtn.addEventListener("click", () => {
   if (!audio.src) return;
@@ -618,6 +618,7 @@ criarCoracoesPreview();
   carregarEstado();
 });
     
+
 
 
 
