@@ -221,6 +221,7 @@ document.querySelectorAll(".bg-card").forEach(card => {
 
     preview.classList.remove("azul","roxo","rosa","preto");
     preview.classList.add(card.dataset.bg);
+     salvarEstado();
   };
 });
   /* =====================
@@ -323,9 +324,11 @@ try {
       slotEl.classList.remove("filled");
       slotEl.innerHTML = "+";
       atualizarMidias();
+       salvarEstado();
     };
 
     atualizarMidias();
+     salvarEstado();
     fotoInput.value = "";
 
   } catch {
@@ -443,6 +446,7 @@ musicaInput.addEventListener("change", async () => {
     if (!data.url) throw new Error();
 
     musicaUrl = data.url;
+     salvarEstado();
 
     // prepara áudio corretamente
     audio.pause();
@@ -492,7 +496,7 @@ removeMusic.addEventListener("click", () => {
   musicBox.style.pointerEvents = "auto";
   musicBox.innerText = "🎵 Adicionar música";
 });
-
+salvarEstado();
 // play / pause
 playBtn.addEventListener("click", () => {
   if (!audio.src) return;
@@ -614,6 +618,7 @@ criarCoracoesPreview();
   carregarEstado();
 });
     
+
 
 
 
