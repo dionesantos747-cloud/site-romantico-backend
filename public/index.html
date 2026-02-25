@@ -29,9 +29,9 @@ body{
   padding:14px;
   text-align:center;
   font-weight:700;
-  margin-bottom:24px;
+  margin-bottom:20px;
 }
-#timer{font-size:1.3rem;display:block;margin-top:6px}
+#timer{display:block;font-size:1.3rem;margin-top:6px}
 
 /* ALERTA FINAL */
 .final-alert{
@@ -46,7 +46,7 @@ body{
   font-weight:600;
 }
 
-/* HERO */
+/* TÍTULO */
 .hero-title{
   font-family:'Playfair Display',serif;
   text-align:center;
@@ -120,8 +120,10 @@ body{
   background:#000;
   display:flex;
   justify-content:space-between;
+  align-items:center;
   padding:16px;
 }
+.sticky-info{display:flex;flex-direction:column}
 .sticky-old{text-decoration:line-through;opacity:.4;font-size:.75rem}
 .sticky-price{color:#ffd400;font-size:1.5rem;font-weight:800}
 </style>
@@ -137,11 +139,11 @@ body{
 </div>
 
 <div class="final-alert" id="finalAlert">
-⏰ Últimos minutos para garantir o desconto
+⏰ Últimos 3 minutos para garantir o desconto
 </div>
 
 <h1 class="hero-title">
-  <span id="typed-text"></span><span class="cursor">|</span>
+<span id="typed-text"></span><span class="cursor">|</span>
 </h1>
 
 <p class="subtitle">
@@ -149,17 +151,19 @@ Eternize sua história com fotos, música e um link que dura para sempre.
 </p>
 
 <div class="editor-preview">
-  <div class="editor-top">
-    <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
-  </div>
-  <div class="editor-content">
-    <span id="preview-text"></span><span class="fake-cursor"></span>
-  </div>
+<div class="editor-top">
+<div class="dot red"></div>
+<div class="dot yellow"></div>
+<div class="dot green"></div>
+</div>
+<div class="editor-content">
+<span id="preview-text"></span><span class="fake-cursor"></span>
+</div>
 </div>
 
 <div class="steps">
-  <div class="step"><span>✏️</span><div><strong>Edite</strong><br>Personalize tudo</div></div>
-  <div class="step"><span>🔗</span><div><strong>Link eterno</strong><br>Compartilhe para sempre</div></div>
+<div class="step"><span>✏️</span><div><strong>Edite</strong><br>Personalize tudo</div></div>
+<div class="step"><span>🔗</span><div><strong>Link eterno</strong><br>Compartilhe para sempre</div></div>
 </div>
 
 <div class="idea-text">
@@ -171,8 +175,8 @@ Imagine a pessoa lendo suas palavras… e descobrindo um link com fotos, música
 </div>
 
 <div class="price-box">
-  <div class="old" id="oldPrice">de R$ 25,00</div>
-  <div class="price" id="mainPrice">R$ 9,99</div>
+<div class="old" id="oldPrice">de R$ 25,00</div>
+<div class="price" id="mainPrice">R$ 9,99</div>
 </div>
 
 <a href="editor.html" class="cta">Criar agora</a>
@@ -180,53 +184,59 @@ Imagine a pessoa lendo suas palavras… e descobrindo um link com fotos, música
 </div>
 
 <div class="sticky-bar">
-  <div>
-    <div class="sticky-old" id="stickyOld">R$ 25,00</div>
-    <div class="sticky-price" id="stickyPrice">R$ 9,99</div>
-  </div>
-  <a href="editor.html" class="cta">Criar agora</a>
+<div class="sticky-info">
+<span class="sticky-old" id="stickyOld">R$ 25,00</span>
+<span class="sticky-price" id="stickyPrice">R$ 9,99</span>
+</div>
+<a href="editor.html" class="cta">Criar agora</a>
 </div>
 
 <script>
-/* ====== TÍTULO ====== */
+/* ===== TÍTULO ===== */
 const typed=document.getElementById("typed-text");
 const parts=[{t:"Crie ",c:""},{t:"um site ",c:"color-1"},{t:"inesquecível",c:"color-2"}];
 let pi=0,ci=0;
 (function type(){if(pi<parts.length){if(ci<parts[pi].t.length){const s=document.createElement("span");s.className=parts[pi].c;s.textContent=parts[pi].t[ci++];typed.appendChild(s);setTimeout(type,50);}else{pi++;ci=0;setTimeout(type,150);}}})();
 
-/* ====== PREVIEW ====== */
+/* ===== PREVIEW ===== */
 const preview=document.getElementById("preview-text");
 const msg="Desde o dia em que nos conhecemos, tudo ficou mais bonito 💖";
 let i=0;setTimeout(function p(){if(i<msg.length){preview.textContent+=msg[i++];setTimeout(p,40);}},1200);
 
-/* ====== TIMER (SINCRONIZADO) ====== */
-async function getTimer(){
-  const res = await fetch("/api/timer"); // ENDPOINT
-  const data = await res.json();
-  return data.remaining;
+/* ===== TIMER INTELIGENTE ===== */
+const DURATION=25*60*1000;
+let end=localStorage.getItem("promo_end");
+
+const nav=performance.getEntriesByType("navigation")[0];
+const isReload=nav && nav.type==="reload";
+
+if(!end || !isReload){
+end=Date.now()+DURATION;
+localStorage.setItem("promo_end",end);
 }
 
-async function startTimer(){
-  let remaining = await getTimer();
-  const timerEl=document.getElementById("timer");
-  const alertEl=document.getElementById("finalAlert");
+function update(){
+const remaining=end-Date.now();
+const timer=document.getElementById("timer");
+const alert=document.getElementById("finalAlert");
 
-  setInterval(()=>{
-    if(remaining<=0){
-      timerEl.textContent="Encerrada";
-      document.getElementById("mainPrice").textContent="R$ 25,00";
-      document.getElementById("stickyPrice").textContent="R$ 25,00";
-      document.getElementById("stickyOld").style.display="none";
-      return;
-    }
-    if(remaining<=180){alertEl.style.display="block";}
-    const m=String(Math.floor(remaining/60)).padStart(2,"0");
-    const s=String(remaining%60).padStart(2,"0");
-    timerEl.textContent=`${m}:${s}`;
-    remaining--;
-  },1000);
+if(remaining<=0){
+timer.textContent="Encerrada";
+document.getElementById("mainPrice").textContent="R$ 25,00";
+document.getElementById("stickyPrice").textContent="R$ 25,00";
+document.getElementById("stickyOld").style.display="none";
+return;
 }
-startTimer();
+
+if(remaining<=180000){alert.style.display="block";}
+
+const s=Math.floor(remaining/1000);
+const m=String(Math.floor(s/60)).padStart(2,"0");
+const sec=String(s%60).padStart(2,"0");
+timer.textContent=m+":"+sec;
+}
+update();
+setInterval(update,1000);
 </script>
 
 </body>
