@@ -277,9 +277,7 @@ h1{
 <span id="timer">10:00</span>
 </div>
 
-<div class="logo">💖</div>
-
-<h1>Crie um site romântico inesquecível</h1>
+<h1>Crie um site inesquecível</h1>
 
 <p class="subtitle">
 Eternize sua história com fotos, música, contador do tempo juntos e um link que dura para sempre.
@@ -289,7 +287,7 @@ Eternize sua história com fotos, música, contador do tempo juntos e um link qu
   <div class="tag">💌 Carta de amor</div>
   <div class="tag">🎂 Aniversário</div>
   <div class="tag">💍 Casamento</div>
-  <div class="tag">❤️ Dia dos Namorados</div>
+  <div class="tag">❤️ Amizade</div>
   <div class="tag">🌎 Amor à distância</div>
 </div>
 
@@ -320,7 +318,7 @@ Eternize sua história com fotos, música, contador do tempo juntos e um link qu
 </div>
 
 <div class="price-box">
-  <div class="old">de R$ 30,00</div>
+  <div class="old">de R$ 25,00</div>
   <div class="price">R$ 9,99</div>
   <div class="note">Acesso imediato • Sem mensalidade</div>
 </div>
@@ -328,13 +326,13 @@ Eternize sua história com fotos, música, contador do tempo juntos e um link qu
 <a href="editor.html" class="cta">Criar agora</a>
 
 <div class="footer">
-MemoryIt © Todos os direitos reservados
+MemoryDs © Todos os direitos reservados
 </div>
 
 </div>
 
 <script>
-let duration = 600;
+let duration = 1500;
 const el = document.getElementById("timer");
 const stickyPrice = document.querySelector(".sticky-price");
 const stickyOld = document.querySelector(".sticky-old");
@@ -356,7 +354,7 @@ const interval = setInterval(()=>{
   if(duration <= 0){
     clearInterval(interval);
     el.textContent = "Encerrada";
-    stickyPrice.textContent = "R$ 30,00";
+    stickyPrice.textContent = "R$ 25,00";
     stickyOld.style.display = "none";
     return;
   }
