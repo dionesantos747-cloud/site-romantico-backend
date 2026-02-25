@@ -155,8 +155,8 @@ h1{
   opacity:.4;
 }
 
-  /* =========================
-   BARRA FIXA DE CONVERSÃO
+/* =========================
+   BARRA FIXA PREMIUM
 ========================= */
 
 .sticky-bar{
@@ -168,68 +168,69 @@ h1{
 
   background:linear-gradient(
     180deg,
-    rgba(0,0,0,.85),
-    rgba(0,0,0,.95)
+    rgba(15,15,15,.85),
+    rgba(0,0,0,.98)
   );
 
-  backdrop-filter:blur(14px);
+  backdrop-filter:blur(18px);
+
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:14px 16px;
 
-  border-top:1px solid rgba(255,255,255,.1);
+  padding:16px 18px;
+
+  border-top:1px solid rgba(255,255,255,.08);
+
+  box-shadow:0 -10px 40px rgba(0,0,0,.6);
 }
 
-/* info preço */
+/* preço */
 .sticky-info{
   display:flex;
   flex-direction:column;
-  line-height:1.1;
 }
 
 .sticky-old{
   font-size:.75rem;
-  opacity:.4;
+  opacity:.35;
   text-decoration:line-through;
 }
 
 .sticky-price{
-  font-size:1.4rem;
-  font-weight:700;
+  font-size:1.6rem;
+  font-weight:800;
   color:#ffd400;
+  line-height:1.1;
 }
 
 /* botão */
 .sticky-btn{
-  padding:14px 22px;
+  padding:16px 26px;
   border-radius:999px;
   background:linear-gradient(90deg,#ffd400,#ffae00);
   color:#000;
-  font-weight:700;
+  font-weight:800;
+  font-size:1rem;
   text-decoration:none;
-  font-size:.95rem;
 
   box-shadow:
-    0 10px 30px rgba(255,210,0,.45);
+    0 15px 40px rgba(255,210,0,.45);
 
-  transition:.25s;
+  transition:.2s ease;
 }
 
 .sticky-btn:active{
-  transform:scale(.96);
+  transform:scale(.95);
+}
+  @keyframes pulseSticky {
+  0% { box-shadow:0 0 0 0 rgba(255,210,0,.6); }
+  70% { box-shadow:0 0 0 12px rgba(255,210,0,0); }
+  100% { box-shadow:0 0 0 0 rgba(255,210,0,0); }
 }
 
-/* espaço extra para não cobrir conteúdo */
-body{
-  padding-bottom:90px;
-}
-
-/* desktop: esconder */
-@media (min-width:768px){
-  .sticky-bar{
-    display:none;
-  }
+.sticky-btn{
+  animation:pulseSticky 2.5s infinite;
 }
 </style>
 </head>
@@ -302,8 +303,11 @@ MemoryIt © Todos os direitos reservados
 <script>
 let duration = 600;
 const el = document.getElementById("timer");
+const stickyPrice = document.querySelector(".sticky-price");
+const stickyOld = document.querySelector(".sticky-old");
 
 const saved = localStorage.getItem("promo_timer");
+
 if(saved){
   const diff = Math.floor((Date.now() - saved)/1000);
   duration = Math.max(600 - diff,0);
@@ -311,17 +315,26 @@ if(saved){
   localStorage.setItem("promo_timer",Date.now());
 }
 
-setInterval(()=>{
+const interval = setInterval(()=>{
   const m = String(Math.floor(duration/60)).padStart(2,"0");
   const s = String(duration%60).padStart(2,"0");
   el.textContent = m + ":" + s;
-  if(duration>0) duration--;
+
+  if(duration <= 0){
+    clearInterval(interval);
+    el.textContent = "Encerrada";
+    stickyPrice.textContent = "R$ 30,00";
+    stickyOld.style.display = "none";
+    return;
+  }
+
+  duration--;
 },1000);
 </script>
 <!-- BARRA FIXA DE CONVERSÃO -->
 <div class="sticky-bar">
   <div class="sticky-info">
-    <span class="sticky-old">R$ 30,00</span>
+    <span class="sticky-old">R$ 25,00</span>
     <span class="sticky-price">R$ 9,99</span>
   </div>
   <a href="editor.html" class="sticky-btn">Criar agora</a>
