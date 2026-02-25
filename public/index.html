@@ -20,10 +20,10 @@ body{
 .container{
   max-width:480px;
   margin:auto;
-  padding:20px 20px 110px;
+  padding:20px 20px 120px;
 }
 
-/* PROMO TOPO */
+/* PROMO */
 .promo{
   background:linear-gradient(120deg,#ff4d88,#ff9ecb,#b84cff);
   color:#000;
@@ -33,7 +33,6 @@ body{
   font-weight:700;
   margin-bottom:28px;
   box-shadow:0 10px 40px rgba(255,80,130,.4);
-  letter-spacing:.4px;
 }
 
 #timer{
@@ -43,25 +42,81 @@ body{
 }
 
 /* HERO */
-h1{
+.hero-title{
   font-family:'Playfair Display',serif;
   text-align:center;
   font-size:2.3rem;
   margin:14px 0;
+  min-height:60px;
+}
 
-  background:linear-gradient(90deg,#b84cff,#ff4fd8);
+.color-1{
+  background:linear-gradient(90deg,#ff4fd8,#b84cff);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
+}
+.color-2{
+  background:linear-gradient(90deg,#ffd400,#ff7a00);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
 
-  text-shadow:0 0 18px rgba(255,80,200,.25);
+.cursor{
+  margin-left:4px;
+  animation:blink 1s infinite;
+  color:#ff4fd8;
+}
+
+@keyframes blink{
+  0%,50%,100%{opacity:1}
+  25%,75%{opacity:0}
 }
 
 .subtitle{
   text-align:center;
   color:rgba(240,230,255,.85);
   line-height:1.6;
-  margin-bottom:34px;
-  font-size:1rem;
+  margin-bottom:24px;
+}
+
+/* PREVIEW EDITOR */
+.editor-preview{
+  margin:30px 0 40px;
+  border-radius:24px;
+  padding:18px;
+  background:linear-gradient(180deg,#120018,#000);
+  border:1px solid rgba(255,80,200,.25);
+  box-shadow:0 30px 80px rgba(0,0,0,.8);
+}
+
+.editor-top{
+  display:flex;
+  gap:8px;
+  margin-bottom:14px;
+}
+
+.dot{width:10px;height:10px;border-radius:50%}
+.red{background:#ff5f57}
+.yellow{background:#ffbd2e}
+.green{background:#28c840}
+
+.editor-content{
+  background:radial-gradient(circle at top,#2a0040,#000 70%);
+  padding:20px;
+  border-radius:18px;
+  min-height:120px;
+  font-family:'Playfair Display',serif;
+  font-size:1.2rem;
+  line-height:1.6;
+}
+
+.fake-cursor{
+  display:inline-block;
+  width:2px;
+  height:18px;
+  background:#ff4fd8;
+  margin-left:4px;
+  animation:blink 1s infinite;
 }
 
 /* TAGS */
@@ -80,10 +135,6 @@ h1{
   background:rgba(255,255,255,.05);
   border:1px solid rgba(255,80,200,.35);
   color:#f5eaff;
-  backdrop-filter:blur(10px);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,80,200,.15),
-    0 0 14px rgba(255,80,200,.15);
 }
 
 /* PASSOS */
@@ -101,9 +152,6 @@ h1{
   border-radius:20px;
   background:rgba(20,10,25,.75);
   border:1px solid rgba(255,80,200,.25);
-  box-shadow:
-    0 12px 35px rgba(0,0,0,.6),
-    inset 0 0 0 1px rgba(255,80,200,.15);
 }
 
 .step span{font-size:1.6rem}
@@ -117,27 +165,15 @@ h1{
   background:linear-gradient(180deg,rgba(40,10,60,.8),rgba(10,0,20,.9));
   border:1px solid rgba(255,80,200,.35);
   text-align:center;
-  box-shadow:
-    0 30px 80px rgba(0,0,0,.9),
-    0 0 35px rgba(255,80,200,.15);
 }
 
-.old{
-  text-decoration:line-through;
-  opacity:.4;
-}
-
+.old{text-decoration:line-through;opacity:.4}
 .price{
   font-family:'Playfair Display',serif;
   font-size:3.2rem;
   color:#ffd400;
-  margin:8px 0;
 }
-
-.note{
-  font-size:.9rem;
-  opacity:.7;
-}
+.note{font-size:.9rem;opacity:.7}
 
 /* CTA */
 .cta{
@@ -150,15 +186,8 @@ h1{
   color:#fff;
   text-align:center;
   font-weight:800;
-  font-size:1.05rem;
-  letter-spacing:.5px;
   text-decoration:none;
-  box-shadow:
-    0 0 30px rgba(255,80,200,.6),
-    0 20px 50px rgba(0,0,0,.6);
 }
-
-.cta:active{transform:scale(.96)}
 
 .security{
   text-align:center;
@@ -167,35 +196,15 @@ h1{
   margin-top:12px;
 }
 
-/* FOOTER */
-.footer{
-  margin-top:50px;
-  text-align:center;
-  font-size:.75rem;
-  opacity:.4;
-}
-
-/* BARRA FIXA */
+/* STICKY */
 .sticky-bar{
   position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  z-index:999;
-  background:linear-gradient(180deg,rgba(15,15,15,.85),rgba(0,0,0,.98));
-  backdrop-filter:blur(18px);
+  bottom:0;left:0;right:0;
+  background:linear-gradient(180deg,rgba(15,15,15,.9),#000);
   display:flex;
-  align-items:center;
   justify-content:space-between;
-  padding:16px 18px;
-  border-top:1px solid rgba(255,255,255,.08);
-  box-shadow:0 -10px 40px rgba(0,0,0,.6);
-}
-
-.sticky-old{
-  font-size:.75rem;
-  opacity:.35;
-  text-decoration:line-through;
+  align-items:center;
+  padding:16px;
 }
 
 .sticky-price{
@@ -205,19 +214,12 @@ h1{
 }
 
 .sticky-btn{
-  padding:16px 26px;
+  padding:14px 24px;
   border-radius:999px;
   background:linear-gradient(90deg,#ffd400,#ffae00);
   color:#000;
   font-weight:800;
   text-decoration:none;
-  animation:pulse 2.5s infinite;
-}
-
-@keyframes pulse{
-  0%{box-shadow:0 0 0 0 rgba(255,210,0,.6)}
-  70%{box-shadow:0 0 0 12px rgba(255,210,0,0)}
-  100%{box-shadow:0 0 0 0 rgba(255,210,0,0)}
 }
 </style>
 </head>
@@ -231,18 +233,30 @@ h1{
 <span id="timer">25:00</span>
 </div>
 
-<h1>Crie um site inesquecível</h1>
+<h1 class="hero-title">
+  <span id="typed-text"></span><span class="cursor">|</span>
+</h1>
 
 <p class="subtitle">
-Eternize sua história com fotos, música, contador do tempo juntos e um link que dura para sempre.
+Eternize sua história com fotos, música e um site que dura para sempre.
 </p>
+
+<div class="editor-preview">
+  <div class="editor-top">
+    <div class="dot red"></div>
+    <div class="dot yellow"></div>
+    <div class="dot green"></div>
+  </div>
+  <div class="editor-content">
+    <span id="preview-text"></span><span class="fake-cursor"></span>
+  </div>
+</div>
 
 <div class="tags">
   <div class="tag">💌 Carta de amor</div>
   <div class="tag">🎂 Aniversário</div>
   <div class="tag">💍 Casamento</div>
   <div class="tag">❤️ Amizade</div>
-  <div class="tag">🌎 Amor à distância</div>
 </div>
 
 <div class="steps">
@@ -258,40 +272,60 @@ Eternize sua história com fotos, música, contador do tempo juntos e um link qu
 </div>
 
 <a href="editor.html" class="cta">Criar agora</a>
-<p class="security">🔒 Pagamento seguro • Acesso imediato • Link permanente</p>
-
-<div class="footer">MemoryIt © Todos os direitos reservados</div>
+<p class="security">🔒 Pagamento seguro • Link permanente</p>
 
 </div>
 
-<!-- BARRA FIXA -->
 <div class="sticky-bar">
-  <div>
-    <div class="sticky-old">R$ 25,00</div>
-    <div class="sticky-price">R$ 9,99</div>
-  </div>
+  <div class="sticky-price">R$ 9,99</div>
   <a href="editor.html" class="sticky-btn">Criar agora</a>
 </div>
 
 <script>
-let duration = 1500; // 25 minutos
+/* TIMER 25 MIN */
+let duration = 1500;
 const timer = document.getElementById("timer");
-const stickyPrice = document.querySelector(".sticky-price");
-const stickyOld = document.querySelector(".sticky-old");
 
 setInterval(()=>{
   const m = String(Math.floor(duration/60)).padStart(2,"0");
   const s = String(duration%60).padStart(2,"0");
-  timer.textContent = m + ":" + s;
-
-  if(duration <= 0){
-    timer.textContent = "Encerrada";
-    stickyPrice.textContent = "R$ 25,00";
-    stickyOld.style.display = "none";
-    return;
-  }
-  duration--;
+  timer.textContent = m+":"+s;
+  if(duration>0) duration--;
 },1000);
+
+/* TÍTULO DIGITANDO */
+const typed = document.getElementById("typed-text");
+const parts = [
+  {t:"Crie ",c:""},
+  {t:"um site ",c:"color-1"},
+  {t:"inesquecível",c:"color-2"}
+];
+let pi=0,ci=0;
+
+function typeTitle(){
+  if(pi<parts.length){
+    if(ci<parts[pi].t.length){
+      const s=document.createElement("span");
+      s.className=parts[pi].c;
+      s.textContent=parts[pi].t[ci];
+      typed.appendChild(s);
+      ci++;
+      setTimeout(typeTitle,50);
+    }else{pi++;ci=0;setTimeout(typeTitle,150);}
+  }
+}
+typeTitle();
+
+/* PREVIEW DIGITANDO */
+const preview=document.getElementById("preview-text");
+const msg="Desde o dia em que nos conhecemos, tudo mudou para melhor ";
+let i=0;
+setTimeout(function typePreview(){
+  if(i<msg.length){
+    preview.textContent+=msg[i++];
+    setTimeout(typePreview,40);
+  }
+},1200);
 </script>
 
 </body>
