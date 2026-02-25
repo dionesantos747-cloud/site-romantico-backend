@@ -140,11 +140,11 @@ function carregarEstado() {
     });
   }
 
-  if (estado.fotos?.length) {
-    fotos = estado.fotos;
-    atualizarMidias();
-  }
-
+if (estado.fotos?.length) {
+  fotos = estado.fotos;
+  restaurarSlotsFotos();   // 👈 ESSENCIAL
+  atualizarMidias();
+}
   if (estado.musica) {
     musicaUrl = estado.musica;
     audio.src = musicaUrl;
@@ -354,7 +354,31 @@ try {
 
     iniciarSlider(document.getElementById("editorSliderTrack"));
   }
+function restaurarSlotsFotos() {
+  document.querySelectorAll(".photo-slot").forEach((slotEl, index) => {
+    const url = fotos[index];
 
+    // limpa slot
+    slotEl.classList.remove("filled");
+    slotEl.innerHTML = "+";
+
+    if (!url) return;
+
+    slotEl.classList.add("filled");
+    slotEl.innerHTML = `
+      <img src="${url}">
+      <div class="photo-remove">×</div>
+    `;
+
+    slotEl.querySelector(".photo-remove").onclick = () => {
+      fotos[index] = null;
+      slotEl.classList.remove("filled");
+      slotEl.innerHTML = "+";
+      atualizarMidias();
+      salvarEstado();
+    };
+  });
+}
   function iniciarSlider(track) {
   const slides = track.querySelectorAll(".slide");
 
@@ -618,6 +642,7 @@ criarCoracoesPreview();
   carregarEstado();
 });
     
+
 
 
 
