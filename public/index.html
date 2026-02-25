@@ -154,6 +154,83 @@ h1{
   font-size:.75rem;
   opacity:.4;
 }
+
+  /* =========================
+   BARRA FIXA DE CONVERSÃO
+========================= */
+
+.sticky-bar{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  z-index:999;
+
+  background:linear-gradient(
+    180deg,
+    rgba(0,0,0,.85),
+    rgba(0,0,0,.95)
+  );
+
+  backdrop-filter:blur(14px);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 16px;
+
+  border-top:1px solid rgba(255,255,255,.1);
+}
+
+/* info preço */
+.sticky-info{
+  display:flex;
+  flex-direction:column;
+  line-height:1.1;
+}
+
+.sticky-old{
+  font-size:.75rem;
+  opacity:.4;
+  text-decoration:line-through;
+}
+
+.sticky-price{
+  font-size:1.4rem;
+  font-weight:700;
+  color:#ffd400;
+}
+
+/* botão */
+.sticky-btn{
+  padding:14px 22px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#ffd400,#ffae00);
+  color:#000;
+  font-weight:700;
+  text-decoration:none;
+  font-size:.95rem;
+
+  box-shadow:
+    0 10px 30px rgba(255,210,0,.45);
+
+  transition:.25s;
+}
+
+.sticky-btn:active{
+  transform:scale(.96);
+}
+
+/* espaço extra para não cobrir conteúdo */
+body{
+  padding-bottom:90px;
+}
+
+/* desktop: esconder */
+@media (min-width:768px){
+  .sticky-bar{
+    display:none;
+  }
+}
 </style>
 </head>
 
@@ -241,6 +318,13 @@ setInterval(()=>{
   if(duration>0) duration--;
 },1000);
 </script>
-
+<!-- BARRA FIXA DE CONVERSÃO -->
+<div class="sticky-bar">
+  <div class="sticky-info">
+    <span class="sticky-old">R$ 30,00</span>
+    <span class="sticky-price">R$ 9,99</span>
+  </div>
+  <a href="editor.html" class="sticky-btn">Criar agora</a>
+</div>
 </body>
 </html>
