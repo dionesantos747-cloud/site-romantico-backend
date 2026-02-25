@@ -3,85 +3,87 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MemoryIt — Um site para eternizar o amor</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<title>MemoryIt — Eternize sua história</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
-  background: radial-gradient(circle at 30% 20%, #111, #000 70%);
+  background: radial-gradient(circle at top, #111, #000 70%);
   color: #fff;
   font-family: 'Inter', sans-serif;
-  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* ===== WRAPPER ===== */
 .wrapper {
   max-width: 480px;
   margin: auto;
   padding: 50px 22px 80px;
-  text-align: center;
 }
 
-/* ===== HERO ===== */
+/* HERO */
 h1 {
   font-family: 'Playfair Display', serif;
-  font-size: 2.3rem;
-  font-weight: 600;
+  font-size: 2.4rem;
+  text-align: center;
   margin-bottom: 16px;
 }
 
 .subtitle {
-  opacity: .75;
+  text-align: center;
+  opacity: .8;
   line-height: 1.6;
   margin-bottom: 40px;
 }
 
-/* ===== MOCKUP ===== */
-.phone {
-  width: 220px;
-  height: 440px;
-  margin: 30px auto;
-  border-radius: 40px;
-  background: linear-gradient(180deg,#1a1a1a,#000);
-  box-shadow:
-    0 40px 90px rgba(0,0,0,.9),
-    inset 0 0 0 1px rgba(255,255,255,.06);
-  position: relative;
-  animation: float 4s ease-in-out infinite;
+/* BENEFÍCIOS */
+.features {
+  list-style: none;
+  padding: 0;
+  margin: 30px 0 40px;
 }
 
-.phone::before {
-  content: "";
-  position: absolute;
-  top: 15px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90px;
-  height: 18px;
-  background: #000;
+.features li {
+  margin-bottom: 14px;
+  font-size: .95rem;
+  opacity: .9;
+}
+
+/* COMO FUNCIONA */
+.steps {
+  margin: 40px 0;
+  display: grid;
+  gap: 20px;
+}
+
+.step {
+  background: rgba(255,255,255,0.04);
+  padding: 20px;
   border-radius: 20px;
+  text-align: center;
 }
 
-@keyframes float {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
+.step span {
+  font-size: 1.8rem;
 }
 
-/* ===== PROMO CARD ===== */
-.promo {
-  margin-top: 50px;
-  padding: 28px;
-  border-radius: 24px;
-  background: rgba(20,20,20,.6);
-  backdrop-filter: blur(18px);
-  box-shadow:
-    0 30px 80px rgba(0,0,0,.8),
-    inset 0 0 0 1px rgba(255,255,255,.08);
+.step h3 {
+  margin: 10px 0 6px;
+  font-weight: 600;
+}
+
+/* PREÇO */
+.price-box {
+  margin-top: 40px;
+  padding: 30px;
+  border-radius: 26px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+  text-align: center;
+  box-shadow: 0 30px 70px rgba(0,0,0,.8);
 }
 
 .old {
@@ -90,50 +92,40 @@ h1 {
 }
 
 .price {
+  display: block;
   font-family: 'Playfair Display', serif;
-  font-size: 2.8rem;
+  font-size: 3.2rem;
   color: #ffd400;
-  margin: 6px 0 10px;
+  margin: 8px 0;
 }
 
-.timer-label {
-  font-size: .9rem;
-  opacity: .7;
-}
-
-.countdown {
-  margin-top: 8px;
+.timer {
+  margin-top: 10px;
   font-family: monospace;
-  font-size: 1.5rem;
-  letter-spacing: 3px;
+  font-size: 1.4rem;
   color: #ff4d88;
 }
 
-/* ===== STEPS ===== */
-.steps {
-  margin: 60px 0 30px;
-  text-align: left;
-  font-size: .95rem;
+.secure {
+  margin-top: 12px;
+  font-size: .85rem;
+  opacity: .6;
 }
 
-.steps div {
-  margin-bottom: 16px;
-  opacity: .8;
-}
-
-/* ===== CTA ===== */
+/* CTA */
 .cta {
   display: block;
   width: 100%;
   padding: 20px;
-  margin-top: 40px;
+  margin-top: 30px;
   border-radius: 999px;
   background: linear-gradient(90deg,#ffd400,#ffae00);
   color: #000;
   font-weight: 600;
+  text-align: center;
   text-decoration: none;
   font-size: 1.05rem;
-  box-shadow: 0 25px 50px rgba(255,212,0,.5);
+  box-shadow: 0 20px 40px rgba(255,212,0,.4);
   transition: .3s;
 }
 
@@ -141,10 +133,20 @@ h1 {
   transform: translateY(-3px);
 }
 
+/* PROVA SOCIAL */
+.proof {
+  margin-top: 50px;
+  text-align: center;
+  font-size: .9rem;
+  opacity: .7;
+}
+
+/* FOOTER */
 .footer {
-  margin-top: 70px;
+  margin-top: 60px;
+  text-align: center;
   font-size: .75rem;
-  opacity: .35;
+  opacity: .4;
 }
 </style>
 </head>
@@ -153,48 +155,85 @@ h1 {
 
 <div class="wrapper">
 
-  <h1>Eternize sua história</h1>
-  <p class="subtitle">
-    Crie um site romântico exclusivo com fotos, música e contador de tempo.
-  </p>
+<h1>Transforme sua história em um site eterno</h1>
 
-  <div class="phone"></div>
+<p class="subtitle">
+Crie um site romântico exclusivo com fotos, música e contador automático do tempo juntos.
+Compartilhe com um link único e QR Code.
+</p>
 
-  <div class="promo">
-    <div class="old">de R$ 30,00</div>
-    <div class="price">R$ 9,99</div>
+<ul class="features">
+<li>✔ Contador automático em tempo real</li>
+<li>✔ Fotos estilo polaroid</li>
+<li>✔ Música personalizada</li>
+<li>✔ Link exclusivo + QR Code</li>
+<li>✔ Visual premium, sem anúncios</li>
+</ul>
 
-    <div class="timer-label">oferta termina em</div>
-    <div id="timer" class="countdown">10:00</div>
+<div class="steps">
+  <div class="step">
+    <span>✏️</span>
+    <h3>Edite</h3>
+    <p>Personalize nome, texto, fotos e música.</p>
   </div>
 
-  <div class="steps">
-    <div>1. Personalize nome, fotos e música</div>
-    <div>2. Gere seu link exclusivo</div>
-    <div>3. Receba QR Code e compartilhe</div>
+  <div class="step">
+    <span>💳</span>
+    <h3>Pague</h3>
+    <p>Pagamento único, rápido e seguro.</p>
   </div>
 
-  <a href="editor.html" class="cta">Começar a editar</a>
-
-  <div class="footer">
-    MemoryIt © Todos os direitos reservados
+  <div class="step">
+    <span>🔗</span>
+    <h3>Compartilhe</h3>
+    <p>Receba seu link eterno + QR Code.</p>
   </div>
+</div>
+
+<div class="price-box">
+  <div class="old">de R$ 30,00</div>
+  <span class="price">R$ 9,99</span>
+  <div>Oferta por tempo limitado</div>
+  <div id="timer" class="timer">10:00</div>
+  <div class="secure">Pagamento 100% seguro • Acesso imediato</div>
+</div>
+
+<a href="editor.html" class="cta">Começar agora</a>
+
+<div class="proof">
+Mais de 1.000 histórias eternizadas 💛
+</div>
+
+<div class="footer">
+MemoryIt © Todos os direitos reservados
+</div>
 
 </div>
 
 <script>
-let time = 600;
-const el = document.getElementById("timer");
+let duration = 600;
+const display = document.getElementById("timer");
 
-function tick() {
-  const m = Math.floor(time / 60);
-  const s = time % 60;
-  el.textContent = `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
-  if (time > 0) time--;
+function startTimer() {
+  const saved = localStorage.getItem("promo_timer");
+  if (saved) {
+    const diff = Math.floor((Date.now() - saved) / 1000);
+    duration = Math.max(600 - diff, 0);
+  } else {
+    localStorage.setItem("promo_timer", Date.now());
+  }
+
+  setInterval(() => {
+    const minutes = Math.floor(duration / 60);
+    const seconds = duration % 60;
+    display.textContent =
+      String(minutes).padStart(2,"0") + ":" +
+      String(seconds).padStart(2,"0");
+    if (duration > 0) duration--;
+  }, 1000);
 }
 
-tick();
-setInterval(tick, 1000);
+startTimer();
 </script>
 
 </body>
