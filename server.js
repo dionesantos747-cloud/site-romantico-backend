@@ -88,8 +88,14 @@ app.post("/upload-image", upload.single("file"), (req, res) => {
     return res.status(400).json({ error: "Arquivo não enviado" });
   }
 
-  cloudinary.uploader.upload_stream(
-    { folder: "site-romantico/fotos" },
+cloudinary.uploader.upload_stream(
+  {
+    folder: "site-romantico/fotos",
+    resource_type: "image",
+    transformation: [
+      { width: 1600, height: 1600, crop: "limit", quality: "auto" }
+    ]
+  },
     (err, result) => {
       if (err) return res.status(500).json({ error: "Erro imagem" });
       res.json({ url: result.secure_url });
@@ -105,9 +111,13 @@ app.post("/upload-music", upload.single("file"), (req, res) => {
     return res.status(400).json({ error: "Arquivo não enviado" });
   }
 
-cloudinary.uploader.upload_stream(
-  { resource_type: "auto", folder: "site-romantico/musicas" },
+  // ✅ AQUI (EXATAMENTE AQUI)
+  if (!req.file.mimetype.startsWith("audio/")) {
+    return res.status(400).json({ error: "Arquivo inválido. Envie um áudio." });
+  }
 
+  cloudinary.uploader.upload_stream(
+    { resource_type: "auto", folder: "site-romantico/musicas" },
     (err, result) => {
       if (err) return res.status(500).json({ error: "Erro música" });
       res.json({ url: result.secure_url });
