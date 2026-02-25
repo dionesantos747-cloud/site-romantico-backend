@@ -192,51 +192,54 @@ Imagine a pessoa lendo suas palavras… e descobrindo um link com fotos, música
 </div>
 
 <script>
-/* ===== TÍTULO ===== */
-const typed=document.getElementById("typed-text");
-const parts=[{t:"Crie ",c:""},{t:"um site ",c:"color-1"},{t:"inesquecível",c:"color-2"}];
-let pi=0,ci=0;
-(function type(){if(pi<parts.length){if(ci<parts[pi].t.length){const s=document.createElement("span");s.className=parts[pi].c;s.textContent=parts[pi].t[ci++];typed.appendChild(s);setTimeout(type,50);}else{pi++;ci=0;setTimeout(type,150);}}})();
+/* ===== TIMER DEFINITIVO 25 MIN ===== */
 
-/* ===== PREVIEW ===== */
-const preview=document.getElementById("preview-text");
-const msg="Desde o dia em que nos conhecemos, tudo ficou mais bonito 💖";
-let i=0;setTimeout(function p(){if(i<msg.length){preview.textContent+=msg[i++];setTimeout(p,40);}},1200);
+const DURATION = 25 * 60 * 1000;
+let endTime = localStorage.getItem("promo_end");
 
-/* ===== TIMER INTELIGENTE ===== */
-const DURATION=25*60*1000;
-let end=localStorage.getItem("promo_end");
-
-const nav=performance.getEntriesByType("navigation")[0];
-const isReload=nav && nav.type==="reload";
-
-if(!end || !isReload){
-end=Date.now()+DURATION;
-localStorage.setItem("promo_end",end);
+/* Se acessar com ?novo reinicia */
+if (window.location.search.includes("novo")) {
+  localStorage.removeItem("promo_end");
+  endTime = null;
 }
 
-function update(){
-const remaining=end-Date.now();
-const timer=document.getElementById("timer");
-const alert=document.getElementById("finalAlert");
-
-if(remaining<=0){
-timer.textContent="Encerrada";
-document.getElementById("mainPrice").textContent="R$ 25,00";
-document.getElementById("stickyPrice").textContent="R$ 25,00";
-document.getElementById("stickyOld").style.display="none";
-return;
+/* Se não existir tempo salvo, cria */
+if (!endTime) {
+  endTime = Date.now() + DURATION;
+  localStorage.setItem("promo_end", endTime);
 }
 
-if(remaining<=180000){alert.style.display="block";}
+endTime = parseInt(endTime);
 
-const s=Math.floor(remaining/1000);
-const m=String(Math.floor(s/60)).padStart(2,"0");
-const sec=String(s%60).padStart(2,"0");
-timer.textContent=m+":"+sec;
+function updateTimer() {
+  const now = Date.now();
+  const remaining = endTime - now;
+
+  const timer = document.getElementById("timer");
+  const alert = document.getElementById("finalAlert");
+
+  if (remaining <= 0) {
+    timer.textContent = "Encerrada";
+    document.getElementById("mainPrice").textContent = "R$ 25,00";
+    document.getElementById("stickyPrice").textContent = "R$ 25,00";
+    document.getElementById("stickyOld").style.display = "none";
+    return;
+  }
+
+  /* Mostrar alerta nos últimos 3 minutos */
+  if (remaining <= 180000) {
+    alert.style.display = "block";
+  }
+
+  const totalSeconds = Math.floor(remaining / 1000);
+  const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+  const seconds = String(totalSeconds % 60).padStart(2, "0");
+
+  timer.textContent = minutes + ":" + seconds;
 }
-update();
-setInterval(update,1000);
+
+updateTimer();
+setInterval(updateTimer, 1000);
 </script>
 
 </body>
