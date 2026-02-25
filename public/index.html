@@ -20,34 +20,29 @@ body{
 .container{
   max-width:480px;
   margin:auto;
-  padding:20px 20px 90px;
+  padding:20px 20px 110px;
 }
 
 /* PROMO TOPO */
 .promo{
-  background:linear-gradient(90deg,#ff4d88,#ff85b3);
+  background:linear-gradient(120deg,#ff4d88,#ff9ecb,#b84cff);
   color:#000;
   border-radius:18px;
   padding:14px;
   text-align:center;
-  font-weight:600;
+  font-weight:700;
   margin-bottom:28px;
   box-shadow:0 10px 40px rgba(255,80,130,.4);
+  letter-spacing:.4px;
 }
 
 #timer{
   display:block;
-  font-size:1.2rem;
+  font-size:1.3rem;
   margin-top:6px;
 }
 
 /* HERO */
-.logo{
-  text-align:center;
-  font-size:2.4rem;
-  margin-bottom:8px;
-}
-
 h1{
   font-family:'Playfair Display',serif;
   text-align:center;
@@ -58,8 +53,7 @@ h1{
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 
-  text-shadow:
-    0 0 18px rgba(255,80,200,.25);
+  text-shadow:0 0 18px rgba(255,80,200,.25);
 }
 
 .subtitle{
@@ -69,66 +63,60 @@ h1{
   margin-bottom:34px;
   font-size:1rem;
 }
-/* SITUAÇÕES */
+
+/* TAGS */
+.tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:center;
+  margin-bottom:36px;
+}
 
 .tag{
   padding:8px 16px;
   border-radius:999px;
   font-size:.85rem;
-
   background:rgba(255,255,255,.05);
   border:1px solid rgba(255,80,200,.35);
-
   color:#f5eaff;
-
   backdrop-filter:blur(10px);
-
   box-shadow:
     inset 0 0 0 1px rgba(255,80,200,.15),
     0 0 14px rgba(255,80,200,.15);
 }
 
 /* PASSOS */
+.steps{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
 .step{
   display:flex;
   align-items:center;
   gap:14px;
-
   padding:18px;
   border-radius:20px;
-
   background:rgba(20,10,25,.75);
-
   border:1px solid rgba(255,80,200,.25);
-
   box-shadow:
     0 12px 35px rgba(0,0,0,.6),
     inset 0 0 0 1px rgba(255,80,200,.15);
 }
 
-.step span{
-  font-size:1.6rem;
-}
-  .step strong{
-  color:#ff9de6;
-}
+.step span{font-size:1.6rem}
+.step strong{color:#ff9de6}
 
 /* PREÇO */
 .price-box{
   margin-top:26px;
   padding:30px;
   border-radius:28px;
-
-  background:linear-gradient(
-    180deg,
-    rgba(40,10,60,.8),
-    rgba(10,0,20,.9)
-  );
-
+  background:linear-gradient(180deg,rgba(40,10,60,.8),rgba(10,0,20,.9));
   border:1px solid rgba(255,80,200,.35);
-
   text-align:center;
-
   box-shadow:
     0 30px 80px rgba(0,0,0,.9),
     0 0 35px rgba(255,80,200,.15);
@@ -157,27 +145,26 @@ h1{
   display:block;
   width:100%;
   padding:20px;
-
   border-radius:999px;
-
   background:linear-gradient(90deg,#ff4fd8,#b84cff);
-
   color:#fff;
   text-align:center;
   font-weight:800;
   font-size:1.05rem;
   letter-spacing:.5px;
   text-decoration:none;
-
   box-shadow:
     0 0 30px rgba(255,80,200,.6),
     0 20px 50px rgba(0,0,0,.6);
-
-  transition:.3s;
 }
 
-.cta:active{
-  transform:scale(.96);
+.cta:active{transform:scale(.96)}
+
+.security{
+  text-align:center;
+  font-size:.8rem;
+  opacity:.6;
+  margin-top:12px;
 }
 
 /* FOOTER */
@@ -188,40 +175,21 @@ h1{
   opacity:.4;
 }
 
-/* =========================
-   BARRA FIXA PREMIUM
-========================= */
-
+/* BARRA FIXA */
 .sticky-bar{
   position:fixed;
   bottom:0;
   left:0;
   right:0;
   z-index:999;
-
-  background:linear-gradient(
-    180deg,
-    rgba(15,15,15,.85),
-    rgba(0,0,0,.98)
-  );
-
+  background:linear-gradient(180deg,rgba(15,15,15,.85),rgba(0,0,0,.98));
   backdrop-filter:blur(18px);
-
   display:flex;
   align-items:center;
   justify-content:space-between;
-
   padding:16px 18px;
-
   border-top:1px solid rgba(255,255,255,.08);
-
   box-shadow:0 -10px 40px rgba(0,0,0,.6);
-}
-
-/* preço */
-.sticky-info{
-  display:flex;
-  flex-direction:column;
 }
 
 .sticky-old{
@@ -234,36 +202,22 @@ h1{
   font-size:1.6rem;
   font-weight:800;
   color:#ffd400;
-  line-height:1.1;
 }
 
-/* botão */
 .sticky-btn{
   padding:16px 26px;
   border-radius:999px;
   background:linear-gradient(90deg,#ffd400,#ffae00);
   color:#000;
   font-weight:800;
-  font-size:1rem;
   text-decoration:none;
-
-  box-shadow:
-    0 15px 40px rgba(255,210,0,.45);
-
-  transition:.2s ease;
+  animation:pulse 2.5s infinite;
 }
 
-.sticky-btn:active{
-  transform:scale(.95);
-}
-  @keyframes pulseSticky {
-  0% { box-shadow:0 0 0 0 rgba(255,210,0,.6); }
-  70% { box-shadow:0 0 0 12px rgba(255,210,0,0); }
-  100% { box-shadow:0 0 0 0 rgba(255,210,0,0); }
-}
-
-.sticky-btn{
-  animation:pulseSticky 2.5s infinite;
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,210,0,.6)}
+  70%{box-shadow:0 0 0 12px rgba(255,210,0,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,210,0,0)}
 }
 </style>
 </head>
@@ -274,7 +228,7 @@ h1{
 
 <div class="promo">
 🔥 Oferta exclusiva ativa
-<span id="timer">10:00</span>
+<span id="timer">25:00</span>
 </div>
 
 <h1>Crie um site inesquecível</h1>
@@ -292,29 +246,9 @@ Eternize sua história com fotos, música, contador do tempo juntos e um link qu
 </div>
 
 <div class="steps">
-  <div class="step">
-    <span>✏️</span>
-    <div>
-      <strong>Edite</strong><br>
-      Personalize texto, fotos e música
-    </div>
-  </div>
-
-  <div class="step">
-    <span>💳</span>
-    <div>
-      <strong>Pague</strong><br>
-      Pagamento único e seguro
-    </div>
-  </div>
-
-  <div class="step">
-    <span>🔗</span>
-    <div>
-      <strong>Compartilhe</strong><br>
-      Link eterno + QR Code
-    </div>
-  </div>
+  <div class="step"><span>✏️</span><div><strong>Edite</strong><br>Personalize tudo</div></div>
+  <div class="step"><span>💳</span><div><strong>Pague</strong><br>Pagamento único</div></div>
+  <div class="step"><span>🔗</span><div><strong>Compartilhe</strong><br>Link eterno</div></div>
 </div>
 
 <div class="price-box">
@@ -324,51 +258,41 @@ Eternize sua história com fotos, música, contador do tempo juntos e um link qu
 </div>
 
 <a href="editor.html" class="cta">Criar agora</a>
+<p class="security">🔒 Pagamento seguro • Acesso imediato • Link permanente</p>
 
-<div class="footer">
-MemoryDs © Todos os direitos reservados
+<div class="footer">MemoryIt © Todos os direitos reservados</div>
+
 </div>
 
+<!-- BARRA FIXA -->
+<div class="sticky-bar">
+  <div>
+    <div class="sticky-old">R$ 25,00</div>
+    <div class="sticky-price">R$ 9,99</div>
+  </div>
+  <a href="editor.html" class="sticky-btn">Criar agora</a>
 </div>
 
 <script>
-let duration = 1500;
-const el = document.getElementById("timer");
+let duration = 1500; // 25 minutos
+const timer = document.getElementById("timer");
 const stickyPrice = document.querySelector(".sticky-price");
 const stickyOld = document.querySelector(".sticky-old");
 
-const saved = localStorage.getItem("promo_timer");
-
-if(saved){
-  const diff = Math.floor((Date.now() - saved)/1000);
-  duration = Math.max(600 - diff,0);
-}else{
-  localStorage.setItem("promo_timer",Date.now());
-}
-
-const interval = setInterval(()=>{
+setInterval(()=>{
   const m = String(Math.floor(duration/60)).padStart(2,"0");
   const s = String(duration%60).padStart(2,"0");
-  el.textContent = m + ":" + s;
+  timer.textContent = m + ":" + s;
 
   if(duration <= 0){
-    clearInterval(interval);
-    el.textContent = "Encerrada";
+    timer.textContent = "Encerrada";
     stickyPrice.textContent = "R$ 25,00";
     stickyOld.style.display = "none";
     return;
   }
-
   duration--;
 },1000);
 </script>
-<!-- BARRA FIXA DE CONVERSÃO -->
-<div class="sticky-bar">
-  <div class="sticky-info">
-    <span class="sticky-old">R$ 25,00</span>
-    <span class="sticky-price">R$ 9,99</span>
-  </div>
-  <a href="editor.html" class="sticky-btn">Criar agora</a>
-</div>
+
 </body>
 </html>
