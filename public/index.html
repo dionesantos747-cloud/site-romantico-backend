@@ -1,1 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MemoryIt | Surpreenda Quem Você Ama</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Orbitron:wght@600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Cormorant Garamond', serif;
+      background: radial-gradient(circle at 30% 20%, #2b0a3d, #0b0015 60%);
+      color: #fff;
+      text-align: center;
+      padding: 40px 20px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: auto;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      animation: fadeUp 1s ease forwards;
+    }
+
+    .highlight {
+      color: #ffd400;
+    }
+
+    .subtitle {
+      opacity: 0.85;
+      margin-bottom: 30px;
+      animation: fadeUp 1.3s ease forwards;
+    }
+
+    .promo-box {
+      margin: 25px 0;
+      padding: 20px;
+      border-radius: 20px;
+      background: linear-gradient(135deg,#1a0033,#330033);
+      box-shadow: 0 0 25px rgba(255,0,200,.4);
+      animation: pulsePromo 2s infinite;
+    }
+
+    .old-price {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+
+    .new-price {
+      font-size: 2.2rem;
+      font-weight: bold;
+      color: #ffd400;
+    }
+
+    .timer {
+      margin-top: 15px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.6rem;
+      color: #ff4d88;
+    }
+
+    .features {
+      text-align: left;
+      margin: 30px 0;
+      font-size: 1rem;
+    }
+
+    .features li {
+      margin-bottom: 10px;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      margin-top: 25px;
+      padding: 18px 40px;
+      border-radius: 40px;
+      background: #ffd400;
+      color: #000;
+      font-weight: bold;
+      font-size: 1.2rem;
+      text-decoration: none;
+      box-shadow: 0 0 25px rgba(255,212,0,.6);
+      transition: .3s;
+    }
+
+    .cta-btn:hover {
+      transform: scale(1.05);
+    }
+
+    @keyframes pulsePromo {
+      0% { box-shadow: 0 0 25px rgba(255,0,200,.4); }
+      50% { box-shadow: 0 0 45px rgba(255,0,200,.8); }
+      100% { box-shadow: 0 0 25px rgba(255,0,200,.4); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <h1>Crie um <span class="highlight">Site Romântico</span> Exclusivo 💖</h1>
+
+    <p class="subtitle">
+      Personalize nome, mensagem, fotos, música e gere um link com QR Code para surpreender.
+    </p>
+
+    <div class="promo-box">
+      <div>De <span class="old-price">R$30,00</span> por apenas</div>
+      <div class="new-price">R$9,99</div>
+
+      <div class="timer">
+        Oferta termina em:
+        <div id="countdown">10:00</div>
+      </div>
+    </div>
+
+    <ul class="features">
+      <li>✔ Contador automático de tempo juntos</li>
+      <li>✔ Música personalizada</li>
+      <li>✔ Fotos estilo polaroid</li>
+      <li>✔ QR Code exclusivo</li>
+      <li>✔ Link permanente</li>
+    </ul>
+
+    <a href="editor.html" class="cta-btn">Começar a editar</a>
+
+  </div>
+
+  <script>
+    const countdownEl = document.getElementById("countdown");
+
+    let duration = 600; // 10 minutos
+
+    function updateTimer() {
+      const minutes = Math.floor(duration / 60);
+      const seconds = duration % 60;
+
+      countdownEl.textContent =
+        String(minutes).padStart(2, '0') + ":" +
+        String(seconds).padStart(2, '0');
+
+      if (duration > 0) {
+        duration--;
+      } else {
+        countdownEl.textContent = "Encerrado";
+      }
+    }
+
+    setInterval(updateTimer, 1000);
+    updateTimer();
+  </script>
+
+</body>
+</html>
