@@ -51,6 +51,7 @@ if (dateBox && dataInput) {
       const [ano, mes, dia] = data.split("-");
       dateBox.innerHTML = `📆 ${dia}/${mes}/${ano}`;
     }
+    salvarEstado();
   });
 
 }
@@ -86,13 +87,80 @@ if (dateBox && dataInput) {
   function plural(v, s, p) {
     return v === 1 ? s : p;
   }
+/* =====================
+   PERSISTÊNCIA DA EDIÇÃO
+===================== */
 
+const STORAGE_KEY = "romantico_editor_state";
+
+function salvarEstado() {
+  const estado = {
+    nome: nomeInput.value,
+    mensagem: msgInput.value,
+    data: dataInput.value,
+    musica: musicaUrl,
+    fundo: preview.classList.contains("azul") ? "azul" :
+           preview.classList.contains("roxo") ? "roxo" :
+           preview.classList.contains("rosa") ? "rosa" :
+           preview.classList.contains("preto") ? "preto" : "azul",
+    fotos
+  };
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(estado));
+}
+
+function carregarEstado() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return;
+
+  const estado = JSON.parse(raw);
+
+  if (estado.nome) {
+    nomeInput.value = estado.nome;
+    nome.innerText = estado.nome;
+  }
+
+  if (estado.mensagem) {
+    msgInput.value = estado.mensagem;
+    mensagem.innerText = estado.mensagem;
+  }
+
+  if (estado.data) {
+    dataInput.value = estado.data;
+    dataInput.dispatchEvent(new Event("change"));
+  }
+
+  if (estado.fundo) {
+    preview.classList.remove("azul","roxo","rosa","preto");
+    preview.classList.add(estado.fundo);
+
+    document.querySelectorAll(".bg-card").forEach(c => {
+      c.classList.toggle("selected", c.dataset.bg === estado.fundo);
+    });
+  }
+
+  if (estado.fotos?.length) {
+    fotos = estado.fotos;
+    atualizarMidias();
+  }
+
+  if (estado.musica) {
+    musicaUrl = estado.musica;
+    audio.src = musicaUrl;
+    audio.load();
+
+    musicPlayer.style.display = "flex";
+    removeMusic.style.display = "block";
+    musicBox.innerText = "🎵 Música adicionada";
+  }
+}
   /* =====================
      TEXTO AO VIVO
   ===================== */
   nomeInput.oninput = () => {
     nome.innerText = nomeInput.value;
     limparErro(nomeInput);
+    salvarEstado();
   };
 
   let textoExpandido = false;
@@ -100,6 +168,7 @@ if (dateBox && dataInput) {
   msgInput.oninput = () => {
     mensagem.innerText = msgInput.value;
     limparErro(msgInput);
+    salvarEstado();
 
    if (mensagem.innerText.length > 300) {
       mensagem.classList.add("limitada");
@@ -542,8 +611,10 @@ function criarCoracoesPreview() {
 }
 
 criarCoracoesPreview();
+  carregarEstado();
 });
     
+
 
 
 
