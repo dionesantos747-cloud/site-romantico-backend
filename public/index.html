@@ -192,54 +192,63 @@ Imagine a pessoa lendo suas palavras… e descobrindo um link com fotos, música
 </div>
 
 <script>
-/* ===== TIMER DEFINITIVO 25 MIN ===== */
+/* ===== TIMER DEFINITIVO 25 MIN (FIX FINAL) ===== */
 
 const DURATION = 25 * 60 * 1000;
 let endTime = localStorage.getItem("promo_end");
 
-/* Se acessar com ?novo reinicia */
+/* Reiniciar somente se entrar com ?novo */
 if (window.location.search.includes("novo")) {
   localStorage.removeItem("promo_end");
   endTime = null;
 }
 
-/* Se não existir tempo salvo, cria */
+/* Criar tempo apenas se não existir */
 if (!endTime) {
   endTime = Date.now() + DURATION;
   localStorage.setItem("promo_end", endTime);
 }
 
-endTime = parseInt(endTime);
+endTime = parseInt(endTime, 10);
+
+const timerEl = document.getElementById("timer");
+const alertEl = document.getElementById("finalAlert");
+const mainPrice = document.getElementById("mainPrice");
+const stickyPrice = document.getElementById("stickyPrice");
+const stickyOld = document.getElementById("stickyOld");
+
+let interval = null;
 
 function updateTimer() {
-  const now = Date.now();
-  const remaining = endTime - now;
+  const remaining = endTime - Date.now();
 
-  const timer = document.getElementById("timer");
-  const alert = document.getElementById("finalAlert");
-
+  /* Quando acabar */
   if (remaining <= 0) {
-    timer.textContent = "Encerrada";
-    document.getElementById("mainPrice").textContent = "R$ 25,00";
-    document.getElementById("stickyPrice").textContent = "R$ 25,00";
-    document.getElementById("stickyOld").style.display = "none";
+    timerEl.textContent = "Encerrada";
+
+    if (mainPrice) mainPrice.textContent = "R$ 25,00";
+    if (stickyPrice) stickyPrice.textContent = "R$ 25,00";
+    if (stickyOld) stickyOld.style.display = "none";
+
+    clearInterval(interval);
     return;
   }
 
-  /* Mostrar alerta nos últimos 3 minutos */
-  if (remaining <= 180000) {
-    alert.style.display = "block";
+  /* Alerta últimos 3 minutos */
+  if (remaining <= 180000 && alertEl) {
+    alertEl.style.display = "block";
   }
 
   const totalSeconds = Math.floor(remaining / 1000);
   const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
   const seconds = String(totalSeconds % 60).padStart(2, "0");
 
-  timer.textContent = minutes + ":" + seconds;
+  timerEl.textContent = `${minutes}:${seconds}`;
 }
 
+/* Iniciar */
 updateTimer();
-setInterval(updateTimer, 1000);
+interval = setInterval(updateTimer, 1000);
 </script>
 
 </body>
