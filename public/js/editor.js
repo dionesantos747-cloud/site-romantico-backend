@@ -228,49 +228,43 @@ document.querySelectorAll(".bg-card").forEach(card => {
   /* =====================
      FOTOS + SLIDER
   ===================== */
-   async function reduzirImagem(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    const img = new Image();
+async function reduzirImagem(file) {
+  try {
+    // 🔥 Decodificador moderno (HEIC / HDR / câmera)
+    const bitmap = await createImageBitmap(file);
 
-    reader.onload = e => {
-      img.onload = () => {
-        const MAX = 1400;
-        let w = img.width;
-        let h = img.height;
+    const MAX = 1400;
+    let w = bitmap.width;
+    let h = bitmap.height;
 
-        if (w > MAX || h > MAX) {
-          const scale = MAX / Math.max(w, h);
-          w = Math.floor(w * scale);
-          h = Math.floor(h * scale);
-        }
+    if (w > MAX || h > MAX) {
+      const scale = MAX / Math.max(w, h);
+      w = Math.round(w * scale);
+      h = Math.round(h * scale);
+    }
 
-        const canvas = document.createElement("canvas");
-        canvas.width = w;
-        canvas.height = h;
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
 
-       const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#000";
+    ctx.fillRect(0, 0, w, h);
 
-// fundo sólido evita bug em HDR / HEIC
-ctx.fillStyle = "#000";
-ctx.fillRect(0, 0, w, h);
+    ctx.drawImage(bitmap, 0, 0, w, h);
 
-// desenha imagem normalizada
-ctx.drawImage(img, 0, 0, w, h);
+    return new Promise(resolve => {
+      canvas.toBlob(
+        blob => resolve(blob),
+        "image/jpeg",
+        0.88
+      );
+    });
 
-        canvas.toBlob(blob => {
-          if (!blob) reject("Falha ao comprimir");
-          else resolve(blob);
-        }, "image/jpeg", 0.85);
-      };
-
-      img.onerror = () => reject("Erro ao carregar imagem");
-      img.src = e.target.result;
-    };
-
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
+  } catch (err) {
+    console.warn("Falha ao reduzir imagem, enviando original", err);
+    return file; // fallback seguro
+  }
 }
   
  document.querySelectorAll(".photo-slot").forEach(slot => {
@@ -650,6 +644,7 @@ criarCoracoesPreview();
   carregarEstado();
 });
     
+
 
 
 
