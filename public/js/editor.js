@@ -344,7 +344,7 @@ try {
           ${fotos.filter(Boolean).map(url => `
             <div class="slide">
               <div class="polaroid">
-                <img src="${url}">
+                <img src="${url}" loading="lazy">
               </div>
             </div>
           `).join("")}
@@ -520,6 +520,7 @@ removeMusic.addEventListener("click", () => {
   musicBox.classList.remove("disabled");
   musicBox.style.pointerEvents = "auto";
   musicBox.innerText = "🎵 Adicionar música";
+  salvarEstado();
 });
 // play / pause
 playBtn.addEventListener("click", () => {
@@ -642,6 +643,7 @@ criarCoracoesPreview();
   carregarEstado();
 });
     
+
 
 
 
