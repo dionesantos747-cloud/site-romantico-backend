@@ -1393,6 +1393,56 @@ body.final #audioPlayer {
   max-width: 280px;
   margin: 20px auto;
 }
+/* =========================
+   TELA ABRIR PRESENTE
+========================= */
+
+.gift-screen {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at top, #ff4d88, #1a0010 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.gift-card {
+  text-align: center;
+  color: #fff;
+  padding: 40px 30px;
+  max-width: 320px;
+}
+
+.gift-card h1 {
+  font-family: 'Keania One', sans-serif;
+  font-size: 1.8em;
+  margin-bottom: 30px;
+}
+
+.gift-box {
+  font-size: 90px;
+  animation: giftPulse 1.8s infinite;
+  margin-bottom: 30px;
+}
+
+@keyframes giftPulse {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+#openGiftBtn {
+  background: #fff;
+  color: #000;
+  border: none;
+  padding: 16px 28px;
+  border-radius: 999px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0,0,0,.4);
+}
 
 
 
