@@ -48,12 +48,17 @@ async function carregar() {
   atualizarTexto();
 
 
-  if (data.musica) {
-    musicaEl.src = data.musica;
-    musicaEl.volume = 0.7;
-    musicaEl.style.display = "block";
+ if (data.musica) {
+  musicaEl.src = data.musica;
+  musicaEl.volume = 0.7;
+  musicaEl.load();              // ✅ ESSENCIAL
+  musicaEl.style.display = "block";
+
+  // ▶️ toca somente após interação (compatível com mobile)
+  document.body.addEventListener("click", () => {
     musicaEl.play().catch(() => {});
-  }
+  }, { once: true });
+}
 
   iniciarTempo(data.dataInicio);
   criarCorações();
@@ -122,7 +127,7 @@ function montarSliderFotos(fotos) {
         ${fotos.map(url => `
           <div class="slide">
             <div class="polaroid">
-              <img src="${url}">
+            <img src="${url}" loading="lazy">
             </div>
           </div>
         `).join("")}
