@@ -1,11 +1,23 @@
-/* 🔒 BLOQUEIA MODO ESCURO DO SISTEMA */
-
+/* 🔒 BLOQUEIO TOTAL DE DARK MODE (CHROME + SAMSUNG) */
 :root {
-
-color-scheme: light;
-
+  color-scheme: light !important;
 }
 
+html {
+  color-scheme: light !important;
+  background-color: #fff !important; /* engana o Samsung */
+}
+
+body {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+/* Impede inversão forçada */
+html, body, * {
+  filter: none !important;
+  -webkit-filter: none !important;
+}
 html, body {
 
 color-scheme: light !important;
@@ -1444,6 +1456,21 @@ body.final #audioPlayer {
   box-shadow: 0 10px 30px rgba(0,0,0,.4);
 }
 
+/* 🚫 FIX DEFINITIVO SAMSUNG INTERNET */
+@media (prefers-color-scheme: dark) {
+  html {
+    background-color: #fff !important;
+  }
+
+  body {
+    background-color: #000 !important;
+    color: #fff !important;
+  }
+
+  img, video, iframe {
+    filter: none !important;
+  }
+}
 
 
 
