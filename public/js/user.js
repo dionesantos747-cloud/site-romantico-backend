@@ -116,12 +116,46 @@ if (openGiftBtn) {
       giftScreen.remove();
     }, 600);
 
-    // 🔊 inicia música junto (se existir)
+    // 🎵 inicia música + sincroniza player
     if (musicaEl && musicaEl.src) {
-      musicaEl.play().catch(() => {});
+      musicaEl.play().then(() => {
+        // 🔥 ATUALIZA PLAYER VISUAL
+        const playBtn = document.getElementById("playBtn");
+        const musicPlayer = document.getElementById("musicPlayer");
+
+        if (musicPlayer) {
+          musicPlayer.style.display = "flex";
+        }
+
+        if (playBtn) {
+          playBtn.innerHTML = "❚❚";
+        }
+      }).catch(() => {});
     }
   });
 }
+
+/* ==========================
+   SINCRONIZA PLAYER COM AUDIO
+========================== */
+
+musicaEl.addEventListener("play", () => {
+  const playBtn = document.getElementById("playBtn");
+  if (playBtn) playBtn.innerHTML = "❚❚";
+});
+
+musicaEl.addEventListener("pause", () => {
+  const playBtn = document.getElementById("playBtn");
+  if (playBtn) playBtn.innerHTML = "▶";
+});
+
+musicaEl.addEventListener("ended", () => {
+  const playBtn = document.getElementById("playBtn");
+  const progress = document.querySelector(".progress");
+
+  if (playBtn) playBtn.innerHTML = "▶";
+  if (progress) progress.style.width = "0%";
+});
 /* ==========================
    FUNDO
 ========================== */
