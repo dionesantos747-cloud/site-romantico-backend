@@ -66,19 +66,8 @@ if (data.musica) {
     document.removeEventListener("touchstart", unlock);
   };
 
-  document.addEventListener("click", unlock);
-  document.addEventListener("touchstart", unlock);
-
-  // play / pause
-  playBtn.onclick = () => {
-    if (musicaEl.paused) {
-      musicaEl.play().catch(() => {});
-      playBtn.innerHTML = "❚❚";
-    } else {
-      musicaEl.pause();
-      playBtn.innerHTML = "▶";
-    }
-  };
+document.addEventListener("click", unlock, { once: true });
+document.addEventListener("touchstart", unlock, { once: true });
 
   // progresso
   musicaEl.addEventListener("timeupdate", () => {
@@ -117,8 +106,9 @@ if (openGiftBtn) {
     }, 600);
 
     // 🎵 inicia música + sincroniza player
-    if (musicaEl && musicaEl.src) {
-      musicaEl.play().then(() => {
+   if (musicaEl && musicaEl.src && musicaEl.paused) {
+  musicaEl.play().catch(() => {});
+}
         // 🔥 ATUALIZA PLAYER VISUAL
         const playBtn = document.getElementById("playBtn");
         const musicPlayer = document.getElementById("musicPlayer");
@@ -138,6 +128,20 @@ if (openGiftBtn) {
 /* ==========================
    SINCRONIZA PLAYER COM AUDIO
 ========================== */
+
+const playBtnGlobal = document.getElementById("playBtn");
+
+if (playBtnGlobal) {
+  playBtnGlobal.addEventListener("click", () => {
+    if (!musicaEl.src) return;
+
+    if (musicaEl.paused) {
+      musicaEl.play().catch(() => {});
+    } else {
+      musicaEl.pause();
+    }
+  });
+}
 
 musicaEl.addEventListener("play", () => {
   const playBtn = document.getElementById("playBtn");
