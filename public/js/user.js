@@ -55,7 +55,9 @@ if (data.musica) {
 
   // 🔓 desbloqueia autoplay no primeiro toque
   const startMusic = () => {
-    musicaEl.play().catch(() => {});
+  document.body.addEventListener("click", () => {
+  musicaEl.play().catch(() => {});
+}, { once: true });
     document.removeEventListener("click", startMusic);
     document.removeEventListener("touchstart", startMusic);
   };
