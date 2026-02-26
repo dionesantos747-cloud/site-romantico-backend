@@ -477,10 +477,10 @@ border-radius: 4px;
 
 /* Título */
 #tempo .titulo {
-  font-family: 'Ewert', cursive;
+   font-family: 'Keania One', sans-serif;
 
-  font-size: 1.9em;
-  letter-spacing: 2px;
+  font-size: 1.6em;
+  letter-spacing: 1.5px;
 
   color: #ffffff;
 
@@ -1419,6 +1419,7 @@ textarea:-webkit-autofill {
     letter-spacing: 1.5px;
   }
 }
+
 
 
 
