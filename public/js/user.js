@@ -101,6 +101,28 @@ if (data.musica) {
 carregar();
 
 /* ==========================
+   TELA ABRIR PRESENTE
+========================== */
+
+const giftScreen = document.getElementById("giftScreen");
+const openGiftBtn = document.getElementById("openGiftBtn");
+
+if (openGiftBtn) {
+  openGiftBtn.addEventListener("click", () => {
+    giftScreen.style.opacity = "0";
+    giftScreen.style.pointerEvents = "none";
+
+    setTimeout(() => {
+      giftScreen.remove();
+    }, 600);
+
+    // 🔊 inicia música junto (se existir)
+    if (musicaEl && musicaEl.src) {
+      musicaEl.play().catch(() => {});
+    }
+  });
+}
+/* ==========================
    FUNDO
 ========================== */
 function aplicarFundo(fundo) {
