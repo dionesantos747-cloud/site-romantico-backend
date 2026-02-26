@@ -501,8 +501,7 @@ text-shadow: 0 2px 6px rgba(0,0,0,0.6);
 
 /* Cápsulas */
 #tempo .item {
-  font-family: 'Manufacturing Consent', sans-serif;
-
+ font-family: 'Orbitron', sans-serif;
   font-size: 1.9em;          /* ⬇️ menor */
   font-weight: 400;
   letter-spacing: 1.5px;
@@ -1396,6 +1395,7 @@ textarea:-webkit-autofill {
     letter-spacing: 1.5px;
   }
 }
+
 
 
 
