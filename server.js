@@ -27,7 +27,11 @@ app.use(express.static(path.join(__dirname, "public"), {
   etag: true,
   lastModified: true
 }));
-
+// 🔒 PROTEÇÃO CONTRA REQUESTS PRESOS (IMPORTANTE)
+app.use((req, res, next) => {
+  res.setTimeout(30000); // 30 segundos
+  next();
+});
 /* =====================
    ROTA INICIAL
 ===================== */
@@ -86,6 +90,11 @@ if (!MONGO_URI || !MP_ACCESS_TOKEN) {
 app.post("/upload-image", upload.single("file"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "Arquivo não enviado" });
+  }
+
+  // 🔒 PROTEÇÃO REAL (ADICIONAR AQUI)
+  if (!req.file.mimetype.startsWith("image/")) {
+    return res.status(400).json({ error: "Arquivo inválido" });
   }
 
   cloudinary.uploader.upload_stream(
