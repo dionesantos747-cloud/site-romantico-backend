@@ -51,18 +51,48 @@ async function carregar() {
 if (data.musica) {
   musicaEl.src = data.musica;
   musicaEl.volume = 0.7;
-  musicaEl.controls = true;
-  musicaEl.setAttribute("playsinline", "");
-  musicaEl.style.display = "block";
+  musicaEl.load();
 
-  const desbloquearAudio = () => {
+  const musicPlayer = document.getElementById("musicPlayer");
+  const playBtn = document.getElementById("playBtn");
+  const progress = document.querySelector(".progress");
+
+  musicPlayer.style.display = "flex";
+
+  // desbloqueio autoplay (Instagram / mobile)
+  const unlock = () => {
     musicaEl.play().catch(() => {});
-    document.removeEventListener("click", desbloquearAudio);
-    document.removeEventListener("touchstart", desbloquearAudio);
+    document.removeEventListener("click", unlock);
+    document.removeEventListener("touchstart", unlock);
   };
 
-  document.addEventListener("click", desbloquearAudio);
-  document.addEventListener("touchstart", desbloquearAudio);
+  document.addEventListener("click", unlock);
+  document.addEventListener("touchstart", unlock);
+
+  // play / pause
+  playBtn.onclick = () => {
+    if (musicaEl.paused) {
+      musicaEl.play().catch(() => {});
+      playBtn.innerHTML = "❚❚";
+    } else {
+      musicaEl.pause();
+      playBtn.innerHTML = "▶";
+    }
+  };
+
+  // progresso
+  musicaEl.addEventListener("timeupdate", () => {
+    if (!musicaEl.duration) return;
+    const percent = (musicaEl.currentTime / musicaEl.duration) * 100;
+    progress.style.width = percent + "%";
+  });
+
+  // fim da música
+  musicaEl.addEventListener("ended", () => {
+    playBtn.innerHTML = "▶";
+    progress.style.width = "0%";
+    musicaEl.currentTime = 0;
+  });
 }
   iniciarTempo(data.dataInicio);
   criarCorações();
