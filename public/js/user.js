@@ -51,19 +51,18 @@ async function carregar() {
 if (data.musica) {
   musicaEl.src = data.musica;
   musicaEl.volume = 0.7;
+  musicaEl.controls = true;
+  musicaEl.setAttribute("playsinline", "");
   musicaEl.style.display = "block";
 
-  // 🔓 desbloqueia autoplay no primeiro toque
-  const startMusic = () => {
-  document.body.addEventListener("click", () => {
-  musicaEl.play().catch(() => {});
-}, { once: true });
-    document.removeEventListener("click", startMusic);
-    document.removeEventListener("touchstart", startMusic);
+  const desbloquearAudio = () => {
+    musicaEl.play().catch(() => {});
+    document.removeEventListener("click", desbloquearAudio);
+    document.removeEventListener("touchstart", desbloquearAudio);
   };
 
-  document.addEventListener("click", startMusic, { once: true });
-  document.addEventListener("touchstart", startMusic, { once: true });
+  document.addEventListener("click", desbloquearAudio);
+  document.addEventListener("touchstart", desbloquearAudio);
 }
   iniciarTempo(data.dataInicio);
   criarCorações();
@@ -192,7 +191,7 @@ function iniciarTempo(dataInicio) {
     const mo = Math.floor(diff / 2592000000) % 12;
     const a  = Math.floor(diff / 31536000000);
 
-  tempo.innerHTML = `
+tempoEl.innerHTML = `
   <span class="titulo">compartilhamos a vida já faz:</span>
   <div class="contador">
     <div class="item">${a} ${plural(a,"ano","anos")}</div>
