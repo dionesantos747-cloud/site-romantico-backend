@@ -893,11 +893,7 @@ justify-content: center;
 
 
 body.final {
-
-color-scheme: light !important;
-
-  background: inherit;
-
+  color-scheme: light !important;
 }
 
 body.final * {
@@ -1471,6 +1467,7 @@ body.final #audioPlayer {
     filter: none !important;
   }
 }
+
 
 
 
