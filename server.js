@@ -81,23 +81,33 @@ if (!MONGO_URI || !MP_ACCESS_TOKEN) {
 })();
 
 /* =====================
-   UPLOAD FOTO
+   UPLOAD FOTO (FIX HEIC DEFINITIVO)
 ===================== */
 app.post("/upload-image", upload.single("file"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "Arquivo não enviado" });
   }
 
-cloudinary.uploader.upload_stream(
-  {
-    folder: "site-romantico/fotos",
-    resource_type: "image",
-    transformation: [
-      { width: 1600, height: 1600, crop: "limit", quality: "auto" }
-    ]
-  },
+  cloudinary.uploader.upload_stream(
+    {
+      folder: "site-romantico/fotos",
+      resource_type: "image",
+
+      // 🔥 FORÇA CONVERSÃO UNIVERSAL
+      format: "jpg",
+
+      transformation: [
+        { width: 1600, height: 1600, crop: "limit" },
+        { quality: "auto" },
+        { fetch_format: "auto" }
+      ]
+    },
     (err, result) => {
-      if (err) return res.status(500).json({ error: "Erro imagem" });
+      if (err) {
+        console.error("Erro Cloudinary:", err);
+        return res.status(500).json({ error: "Erro imagem" });
+      }
+
       res.json({ url: result.secure_url });
     }
   ).end(req.file.buffer);
