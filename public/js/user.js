@@ -190,15 +190,15 @@ function iniciarTempo(dataInicio) {
     const mo = Math.floor(diff / 2592000000) % 12;
     const a  = Math.floor(diff / 31536000000);
 
-    tempoEl.innerHTML = `
-      <span class="titulo">compartilhamos a vida há:</span>
-      <div class="contador">
-        <div class="item">${a} ${plural(a,"ano","anos")}</div>
-        <div class="item">${mo} ${plural(mo,"mês","meses")}</div>
-        <div class="item">${d} ${plural(d,"dia","dias")}</div>
-        <div class="item">${h}h ${m}m ${s}s</div>
-      </div>
-    `;
+  tempo.innerHTML = `
+  <span class="titulo">compartilhamos a vida já faz:</span>
+  <div class="contador">
+    <div class="item">${a} ${plural(a,"ano","anos")}</div>
+    <div class="item">${mo} ${plural(mo,"mês","meses")}</div>
+    <div class="item">${d} ${plural(d,"dia","dias")}</div>
+    <div class="item tempo-hms">${h}h ${m}m ${s}s</div>
+  </div>
+`;
   }
 
   atualizar();
