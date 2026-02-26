@@ -5,23 +5,49 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MemoryIt — Eternize sua história</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- FONTES -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
+/* =====================
+   RESET
+===================== */
 *{box-sizing:border-box}
 body{
   margin:0;
-  background:radial-gradient(circle at top,#1a0f14,#000 70%);
   color:#fff;
   font-family:'Inter',sans-serif;
+  background:
+    linear-gradient(rgba(0,0,0,.75),rgba(0,0,0,.75)),
+    repeating-linear-gradient(
+      45deg,
+      rgba(255,0,200,.08) 0px,
+      rgba(255,0,200,.08) 1px,
+      transparent 1px,
+      transparent 8px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(0,200,255,.06) 0px,
+      rgba(0,200,255,.06) 1px,
+      transparent 1px,
+      transparent 8px
+    ),
+    radial-gradient(circle at top,#1a0f14,#000 70%);
 }
+
+/* =====================
+   CONTAINER
+===================== */
 .container{
   max-width:480px;
   margin:auto;
-  padding:20px 20px 130px;
+  padding:20px 20px 140px;
 }
 
-/* PROMO */
+/* =====================
+   PROMO
+===================== */
 .promo{
   background:linear-gradient(120deg,#ff4d88,#ff9ecb,#b84cff);
   color:#000;
@@ -29,11 +55,11 @@ body{
   padding:14px;
   text-align:center;
   font-weight:700;
-  margin-bottom:20px;
+  margin-bottom:18px;
 }
 #timer{display:block;font-size:1.3rem;margin-top:6px}
 
-/* ALERTA FINAL */
+/* ALERTA */
 .final-alert{
   display:none;
   background:rgba(255,80,80,.15);
@@ -46,48 +72,76 @@ body{
   font-weight:600;
 }
 
-/* TÍTULO */
+/* =====================
+   TÍTULO DIGITADO
+===================== */
 .hero-title{
   font-family:'Playfair Display',serif;
   text-align:center;
-  font-size:2.3rem;
-  margin:14px 0;
-  min-height:60px;
+  font-size:2.4rem;
+  margin:16px 0;
+  min-height:70px;
 }
-.color-1{background:linear-gradient(90deg,#ff4fd8,#b84cff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.color-2{background:linear-gradient(90deg,#ffd400,#ff7a00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.color-1{
+  background:linear-gradient(90deg,#ff4fd8,#b84cff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.color-2{
+  background:linear-gradient(90deg,#ffd400,#ff7a00);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
 .cursor{animation:blink 1s infinite;margin-left:4px}
 @keyframes blink{50%{opacity:0}}
 
-.subtitle{text-align:center;opacity:.85;margin-bottom:24px}
+.subtitle{text-align:center;opacity:.85;margin-bottom:26px}
 
-/* PREVIEW */
+/* =====================
+   PREVIEW EDITOR
+===================== */
 .editor-preview{
   margin:30px 0;
   padding:18px;
-  border-radius:24px;
-  background:linear-gradient(180deg,#120018,#000);
-  border:1px solid rgba(255,80,200,.25);
+  border-radius:26px;
+  background:rgba(0,0,0,.6);
+  border:1px solid rgba(255,0,200,.25);
+  backdrop-filter: blur(10px);
 }
 .editor-top{display:flex;gap:8px;margin-bottom:14px}
 .dot{width:10px;height:10px;border-radius:50%}
 .red{background:#ff5f57}.yellow{background:#ffbd2e}.green{background:#28c840}
 .editor-content{
-  background:radial-gradient(circle at top,#2a0040,#000 70%);
+  background:rgba(10,0,20,.8);
   padding:20px;
   border-radius:18px;
   font-family:'Playfair Display',serif;
 }
-.fake-cursor{width:2px;height:18px;background:#ff4fd8;display:inline-block;animation:blink 1s infinite}
+.fake-cursor{
+  width:2px;height:18px;
+  background:#ff4fd8;
+  display:inline-block;
+  animation:blink 1s infinite;
+}
 
-/* PASSOS */
+/* =====================
+   PASSOS
+===================== */
 .steps{display:flex;flex-direction:column;gap:18px}
-.step{display:flex;gap:14px;padding:18px;border-radius:20px;background:rgba(20,10,25,.75)}
+.step{
+  display:flex;gap:14px;
+  padding:18px;
+  border-radius:20px;
+  background:rgba(20,10,25,.75);
+  border:1px solid rgba(255,0,200,.2);
+}
 .step strong{color:#ff9de6}
 
-/* TEXTO CARTA */
+/* =====================
+   TEXTO IDEIA
+===================== */
 .idea-text{
-  margin:30px 0;
+  margin:28px 0;
   padding:20px;
   border-radius:20px;
   background:rgba(255,255,255,.05);
@@ -96,15 +150,23 @@ body{
   line-height:1.6;
 }
 
-/* PREÇO */
+/* =====================
+   PREÇO
+===================== */
 .price-box{text-align:center;margin-top:20px}
 .old{text-decoration:line-through;opacity:.4}
-.price{font-size:3rem;color:#ffd400;font-family:'Playfair Display',serif}
+.price{
+  font-size:3rem;
+  color:#ffd400;
+  font-family:'Playfair Display',serif;
+}
 
-/* CTA */
+/* =====================
+   CTA
+===================== */
 .cta{
   display:block;
-  margin-top:30px;
+  margin-top:28px;
   padding:20px;
   border-radius:999px;
   background:linear-gradient(90deg,#ff4fd8,#b84cff);
@@ -112,20 +174,26 @@ body{
   font-weight:800;
   text-align:center;
   text-decoration:none;
+  box-shadow:0 0 25px rgba(255,0,200,.6);
 }
 
-/* STICKY */
+/* =====================
+   STICKY BAR
+===================== */
 .sticky-bar{
-  position:fixed;bottom:0;left:0;right:0;
-  background:#000;
+  position:fixed;
+  bottom:0;left:0;right:0;
+  background:rgba(0,0,0,.85);
+  backdrop-filter: blur(14px);
   display:flex;
   justify-content:space-between;
   align-items:center;
   padding:16px;
+  border-top:1px solid rgba(255,255,255,.1);
 }
 .sticky-info{display:flex;flex-direction:column}
 .sticky-old{text-decoration:line-through;opacity:.4;font-size:.75rem}
-.sticky-price{color:#ffd400;font-size:1.5rem;font-weight:800}
+.sticky-price{color:#ffd400;font-size:1.6rem;font-weight:800}
 </style>
 </head>
 
@@ -143,7 +211,7 @@ body{
 </div>
 
 <h1 class="hero-title">
-<span id="typed-text"></span><span class="cursor">|</span>
+  <span id="typed-text"></span><span class="cursor">|</span>
 </h1>
 
 <p class="subtitle">
@@ -151,65 +219,60 @@ Eternize sua história com fotos, música e um link que dura para sempre.
 </p>
 
 <div class="editor-preview">
-<div class="editor-top">
-<div class="dot red"></div>
-<div class="dot yellow"></div>
-<div class="dot green"></div>
-</div>
-<div class="editor-content">
-<span id="preview-text"></span><span class="fake-cursor"></span>
-</div>
+  <div class="editor-top">
+    <div class="dot red"></div>
+    <div class="dot yellow"></div>
+    <div class="dot green"></div>
+  </div>
+  <div class="editor-content">
+    <span id="preview-text"></span><span class="fake-cursor"></span>
+  </div>
 </div>
 
 <div class="steps">
-<div class="step"><span>✏️</span><div><strong>Edite</strong><br>Personalize tudo</div></div>
-<div class="step"><span>🔗</span><div><strong>Link eterno</strong><br>Compartilhe para sempre</div></div>
+  <div class="step">✏️ <div><strong>Edite</strong><br>Personalize tudo</div></div>
+  <div class="step">💳 <div><strong>Pague</strong><br>Pagamento único e seguro</div></div>
+  <div class="step">🔗 <div><strong>Receba</strong><br>Link eterno + QR Code</div></div>
 </div>
 
 <div class="idea-text">
-💌 <strong>Transforme o link em um gesto inesquecível</strong><br><br>
-Escreva uma carta à mão, imprima o QR Code do site e coloque dentro do envelope.  
-Imagine a pessoa lendo suas palavras… e descobrindo um link com fotos, música e o tempo que vocês compartilham juntos.<br><br>
-É simples, criativo e profundamente marcante.  
-<strong>Um presente que não se perde — fica para sempre.</strong>
+💌 <strong>Transforme o link em um presente físico</strong><br><br>
+Escreva uma carta à mão, imprima o QR Code e coloque dentro do envelope.  
+Quem receber vai ler suas palavras… e descobrir um site com fotos, música  
+e o tempo que vocês compartilham juntos.<br><br>
+<strong>Um gesto simples que fica para sempre.</strong>
 </div>
 
 <div class="price-box">
-<div class="old" id="oldPrice">de R$ 25,00</div>
-<div class="price" id="mainPrice">R$ 9,99</div>
+  <div class="old" id="oldPrice">de R$ 25,00</div>
+  <div class="price" id="mainPrice">R$ 9,99</div>
 </div>
 
-<a href="editor.html" class="cta">Criar agora</a>
-
+<a href="editor.html?novo" class="cta">Criar agora</a>
 </div>
 
 <div class="sticky-bar">
-<div class="sticky-info">
-<span class="sticky-old" id="stickyOld">R$ 25,00</span>
-<span class="sticky-price" id="stickyPrice">R$ 9,99</span>
-</div>
-<a href="editor.html" class="cta">Criar agora</a>
+  <div class="sticky-info">
+    <span class="sticky-old" id="stickyOld">R$ 25,00</span>
+    <span class="sticky-price" id="stickyPrice">R$ 9,99</span>
+  </div>
+  <a href="editor.html?novo" class="cta">Criar agora</a>
 </div>
 
 <script>
-/* ===== TIMER DEFINITIVO 25 MIN (FIX FINAL) ===== */
-
+/* ===== TIMER 25 MIN ===== */
 const DURATION = 25 * 60 * 1000;
 let endTime = localStorage.getItem("promo_end");
 
-/* Reiniciar somente se entrar com ?novo */
 if (window.location.search.includes("novo")) {
   localStorage.removeItem("promo_end");
   endTime = null;
 }
-
-/* Criar tempo apenas se não existir */
 if (!endTime) {
   endTime = Date.now() + DURATION;
   localStorage.setItem("promo_end", endTime);
 }
-
-endTime = parseInt(endTime, 10);
+endTime = parseInt(endTime,10);
 
 const timerEl = document.getElementById("timer");
 const alertEl = document.getElementById("finalAlert");
@@ -217,38 +280,56 @@ const mainPrice = document.getElementById("mainPrice");
 const stickyPrice = document.getElementById("stickyPrice");
 const stickyOld = document.getElementById("stickyOld");
 
-let interval = null;
-
-function updateTimer() {
+function updateTimer(){
   const remaining = endTime - Date.now();
-
-  /* Quando acabar */
-  if (remaining <= 0) {
+  if (remaining <= 0){
     timerEl.textContent = "Encerrada";
-
-    if (mainPrice) mainPrice.textContent = "R$ 25,00";
-    if (stickyPrice) stickyPrice.textContent = "R$ 25,00";
-    if (stickyOld) stickyOld.style.display = "none";
-
-    clearInterval(interval);
+    mainPrice.textContent = "R$ 25,00";
+    stickyPrice.textContent = "R$ 25,00";
+    stickyOld.style.display = "none";
     return;
   }
-
-  /* Alerta últimos 3 minutos */
-  if (remaining <= 180000 && alertEl) {
-    alertEl.style.display = "block";
-  }
-
-  const totalSeconds = Math.floor(remaining / 1000);
-  const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
-  const seconds = String(totalSeconds % 60).padStart(2, "0");
-
-  timerEl.textContent = `${minutes}:${seconds}`;
+  if (remaining <= 180000) alertEl.style.display="block";
+  const s = Math.floor(remaining/1000);
+  timerEl.textContent =
+    String(Math.floor(s/60)).padStart(2,"0")+":"+
+    String(s%60).padStart(2,"0");
 }
+setInterval(updateTimer,1000);updateTimer();
 
-/* Iniciar */
-updateTimer();
-interval = setInterval(updateTimer, 1000);
+/* ===== TÍTULO DIGITADO ===== */
+const titleParts=[
+  {t:"Crie um site ",c:"color-1"},
+  {t:"inesquecível",c:"color-2"}
+];
+let p=0,i=0;
+const titleEl=document.getElementById("typed-text");
+function typeTitle(){
+  if(p>=titleParts.length)return;
+  const span=document.createElement("span");
+  span.className=titleParts[p].c;
+  titleEl.appendChild(span);
+  const int=setInterval(()=>{
+    span.textContent+=titleParts[p].t[i++];
+    if(i===titleParts[p].t.length){
+      clearInterval(int);i=0;p++;setTimeout(typeTitle,250);
+    }
+  },80);
+}
+typeTitle();
+
+/* ===== PREVIEW DIGITADO ===== */
+const previewText=`Vitória ❤️
+Você me faz querer ser melhor todos os dias.
+Cada momento ao seu lado é único.`;
+let j=0;
+const previewEl=document.getElementById("preview-text");
+(function typePreview(){
+  if(j<previewText.length){
+    previewEl.textContent+=previewText[j++];
+    setTimeout(typePreview,40);
+  }
+})();
 </script>
 
 </body>
