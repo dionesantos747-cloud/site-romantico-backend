@@ -840,20 +840,21 @@ display: none !important;
 
 }
 
+/* ===== SITE FINAL IGUAL AO EDITOR ===== */
+
 body.final .preview {
+  width: 360px;
+  max-width: 92vw;
+  aspect-ratio: 9 / 19.5;
 
-width: 100%;
+  border-radius: 34px;
+  border: 10px solid #111;
 
-max-width: 100%;
+  box-shadow:
+    0 0 0 4px #000,
+    0 25px 60px rgba(0,0,0,.8);
 
-border: none;
-
-box-shadow: none;
-
-border-radius: 0;
-
-background: inherit;
-
+  margin: 0 auto;
 }
 
 /* 🔥 SLIDER PRECISA EXISTIR */
@@ -888,37 +889,13 @@ justify-content: center;
 
 }
 
-/* 🔥 FUNDO REAL NO SITE FINAL */
 
-body.final .preview.azul {
-
-background: radial-gradient(#2f6cff, #050b1a) !important;
-
-}
-
-body.final .preview.roxo {
-
-background: radial-gradient(#7a4cff, #12071a) !important;
-
-}
-
-body.final .preview.rosa {
-
-background: radial-gradient(#ff5ca8, #1a050f) !important;
-
-}
-
-body.final .preview.preto {
-
-background: radial-gradient(#444, #000) !important;
-
-}
 
 body.final {
 
 color-scheme: light !important;
 
-background: #000 !important;
+  background: inherit;
 
 }
 
@@ -1419,6 +1396,7 @@ textarea:-webkit-autofill {
     letter-spacing: 1.5px;
   }
 }
+
 
 
 
