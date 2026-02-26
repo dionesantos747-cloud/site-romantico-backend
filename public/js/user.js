@@ -90,37 +90,39 @@ document.addEventListener("touchstart", unlock, { once: true });
 carregar();
 
 /* ==========================
-   TELA ABRIR PRESENTE
+   TELA ABRIR PRESENTE (FIX)
 ========================== */
 
 const giftScreen = document.getElementById("giftScreen");
 const openGiftBtn = document.getElementById("openGiftBtn");
 
-if (openGiftBtn) {
+if (openGiftBtn && giftScreen) {
   openGiftBtn.addEventListener("click", () => {
+
+    // animação de saída
     giftScreen.style.opacity = "0";
+    giftScreen.style.transition = "opacity 0.6s ease";
     giftScreen.style.pointerEvents = "none";
 
     setTimeout(() => {
       giftScreen.remove();
     }, 600);
 
-    // 🎵 inicia música + sincroniza player
-   if (musicaEl && musicaEl.src && musicaEl.paused) {
-  musicaEl.play().catch(() => {});
-}
-        // 🔥 ATUALIZA PLAYER VISUAL
-        const playBtn = document.getElementById("playBtn");
-        const musicPlayer = document.getElementById("musicPlayer");
+    // 🎵 inicia música
+    if (musicaEl && musicaEl.src) {
+      musicaEl.play().catch(() => {});
+    }
 
-        if (musicPlayer) {
-          musicPlayer.style.display = "flex";
-        }
+    // 🔥 sincroniza player visual
+    const playBtn = document.getElementById("playBtn");
+    const musicPlayer = document.getElementById("musicPlayer");
 
-        if (playBtn) {
-          playBtn.innerHTML = "❚❚";
-        }
-      }).catch(() => {});
+    if (musicPlayer) {
+      musicPlayer.style.display = "flex";
+    }
+
+    if (playBtn) {
+      playBtn.innerHTML = "❚❚";
     }
   });
 }
