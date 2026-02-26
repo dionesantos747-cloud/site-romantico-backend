@@ -260,42 +260,68 @@ e o tempo que vocês compartilham juntos.<br><br>
 </div>
 
 <script>
-/* ===== TIMER 25 MIN ===== */
-const DURATION = 25 * 60 * 1000;
-let endTime = localStorage.getItem("promo_end");
+/* ===== TIMER DEFINITIVO 25 MIN (FIX REAL) ===== */
 
+const DURATION = 25 * 60 * 1000;
+const STORAGE_KEY = "promo_end";
+
+let endTime = localStorage.getItem(STORAGE_KEY);
+
+/* 🔁 Forçar reset apenas com ?novo */
 if (window.location.search.includes("novo")) {
-  localStorage.removeItem("promo_end");
+  localStorage.removeItem(STORAGE_KEY);
   endTime = null;
 }
-if (!endTime) {
-  endTime = Date.now() + DURATION;
-  localStorage.setItem("promo_end", endTime);
-}
-endTime = parseInt(endTime,10);
 
+/* 🧠 Se não existir OU se estiver vencido, cria novo */
+if (!endTime || isNaN(endTime) || Number(endTime) < Date.now()) {
+  endTime = Date.now() + DURATION;
+  localStorage.setItem(STORAGE_KEY, endTime);
+}
+
+endTime = Number(endTime);
+
+/* ELEMENTOS */
 const timerEl = document.getElementById("timer");
 const alertEl = document.getElementById("finalAlert");
 const mainPrice = document.getElementById("mainPrice");
 const stickyPrice = document.getElementById("stickyPrice");
 const stickyOld = document.getElementById("stickyOld");
 
-function updateTimer(){
+function updateTimer() {
   const remaining = endTime - Date.now();
-  if (remaining <= 0){
+
+  /* ⛔ Encerrado */
+  if (remaining <= 0) {
     timerEl.textContent = "Encerrada";
+
     mainPrice.textContent = "R$ 25,00";
     stickyPrice.textContent = "R$ 25,00";
     stickyOld.style.display = "none";
+
     return;
   }
-  if (remaining <= 180000) alertEl.style.display="block";
-  const s = Math.floor(remaining/1000);
-  timerEl.textContent =
-    String(Math.floor(s/60)).padStart(2,"0")+":"+
-    String(s%60).padStart(2,"0");
+
+  /* 💸 Promoção ativa */
+  mainPrice.textContent = "R$ 9,99";
+  stickyPrice.textContent = "R$ 9,99";
+  stickyOld.style.display = "block";
+
+  /* 🚨 Últimos 3 minutos */
+  if (remaining <= 180000) {
+    alertEl.style.display = "block";
+  }
+
+  const totalSeconds = Math.floor(remaining / 1000);
+  const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+  const seconds = String(totalSeconds % 60).padStart(2, "0");
+
+  timerEl.textContent = `${minutes}:${seconds}`;
 }
-setInterval(updateTimer,1000);updateTimer();
+
+/* START */
+updateTimer();
+setInterval(updateTimer, 1000);
 
 /* ===== TÍTULO DIGITADO ===== */
 const titleParts=[
@@ -319,9 +345,9 @@ function typeTitle(){
 typeTitle();
 
 /* ===== PREVIEW DIGITADO ===== */
-const previewText=`Vitória ❤️
-Você me faz querer ser melhor todos os dias.
-Cada momento ao seu lado é único.`;
+const previewText=`EX:
+"Desde o dia em que nos conhecemos, tudo ficou mais bonito e
+cada momento ao seu lado é único."`;
 let j=0;
 const previewEl=document.getElementById("preview-text");
 (function typePreview(){
