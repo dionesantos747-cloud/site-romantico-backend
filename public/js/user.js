@@ -48,18 +48,21 @@ async function carregar() {
   atualizarTexto();
 
 
- if (data.musica) {
+if (data.musica) {
   musicaEl.src = data.musica;
   musicaEl.volume = 0.7;
-  musicaEl.load();              // ✅ ESSENCIAL
   musicaEl.style.display = "block";
 
-  // ▶️ toca somente após interação (compatível com mobile)
-  document.body.addEventListener("click", () => {
+  // 🔓 desbloqueia autoplay no primeiro toque
+  const startMusic = () => {
     musicaEl.play().catch(() => {});
-  }, { once: true });
-}
+    document.removeEventListener("click", startMusic);
+    document.removeEventListener("touchstart", startMusic);
+  };
 
+  document.addEventListener("click", startMusic, { once: true });
+  document.addEventListener("touchstart", startMusic, { once: true });
+}
   iniciarTempo(data.dataInicio);
   criarCorações();
 }
