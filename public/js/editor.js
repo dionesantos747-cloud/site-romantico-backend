@@ -249,9 +249,13 @@ document.querySelectorAll(".bg-card").forEach(card => {
         canvas.width = w;
         canvas.height = h;
 
-        const ctx = canvas.getContext("2d");
+       const ctx = canvas.getContext("2d");
+
+// fundo sólido evita bug em HDR / HEIC
 ctx.fillStyle = "#000";
 ctx.fillRect(0, 0, w, h);
+
+// desenha imagem normalizada
 ctx.drawImage(img, 0, 0, w, h);
 
         canvas.toBlob(blob => {
@@ -269,14 +273,15 @@ ctx.drawImage(img, 0, 0, w, h);
   });
 }
   
-  document.querySelectorAll(".photo-slot").forEach(slot => {
-    slot.onclick = () => {
-      if (slot.classList.contains("filled")) return;
-      fotoInput.dataset.slot = slot.dataset.slot;
-      fotoInput.click();
-    };
-  });
+ document.querySelectorAll(".photo-slot").forEach(slot => {
+  slot.onclick = () => {
+    if (slot.classList.contains("filled")) return;
 
+    fotoInput.value = "";              // ✅ ADICIONAR
+    fotoInput.dataset.slot = slot.dataset.slot;
+    fotoInput.click();
+  };
+});
   fotoInput.onchange = async () => {
   const file = fotoInput.files[0];
   if (!file) return;
@@ -645,6 +650,7 @@ criarCoracoesPreview();
   carregarEstado();
 });
     
+
 
 
 
