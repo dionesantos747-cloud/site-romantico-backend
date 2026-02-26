@@ -1388,6 +1388,14 @@ textarea:-webkit-autofill {
     letter-spacing: 1.5px;
   }
 }
+/* ===== PLAYER SITE FINAL ===== */
+
+body.final #audioPlayer {
+  display: block;
+  width: 80%;
+  max-width: 280px;
+  margin: 20px auto;
+}
 
 
 
