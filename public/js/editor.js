@@ -249,8 +249,10 @@ document.querySelectorAll(".bg-card").forEach(card => {
         canvas.width = w;
         canvas.height = h;
 
-        const ctx = canvas.getContext("2d", { alpha: false });
-        ctx.drawImage(img, 0, 0, w, h);
+        const ctx = canvas.getContext("2d");
+ctx.fillStyle = "#000";
+ctx.fillRect(0, 0, w, h);
+ctx.drawImage(img, 0, 0, w, h);
 
         canvas.toBlob(blob => {
           if (!blob) reject("Falha ao comprimir");
@@ -643,6 +645,7 @@ criarCoracoesPreview();
   carregarEstado();
 });
     
+
 
 
 
