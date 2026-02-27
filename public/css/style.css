@@ -1533,22 +1533,5 @@ body.final #audioPlayer {
   margin-top: 6px;
 }
 
-/* =========================
-   CORREÇÃO CAPSULAS TEMPO (ALINHAMENTO)
-========================= */
 
-#tempo .item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-
-  min-width: 96px; /* 🔥 padroniza largura */
-}
-
-/* garante mesma leitura visual */
-#tempo .item span,
-#tempo .item {
-  letter-spacing: 1.5px;
-}
 
