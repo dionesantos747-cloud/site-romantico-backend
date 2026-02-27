@@ -1467,6 +1467,54 @@ body.final #audioPlayer {
     filter: none !important;
   }
 }
+/* =========================
+   DESENHO EM TRAÇO ANIMADO
+========================= */
+
+.draw-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 40px 0 20px;
+}
+
+.draw-svg {
+  width: 260px;
+  max-width: 90%;
+}
+
+/* traço animado */
+.draw-line {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+
+  stroke-dasharray: 800;
+  stroke-dashoffset: 800;
+
+  animation: drawLine 4s ease forwards;
+}
+
+/* cores */
+.draw-line.light {
+  stroke: rgba(255,255,255,0.9);
+}
+
+.draw-line.dark {
+  stroke: rgba(255,255,255,0.55);
+  animation-delay: 0.6s;
+}
+
+.draw-line.moon {
+  stroke: rgba(255,255,255,0.7);
+  animation-delay: 1.2s;
+}
+
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
 
 
 
