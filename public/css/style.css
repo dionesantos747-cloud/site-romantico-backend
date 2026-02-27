@@ -1468,6 +1468,27 @@ body.final #audioPlayer {
   }
 }
 
+/* =========================
+   GATINHOS SVG (EDITOR + FINAL)
+========================= */
+
+.gatinhos-container {
+  display: flex;
+  justify-content: center;
+  margin: 60px 0 40px;
+}
+
+.gatinhos-svg {
+  width: 240px;
+  max-width: 85vw;
+  opacity: 0.95;
+  transition: transform .4s ease, opacity .4s ease;
+}
+
+/* efeito leve na preview */
+.preview .gatinhos-svg:hover {
+  transform: scale(1.05);
+}
 
 
 
