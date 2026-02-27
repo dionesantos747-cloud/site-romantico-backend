@@ -1503,35 +1503,8 @@ body.final #audioPlayer {
     filter: none !important;
   }
 }
-/* =========================
-   TEMPO JUNTOS – PREVIEW MAIS COMPACTA
-========================= */
 
-.preview #tempo {
-  margin: 30px 0 20px;
-}
 
-.preview #tempo .titulo {
-  font-size: 1.2em;
-  margin-bottom: 14px;
-  letter-spacing: 1px;
-}
-
-.preview #tempo .contador {
-  gap: 8px;
-}
-
-.preview #tempo .item {
-  font-size: 1.3em;
-  padding: 10px 14px;
-  min-width: 75px;
-}
-
-.preview #tempo .tempo-hms {
-  font-size: 1.2em;
-  padding: 10px 18px;
-  margin-top: 6px;
-}
 
 
 
