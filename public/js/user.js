@@ -88,7 +88,6 @@ document.addEventListener("touchstart", unlock, { once: true });
 }
 
 carregar();
-
 /* ==========================
    TELA ABRIR PRESENTE (FIX)
 ========================== */
@@ -98,6 +97,12 @@ const openGiftBtn = document.getElementById("openGiftBtn");
 
 if (openGiftBtn && giftScreen) {
   openGiftBtn.addEventListener("click", () => {
+
+    // 🔥 MOSTRAR SITE FINAL (ADICIONE ISSO AQUI)
+    const siteFinal = document.getElementById("siteFinal");
+    if (siteFinal) {
+      siteFinal.style.display = "block";
+    }
 
     // animação de saída
     giftScreen.style.opacity = "0";
