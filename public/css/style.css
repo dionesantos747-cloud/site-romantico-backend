@@ -1528,4 +1528,26 @@ body.final #audioPlayer {
   margin-top: 3px;
   text-transform: lowercase;
 }
+/* =====================
+   TÓPICOS EM DESTAQUE
+===================== */
+.topics{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
+  margin:22px 0 30px;
+}
+
+.topics span{
+  padding:8px 14px;
+  border-radius:999px;
+  font-size:.85rem;
+  font-weight:600;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,0,200,.25);
+  backdrop-filter: blur(6px);
+  color:#fff;
+  white-space:nowrap;
+}
 
