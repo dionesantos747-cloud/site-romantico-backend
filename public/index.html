@@ -46,30 +46,39 @@ body{
 }
 
 /* =====================
-   PROMO
+   PROMO FIXA
 ===================== */
 .promo{
   background:linear-gradient(120deg,#ff4d88,#ff9ecb,#b84cff);
   color:#000;
   border-radius:18px;
-  padding:14px;
+  padding:16px;
   text-align:center;
-  font-weight:700;
+  font-weight:800;
   margin-bottom:18px;
+  font-size:1rem;
 }
-#timer{display:block;font-size:1.3rem;margin-top:6px}
 
-/* ALERTA */
-.final-alert{
-  display:none;
-  background:rgba(255,80,80,.15);
-  border:1px solid rgba(255,80,80,.6);
-  color:#ffb3b3;
-  padding:12px;
-  border-radius:14px;
-  text-align:center;
-  margin-bottom:20px;
+/* =====================
+   TÓPICOS
+===================== */
+.topics{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
+  margin:22px 0 30px;
+}
+.topics span{
+  padding:8px 14px;
+  border-radius:999px;
+  font-size:.85rem;
   font-weight:600;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,0,200,.25);
+  backdrop-filter: blur(6px);
+  color:#fff;
+  white-space:nowrap;
 }
 
 /* =====================
@@ -95,7 +104,7 @@ body{
 .cursor{animation:blink 1s infinite;margin-left:4px}
 @keyframes blink{50%{opacity:0}}
 
-.subtitle{text-align:center;opacity:.85;margin-bottom:26px}
+.subtitle{text-align:center;opacity:.85;margin-bottom:10px}
 
 /* =====================
    PREVIEW EDITOR
@@ -202,12 +211,8 @@ body{
 <div class="container">
 
 <div class="promo">
-🔥 Oferta exclusiva ativa
-<span id="timer">--:--</span>
-</div>
-
-<div class="final-alert" id="finalAlert">
-⏰ Últimos 3 minutos para garantir o desconto
+🔥 Promoção exclusiva <br>
+<strong>de R$ 19,90 por apenas R$ 9,99</strong>
 </div>
 
 <h1 class="hero-title">
@@ -217,6 +222,15 @@ body{
 <p class="subtitle">
 Eternize sua história com fotos, música e um link que dura para sempre.
 </p>
+
+<div class="topics">
+  <span>💑 Namorados</span>
+  <span>💌 Carta de amor</span>
+  <span>🤍 Casais</span>
+  <span>👫 Amizade</span>
+  <span>👨‍👩‍👧 Família</span>
+  <span>🎁 Presente surpresa</span>
+</div>
 
 <div class="editor-preview">
   <div class="editor-top">
@@ -238,13 +252,13 @@ Eternize sua história com fotos, música e um link que dura para sempre.
 <div class="idea-text">
 💌 <strong>Transforme o link em um gesto inesquecível</strong><br><br>
 Escreva uma carta à mão, imprima o QR Code do site e coloque dentro do envelope.  
-Imagine a pessoa lendo suas palavras… e descobrindo um link com fotos, música e o tempo que vocês compartilham juntos.<br><br>
-É simples, criativo e profundamente marcante.  
+Imagine a pessoa lendo suas palavras… e descobrindo um link com fotos, música e momentos especiais.<br><br>
 <strong>Um presente que não se perde — fica para sempre.</strong>
 </div>
+
 <div class="price-box">
-  <div class="old" id="oldPrice">de R$ 25,00</div>
-  <div class="price" id="mainPrice">R$ 9,99</div>
+  <div class="old">de R$ 19,90</div>
+  <div class="price">R$ 9,99</div>
 </div>
 
 <a href="editor.html?novo" class="cta">Criar agora</a>
@@ -252,76 +266,13 @@ Imagine a pessoa lendo suas palavras… e descobrindo um link com fotos, música
 
 <div class="sticky-bar">
   <div class="sticky-info">
-    <span class="sticky-old" id="stickyOld">R$ 25,00</span>
-    <span class="sticky-price" id="stickyPrice">R$ 9,99</span>
+    <span class="sticky-old">R$ 19,90</span>
+    <span class="sticky-price">R$ 9,99</span>
   </div>
   <a href="editor.html?novo" class="cta">Criar agora</a>
 </div>
 
 <script>
-/* ===== TIMER DEFINITIVO 25 MIN (FIX REAL) ===== */
-
-const DURATION = 25 * 60 * 1000;
-const STORAGE_KEY = "promo_end";
-
-let endTime = localStorage.getItem(STORAGE_KEY);
-
-/* 🔁 Forçar reset apenas com ?novo */
-if (window.location.search.includes("novo")) {
-  localStorage.removeItem(STORAGE_KEY);
-  endTime = null;
-}
-
-/* 🧠 Se não existir OU se estiver vencido, cria novo */
-if (!endTime || isNaN(endTime) || Number(endTime) < Date.now()) {
-  endTime = Date.now() + DURATION;
-  localStorage.setItem(STORAGE_KEY, endTime);
-}
-
-endTime = Number(endTime);
-
-/* ELEMENTOS */
-const timerEl = document.getElementById("timer");
-const alertEl = document.getElementById("finalAlert");
-const mainPrice = document.getElementById("mainPrice");
-const stickyPrice = document.getElementById("stickyPrice");
-const stickyOld = document.getElementById("stickyOld");
-
-function updateTimer() {
-  const remaining = endTime - Date.now();
-
-  /* ⛔ Encerrado */
-  if (remaining <= 0) {
-    timerEl.textContent = "Encerrada";
-
-    mainPrice.textContent = "R$ 25,00";
-    stickyPrice.textContent = "R$ 25,00";
-    stickyOld.style.display = "none";
-
-    return;
-  }
-
-  /* 💸 Promoção ativa */
-  mainPrice.textContent = "R$ 9,99";
-  stickyPrice.textContent = "R$ 9,99";
-  stickyOld.style.display = "block";
-
-  /* 🚨 Últimos 3 minutos */
-  if (remaining <= 180000) {
-    alertEl.style.display = "block";
-  }
-
-  const totalSeconds = Math.floor(remaining / 1000);
-  const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
-  const seconds = String(totalSeconds % 60).padStart(2, "0");
-
-  timerEl.textContent = `${minutes}:${seconds}`;
-}
-
-/* START */
-updateTimer();
-setInterval(updateTimer, 1000);
-
 /* ===== TÍTULO DIGITADO ===== */
 const titleParts=[
   {t:"Crie um site ",c:"color-1"},
@@ -345,8 +296,8 @@ typeTitle();
 
 /* ===== PREVIEW DIGITADO ===== */
 const previewText=`EX:
-"Desde o dia em que nos conhecemos, tudo ficou mais bonito e
-cada momento ao seu lado é único."`;
+"Desde o dia em que nos conhecemos,
+tudo ficou mais bonito ao seu lado."`;
 let j=0;
 const previewEl=document.getElementById("preview-text");
 (function typePreview(){
