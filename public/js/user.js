@@ -290,11 +290,26 @@ function iniciarTempo(dataInicio) {
 
 tempoEl.innerHTML = `
   <span class="titulo">compartilhamos a vida já faz:</span>
+
   <div class="contador">
-    <div class="item">${a} ${plural(a,"ano","anos")}</div>
-    <div class="item">${mo} ${plural(mo,"mês","meses")}</div>
-    <div class="item">${d} ${plural(d,"dia","dias")}</div>
-    <div class="item tempo-hms">${h}h ${m}m ${s}s</div>
+    <div class="item">
+      <div class="numero">${a}</div>
+      <div class="label">${plural(a,"ano","anos")}</div>
+    </div>
+
+    <div class="item">
+      <div class="numero">${mo}</div>
+      <div class="label">${plural(mo,"mês","meses")}</div>
+    </div>
+
+    <div class="item">
+      <div class="numero">${d}</div>
+      <div class="label">${plural(d,"dia","dias")}</div>
+    </div>
+
+    <div class="item tempo-hms">
+      ${h}h ${m}m ${s}s
+    </div>
   </div>
 `;
   }
