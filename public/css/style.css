@@ -1517,7 +1517,7 @@ body.final #audioPlayer {
 }
 
 #tempo .numero {
-  font-size: 1.4em;   /* 🔥 menor e equilibrado */
+  font-size: 0.90em;   /* 🔥 menor e equilibrado */
   font-weight: 500;
   line-height: 1;
 }
@@ -1528,3 +1528,4 @@ body.final #audioPlayer {
   margin-top: 3px;
   text-transform: lowercase;
 }
+
