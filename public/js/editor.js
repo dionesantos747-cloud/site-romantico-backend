@@ -581,7 +581,7 @@ audio.addEventListener("ended", () => {
     const mo = Math.floor(diff / 2592000000) % 12;
     const a = Math.floor(diff / 31536000000);
 
- tempoEl.innerHTML = `
+ tempo.innerHTML = `
   <span class="titulo">compartilhamos a vida já faz:</span>
 
   <div class="contador">
@@ -659,6 +659,7 @@ criarCoracoesPreview();
   carregarEstado();
 });
     
+
 
 
 
