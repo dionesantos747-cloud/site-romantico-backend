@@ -1589,3 +1589,49 @@ body.final #audioPlayer {
   height: 100%;
   object-fit: cover;
 }
+
+/* =====================
+   MINI PREVIEW CELULAR
+===================== */
+
+.mini-preview-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 36px 0 28px;
+}
+
+.mini-phone {
+  width: 180px;               /* 🔥 pequeno e elegante */
+  aspect-ratio: 9 / 19.5;
+  background: #000;
+  border-radius: 26px;
+  padding: 6px;
+
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,0.08),
+    0 25px 55px rgba(0,0,0,0.85);
+
+  position: relative;
+}
+
+/* notch */
+.mini-phone::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70px;
+  height: 12px;
+  background: #000;
+  border-radius: 10px;
+  z-index: 2;
+}
+
+.mini-phone video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+  display: block;
+}
