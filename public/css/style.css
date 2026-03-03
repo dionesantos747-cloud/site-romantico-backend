@@ -502,7 +502,7 @@ border-radius: 4px;
 #tempo .contador {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
+  gap: 10px;
   justify-items: center;
   margin-top: 20px;
   padding: 0 10px; /* evita estourar no mobile */
@@ -1527,4 +1527,19 @@ body.final #audioPlayer {
   opacity: 0.6;
   margin-top: 3px;
   text-transform: lowercase;
+}
+
+/* =====================
+   AJUSTE TEMPO PREVIEW
+===================== */
+
+.contador {
+  display: flex;
+  justify-content: center;
+  gap: 16px; /* 🔥 espaço entre os balões */
+  margin-top: 18px;
+}
+
+.contador .item {
+  min-width: 90px;
 }
