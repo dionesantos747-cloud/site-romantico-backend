@@ -1557,15 +1557,16 @@ body.final #audioPlayer {
     padding: 10px 10px;
   }
 }
-.heart-img {
-  width: 220px;
-  margin-top: 30px;
-  filter: invert(1) brightness(2);
-}
 
 .heart-container {
   position: relative;
   text-align: center;
+  margin-top: 30px;
+}
+
+.heart-img {
+  width: 200px;
+  filter: invert(1) brightness(2); /* linhas brancas no fundo preto */
 }
 
 .heart-name {
@@ -1574,6 +1575,6 @@ body.final #audioPlayer {
   left: 50%;
   transform: translateX(-50%);
   font-family: 'Playfair Display', serif;
-  font-size: 18px;
+  font-size: 16px;
   color: #fff;
 }
