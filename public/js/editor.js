@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const dataInput  = document.getElementById("dataInput");
 
   const nome     = document.getElementById("nome");
+  const heartPreviewName = document.getElementById("heartPreviewName");
   const mensagem = document.getElementById("mensagem");
   const tempo    = document.getElementById("tempo");
   const preview  = document.getElementById("preview");
@@ -120,6 +121,9 @@ function carregarEstado() {
     nomeInput.value = estado.nome;
     nome.innerText = estado.nome;
   }
+  if (heartPreviewName) {
+  heartPreviewName.innerText = estado.nome;
+}
 
   if (estado.mensagem) {
     msgInput.value = estado.mensagem;
@@ -158,12 +162,16 @@ if (estado.fotos?.length) {
   /* =====================
      TEXTO AO VIVO
   ===================== */
-  nomeInput.oninput = () => {
-    nome.innerText = nomeInput.value;
-    limparErro(nomeInput);
-    salvarEstado();
-  };
+ nomeInput.oninput = () => {
+  nome.innerText = nomeInput.value;
 
+  if (heartPreviewName) {
+    heartPreviewName.innerText = nomeInput.value;
+  }
+
+  limparErro(nomeInput);
+  salvarEstado();
+};
   let textoExpandido = false;
 
   msgInput.oninput = () => {
@@ -659,6 +667,7 @@ criarCoracoesPreview();
   carregarEstado();
 });
     
+
 
 
 
