@@ -1528,18 +1528,21 @@ body.final #audioPlayer {
   margin-top: 3px;
   text-transform: lowercase;
 }
-
-/* =====================
-   AJUSTE TEMPO PREVIEW
-===================== */
+/* CONTADOR - ESPAÇAMENTO CORRETO */
 
 .contador {
   display: flex;
   justify-content: center;
-  gap: 16px; /* 🔥 espaço entre os balões */
-  margin-top: 18px;
+  align-items: center;
+  gap: 18px;
+  margin: 20px 0;
 }
 
 .contador .item {
-  min-width: 90px;
+  min-width: 95px;
+  padding: 14px 12px;
+}
+
+.tempo-hms {
+  margin-top: 18px;
 }
