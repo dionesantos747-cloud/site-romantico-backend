@@ -37,9 +37,15 @@ async function carregar() {
     return;
   }
 
-  aplicarFundo(data.fundo);
+ aplicarFundo(data.fundo);
 
-  nomeEl.innerText = data.nome || "";
+nomeEl.innerText = data.nome || "";
+
+// 🔥 ADICIONE EXATAMENTE AQUI
+const heartNameEl = document.getElementById("heartName");
+if (heartNameEl) {
+  heartNameEl.innerText = data.nome || "";
+}
 
   // 🔥 SLIDER AUTOMÁTICO (CORRETO)
   montarSliderFotos(data.fotos);
