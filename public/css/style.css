@@ -1528,21 +1528,32 @@ body.final #audioPlayer {
   margin-top: 3px;
   text-transform: lowercase;
 }
-/* CONTADOR - ESPAÇAMENTO CORRETO */
+/* =========================
+   CONTADOR – FIX REAL
+========================= */
 
 .contador {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 18px;
-  margin: 20px 0;
+  gap: 14px;              /* espaço real entre eles */
+  flex-wrap: nowrap;      /* impede quebra estranha */
 }
 
 .contador .item {
-  min-width: 95px;
-  padding: 14px 12px;
+  flex: 0 0 auto;         /* impede encolher */
+  min-width: 85px;        /* largura menor */
+  padding: 12px 14px;
 }
 
-.tempo-hms {
-  margin-top: 18px;
+/* versão mobile mais controlada */
+@media (max-width: 420px) {
+  .contador {
+    gap: 10px;
+  }
+
+  .contador .item {
+    min-width: 75px;
+    padding: 10px 10px;
+  }
 }
