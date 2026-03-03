@@ -178,17 +178,20 @@ async function verificarPagamento() {
     const res = await fetch(`/check-payment?payment_id=${paymentId}`);
     const data = await res.json();
 
-    if (data.status === "approved") {
-      polling = false;
+  if (data.status === "approved") {
+  polling = false;
 
-      document.getElementById("status").innerText =
-        "✅ Pagamento aprovado! Redirecionando...";
+  document.getElementById("status").innerText =
+    "✅ Pagamento aprovado! Redirecionando...";
 
-      setTimeout(() => {
-        window.location.href =
-          `/success.html?payment_id=${paymentId}`;
-      }, 1200);
-    }
+  // 🔥 LIMPA TODOS OS DADOS DO EDITOR
+  localStorage.removeItem("romantico_editor_state");
+
+  setTimeout(() => {
+    window.location.href =
+      `/success.html?payment_id=${paymentId}`;
+  }, 1200);
+}
   } catch {
     // silencioso
   }
