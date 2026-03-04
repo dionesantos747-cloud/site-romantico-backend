@@ -1558,18 +1558,12 @@ body.final #audioPlayer {
   }
 }
 
-.heart-container{
-position:relative;
-
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-
-width:100%;
-margin:40px auto;
-
-text-align:center;
+.heart-container {
+  position: relative;
+  width: 100%;
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
 }
 
 .heart-name{
@@ -1586,11 +1580,10 @@ font-family:'Playfair Display', serif;
 white-space:nowrap;
 }
 
-.heart-img{
-width:100%;
-max-width:none;
-display:block;
-margin:0 auto;
+.heart-img {
+  width: 90vw;
+  max-width: 520px;
+  height: auto;
 }
 
 .heart-name {
@@ -1621,6 +1614,7 @@ white-space:nowrap;
 .heart-container {
   display: none;
 }
+
 
 
 
