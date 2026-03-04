@@ -1604,5 +1604,8 @@ text-overflow:ellipsis;
 white-space:nowrap;
 }
 
+.heart-container {
+  display: none;
+}
 
 
