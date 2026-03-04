@@ -1566,11 +1566,13 @@ body.final #audioPlayer {
   justify-content: center;
 }
 
-.heart-img {
-  width: 95vw;
-  max-width: 600px;
-  height: auto;
-  filter: brightness(0) invert(1);
+
+.heart-img{
+width:100%;
+display:block;
+
+/* deslocamento visual */
+transform: translateX(-12%);
 }
 
 
@@ -1602,6 +1604,7 @@ white-space:nowrap;
 .heart-container {
   display: none;
 }
+
 
 
 
