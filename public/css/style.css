@@ -1587,8 +1587,8 @@ white-space:nowrap;
 }
 
 .heart-img{
-width:90%;
-max-width:420px;
+width:100%;
+max-width:none;
 display:block;
 margin:0 auto;
 }
@@ -1621,6 +1621,7 @@ white-space:nowrap;
 .heart-container {
   display: none;
 }
+
 
 
 
