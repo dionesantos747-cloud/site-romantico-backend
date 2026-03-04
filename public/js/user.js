@@ -44,17 +44,26 @@ const primeiroNome = nomeCompleto.split(" ")[0];
 
 nomeEl.innerText = nomeCompleto;
 
-// nome gravado na peça
+// coração + nome na peça
 const heartNameEl = document.getElementById("heartName");
-if (heartNameEl) {
+const heartContainer = document.querySelector(".heart-container");
+
+if (heartNameEl && heartContainer) {
+
   heartNameEl.innerText = primeiroNome;
+
+  // mostra coração somente se existir nome
+  if (primeiroNome.length > 0) {
+    heartContainer.style.display = "block";
+  }
+
 }
 
-  // 🔥 SLIDER AUTOMÁTICO (CORRETO)
-  montarSliderFotos(data.fotos);
+// 🔥 SLIDER AUTOMÁTICO
+montarSliderFotos(data.fotos);
 
-  textoCompleto = data.mensagem || "";
-  atualizarTexto();
+textoCompleto = data.mensagem || "";
+atualizarTexto();
 
 
 if (data.musica) {
