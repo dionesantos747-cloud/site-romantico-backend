@@ -1581,22 +1581,22 @@ body.final #audioPlayer {
 
 .heart-name {
   position: absolute;
-  bottom: 5.5%;
-  left: 50%;
-  transform: translateX(-50%);
+
+  left: 57%;
+  top: 78.6%;
+
+  transform: translate(-50%, -50%);
+
   width: 48%;
   text-align: center;
 
   font-family: 'Cinzel', serif;
   font-size: clamp(18px, 4.5vw, 32px);
-  letter-spacing: 1px;
 
-  color: #dcdcdc;
+  color: #cfcfcf;
 
-  /* 🔥 EFEITO GRAVADO REAL */
   text-shadow:
-    1px 1px 1px rgba(0,0,0,0.6),
-    -1px -1px 1px rgba(255,255,255,0.15);
-
-  pointer-events: none;
+    2px 2px 2px rgba(0,0,0,0.7),
+    -1px -1px 2px rgba(255,255,255,0.1);
 }
+
