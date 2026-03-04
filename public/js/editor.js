@@ -659,16 +659,30 @@ audio.addEventListener("ended", () => {
      CORAÇÕES
   ===================== */
 function criarCoracoesPreview() {
-  // remove corações antigos
+
   document.querySelectorAll(".heart").forEach(h => h.remove());
 
-  // cria novos corações
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 12; i++) {
+
     const h = document.createElement("div");
     h.className = "heart";
     h.innerText = "❤️";
+
+    // posição horizontal aleatória
     h.style.left = Math.random() * 100 + "%";
-    h.style.animationDuration = 6 + Math.random() * 6 + "s";
+
+    // nascer sempre embaixo
+    h.style.bottom = "-30px";
+
+    // tamanhos diferentes
+    h.style.fontSize = (16 + Math.random() * 10) + "px";
+
+    // velocidades diferentes
+    h.style.animationDuration = (6 + Math.random() * 6) + "s";
+
+    // iniciar em tempos diferentes
+    h.style.animationDelay = (Math.random() * 5) + "s";
+
     preview.appendChild(h);
   }
 }
@@ -677,6 +691,7 @@ criarCoracoesPreview();
   carregarEstado();
 });
     
+
 
 
 
