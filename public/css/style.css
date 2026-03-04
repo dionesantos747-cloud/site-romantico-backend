@@ -1558,28 +1558,39 @@ body.final #audioPlayer {
   }
 }
 
-.heart-container {
-  position: relative;
-  width: 100%;
-  margin-top: 40px;
-  display: flex;
-  justify-content: center;
+.heart-container{
+position:relative;
+
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+
+width:100%;
+margin:40px auto;
+
+text-align:center;
 }
 
 .heart-name{
-max-width:80%;
-text-align:center;
+position:absolute;
+
+left:50%;
+transform:translateX(-50%);
+
+bottom:6%;
+
+font-size:clamp(16px,4vw,24px);
+font-family:'Playfair Display', serif;
 
 white-space:nowrap;
-overflow:hidden;
-
-font-size:clamp(14px,3.5vw,22px);
 }
 
-.heart-img {
-  width: 90vw;
-  max-width: 520px;
-  height: auto;
+.heart-img{
+width:90%;
+max-width:420px;
+display:block;
+margin:0 auto;
 }
 
 .heart-name {
@@ -1610,6 +1621,7 @@ white-space:nowrap;
 .heart-container {
   display: none;
 }
+
 
 
 
