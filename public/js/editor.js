@@ -162,11 +162,21 @@ if (estado.fotos?.length) {
   /* =====================
      TEXTO AO VIVO
   ===================== */
- nomeInput.oninput = () => {
-  nome.innerText = nomeInput.value;
+nomeInput.oninput = () => {
+
+  const nomeDigitado = nomeInput.value.trim();
+  const primeiroNome = nomeDigitado.split(" ")[0];
+
+  nome.innerText = nomeDigitado;
 
   if (heartPreviewName) {
-    heartPreviewName.innerText = nomeInput.value;
+    heartPreviewName.innerText = primeiroNome;
+  }
+
+  const heartContainer = document.querySelector(".heart-container");
+
+  if (heartContainer) {
+    heartContainer.style.display = nomeDigitado ? "block" : "none";
   }
 
   limparErro(nomeInput);
@@ -667,6 +677,7 @@ criarCoracoesPreview();
   carregarEstado();
 });
     
+
 
 
 
