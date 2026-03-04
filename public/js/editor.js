@@ -122,7 +122,7 @@ function carregarEstado() {
     nome.innerText = estado.nome;
   }
   if (heartPreviewName) {
-  heartPreviewName.innerText = estado.nome;
+ heartPreviewName.innerText = estado.nome.split(" ")[0];
 }
 
   if (estado.mensagem) {
@@ -677,6 +677,7 @@ criarCoracoesPreview();
   carregarEstado();
 });
     
+
 
 
 
