@@ -1566,11 +1566,14 @@ body.final #audioPlayer {
   justify-content: center;
 }
 
-.heart-name::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  mix-blend-mode: multiply;
+.heart-name{
+max-width:80%;
+text-align:center;
+
+white-space:nowrap;
+overflow:hidden;
+
+font-size:clamp(14px,3.5vw,22px);
 }
 
 .heart-img {
@@ -1607,5 +1610,6 @@ white-space:nowrap;
 .heart-container {
   display: none;
 }
+
 
 
