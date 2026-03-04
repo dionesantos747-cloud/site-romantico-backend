@@ -638,7 +638,7 @@ animation: float 8s linear infinite;
 
 @keyframes float {
 
-to { transform: translateY(-180vh); opacity: 0; }
+to { transform: translateY(-230vh); opacity: 0; }
 
 }
 
@@ -1604,6 +1604,7 @@ white-space:nowrap;
 .heart-container {
   display: none;
 }
+
 
 
 
