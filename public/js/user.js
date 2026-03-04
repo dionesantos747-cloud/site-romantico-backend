@@ -343,14 +343,26 @@ function criarCorações() {
   const preview = document.getElementById("preview");
   preview.querySelectorAll(".heart").forEach(h => h.remove());
 
-  for (let i = 0; i < 14; i++) {
-    const h = document.createElement("div");
-    h.className = "heart";
-    h.innerText = "❤️";
-    h.style.left = Math.random() * 100 + "%";
-    h.style.animationDuration = 8 + Math.random() * 8 + "s";
-    preview.appendChild(h);
-  }
+ for (let i = 0; i < 14; i++) {
+
+  const h = document.createElement("div");
+  h.className = "heart";
+  h.innerText = "❤️";
+
+  // posição horizontal aleatória
+  h.style.left = Math.random() * 100 + "%";
+
+  // tamanhos diferentes
+  h.style.fontSize = (16 + Math.random() * 14) + "px";
+
+  // velocidade diferente
+  h.style.animationDuration = (6 + Math.random() * 8) + "s";
+
+  // começa em tempos diferentes
+  h.style.animationDelay = (Math.random() * 6) + "s";
+
+  preview.appendChild(h);
+   }
 }
           
 
