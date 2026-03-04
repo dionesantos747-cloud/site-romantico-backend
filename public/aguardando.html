@@ -175,7 +175,7 @@ async function verificarPagamento() {
   if (!polling) return;
 
   try {
-    const res = await fetch(`/check-payment?payment_id=${paymentId}`);
+    const res = await fetch(`/check-payment?payment_id=${paymentId}&t=${Date.now()}`);
     const data = await res.json();
 
   if (data.status === "approved") {
