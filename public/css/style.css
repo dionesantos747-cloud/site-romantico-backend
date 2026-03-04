@@ -1566,22 +1566,37 @@ body.final #audioPlayer {
   justify-content: center;
 }
 
+.heart-name::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: multiply;
+}
+
 .heart-img {
   width: 90vw;
   max-width: 520px;
   height: auto;
-  filter: brightness(0) invert(1);
 }
 
 .heart-name {
   position: absolute;
-  bottom: 7%;
+  bottom: 5.5%;
   left: 50%;
   transform: translateX(-50%);
-  width: 55%;
+  width: 48%;
   text-align: center;
-  font-family: 'Great Vibes', cursive;
-  font-size: clamp(22px, 6vw, 42px);
-  color: #ffffff;
-  white-space: nowrap;
+
+  font-family: 'Cinzel', serif;
+  font-size: clamp(18px, 4.5vw, 32px);
+  letter-spacing: 1px;
+
+  color: #dcdcdc;
+
+  /* 🔥 EFEITO GRAVADO REAL */
+  text-shadow:
+    1px 1px 1px rgba(0,0,0,0.6),
+    -1px -1px 1px rgba(255,255,255,0.15);
+
+  pointer-events: none;
 }
