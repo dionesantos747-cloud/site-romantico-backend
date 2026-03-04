@@ -1582,8 +1582,8 @@ body.final #audioPlayer {
 .heart-name {
   position: absolute;
 
-  left: 57%;
-  top: 78.6%;
+  left: 53.5%;
+  top: 77.1%;
 
   transform: translate(-50%, -50%);
 
@@ -1591,7 +1591,7 @@ body.final #audioPlayer {
   text-align: center;
 
   font-family: 'Cinzel', serif;
-  font-size: clamp(14px, 3.5vw, 24px);
+  font-size: clamp(14px, 3.5vw, 22px);
 
   color: #cfcfcf;
 
@@ -1603,5 +1603,6 @@ overflow:hidden;
 text-overflow:ellipsis;
 white-space:nowrap;
 }
+
 
 
