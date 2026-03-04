@@ -39,12 +39,15 @@ async function carregar() {
 
  aplicarFundo(data.fundo);
 
-nomeEl.innerText = data.nome || "";
+const nomeCompleto = (data.nome || "").trim();
+const primeiroNome = nomeCompleto.split(" ")[0];
 
-// 🔥 ADICIONE EXATAMENTE AQUI
+nomeEl.innerText = nomeCompleto;
+
+// nome gravado na peça
 const heartNameEl = document.getElementById("heartName");
 if (heartNameEl) {
-  heartNameEl.innerText = data.nome || "";
+  heartNameEl.innerText = primeiroNome;
 }
 
   // 🔥 SLIDER AUTOMÁTICO (CORRETO)
