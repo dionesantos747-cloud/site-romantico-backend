@@ -1566,25 +1566,13 @@ body.final #audioPlayer {
   justify-content: center;
 }
 
-.heart-name{
-position:absolute;
-
-left:50%;
-transform:translateX(-50%);
-
-bottom:6%;
-
-font-size:clamp(16px,4vw,24px);
-font-family:'Playfair Display', serif;
-
-white-space:nowrap;
-}
-
 .heart-img {
   width: 90vw;
   max-width: 520px;
   height: auto;
+  filter: brightness(0) invert(1);
 }
+
 
 .heart-name {
   position: absolute;
@@ -1614,6 +1602,7 @@ white-space:nowrap;
 .heart-container {
   display: none;
 }
+
 
 
 
