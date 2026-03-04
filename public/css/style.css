@@ -1587,14 +1587,16 @@ transform: translateX(-10%);
   width: 42%;
   text-align: center;
 
-  font-family: 'Cinzel', serif;
-  font-size: clamp(14px, 3.5vw, 22px);
+  font-family: 'Coiny', cursive;
 
-  color: #cfcfcf;
+  font-size: clamp(10px, 2.2vw, 14px);
+
+  color: #e8e8e8;
+
+  letter-spacing: 1px;
 
   text-shadow:
-    2px 2px 2px rgba(0,0,0,0.7),
-    -1px -1px 2px rgba(255,255,255,0.1);
+    1px 1px 2px rgba(0,0,0,0.8);
 max-width:90%;
 overflow:hidden;
 text-overflow:ellipsis;
@@ -1604,6 +1606,7 @@ white-space:nowrap;
 .heart-container {
   display: none;
 }
+
 
 
 
