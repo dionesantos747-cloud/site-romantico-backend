@@ -1589,7 +1589,7 @@ transform: translateX(-10%);
 
   font-family: 'Coiny', cursive;
 
-  font-size: clamp(10px, 2.2vw, 14px);
+  font-size: clamp(12px, 2.2vw, 14px);
 
   color: #e8e8e8;
 
@@ -1606,6 +1606,7 @@ white-space:nowrap;
 .heart-container {
   display: none;
 }
+
 
 
 
