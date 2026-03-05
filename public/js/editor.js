@@ -107,57 +107,107 @@ function salvarEstado() {
            preview.classList.contains("rosa") ? "rosa" :
            preview.classList.contains("preto") ? "preto" : "azul",
     fotos: [...fotos]
+    textoExpandido: textoExpandido,
   };
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(estado));
 }
 function carregarEstado() {
+
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) return;
 
   const estado = JSON.parse(raw);
 
+  /* ===== NOME ===== */
+
   if (estado.nome) {
     nomeInput.value = estado.nome;
     nome.innerText = estado.nome;
+
+    if (heartPreviewName) {
+      heartPreviewName.innerText = estado.nome.split(" ")[0];
+    }
   }
-  if (heartPreviewName) {
- heartPreviewName.innerText = estado.nome.split(" ")[0];
-}
+
+  /* ===== MENSAGEM ===== */
 
   if (estado.mensagem) {
     msgInput.value = estado.mensagem;
     mensagem.innerText = estado.mensagem;
   }
 
+  /* ===== ESTADO LER MAIS ===== */
+
+  if (estado.textoExpandido && lerBtn) {
+
+    textoExpandido = true;
+    mensagem.classList.remove("limitada");
+
+    lerBtn.style.display = "block";
+
+    lerBtn.innerHTML = `
+      <span class="ler-text">Ler menos</span>
+      <span class="ler-icon up">⌃</span>
+      <span class="ler-icon up">⌃</span>
+    `;
+  }
+
+  /* ===== DATA ===== */
+
   if (estado.data) {
     dataInput.value = estado.data;
     dataInput.dispatchEvent(new Event("change"));
   }
 
+  /* ===== FUNDO ===== */
+
   if (estado.fundo) {
+
     preview.classList.remove("azul","roxo","rosa","preto");
     preview.classList.add(estado.fundo);
 
     document.querySelectorAll(".bg-card").forEach(c => {
       c.classList.toggle("selected", c.dataset.bg === estado.fundo);
     });
+
   }
 
-if (estado.fotos?.length) {
-  fotos = estado.fotos;
-  restaurarSlotsFotos();   // 👈 ESSENCIAL
-  atualizarMidias();
-}
+  /* ===== CORAÇÃO ===== */
+
+  const heartContainer = document.querySelector(".heart-container");
+
+  if (heartContainer) {
+    heartContainer.style.display = estado.nome ? "block" : "none";
+  }
+
+  /* ===== FOTOS ===== */
+
+  if (estado.fotos?.length) {
+
+    fotos = estado.fotos;
+
+    restaurarSlotsFotos();
+    atualizarMidias();
+
+  }
+
+  /* ===== MÚSICA ===== */
+
   if (estado.musica) {
+
     musicaUrl = estado.musica;
+
     audio.src = musicaUrl;
     audio.load();
 
     musicPlayer.style.display = "flex";
     removeMusic.style.display = "block";
+
     musicBox.innerText = "🎵 Música adicionada";
+
   }
+
 }
   /* =====================
      TEXTO AO VIVO
@@ -691,6 +741,7 @@ criarCoracoesPreview();
   carregarEstado();
 });
     
+
 
 
 
