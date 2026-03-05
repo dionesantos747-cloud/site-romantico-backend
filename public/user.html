@@ -80,6 +80,25 @@
   </div> <!-- FIM .preview -->
 </div>   <!-- FIM #siteFinal -->
 
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const raw = localStorage.getItem("romantico_editor_state");
+  if (!raw) return;
+
+  const estado = JSON.parse(raw);
+
+  const giftScreen = document.getElementById("giftScreen");
+
+  if (!giftScreen || !estado.fundo) return;
+
+  giftScreen.classList.add(estado.fundo);
+
+});
+
+</script>
+
 <script src="/js/user.js"></script>
 </body>
 </html>
