@@ -106,7 +106,7 @@ function salvarEstado() {
            preview.classList.contains("roxo") ? "roxo" :
            preview.classList.contains("rosa") ? "rosa" :
            preview.classList.contains("preto") ? "preto" : "azul",
-    fotos: [...fotos]
+    fotos: [...fotos],
     textoExpandido: textoExpandido,
   };
 
@@ -741,6 +741,7 @@ criarCoracoesPreview();
   carregarEstado();
 });
     
+
 
 
 
