@@ -634,6 +634,10 @@ opacity: .6;
 
 animation: float 8s linear infinite;
 
+z-index: 9999;   /* 🔥 garante que fique na frente */
+
+pointer-events: none;
+
 }
 
 @keyframes float {
@@ -1606,6 +1610,7 @@ white-space:nowrap;
 .heart-container {
   display: none;
 }
+
 
 
 
