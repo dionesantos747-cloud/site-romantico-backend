@@ -231,6 +231,7 @@ nomeInput.oninput = () => {
 
   limparErro(nomeInput);
   salvarEstado();
+  criarCoracoesPreview();
 };
   let textoExpandido = false;
 
@@ -277,6 +278,7 @@ nomeInput.oninput = () => {
     <span class="ler-icon down">⌄</span>
   `;
 }
+    criarCoracoesPreview();
   };
 
 
@@ -674,6 +676,7 @@ audio.addEventListener("ended", () => {
   </div>
 `;
   }, 1000);
+   criarCoracoesPreview();
 };
 
   /* =====================
@@ -712,7 +715,7 @@ function criarCoracoesPreview() {
 
   document.querySelectorAll(".heart").forEach(h => h.remove());
 
-  const alturaTotal = preview.scrollHeight;
+ const alturaTotal = preview.scrollHeight + 100;
 
   for (let i = 0; i < 12; i++) {
 
@@ -737,6 +740,7 @@ criarCoracoesPreview();
   carregarEstado();
 });
     
+
 
 
 
