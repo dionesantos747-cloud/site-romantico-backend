@@ -712,7 +712,7 @@ function criarCoracoesPreview() {
 
   document.querySelectorAll(".heart").forEach(h => h.remove());
 
-  const altura = preview.offsetHeight;
+  const alturaTotal = preview.scrollHeight;
 
   for (let i = 0; i < 12; i++) {
 
@@ -722,11 +722,10 @@ function criarCoracoesPreview() {
 
     h.style.left = Math.random() * 100 + "%";
 
-    // força nascer do fundo real
-    h.style.top = altura + "px";
+    /* nascer sempre no fundo REAL da preview */
+    h.style.top = alturaTotal + "px";
 
     h.style.fontSize = (16 + Math.random() * 10) + "px";
-
     h.style.animationDuration = (6 + Math.random() * 6) + "s";
     h.style.animationDelay = (Math.random() * 5) + "s";
 
@@ -738,6 +737,7 @@ criarCoracoesPreview();
   carregarEstado();
 });
     
+
 
 
 
