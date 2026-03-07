@@ -641,17 +641,7 @@ pointer-events: none;
 }
 
 @keyframes float {
-
-0% {
-  transform: translateY(0);
-  opacity: 0.7;
-}
-
-100% {
-  transform: translateY(-1200px);
-  opacity: 0;
-}
-
+to { transform: translateY(-230vh); opacity: 0; }
 }
 
 /* ===== Segurança Site Final ===== */
@@ -1618,6 +1608,7 @@ white-space:nowrap;
 .heart-container {
   display: none;
 }
+
 
 
 
