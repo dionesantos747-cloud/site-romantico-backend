@@ -176,6 +176,11 @@ display=swap" rel="stylesheet">
 
 
 <script>
+function abrirNavegador(){
+  const url = window.location.href;
+  window.open(url, "_blank");
+}
+
 const ua = navigator.userAgent.toLowerCase();
 
 const inTikTok =
@@ -192,11 +197,13 @@ if (inTikTok) {
   // 🔒 bloqueia editor
   const editor = document.getElementById("editor");
   if (editor) editor.style.display = "none";
+
 }
 </script>
 
 </body>
 </html>
+
 
 
 
