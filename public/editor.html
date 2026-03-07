@@ -195,19 +195,25 @@ Abrir no navegador
 <!-- =====================
      SCRIPT PRINCIPAL
 ===================== -->
-<script src="/js/editor.js"></script>
 <script>
 function abrirNavegador(){
   const url = window.location.href;
   window.open(url, "_blank");
 }
 
-if (navigator.userAgent.includes("TikTok")) {
+const ua = navigator.userAgent.toLowerCase();
+
+if (
+  ua.includes("tiktok") ||
+  ua.includes("musical_ly") ||
+  ua.includes("bytedance")
+) {
   document.getElementById("tiktokWarning").style.display = "block";
 }
 </script>
 </body>
 </html>
+
 
 
 
