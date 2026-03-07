@@ -30,10 +30,36 @@ display=swap" rel="stylesheet">
 
 <body>
 
-<div id="tiktokWarning" style="display:none;">
-⚠️ Para enviar fotos e música, abra este site no navegador
+<div id="tiktokWarning" style="
+display:none;
+background:#ff0050;
+color:#fff;
+text-align:center;
+padding:16px;
+font-weight:bold;
+">
+
+⚠️ O navegador do TikTok bloqueia envio de fotos e música.
+
+<br><br>
+
+Abra este site no navegador do celular para funcionar corretamente.
+
+<br><br>
+
+<button onclick="abrirNavegador()" style="
+background:#fff;
+color:#000;
+border:none;
+padding:10px 16px;
+border-radius:10px;
+font-weight:bold;
+cursor:pointer;
+">
+Abrir no navegador
+</button>
+
 </div>
-  
 <!-- =====================
      EDITOR
 ===================== -->
@@ -177,27 +203,23 @@ display=swap" rel="stylesheet">
 
 <script>
 function abrirNavegador(){
-  const url = window.location.href;
-  window.open(url, "_blank");
+  window.open(window.location.href, "_blank");
 }
 
-const ua = navigator.userAgent.toLowerCase();
+const ua = navigator.userAgent || "";
+const isTikTok = ua.includes("TikTok");
+const isInstagram = ua.includes("Instagram");
+const isFacebook = ua.includes("FBAN") || ua.includes("FBAV");
 
-const inApp =
-  ua.includes("tiktok") ||
-  ua.includes("musical_ly") ||
-  ua.includes("bytedance") ||
-  ua.includes("ttwebview") ||
-  ua.includes("webview");
+// detecta navegador interno
+const isInAppBrowser = isTikTok || isInstagram || isFacebook;
 
-if (inApp) {
+if (isInAppBrowser) {
 
-  // mostra aviso
   const aviso = document.getElementById("tiktokWarning");
-  if (aviso) aviso.style.display = "block";
-
-  // bloqueia editor
   const editor = document.getElementById("editor");
+
+  if (aviso) aviso.style.display = "block";
   if (editor) editor.style.display = "none";
 
 }
@@ -205,6 +227,7 @@ if (inApp) {
 
 </body>
 </html>
+
 
 
 
