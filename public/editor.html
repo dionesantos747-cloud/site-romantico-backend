@@ -206,15 +206,15 @@ function abrirNavegador(){
   window.open(window.location.href, "_blank");
 }
 
-const ua = navigator.userAgent || "";
-const isTikTok = ua.includes("TikTok");
-const isInstagram = ua.includes("Instagram");
-const isFacebook = ua.includes("FBAN") || ua.includes("FBAV");
-
 // detecta navegador interno
-const isInAppBrowser = isTikTok || isInstagram || isFacebook;
+function isInAppBrowser() {
+  const ua = navigator.userAgent || "";
+  const isAndroidWebView = /wv/.test(ua);
+  const isIOSWebView = /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(ua);
+  return isAndroidWebView || isIOSWebView;
+}
 
-if (isInAppBrowser) {
+if (isInAppBrowser()) {
 
   const aviso = document.getElementById("tiktokWarning");
   const editor = document.getElementById("editor");
@@ -225,8 +225,10 @@ if (isInAppBrowser) {
 }
 </script>
 
+
 </body>
 </html>
+
 
 
 
