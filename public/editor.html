@@ -183,18 +183,20 @@ function abrirNavegador(){
 
 const ua = navigator.userAgent.toLowerCase();
 
-const inTikTok =
+const inApp =
   ua.includes("tiktok") ||
   ua.includes("musical_ly") ||
-  ua.includes("bytedance");
+  ua.includes("bytedance") ||
+  ua.includes("ttwebview") ||
+  ua.includes("webview");
 
-if (inTikTok) {
+if (inApp) {
 
   // mostra aviso
   const aviso = document.getElementById("tiktokWarning");
   if (aviso) aviso.style.display = "block";
 
-  // 🔒 bloqueia editor
+  // bloqueia editor
   const editor = document.getElementById("editor");
   if (editor) editor.style.display = "none";
 
@@ -203,6 +205,7 @@ if (inTikTok) {
 
 </body>
 </html>
+
 
 
 
