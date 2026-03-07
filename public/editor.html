@@ -198,7 +198,8 @@ Abrir no navegador
 <script src="/js/editor.js"></script>
 <script>
 function abrirNavegador(){
-  window.location.href = window.location.href;
+  const url = window.location.href;
+  window.open(url, "_blank");
 }
 
 if (navigator.userAgent.includes("TikTok")) {
@@ -207,6 +208,7 @@ if (navigator.userAgent.includes("TikTok")) {
 </script>
 </body>
 </html>
+
 
 
 
