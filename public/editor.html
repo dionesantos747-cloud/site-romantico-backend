@@ -40,21 +40,6 @@ font-weight:bold;
 font-size:14px;
 ">
 ⚠️ Para enviar fotos e música, abra este site no navegador
-
-<br><br>
-
-<button onclick="abrirNavegador()" style="
-background:#fff;
-color:#000;
-border:none;
-padding:10px 16px;
-border-radius:10px;
-font-weight:bold;
-cursor:pointer;
-">
-Abrir no navegador
-</button>
-
 </div>
   
 <!-- =====================
@@ -195,6 +180,9 @@ Abrir no navegador
 <!-- =====================
      SCRIPT PRINCIPAL
 ===================== -->
+<script src="/js/editor.js"></script>
+
+
 <script>
 function abrirNavegador(){
   const url = window.location.href;
@@ -208,11 +196,14 @@ if (
   ua.includes("musical_ly") ||
   ua.includes("bytedance")
 ) {
-  document.getElementById("tiktokWarning").style.display = "block";
+  const aviso = document.getElementById("tiktokWarning");
+  if (aviso) aviso.style.display = "block";
 }
 </script>
+
 </body>
 </html>
+
 
 
 
