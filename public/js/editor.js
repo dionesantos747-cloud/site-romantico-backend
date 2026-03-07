@@ -715,7 +715,7 @@ function criarCoracoesPreview() {
 
   document.querySelectorAll(".heart").forEach(h => h.remove());
 
- const alturaTotal = preview.scrollHeight + 100;
+ const alturaTotal = preview.scrollHeight + 200;
 
   for (let i = 0; i < 12; i++) {
 
@@ -740,6 +740,7 @@ criarCoracoesPreview();
   carregarEstado();
 });
     
+
 
 
 
