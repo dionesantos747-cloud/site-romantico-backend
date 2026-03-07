@@ -642,7 +642,15 @@ pointer-events: none;
 
 @keyframes float {
 
-to { transform: translateY(-230vh); opacity: 0; }
+0% {
+  transform: translateY(0);
+  opacity: 0.7;
+}
+
+100% {
+  transform: translateY(-1200px);
+  opacity: 0;
+}
 
 }
 
@@ -1610,6 +1618,7 @@ white-space:nowrap;
 .heart-container {
   display: none;
 }
+
 
 
 
