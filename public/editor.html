@@ -200,7 +200,6 @@ Abrir no navegador
 ===================== -->
 <script src="/js/editor.js"></script>
 
-
 <script>
 
 const ua = navigator.userAgent.toLowerCase();
@@ -214,22 +213,24 @@ ua.includes("kwai");
 
 if(inApp){
 
+document.getElementById("tiktokWarning").style.display = "block";
+
+}
+
+function abrirNavegador(){
+
 const url = window.location.href;
 
-/* ANDROID */
-if(/android/i.test(ua)){
+if(/android/i.test(navigator.userAgent)){
 
 window.location.href =
 "intent://" +
 url.replace(/^https?:\/\//,'') +
-"#Intent;scheme=https;package=com.android.chrome;end";
+"#Intent;scheme=https;end";
 
-}
+}else{
 
-/* IOS */
-else if(/iphone|ipad|ipod/i.test(ua)){
-
-window.location.href = url;
+window.open(url,"_blank");
 
 }
 
@@ -237,9 +238,9 @@ window.location.href = url;
 
 </script>
 
-
 </body>
 </html>
+
 
 
 
