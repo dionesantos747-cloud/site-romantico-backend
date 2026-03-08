@@ -1614,12 +1614,16 @@ white-space:nowrap;
 outline: none;
 }
 
+body,
+a,
 button,
 div,
 input,
 textarea{
+-webkit-tap-highlight-color: transparent;
 outline: none;
 }
+
 
 
 
