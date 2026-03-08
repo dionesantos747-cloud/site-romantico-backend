@@ -169,56 +169,11 @@ display=swap" rel="stylesheet">
 <!-- =====================
      SCRIPT PRINCIPAL
 ===================== -->
-<script>
+<script src="/js/editor.js"></script>
 
-const ua = navigator.userAgent.toLowerCase();
-
-const inApp =
-ua.includes("tiktok") ||
-ua.includes("instagram") ||
-ua.includes("fbav") ||
-ua.includes("fban") ||
-ua.includes("kwai");
-
-if(inApp){
-
-const url = window.location.href;
-
-/* tenta abrir automaticamente */
-
-if(/android/i.test(ua)){
-
-setTimeout(()=>{
-window.location.href =
-"intent://" +
-url.replace(/^https?:\/\//,'') +
-"#Intent;scheme=https;end";
-},300);
-
-}
-
-/* fallback se bloqueado */
-
-setTimeout(()=>{
-document.getElementById("tiktokWarning").style.display="block";
-},1500);
-
-}
-
-function abrirNavegador(){
-
-const url = window.location.href;
-
-window.location.href =
-"intent://" +
-url.replace(/^https?:\/\//,'') +
-"#Intent;scheme=https;end";
-
-}
-
-</script>
 </body>
 </html>
+
 
 
 
