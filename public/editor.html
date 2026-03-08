@@ -37,9 +37,12 @@ color:#fff;
 text-align:center;
 padding:16px;
 font-weight:bold;
+position:sticky;
+top:0;
+z-index:9999;
 ">
 
-⚠️ O navegador do TikTok bloqueia envio de fotos e música.
+⚠️ O navegador do TikTok/Instagram bloqueia envio de fotos e música.
 
 <br><br>
 
@@ -198,8 +201,6 @@ Abrir no navegador
 <!-- =====================
      SCRIPT PRINCIPAL
 ===================== -->
-<script src="/js/editor.js"></script>
-
 <script>
 
 const ua = navigator.userAgent.toLowerCase();
@@ -213,7 +214,26 @@ ua.includes("kwai");
 
 if(inApp){
 
-document.getElementById("tiktokWarning").style.display = "block";
+const url = window.location.href;
+
+/* tenta abrir automaticamente */
+
+if(/android/i.test(ua)){
+
+setTimeout(()=>{
+window.location.href =
+"intent://" +
+url.replace(/^https?:\/\//,'') +
+"#Intent;scheme=https;end";
+},300);
+
+}
+
+/* fallback se bloqueado */
+
+setTimeout(()=>{
+document.getElementById("tiktokWarning").style.display="block";
+},1500);
 
 }
 
@@ -221,25 +241,17 @@ function abrirNavegador(){
 
 const url = window.location.href;
 
-if(/android/i.test(navigator.userAgent)){
-
 window.location.href =
 "intent://" +
 url.replace(/^https?:\/\//,'') +
 "#Intent;scheme=https;end";
 
-}else{
-
-window.open(url,"_blank");
-
-}
-
 }
 
 </script>
-
 </body>
 </html>
+
 
 
 
