@@ -1609,6 +1609,17 @@ white-space:nowrap;
   display: none;
 }
 
+*{
+-webkit-tap-highlight-color: transparent;
+outline: none;
+}
+
+button,
+div,
+input,
+textarea{
+outline: none;
+}
 
 
 
