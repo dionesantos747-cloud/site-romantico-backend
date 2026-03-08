@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Abrindo...</title>
+
+<script>
+
+const ua = navigator.userAgent.toLowerCase();
+
+const inApp =
+ua.includes("tiktok") ||
+ua.includes("musical_ly") ||
+ua.includes("bytedance") ||
+ua.includes("instagram") ||
+ua.includes("fbav") ||
+ua.includes("fban") ||
+ua.includes("kwai");
+
+const url = "https://site-romantico-backend.onrender.com";
+
+if(inApp){
+
+if(/android/i.test(ua)){
+
+window.location.href =
+"intent://" +
+url.replace(/^https?:\/\//,'') +
+"#Intent;scheme=https;package=com.android.chrome;end";
+
+}
+
+else{
+
+window.location.href = url;
+
+}
+
+}
+
+else{
+
+window.location.href = url;
+
+}
+
+</script>
+
+</head>
+
+<body style="background:#000;color:#fff;text-align:center;padding-top:80px;font-family:sans-serif">
+
+Abrindo site...
+
+</body>
+</html>
