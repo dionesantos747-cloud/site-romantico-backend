@@ -202,32 +202,45 @@ Abrir no navegador
 
 
 <script>
-function abrirNavegador(){
-  window.open(window.location.href, "_blank");
+
+const ua = navigator.userAgent.toLowerCase();
+
+const inApp =
+ua.includes("tiktok") ||
+ua.includes("instagram") ||
+ua.includes("fbav") ||
+ua.includes("fban") ||
+ua.includes("kwai");
+
+if(inApp){
+
+const url = window.location.href;
+
+/* ANDROID */
+if(/android/i.test(ua)){
+
+window.location.href =
+"intent://" +
+url.replace(/^https?:\/\//,'') +
+"#Intent;scheme=https;package=com.android.chrome;end";
+
 }
 
-// detecta navegador interno
-function isInAppBrowser() {
-  const ua = navigator.userAgent || "";
-  const isAndroidWebView = /wv/.test(ua);
-  const isIOSWebView = /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(ua);
-  return isAndroidWebView || isIOSWebView;
-}
+/* IOS */
+else if(/iphone|ipad|ipod/i.test(ua)){
 
-if (isInAppBrowser()) {
-
-  const aviso = document.getElementById("tiktokWarning");
-  const editor = document.getElementById("editor");
-
-  if (aviso) aviso.style.display = "block";
-  if (editor) editor.style.display = "none";
+window.location.href = url;
 
 }
+
+}
+
 </script>
 
 
 </body>
 </html>
+
 
 
 
