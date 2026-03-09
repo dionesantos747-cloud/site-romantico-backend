@@ -740,6 +740,80 @@ criarCoracoesPreview();
   carregarEstado();
 });
     
+const previewAudio = document.getElementById("previewAudio");
+const musicLibrary = document.getElementById("musicLibrary");
+
+const openLibrary = document.getElementById("openMusicLibrary");
+const closeLibrary = document.getElementById("closeMusicLibrary");
+
+if(openLibrary){
+openLibrary.onclick = ()=>{
+musicLibrary.style.display = "block";
+};
+}
+
+if(closeLibrary){
+closeLibrary.onclick = ()=>{
+musicLibrary.style.display = "none";
+previewAudio.pause();
+};
+}
+
+/* PREVIEW PLAY */
+
+document.querySelectorAll(".preview-btn").forEach(btn=>{
+
+btn.onclick = (e)=>{
+
+const item = e.target.closest(".music-item");
+const url = item.dataset.src;
+
+if(previewAudio.src.includes(url) && !previewAudio.paused){
+previewAudio.pause();
+btn.innerText="▶";
+return;
+}
+
+previewAudio.src = url;
+previewAudio.play();
+
+document.querySelectorAll(".preview-btn").forEach(b=>{
+b.innerText="▶";
+});
+
+btn.innerText="⏸";
+
+};
+
+});
+
+/* ESCOLHER MUSICA */
+
+document.querySelectorAll(".select-btn").forEach(btn=>{
+
+btn.onclick = (e)=>{
+
+const item = e.target.closest(".music-item");
+const url = item.dataset.src;
+
+musicaUrl = url;
+
+audio.src = url;
+audio.load();
+
+musicPlayer.style.display = "flex";
+removeMusic.style.display = "block";
+
+musicBox.innerText = "🎵 Música selecionada";
+
+previewAudio.pause();
+musicLibrary.style.display = "none";
+
+salvarEstado();
+
+};
+
+});
 
 
 
