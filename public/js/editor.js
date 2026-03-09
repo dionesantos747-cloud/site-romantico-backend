@@ -764,31 +764,47 @@ previewAudio.pause();
 
 /* PREVIEW PLAY */
 
-document.querySelectorAll(".preview-btn").forEach(btn=>{
+document.querySelectorAll(".preview-btn").forEach(btn => {
 
-btn.onclick = (e)=>{
+btn.onclick = (e) => {
 
 const item = e.target.closest(".music-item");
 const url = item.dataset.src;
 
+/* mesma música tocando → pause */
 if(previewAudio.src.includes(url) && !previewAudio.paused){
+
 previewAudio.pause();
-btn.innerText="▶";
+btn.innerHTML = "▶";
 return;
+
 }
 
+/* resetar todos os botões */
+document.querySelectorAll(".preview-btn").forEach(b=>{
+b.innerHTML="▶";
+});
+
+/* tocar nova música */
 previewAudio.src = url;
 previewAudio.play();
 
-document.querySelectorAll(".preview-btn").forEach(b=>{
-b.innerText="▶";
-});
-
-btn.innerText="⏸";
+/* mostrar pause */
+btn.innerHTML = "❚❚";
 
 };
 
 });
+
+/* quando música terminar */
+previewAudio.addEventListener("ended", () => {
+
+document.querySelectorAll(".preview-btn").forEach(b=>{
+b.innerHTML="▶";
+});
+
+});
+
 
 /* ESCOLHER MUSICA */
 
@@ -815,8 +831,6 @@ musicLibrary.style.display = "none";
 salvarEstado();
 
 };
-
-});
 
 });
 
