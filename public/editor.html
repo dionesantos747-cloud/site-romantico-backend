@@ -74,6 +74,9 @@ display=swap" rel="stylesheet">
  <div class="music-box" id="musicBox">
   🎵 Adicionar música
 </div>
+  <div class="music-library-btn" id="openMusicLibrary">
+🎧 Escolher da biblioteca
+</div>
   
 <div id="cancelMusic" style="display:none; color:#ff4d88; margin-top:8px; cursor:pointer;">
   ❌ Cancelar carregamento
@@ -171,8 +174,84 @@ display=swap" rel="stylesheet">
 ===================== -->
 <script src="/js/editor.js"></script>
 
+<div class="music-library" id="musicLibrary">
+
+<div class="music-header">
+Escolha uma música
+<span id="closeMusicLibrary">✕</span>
+</div>
+
+<div class="music-item" data-src="/music/alianca.mp3">
+<span>💍 Aliança</span>
+<div class="music-actions">
+<button class="preview-btn">▶</button>
+<button class="select-btn">Escolher</button>
+</div>
+</div>
+
+<div class="music-item" data-src="/music/bestpart.mp3">
+<span>💖 Best Part</span>
+<div class="music-actions">
+<button class="preview-btn">▶</button>
+<button class="select-btn">Escolher</button>
+</div>
+</div>
+
+<div class="music-item" data-src="/music/dejaneiroajaneiro.mp3">
+<span>🌹 De Janeiro a Janeiro</span>
+<div class="music-actions">
+<button class="preview-btn">▶</button>
+<button class="select-btn">Escolher</button>
+</div>
+</div>
+
+<div class="music-item" data-src="/music/loveme.mp3">
+<span>❤️ Love Me</span>
+<div class="music-actions">
+<button class="preview-btn">▶</button>
+<button class="select-btn">Escolher</button>
+</div>
+</div>
+
+<div class="music-item" data-src="/music/palavrasaovento.mp3">
+<span>🌬 Palavras ao Vento</span>
+<div class="music-actions">
+<button class="preview-btn">▶</button>
+<button class="select-btn">Escolher</button>
+</div>
+</div>
+
+<div class="music-item" data-src="/music/planos.mp3">
+<span>✨ Planos</span>
+<div class="music-actions">
+<button class="preview-btn">▶</button>
+<button class="select-btn">Escolher</button>
+</div>
+</div>
+
+<div class="music-item" data-src="/music/umamorpuro.mp3">
+<span>💘 Um Amor Puro</span>
+<div class="music-actions">
+<button class="preview-btn">▶</button>
+<button class="select-btn">Escolher</button>
+</div>
+</div>
+
+<div class="music-item" data-src="/music/velhainfancia.mp3">
+<span>🌻 Velha Infância</span>
+<div class="music-actions">
+<button class="preview-btn">▶</button>
+<button class="select-btn">Escolher</button>
+</div>
+</div>
+
+</div>
+
+<audio id="previewAudio"></audio>
+  
 </body>
 </html>
+
 
 
 
