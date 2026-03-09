@@ -737,9 +737,12 @@ function criarCoracoesPreview() {
 }
 
 criarCoracoesPreview();
-  carregarEstado();
-});
-    
+carregarEstado();
+
+/* =====================
+   BIBLIOTECA DE MÚSICAS
+===================== */
+
 const previewAudio = document.getElementById("previewAudio");
 const musicLibrary = document.getElementById("musicLibrary");
 
@@ -815,6 +818,7 @@ salvarEstado();
 
 });
 
+});
 
 
 
