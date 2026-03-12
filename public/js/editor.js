@@ -779,12 +779,13 @@ return;
 
 previewAudio.src = url;
 previewAudio.play();
+  previewAudio.currentTime = 0;
 
 document.querySelectorAll(".preview-btn").forEach(b=>{
 b.innerText="▶";
 });
 
-btn.innerText="❚❚";
+btn.innerHTML="❚❚";
 
 };
 
@@ -801,16 +802,30 @@ const url = item.dataset.src;
 
 musicaUrl = url;
 
+/* prepara áudio do editor */
+
+audio.pause();
 audio.src = url;
 audio.load();
+
+/* mostrar player */
 
 musicPlayer.style.display = "flex";
 removeMusic.style.display = "block";
 
+playBtn.innerHTML = "▶";
+progress.style.width = "0%";
+
+/* atualizar botão */
+
 musicBox.innerText = "🎵 Música selecionada";
+
+/* fechar biblioteca */
 
 previewAudio.pause();
 musicLibrary.style.display = "none";
+
+/* salvar estado */
 
 salvarEstado();
 
@@ -818,7 +833,6 @@ salvarEstado();
 
 });
 
-});
 
 
 
