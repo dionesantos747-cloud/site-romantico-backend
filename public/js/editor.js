@@ -800,9 +800,11 @@ btn.onclick = (e)=>{
 const item = e.target.closest(".music-item");
 const url = item.dataset.src;
 
+/* salva música escolhida */
+
 musicaUrl = url;
 
-/* prepara áudio do editor */
+/* prepara player do editor */
 
 audio.pause();
 audio.src = url;
