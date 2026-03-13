@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const musicPlayer = document.getElementById("musicPlayer");
   const playBtn = document.getElementById("playBtn");
   const progress = document.querySelector(".progress");
+  const musicTitle = document.querySelector(".music-title");
 /* =====================
    DATA
 ===================== */
@@ -799,16 +800,21 @@ btn.onclick = (e)=>{
 
 const item = e.target.closest(".music-item");
 const url = item.dataset.src;
+const nomeMusica = item.querySelector("span").innerText;
 
-/* salva música escolhida */
+/* salvar música */
 
 musicaUrl = url;
 
-/* prepara player do editor */
+/* preparar player */
 
 audio.pause();
 audio.src = url;
 audio.load();
+
+/* atualizar nome no player */
+
+musicTitle.innerText = nomeMusica;
 
 /* mostrar player */
 
@@ -818,13 +824,27 @@ removeMusic.style.display = "block";
 playBtn.innerHTML = "▶";
 progress.style.width = "0%";
 
-/* atualizar botão */
-
 musicBox.innerText = "🎵 Música selecionada";
+
+/* resetar botões */
+
+document.querySelectorAll(".select-btn").forEach(b=>{
+b.innerText="Escolher";
+b.classList.remove("selected-music");
+});
+
+/* marcar selecionada */
+
+btn.innerText="✓ escolhida";
+btn.classList.add("selected-music");
+
+/* parar preview */
+
+previewAudio.pause();
+previewAudio.currentTime = 0;
 
 /* fechar biblioteca */
 
-previewAudio.pause();
 musicLibrary.style.display = "none";
 
 /* salvar estado */
@@ -833,6 +853,7 @@ salvarEstado();
 
 };
 
+});
 });
 
 
