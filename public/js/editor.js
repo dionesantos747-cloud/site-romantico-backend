@@ -710,6 +710,7 @@ audio.addEventListener("ended", () => {
       dataInicio: dataInput.value,
       fotos: fotos.filter(Boolean),
       musica: musicaUrl || null,
+      nomeMusica: nomeMusicaSelecionada,
       fundo: document.querySelector(".bg-card.selected")?.dataset.bg || "azul"
     };
 
