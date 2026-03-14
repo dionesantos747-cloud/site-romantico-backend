@@ -549,7 +549,10 @@ musicaInput.addEventListener("change", async () => {
     audio.pause();
     audio.src = musicaUrl;
     audio.load();
-
+    audio.currentTime = 0;
+    
+ musicTitle.innerText = "Nossa Música";
+  
     // mostra player
     musicPlayer.style.display = "flex";
     removeMusic.style.display = "block";
