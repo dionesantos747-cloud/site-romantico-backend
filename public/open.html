@@ -1,58 +1,42 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Abrir site</title>
+</head>
 
-<title>Abrindo...</title>
+<body style="background:#000;color:#fff;text-align:center;font-family:sans-serif;padding-top:80px">
+
+<h2>Abra no navegador</h2>
+
+<p>Para melhor experiência, abra no Chrome.</p>
+
+<button onclick="abrir()"
+style="padding:18px 40px;font-size:20px;border-radius:10px;border:none;background:#ff2ad4;color:#fff">
+
+Abrir site
+
+</button>
 
 <script>
 
-const ua = navigator.userAgent.toLowerCase();
-
-const inApp =
-ua.includes("tiktok") ||
-ua.includes("musical_ly") ||
-ua.includes("bytedance") ||
-ua.includes("instagram") ||
-ua.includes("fbav") ||
-ua.includes("fban") ||
-ua.includes("kwai");
+function abrir(){
 
 const url = "https://site-romantico-backend.onrender.com";
 
-if(inApp){
-
-if(/android/i.test(ua)){
-
+if(/android/i.test(navigator.userAgent)){
 window.location.href =
 "intent://" +
 url.replace(/^https?:\/\//,'') +
 "#Intent;scheme=https;package=com.android.chrome;end";
-
-}
-
-else{
-
+}else{
 window.location.href = url;
-
 }
-
-}
-
-else{
-
-window.location.href = url;
 
 }
 
 </script>
-
-</head>
-
-<body style="background:#000;color:#fff;text-align:center;padding-top:80px;font-family:sans-serif">
-
-Abrindo site...
 
 </body>
 </html>
