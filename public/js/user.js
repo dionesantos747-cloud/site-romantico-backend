@@ -71,6 +71,12 @@ if (data.musica) {
   musicaEl.volume = 0.7;
   musicaEl.load();
 
+   const musicTitle = document.querySelector(".music-title");
+
+if (data.nomeMusica && musicTitle) {
+  musicTitle.innerText = data.nomeMusica;
+}
+
   const musicPlayer = document.getElementById("musicPlayer");
   const playBtn = document.getElementById("playBtn");
   const progress = document.querySelector(".progress");
