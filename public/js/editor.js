@@ -842,6 +842,10 @@ btn.classList.add("selected-music");
 
 previewAudio.pause();
 previewAudio.currentTime = 0;
+  
+  document.querySelectorAll(".preview-btn").forEach(b=>{
+    b.innerText = "▶";
+});
 
 /* fechar biblioteca */
 
