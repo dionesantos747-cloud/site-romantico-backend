@@ -1,42 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Abrir site</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abrir no navegador</title>
 </head>
 
-<body style="background:#000;color:#fff;text-align:center;font-family:sans-serif;padding-top:80px">
+<body style="background:#000;color:#fff;font-family:sans-serif;text-align:center;padding-top:80px">
 
 <h2>Abra no navegador</h2>
 
-<p>Para melhor experiência, abra no Chrome.</p>
+<p>
+Toque nos <b>três pontos ⋮</b> no canto superior direito<br>
+e depois em <b>"Abrir no navegador"</b>.
+</p>
 
-<button onclick="abrir()"
-style="padding:18px 40px;font-size:20px;border-radius:10px;border:none;background:#ff2ad4;color:#fff">
+<button onclick="window.location.href='https://site-romantico-backend.onrender.com'"
+style="margin-top:20px;padding:16px 40px;font-size:18px;border:none;border-radius:10px;background:#ff2ad4;color:white">
 
-Abrir site
+Continuar
 
 </button>
-
-<script>
-
-function abrir(){
-
-const url = "https://site-romantico-backend.onrender.com";
-
-if(/android/i.test(navigator.userAgent)){
-window.location.href =
-"intent://" +
-url.replace(/^https?:\/\//,'') +
-"#Intent;scheme=https;package=com.android.chrome;end";
-}else{
-window.location.href = url;
-}
-
-}
-
-</script>
 
 </body>
 </html>
