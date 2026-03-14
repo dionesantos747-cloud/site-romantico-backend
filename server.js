@@ -149,12 +149,13 @@ app.post("/upload-music", upload.single("file"), (req, res) => {
 ===================== */
 app.post("/create-payment", async (req, res) => {
   try {
-    const {
+   const {
   nome,
   mensagem,
   dataInicio,
   fotos = [],
   musica = null,
+  nomeMusica = "Nossa Música",
   fundo = "azul"
 } = req.body;
 
@@ -174,6 +175,7 @@ if (!nome || !mensagem || !dataInicio) {
   dataInicio,
   fotos,
   musica,
+  nomeMusica,    
   fundo,
   status: "pending",
   createdAt: new Date()
