@@ -64,7 +64,8 @@ if (dateBox && dataInput) {
   let musicaUrl = null;
   let contadorInterval = null;
   let sliderInterval = null;
-
+  
+let nomeMusicaSelecionada = "Nossa Música";
   /* =====================
      HELPERS
   ===================== */
@@ -103,6 +104,7 @@ function salvarEstado() {
     mensagem: msgInput.value || "",
     data: dataInput.value || "",
     musica: audio?.src || null,
+    nomeMusica: nomeMusicaSelecionada,
     fundo: preview.classList.contains("azul") ? "azul" :
            preview.classList.contains("roxo") ? "roxo" :
            preview.classList.contains("rosa") ? "rosa" :
@@ -201,6 +203,11 @@ function carregarEstado() {
 
     audio.src = musicaUrl;
     audio.load();
+
+    if (estado.nomeMusica) {
+  musicTitle.innerText = estado.nomeMusica;
+  nomeMusicaSelecionada = estado.nomeMusica;
+}
 
     musicPlayer.style.display = "flex";
     removeMusic.style.display = "block";
@@ -824,6 +831,9 @@ audio.load();
 /* atualizar nome no player */
 
 musicTitle.innerText = nomeMusica;
+
+  nomeMusicaSelecionada = nomeMusica;
+salvarEstado();
 
 /* mostrar player */
 
