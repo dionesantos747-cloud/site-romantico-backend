@@ -23,26 +23,32 @@ const url = "https://site-romantico-backend.onrender.com";
 
 if(inApp){
 
-if(/android/i.test(ua)){
+  if(/android/i.test(ua)){
 
-window.location.href =
-"intent://" +
-url.replace(/^https?:\/\//,'') +
-"#Intent;scheme=https;package=com.android.chrome;end";
+    // abre no Chrome
+    window.location.href =
+    "intent://" +
+    url.replace(/^https?:\/\//,'') +
+    "#Intent;scheme=https;package=com.android.chrome;end";
+
+    // fallback caso bloqueie
+    setTimeout(()=>{
+      window.location.href = url;
+    },1500);
+
+  }
+
+  else{
+
+    // iPhone ou bloqueio
+    window.location.href = url;
+
+  }
 
 }
-
 else{
 
-window.location.href = url;
-
-}
-
-}
-
-else{
-
-window.location.href = url;
+  window.location.href = url;
 
 }
 
