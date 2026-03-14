@@ -595,6 +595,12 @@ removeMusic.addEventListener("click", () => {
   musicBox.classList.remove("disabled");
   musicBox.style.pointerEvents = "auto";
   musicBox.innerText = "🎵 Adicionar música";
+ // 🔹 limpar seleção da biblioteca
+  document.querySelectorAll(".select-btn").forEach(b=>{
+    b.innerText = "Escolher";
+    b.classList.remove("selected-music");
+  });
+  
   salvarEstado();
 });
 // play / pause
