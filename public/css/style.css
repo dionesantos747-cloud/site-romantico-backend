@@ -1750,22 +1750,18 @@ gap:10px;
 /* botão play */
 
 .preview-btn{
+  width:44px;
+  height:44px;
+  background:#222;
+  border:none;
+  border-radius:10px;
+  color:white;
+  font-size:18px;
+  cursor:pointer;
 
-width:42px;
-height:42px;
-
-border-radius:12px;
-
-border:none;
-
-background:#1f1f1f;
-
-color:#fff;
-
-font-size:18px;
-
-cursor:pointer;
-
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 /* botão escolher */
