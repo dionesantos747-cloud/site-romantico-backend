@@ -1,50 +1,72 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Abrindo...</title>
 
-<title>Abrindo site...</title>
+<script>
 
-<style>
+const ua = navigator.userAgent.toLowerCase();
 
-body{
-background:#000;
-color:#fff;
-font-family:sans-serif;
-text-align:center;
-padding-top:90px;
-margin:0;
+const inApp =
+ua.includes("tiktok") ||
+ua.includes("musical_ly") ||
+ua.includes("bytedance") ||
+ua.includes("instagram") ||
+ua.includes("fbav") ||
+ua.includes("fban") ||
+ua.includes("kwai");
+
+/* URL do seu site */
+const url = "https://memoryit.com.br";
+
+function abrir(){
+
+if(inApp){
+
+if(/android/i.test(ua)){
+
+window.location.href =
+"intent://" +
+url.replace(/^https?:\/\//,'') +
+"#Intent;scheme=https;package=com.android.chrome;end";
+
+/* fallback se o Chrome não abrir */
+setTimeout(()=>{
+window.location.href = url;
+},1500);
+
+}
+else{
+
+window.location.href = url;
+
 }
 
-h2{
-font-size:28px;
-margin-bottom:10px;
+}
+else{
+
+window.location.href = url;
+
 }
 
-p{
-opacity:.8;
-line-height:1.5;
 }
 
-.btn{
-display:inline-block;
-margin-top:35px;
-padding:18px 40px;
-font-size:18px;
-border-radius:14px;
-background:linear-gradient(90deg,#ff2ad4,#ff7af6);
-color:#fff;
-text-decoration:none;
-font-weight:bold;
-}
+/* tenta abrir automaticamente */
+setTimeout(abrir,300);
 
-</style>
+</script>
 
 </head>
 
-<body>
+<body style="
+background:#000;
+color:#fff;
+text-align:center;
+padding-top:80px;
+font-family:sans-serif;
+">
 
 <h2>Abrindo site...</h2>
 
@@ -53,40 +75,21 @@ Se não abrir automaticamente,<br>
 toque no botão abaixo
 </p>
 
-<a id="openChrome" class="btn">
-Abrir no navegador
-</a>
+<button onclick="abrir()" style="
+margin-top:25px;
+padding:18px 40px;
+font-size:18px;
+border-radius:12px;
+border:none;
+background:#ff2ad4;
+color:#fff;
+cursor:pointer;
+">
+Abrir site
+</button>
 
-<script>
-
-/* pega o id da URL */
-const params = new URLSearchParams(window.location.search);
-const id = params.get("id");
-
-/* monta o link final */
-const url = window.location.origin + "/?id=" + id;
-
-/* botão */
-const link = document.getElementById("openChrome");
-
-/* Android → tentar abrir no Chrome */
-if(/android/i.test(navigator.userAgent)){
-
-link.href =
-"intent://" +
-url.replace(/^https?:\/\//,'') +
-"#Intent;scheme=https;package=com.android.chrome;end";
-
-}
-
-/* iPhone ou outros */
-else{
-
-link.href = url;
-
-}
-
-</script>
+</body>
+</html>
 
 </body>
 </html>
