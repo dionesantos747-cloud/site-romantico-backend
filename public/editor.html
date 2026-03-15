@@ -1,6 +1,54 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <script>
+const ua = navigator.userAgent.toLowerCase();
+
+if (ua.includes("tiktok")) {
+
+document.write(`
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+body{
+background:#000;
+color:#fff;
+font-family:sans-serif;
+display:flex;
+align-items:center;
+justify-content:center;
+height:100vh;
+text-align:center;
+padding:30px;
+}
+</style>
+</head>
+<body>
+
+<div>
+<h2 style="font-size:28px;margin-bottom:10px">Abra no navegador</h2>
+
+<p>
+Para adicionar fotos e música,<br>
+abra este site no navegador.
+</p>
+
+<p style="margin-top:20px;font-size:14px;opacity:.7">
+Toque nos <b>3 pontos</b> no canto superior direito<br>
+e depois em <b>"Abrir no navegador"</b>
+</p>
+</div>
+
+</body>
+</html>
+`);
+
+throw new Error("TikTok browser bloqueado");
+
+}
+</script>
   <meta charset="UTF-8">
   <!-- 🔒 BLOQUEIO DARK MODE -->
 <meta name="color-scheme" content="light">
