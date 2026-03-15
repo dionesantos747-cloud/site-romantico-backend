@@ -4,7 +4,11 @@
   <script>
 const ua = navigator.userAgent.toLowerCase();
 
-if (ua.includes("tiktok")) {
+if (
+  ua.includes("tiktok") ||
+  ua.includes("musical_ly") ||
+  ua.includes("bytedance")
+) {
 
 document.write(`
 <!DOCTYPE html>
@@ -28,7 +32,9 @@ padding:30px;
 <body>
 
 <div>
-<h2 style="font-size:28px;margin-bottom:10px">Abra no navegador</h2>
+<h2 style="font-size:28px;margin-bottom:10px">
+Abra no navegador
+</h2>
 
 <p>
 Para adicionar fotos e música,<br>
@@ -39,6 +45,7 @@ abra este site no navegador.
 Toque nos <b>3 pontos</b> no canto superior direito<br>
 e depois em <b>"Abrir no navegador"</b>
 </p>
+
 </div>
 
 </body>
