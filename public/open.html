@@ -47,21 +47,30 @@ Abrir site
 
 <script>
 
-const url = "https://site-romantico-backend.onrender.com";
+/* pega o id da URL */
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
+
+/* monta o link final */
+const url = window.location.origin + "/?id=" + id;
 
 function abrir(){
 
+/* Android → tenta abrir no Chrome */
 if(/android/i.test(navigator.userAgent)){
 
 window.location.href =
 "googlechrome://" +
 url.replace(/^https?:\/\//,'');
 
+/* fallback se não abrir */
 setTimeout(()=>{
 window.location.href = url;
-},1500);
+},1200);
 
 }
+
+/* iPhone / outros */
 else{
 
 window.location.href = url;
@@ -71,8 +80,7 @@ window.location.href = url;
 }
 
 /* tenta abrir automaticamente */
-
-setTimeout(abrir,300);
+setTimeout(abrir,400);
 
 </script>
 
