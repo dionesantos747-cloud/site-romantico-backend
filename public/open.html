@@ -2,11 +2,10 @@
 <html lang="pt-BR">
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>Abrindo...</title>
+<title>Abrindo site...</title>
 
 <style>
 
@@ -16,16 +15,29 @@ color:#fff;
 font-family:sans-serif;
 text-align:center;
 padding-top:90px;
+margin:0;
 }
 
-button{
-margin-top:30px;
+h2{
+font-size:28px;
+margin-bottom:10px;
+}
+
+p{
+opacity:.8;
+line-height:1.5;
+}
+
+.btn{
+display:inline-block;
+margin-top:35px;
 padding:18px 40px;
 font-size:18px;
-border-radius:12px;
-border:none;
-background:#ff2ad4;
+border-radius:14px;
+background:linear-gradient(90deg,#ff2ad4,#ff7af6);
 color:#fff;
+text-decoration:none;
+font-weight:bold;
 }
 
 </style>
@@ -41,41 +53,38 @@ Se não abrir automaticamente,<br>
 toque no botão abaixo
 </p>
 
-<button onclick="abrir()">
-Abrir site
-</button>
+<a id="openChrome" class="btn">
+Abrir no navegador
+</a>
 
 <script>
 
+/* pega o id da URL */
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
 
-const url = id
-  ? window.location.origin + "/?id=" + id
-  : window.location.origin;
+/* monta o link final */
+const url = window.location.origin + "/?id=" + id;
 
-function abrir(){
+/* botão */
+const link = document.getElementById("openChrome");
 
+/* Android → tentar abrir no Chrome */
 if(/android/i.test(navigator.userAgent)){
 
-window.location.href =
-"googlechrome://" +
-url.replace(/^https?:\/\//,'');
-
-setTimeout(()=>{
-window.location.href = url;
-},1200);
+link.href =
+"intent://" +
+url.replace(/^https?:\/\//,'') +
+"#Intent;scheme=https;package=com.android.chrome;end";
 
 }
+
+/* iPhone ou outros */
 else{
 
-window.location.href = url;
+link.href = url;
 
 }
-
-}
-
-setTimeout(abrir,400);
 
 </script>
 
