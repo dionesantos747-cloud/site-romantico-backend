@@ -47,30 +47,26 @@ Abrir site
 
 <script>
 
-/* pega o id da URL */
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
 
-/* monta o link final */
-const url = window.location.origin + "/?id=" + id;
+const url = id
+  ? window.location.origin + "/?id=" + id
+  : window.location.origin;
 
 function abrir(){
 
-/* Android → tenta abrir no Chrome */
 if(/android/i.test(navigator.userAgent)){
 
 window.location.href =
 "googlechrome://" +
 url.replace(/^https?:\/\//,'');
 
-/* fallback se não abrir */
 setTimeout(()=>{
 window.location.href = url;
 },1200);
 
 }
-
-/* iPhone / outros */
 else{
 
 window.location.href = url;
@@ -79,7 +75,6 @@ window.location.href = url;
 
 }
 
-/* tenta abrir automaticamente */
 setTimeout(abrir,400);
 
 </script>
