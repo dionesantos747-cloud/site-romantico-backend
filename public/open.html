@@ -1,26 +1,80 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Abrir no navegador</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Abrindo...</title>
+
+<style>
+
+body{
+background:#000;
+color:#fff;
+font-family:sans-serif;
+text-align:center;
+padding-top:90px;
+}
+
+button{
+margin-top:30px;
+padding:18px 40px;
+font-size:18px;
+border-radius:12px;
+border:none;
+background:#ff2ad4;
+color:#fff;
+}
+
+</style>
+
 </head>
 
-<body style="background:#000;color:#fff;font-family:sans-serif;text-align:center;padding-top:80px">
+<body>
 
-<h2>Abra no navegador</h2>
+<h2>Abrindo site...</h2>
 
 <p>
-Toque nos <b>três pontos ⋮</b> no canto superior direito<br>
-e depois em <b>"Abrir no navegador"</b>.
+Se não abrir automaticamente,<br>
+toque no botão abaixo
 </p>
 
-<button onclick="window.location.href='https://site-romantico-backend.onrender.com'"
-style="margin-top:20px;padding:16px 40px;font-size:18px;border:none;border-radius:10px;background:#ff2ad4;color:white">
-
-Continuar
-
+<button onclick="abrir()">
+Abrir site
 </button>
+
+<script>
+
+const url = "https://site-romantico-backend.onrender.com";
+
+function abrir(){
+
+if(/android/i.test(navigator.userAgent)){
+
+window.location.href =
+"googlechrome://" +
+url.replace(/^https?:\/\//,'');
+
+setTimeout(()=>{
+window.location.href = url;
+},1500);
+
+}
+else{
+
+window.location.href = url;
+
+}
+
+}
+
+/* tenta abrir automaticamente */
+
+setTimeout(abrir,300);
+
+</script>
 
 </body>
 </html>
