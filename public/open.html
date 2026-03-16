@@ -21,63 +21,84 @@ padding:30px;
 text-align:center;
 }
 
+/* seta apontando para os 3 pontinhos */
+
+.arrow-box{
+position:fixed;
+top:15px;
+right:15px;
+text-align:center;
+animation:bounce 1s infinite;
+}
+
+.arrow{
+font-size:42px;
+}
+
+.arrow-text{
+font-size:14px;
+opacity:.9;
+margin-top:4px;
+}
+
+@keyframes bounce{
+0%{transform:translateY(0)}
+50%{transform:translateY(-8px)}
+100%{transform:translateY(0)}
+}
+
 h2{
-font-size:28px;
-margin-bottom:10px;
+font-size:30px;
+margin-bottom:12px;
 }
 
 p{
-opacity:.85;
-max-width:320px;
-line-height:1.5;
+opacity:.9;
+max-width:340px;
+line-height:1.6;
+}
+
+.highlight{
+color:#ff7af6;
+font-weight:bold;
 }
 
 .btn{
 margin-top:28px;
-padding:18px 42px;
+padding:18px 44px;
 font-size:18px;
 border-radius:14px;
 background:linear-gradient(90deg,#ff2ad4,#ff7af6);
 color:#fff;
 border:none;
 font-weight:bold;
+box-shadow:0 0 20px rgba(255,0,200,.5);
 }
 
-.dots{
-margin-top:40px;
-padding:18px;
+.info{
+margin-top:26px;
+padding:16px;
 border-radius:14px;
 background:#111;
 border:1px solid #333;
 max-width:340px;
-}
-
-.dots span{
-font-size:22px;
-letter-spacing:3px;
-}
-
-.arrow{
-font-size:32px;
-margin-bottom:8px;
-animation:updown 1s infinite;
-}
-
-@keyframes updown{
-0%{transform:translateY(0)}
-50%{transform:translateY(-6px)}
-100%{transform:translateY(0)}
-}
-
-.tip{
-margin-top:8px;
 font-size:14px;
-opacity:.7;
+opacity:.9;
 }
 
 </style>
 
 <script>
+
+const ua = navigator.userAgent.toLowerCase();
+
+/* se NÃO for TikTok redireciona automaticamente */
+
+if(!ua.includes("tiktok") && !ua.includes("musical_ly") && !ua.includes("bytedance")){
+
+window.location.href = "https://memoryit.com.br";
+
+}
 
 function abrirChrome(){
 
@@ -104,37 +125,33 @@ window.location.href = url;
 
 <body>
 
+<!-- seta apontando para os 3 pontinhos -->
+
+<div class="arrow-box">
+<div class="arrow">⬆️</div>
+<div class="arrow-text">3 pontinhos</div>
+</div>
+
 <h2>Abra no navegador</h2>
 
 <p>
-Para adicionar fotos e música,<br>
-abra este site no navegador do celular.
+Para criar seu site você precisa usar o <span class="highlight">navegador do celular</span>.
+</p>
+
+<p>
+O navegador do TikTok bloqueia algumas funções como:
+<br><br>
+📷 adicionar fotos<br>
+🎵 tocar música
 </p>
 
 <button class="btn" onclick="abrirChrome()">
 Abrir no navegador
 </button>
 
-<div class="dots">
-
-<div class="arrow">⬆️</div>
-
-<div>
-Toque nos <b>3 pontinhos</b> do TikTok
-</div>
-
-<div style="margin:8px 0">
-<span>⋯</span>
-</div>
-
-<div>
-Depois toque em <b>"Abrir no navegador"</b>
-</div>
-
-</div>
-
-<div class="tip">
-Se o botão não funcionar, use os 3 pontinhos acima.
+<div class="info">
+Toque nos <b>3 pontinhos</b> no canto superior direito<br>
+e depois em <b>"Abrir no navegador"</b>.
 </div>
 
 </body>
