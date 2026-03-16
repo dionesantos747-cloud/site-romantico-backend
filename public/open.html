@@ -3,26 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-  
 <title>Abrir no navegador</title>
 
 <style>
+
 body{
 background:#000;
 color:#fff;
 font-family:sans-serif;
-text-align:center;
 display:flex;
 flex-direction:column;
 align-items:center;
 justify-content:center;
 height:100vh;
-padding:30px;
 margin:0;
+padding:30px;
+text-align:center;
 }
 
 h2{
@@ -31,29 +27,78 @@ margin-bottom:10px;
 }
 
 p{
-opacity:.8;
+opacity:.85;
 max-width:320px;
 line-height:1.5;
 }
 
 .btn{
-display:inline-block;
-margin-top:30px;
+margin-top:28px;
 padding:18px 42px;
 font-size:18px;
 border-radius:14px;
 background:linear-gradient(90deg,#ff2ad4,#ff7af6);
 color:#fff;
-text-decoration:none;
+border:none;
 font-weight:bold;
 }
 
-.info{
-margin-top:25px;
-font-size:14px;
-opacity:.6;
+.dots{
+margin-top:40px;
+padding:18px;
+border-radius:14px;
+background:#111;
+border:1px solid #333;
+max-width:340px;
 }
+
+.dots span{
+font-size:22px;
+letter-spacing:3px;
+}
+
+.arrow{
+font-size:32px;
+margin-bottom:8px;
+animation:updown 1s infinite;
+}
+
+@keyframes updown{
+0%{transform:translateY(0)}
+50%{transform:translateY(-6px)}
+100%{transform:translateY(0)}
+}
+
+.tip{
+margin-top:8px;
+font-size:14px;
+opacity:.7;
+}
+
 </style>
+
+<script>
+
+function abrirChrome(){
+
+const url = "https://memoryit.com.br";
+
+if(/android/i.test(navigator.userAgent)){
+
+window.location.href =
+"intent://" +
+url.replace(/^https?:\/\//,'') +
+"#Intent;scheme=https;package=com.android.chrome;end";
+
+}else{
+
+window.location.href = url;
+
+}
+
+}
+
+</script>
 
 </head>
 
@@ -66,15 +111,30 @@ Para adicionar fotos e música,<br>
 abra este site no navegador do celular.
 </p>
 
-<!-- botão que abre diretamente no Chrome -->
-<a class="btn"
-href="intent://memoryit.com.br#Intent;scheme=https;package=com.android.chrome;end">
+<button class="btn" onclick="abrirChrome()">
 Abrir no navegador
-</a>
+</button>
 
-<div class="info">
-Toque nos <b>3 pontos</b> no canto superior direito<br>
-e escolha <b>"Abrir no navegador"</b> se o botão não funcionar.
+<div class="dots">
+
+<div class="arrow">⬆️</div>
+
+<div>
+Toque nos <b>3 pontinhos</b> do TikTok
+</div>
+
+<div style="margin:8px 0">
+<span>⋯</span>
+</div>
+
+<div>
+Depois toque em <b>"Abrir no navegador"</b>
+</div>
+
+</div>
+
+<div class="tip">
+Se o botão não funcionar, use os 3 pontinhos acima.
 </div>
 
 </body>
