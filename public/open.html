@@ -32,7 +32,7 @@ animation:bounce 1s infinite;
 }
 
 .arrow{
-font-size:42px;
+font-size:46px;
 }
 
 .arrow-text{
@@ -43,13 +43,13 @@ margin-top:4px;
 
 @keyframes bounce{
 0%{transform:translateY(0)}
-50%{transform:translateY(-8px)}
+50%{transform:translateY(-10px)}
 100%{transform:translateY(0)}
 }
 
 h2{
 font-size:30px;
-margin-bottom:12px;
+margin-bottom:14px;
 }
 
 p{
@@ -63,27 +63,25 @@ color:#ff7af6;
 font-weight:bold;
 }
 
-.btn{
-margin-top:28px;
-padding:18px 44px;
-font-size:18px;
-border-radius:14px;
-background:linear-gradient(90deg,#ff2ad4,#ff7af6);
-color:#fff;
-border:none;
-font-weight:bold;
-box-shadow:0 0 20px rgba(255,0,200,.5);
-}
-
 .info{
-margin-top:26px;
-padding:16px;
+margin-top:28px;
+padding:18px;
 border-radius:14px;
 background:#111;
 border:1px solid #333;
 max-width:340px;
-font-size:14px;
-opacity:.9;
+font-size:15px;
+opacity:.95;
+}
+
+.steps{
+margin-top:18px;
+line-height:1.8;
+font-size:16px;
+}
+
+.steps strong{
+color:#ff7af6;
 }
 
 </style>
@@ -97,25 +95,6 @@ const ua = navigator.userAgent.toLowerCase();
 if(!ua.includes("tiktok") && !ua.includes("musical_ly") && !ua.includes("bytedance")){
 
 window.location.href = "https://memoryit.com.br";
-
-}
-
-function abrirChrome(){
-
-const url = "https://memoryit.com.br";
-
-if(/android/i.test(navigator.userAgent)){
-
-window.location.href =
-"intent://" +
-url.replace(/^https?:\/\//,'') +
-"#Intent;scheme=https;package=com.android.chrome;end";
-
-}else{
-
-window.location.href = url;
-
-}
 
 }
 
@@ -139,19 +118,17 @@ Para criar seu site você precisa usar o <span class="highlight">navegador do ce
 </p>
 
 <p>
-O navegador do TikTok bloqueia algumas funções como:
-<br><br>
-📷 adicionar fotos<br>
-🎵 tocar música
+O navegador do TikTok bloqueia algumas funções importantes como:
 </p>
 
-<button class="btn" onclick="abrirChrome()">
-Abrir no navegador
-</button>
+<div class="steps">
+📷 adicionar fotos<br>
+🎵 tocar música
+</div>
 
 <div class="info">
-Toque nos <b>3 pontinhos</b> no canto superior direito<br>
-e depois em <b>"Abrir no navegador"</b>.
+Toque nos <strong>3 pontinhos</strong> no canto superior direito<br>
+e depois em <strong>"Abrir no navegador"</strong>.
 </div>
 
 </body>
