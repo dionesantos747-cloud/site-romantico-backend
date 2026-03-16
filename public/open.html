@@ -3,93 +3,74 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Abrindo...</title>
+<title>Abrir no navegador</title>
 
-<script>
-
-const ua = navigator.userAgent.toLowerCase();
-
-const inApp =
-ua.includes("tiktok") ||
-ua.includes("musical_ly") ||
-ua.includes("bytedance") ||
-ua.includes("instagram") ||
-ua.includes("fbav") ||
-ua.includes("fban") ||
-ua.includes("kwai");
-
-/* URL do seu site */
-const url = "https://memoryit.com.br";
-
-function abrir(){
-
-if(inApp){
-
-if(/android/i.test(ua)){
-
-window.location.href =
-"intent://" +
-url.replace(/^https?:\/\//,'') +
-"#Intent;scheme=https;package=com.android.chrome;end";
-
-/* fallback se o Chrome não abrir */
-setTimeout(()=>{
-window.location.href = url;
-},1500);
-
-}
-else{
-
-window.location.href = url;
-
+<style>
+body{
+background:#000;
+color:#fff;
+font-family:sans-serif;
+text-align:center;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+height:100vh;
+padding:30px;
+margin:0;
 }
 
-}
-else{
-
-window.location.href = url;
-
+h2{
+font-size:28px;
+margin-bottom:10px;
 }
 
+p{
+opacity:.8;
+max-width:320px;
+line-height:1.5;
 }
 
-/* tenta abrir automaticamente */
-setTimeout(abrir,300);
+.btn{
+display:inline-block;
+margin-top:30px;
+padding:18px 42px;
+font-size:18px;
+border-radius:14px;
+background:linear-gradient(90deg,#ff2ad4,#ff7af6);
+color:#fff;
+text-decoration:none;
+font-weight:bold;
+}
 
-</script>
+.info{
+margin-top:25px;
+font-size:14px;
+opacity:.6;
+}
+</style>
 
 </head>
 
-<body style="
-background:#000;
-color:#fff;
-text-align:center;
-padding-top:80px;
-font-family:sans-serif;
-">
+<body>
 
-<h2>Abrindo site...</h2>
+<h2>Abra no navegador</h2>
 
 <p>
-Se não abrir automaticamente,<br>
-toque no botão abaixo
+Para adicionar fotos e música,<br>
+abra este site no navegador do celular.
 </p>
 
-<button onclick="abrir()" style="
-margin-top:25px;
-padding:18px 40px;
-font-size:18px;
-border-radius:12px;
-border:none;
-background:#ff2ad4;
-color:#fff;
-cursor:pointer;
-">
-Abrir site
-</button>
+<!-- botão que abre diretamente no Chrome -->
+<a class="btn"
+href="intent://memoryit.com.br#Intent;scheme=https;package=com.android.chrome;end">
+Abrir no navegador
+</a>
 
-</body>
-</html>
+<div class="info">
+Toque nos <b>3 pontos</b> no canto superior direito<br>
+e escolha <b>"Abrir no navegador"</b> se o botão não funcionar.
+</div>
 
 </body>
 </html>
