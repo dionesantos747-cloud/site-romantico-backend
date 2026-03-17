@@ -184,7 +184,7 @@ if (!nome || !mensagem || !dataInicio) {
     const mp = await axios.post(
       "https://api.mercadopago.com/v1/payments",
       {
-        transaction_amount: 19,90,
+        transaction_amount: 19.90,
         description: "Site Romântico Premium 💖",
         payment_method_id: "pix",
         payer: { email: "dionesantosx7@gmail.com" },
