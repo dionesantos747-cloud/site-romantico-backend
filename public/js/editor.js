@@ -45,16 +45,65 @@ if (dateBox && dataInput) {
       dataInput.click();
     }
   });
+dataInput.addEventListener("change", () => {
 
-  dataInput.addEventListener("change", () => {
-    const data = dataInput.value;
+  limparErro(dataInput);
 
-    if (data) {
-      const [ano, mes, dia] = data.split("-");
-      dateBox.innerHTML = `📆 ${dia}/${mes}/${ano}`;
-    }
-    salvarEstado();
-  });
+  const data = dataInput.value;
+  if (!data) return;
+
+  // formata data
+  const [ano, mes, dia] = data.split("-");
+  dateBox.innerHTML = `📆 ${dia}/${mes}/${ano}`;
+
+  salvarEstado();
+
+  // contador
+  if (contadorInterval) clearInterval(contadorInterval);
+
+  contadorInterval = setInterval(() => {
+
+    const inicio = new Date(dataInput.value);
+    const diff = Date.now() - inicio.getTime();
+    if (diff < 0) return;
+
+    const s = Math.floor(diff / 1000) % 60;
+    const m = Math.floor(diff / 60000) % 60;
+    const h = Math.floor(diff / 3600000) % 24;
+    const d = Math.floor(diff / 86400000) % 30;
+    const mo = Math.floor(diff / 2592000000) % 12;
+    const a = Math.floor(diff / 31536000000);
+
+    tempo.innerHTML = `
+      <span class="titulo">compartilhamos a vida já faz:</span>
+
+      <div class="contador">
+        <div class="item">
+          <div class="numero">${a}</div>
+          <div class="label">${plural(a,"ano","anos")}</div>
+        </div>
+
+        <div class="item">
+          <div class="numero">${mo}</div>
+          <div class="label">${plural(mo,"mês","meses")}</div>
+        </div>
+
+        <div class="item">
+          <div class="numero">${d}</div>
+          <div class="label">${plural(d,"dia","dias")}</div>
+        </div>
+
+        <div class="item tempo-hms">
+          ${h}h ${m}m ${s}s
+        </div>
+      </div>
+    `;
+
+  }, 1000);
+
+  criarCoracoesPreview();
+
+});
 
 }
   /* =====================
@@ -646,55 +695,7 @@ audio.addEventListener("ended", () => {
   playBtn.innerHTML = "▶";
   progress.style.width = "0%";
 });
-  /* =====================
-     CONTADOR
-  ===================== */
- dataInput.onchange = () => {
-  limparErro(dataInput);
 
-  if (!dataInput.value) return;
-
-  if (contadorInterval) clearInterval(contadorInterval);
-
-  contadorInterval = setInterval(() => {
-    const inicio = new Date(dataInput.value);
-    const diff = Date.now() - inicio.getTime();
-    if (diff < 0) return;
-
-    const s = Math.floor(diff / 1000) % 60;
-    const m = Math.floor(diff / 60000) % 60;
-    const h = Math.floor(diff / 3600000) % 24;
-    const d = Math.floor(diff / 86400000) % 30;
-    const mo = Math.floor(diff / 2592000000) % 12;
-    const a = Math.floor(diff / 31536000000);
-
- tempo.innerHTML = `
-  <span class="titulo">compartilhamos a vida já faz:</span>
-
-  <div class="contador">
-    <div class="item">
-      <div class="numero">${a}</div>
-      <div class="label">${plural(a,"ano","anos")}</div>
-    </div>
-
-    <div class="item">
-      <div class="numero">${mo}</div>
-      <div class="label">${plural(mo,"mês","meses")}</div>
-    </div>
-
-    <div class="item">
-      <div class="numero">${d}</div>
-      <div class="label">${plural(d,"dia","dias")}</div>
-    </div>
-
-    <div class="item tempo-hms">
-      ${h}h ${m}m ${s}s
-    </div>
-  </div>
-`;
-  }, 1000);
-   criarCoracoesPreview();
-};
 
   /* =====================
      COMPRA
