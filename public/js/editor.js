@@ -38,13 +38,14 @@ const dateBox = document.getElementById("dateBox");
 
 if (dateBox && dataInput) {
 
-  dateBox.addEventListener("click", () => {
-    if (dataInput.showPicker) {
-      dataInput.showPicker();
-    } else {
-      dataInput.click();
-    }
-  });
+ dateBox.addEventListener("click", () => {
+  dataInput.focus();
+  dataInput.click();
+
+  if (dataInput.showPicker) {
+    dataInput.showPicker();
+  }
+});
 dataInput.addEventListener("change", () => {
 
   limparErro(dataInput);
