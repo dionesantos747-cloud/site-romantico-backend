@@ -716,6 +716,25 @@ audio.addEventListener("ended", () => {
       fundo: document.querySelector(".bg-card.selected")?.dataset.bg || "azul"
     };
 
+  btnComprar.onclick = async () => {
+  if (!nomeInput.value.trim()) return erro(nomeInput);
+  if (!msgInput.value.trim()) return erro(msgInput);
+  if (!dataInput.value) return erro(dataInput);
+
+  btnComprar.disabled = true;
+  btnComprar.innerText = "Gerando pagamento...";
+
+  try {
+    const payload = {
+      nome: nomeInput.value,
+      mensagem: msgInput.value,
+      dataInicio: dataInput.value,
+      fotos: fotos.filter(Boolean),
+      musica: musicaUrl || null,
+      nomeMusica: nomeMusicaSelecionada,
+      fundo: document.querySelector(".bg-card.selected")?.dataset.bg || "azul"
+    };
+
     const res = await fetch("/create-payment", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -723,10 +742,26 @@ audio.addEventListener("ended", () => {
     });
 
     const data = await res.json();
-    if (!data.payment_id) return alert("Erro ao gerar pagamento");
 
-    window.location.href = `/aguardando.html?payment_id=${data.payment_id}`;
-  };
+    if (!data.qr_base64) {
+      throw new Error("Erro ao gerar pagamento");
+    }
+
+    // 🔥 MOSTRAR QR NA TELA
+    document.getElementById("paymentArea").style.display = "block";
+
+    document.getElementById("qrImage").src = data.qr_base64;
+
+    document.getElementById("pixCode").value = data.copia_cola;
+
+    btnComprar.innerText = "Aguardando pagamento...";
+
+  } catch (err) {
+    alert("Erro ao gerar pagamento");
+    btnComprar.disabled = false;
+    btnComprar.innerText = "Gerar QR Code por R$15.80";
+  }
+};
 
   /* =====================
      CORAÇÕES
