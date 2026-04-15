@@ -282,42 +282,65 @@ app.get("/payment-info", async (req, res) => {
   }
 });
 /* =====================
-   WEBHOOK MERCADO PAGO
+   WEBHOOK PAGSEGURO
 ===================== */
 app.post("/webhook", async (req, res) => {
   res.sendStatus(200);
 
-  const paymentId =
-    req.body?.data?.id ||
-    req.query?.id;
-
-  if (!paymentId) return;
-
   try {
-    const mp = await axios.get(
-      `https://api.mercadopago.com/v1/payments/${paymentId}`,
-      { headers: { Authorization: `Bearer ${MP_ACCESS_TOKEN}` } }
-    );
+    console.log("🔔 Webhook recebido:", JSON.stringify(req.body, null, 2));
 
-    if (mp.data.status !== "approved") return;
+    const charges = req.body?.charges;
+    if (!charges || !charges.length) return;
 
-    const userId = mp.data.metadata?.userId;
-    if (!userId) return;
+    const charge = charges[0];
+
+    const paymentId = charge.id;
+    const status = charge.status;
+
+    console.log("📡 Status PagSeguro:", status);
+
+    if (status !== "PAID") return;
+
+    const pagamento = await payments.findOne({ paymentId });
+
+    if (!pagamento) {
+      console.log("❌ Pagamento não encontrado");
+      return;
+    }
+
+    if (pagamento.status === "approved") {
+      console.log("⚠️ Já aprovado");
+      return;
+    }
+
+    const siteId = crypto.randomUUID();
 
     await payments.updateOne(
-      { paymentId: String(paymentId) },
-      { $set: { status: "approved", approvedAt: new Date() } }
+      { paymentId },
+      {
+        $set: {
+          status: "approved",
+          siteId,
+          aprovadoEm: new Date()
+        }
+      }
     );
 
     await users.updateOne(
-      { _id: userId },
-      { $set: { status: "approved", activatedAt: new Date() } }
+      { _id: pagamento.userId },
+      {
+        $set: {
+          status: "approved",
+          activatedAt: new Date()
+        }
+      }
     );
 
     console.log("💖 Pagamento aprovado:", paymentId);
 
   } catch (err) {
-    console.error("❌ Webhook erro:", err.message);
+    console.error("❌ Erro webhook:", err.message);
   }
 });
 
