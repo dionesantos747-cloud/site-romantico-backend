@@ -240,10 +240,12 @@ await payments.insertOne({
   copia_cola: pix.text
 });
 
-  } catch (err) {
-    console.error("❌ Erro pagamento:", err.message);
-    res.status(500).json({ error: "Erro ao criar pagamento" });
-  }
+ catch (err) {
+  console.error("❌ ERRO COMPLETO:", err.response?.data || err.message);
+  res.status(500).json({
+    error: err.response?.data || err.message
+  });
+}
 });
 /* =====================
    PAYMENT INFO (PIX)
