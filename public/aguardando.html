@@ -39,32 +39,6 @@ h1{
   margin-bottom:20px;
 }
 
-.qr img{
-  width:220px;
-  margin:20px auto;
-}
-
-.code{
-  background:#000;
-  border-radius:10px;
-  padding:12px;
-  font-size:.75em;
-  word-break:break-all;
-  margin-bottom:10px;
-}
-
-button{
-  background:#ffd400;
-  border:none;
-  color:#000;
-  padding:12px;
-  border-radius:12px;
-  width:100%;
-  font-size:1em;
-  font-weight:bold;
-  cursor:pointer;
-}
-
 .info{
   margin-top:18px;
   font-size:.85em;
@@ -85,29 +59,23 @@ button{
 <div class="card">
 
   <h1>Pagamento PIX</h1>
+
   <div class="sub">
-    Escaneie o QR Code ou copie o código PIX para finalizar
+    Após o pagamento, estamos confirmando automaticamente...
   </div>
 
- <div class="qr">
-  <img id="qr">
-</div>
-
-  <div class="code" id="code"></div>
-
- <button id="copyBtn" onclick="copiar()">Copiar código PIX</button>
-  
   <div class="info">
     • Abra o app do seu banco<br>
-    • Escolha PIX → QR Code ou Copia e Cola<br>
-    • Confirme o pagamento<br><br>
-    Assim que o pagamento for aprovado, você será redirecionado automaticamente ✨
+    • Realize o pagamento via PIX<br>
+    • Aguarde a confirmação automática<br><br>
+    Você será redirecionado assim que for aprovado ✨
   </div>
 
-  <div class="status" id="status">⏳ Aguardando pagamento...</div>
+  <div class="status" id="status">
+    ⏳ Aguardando confirmação do pagamento...
+  </div>
 
 </div>
-
 
 <script>
 const params = new URLSearchParams(window.location.search);
@@ -123,82 +91,39 @@ if (!paymentId) {
   throw new Error("payment_id ausente");
 }
 
-const qrImg = document.getElementById("qr");
-const pixBox = document.getElementById("code");
-  const copyBtn = document.getElementById("copyBtn");
-copyBtn.disabled = true;
 let polling = true;
-  
-async function carregarPix() {
-  try {
-    const res = await fetch(`/payment-info?payment_id=${paymentId}`);
-    const data = await res.json();
-
-  if (data.qr_base64 && data.copia_cola) {
-  qrImg.src = "data:image/png;base64," + data.qr_base64;
-  pixBox.innerText = data.copia_cola;
-
-  copyBtn.disabled = false; // ✅ HABILITA O BOTÃO
-} else {
-  pixBox.innerText = "Gerando PIX, aguarde alguns segundos...";
-  copyBtn.disabled = true;
-}
-  } catch {
-    pixBox.innerText = "Erro ao carregar PIX. Aguarde...";
-  }
-}
-
-function copiar() {
-  if (!pixBox.innerText) return;
-
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(pixBox.innerText)
-      .then(() => alert("Código PIX copiado!"))
-      .catch(fallbackCopy);
-  } else {
-    fallbackCopy();
-  }
-}
-
-function fallbackCopy() {
-  const temp = document.createElement("textarea");
-  temp.value = pixBox.innerText;
-  document.body.appendChild(temp);
-  temp.select();
-  document.execCommand("copy");
-  document.body.removeChild(temp);
-  alert("Código PIX copiado!");
-}
-
 
 async function verificarPagamento() {
   if (!polling) return;
 
   try {
-    const res = await fetch(`/check-payment?payment_id=${paymentId}&t=${Date.now()}`);
+    const res = await fetch(`/check-payment?payment_id=${paymentId}`);
     const data = await res.json();
 
-  if (data.status === "approved") {
-  polling = false;
+    if (data.status === "approved") {
 
-  document.getElementById("status").innerText =
-    "✅ Pagamento aprovado! Redirecionando...";
+      polling = false;
 
-  // 🔥 LIMPA TODOS OS DADOS DO EDITOR
-  localStorage.removeItem("romantico_editor_state");
+      document.getElementById("status").innerText =
+        "✅ Pagamento aprovado! Redirecionando...";
 
-  setTimeout(() => {
-    window.location.href =
-      `/success.html?payment_id=${paymentId}`;
-  }, 1200);
-}
-  } catch {
-    // silencioso
+      // limpa editor
+      localStorage.removeItem("romantico_editor_state");
+
+      setTimeout(() => {
+        window.location.href =
+          `/success.html?payment_id=${paymentId}`;
+      }, 1200);
+    }
+
+  } catch (err) {
+    console.log("erro check:", err);
   }
 }
 
-carregarPix();
-setInterval(verificarPagamento, 1500);
+// verifica a cada 3 segundos (leve)
+setInterval(verificarPagamento, 3000);
 </script>
+
 </body>
 </html>
