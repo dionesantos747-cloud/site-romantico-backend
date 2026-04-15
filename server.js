@@ -63,7 +63,7 @@ const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN;
 
 let payments, users;
 
-if (!MONGO_URI || !MP_ACCESS_TOKEN) {
+if (!MONGO_URI || !process.env.PAGSEGURO_TOKEN) {
   console.error("❌ Variáveis de ambiente não definidas");
   process.exit(1);
 }
@@ -234,13 +234,13 @@ await payments.insertOne({
   createdAt: new Date()
 });
 
-   res.json({
+  res.json({
   payment_id: charge.id,
   qr_base64: pix.links[0].href,
   copia_cola: pix.text
 });
 
- catch (err) {
+} catch (err) {
   console.error("❌ ERRO COMPLETO:", err.response?.data || err.message);
   res.status(500).json({
     error: err.response?.data || err.message
