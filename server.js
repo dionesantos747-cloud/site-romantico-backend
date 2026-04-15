@@ -59,7 +59,7 @@ const upload = multer({
    VARIÁVEIS
 ===================== */
 const MONGO_URI = process.env.MONGO_URI;
-const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN;
+
 
 let payments, users;
 
@@ -247,40 +247,7 @@ await payments.insertOne({
   });
 }
 });
-/* =====================
-   PAYMENT INFO (PIX)
-===================== */
-app.get("/payment-info", async (req, res) => {
-  try {
-    const paymentId = String(req.query.payment_id);
-    if (!paymentId) {
-      return res.status(400).json({});
-    }
 
-    const mp = await axios.get(
-      `https://api.mercadopago.com/v1/payments/${paymentId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${MP_ACCESS_TOKEN}`
-        }
-      }
-    );
-
-    const pix = mp.data.point_of_interaction?.transaction_data;
-    if (!pix) {
-      return res.status(404).json({});
-    }
-
-    res.json({
-      qr_base64: pix.qr_code_base64,
-      copia_cola: pix.qr_code
-    });
-
-  } catch (err) {
-    console.error("Erro payment-info:", err.message);
-    res.status(500).json({});
-  }
-});
 /* =====================
    WEBHOOK PAGSEGURO
 ===================== */
@@ -352,54 +319,19 @@ app.get("/check-payment", async (req, res) => {
     const paymentId = String(req.query.payment_id);
 
     const pagamento = await payments.findOne({ paymentId });
+
     if (!pagamento) {
       return res.json({ status: "pending" });
     }
 
-    // consulta fonte da verdade
-    const mp = await axios.get(
-      `https://api.mercadopago.com/v1/payments/${paymentId}`,
-      { headers: { Authorization: `Bearer ${MP_ACCESS_TOKEN}` } }
-    );
+    if (pagamento.status === "approved") {
+      return res.json({
+        status: "approved",
+        siteId: pagamento.siteId
+      });
+    }
 
-    const status = mp.data.status;
-
-    if (status === "approved") {
-
-  let siteId = pagamento.siteId;
-
-  if (!siteId) {
-    siteId = crypto.randomUUID();
-
-    await payments.updateOne(
-      { paymentId },
-      {
-        $set: {
-          status: "approved",
-          siteId,
-          aprovadoEm: new Date()
-        }
-      }
-    );
-
-    await users.updateOne(
-      { _id: pagamento.userId },
-      {
-        $set: {
-          status: "approved",
-          activatedAt: new Date()
-        }
-      }
-    );
-  }
-
-  return res.json({
-    status: "approved",
-    siteId
-  });
-}
-
-    res.json({ status });
+    return res.json({ status: "pending" });
 
   } catch (err) {
     console.error("❌ check-payment erro:", err.message);
