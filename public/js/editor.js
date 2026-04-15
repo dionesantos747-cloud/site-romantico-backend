@@ -701,22 +701,7 @@ audio.addEventListener("ended", () => {
   /* =====================
      COMPRA
   ===================== */
-  btnComprar.onclick = async () => {
-    if (!nomeInput.value.trim()) return erro(nomeInput);
-    if (!msgInput.value.trim()) return erro(msgInput);
-    if (!dataInput.value) return erro(dataInput);
-
-    const payload = {
-      nome: nomeInput.value,
-      mensagem: msgInput.value,
-      dataInicio: dataInput.value,
-      fotos: fotos.filter(Boolean),
-      musica: musicaUrl || null,
-      nomeMusica: nomeMusicaSelecionada,
-      fundo: document.querySelector(".bg-card.selected")?.dataset.bg || "azul"
-    };
-
-  btnComprar.onclick = async () => {
+btnComprar.onclick = async () => {
   if (!nomeInput.value.trim()) return erro(nomeInput);
   if (!msgInput.value.trim()) return erro(msgInput);
   if (!dataInput.value) return erro(dataInput);
@@ -747,11 +732,8 @@ audio.addEventListener("ended", () => {
       throw new Error("Erro ao gerar pagamento");
     }
 
-    // 🔥 MOSTRAR QR NA TELA
     document.getElementById("paymentArea").style.display = "block";
-
     document.getElementById("qrImage").src = data.qr_base64;
-
     document.getElementById("pixCode").value = data.copia_cola;
 
     btnComprar.innerText = "Aguardando pagamento...";
