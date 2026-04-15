@@ -181,39 +181,64 @@ if (!nome || !mensagem || !dataInicio) {
   createdAt: new Date()
 });
 
-    const mp = await axios.post(
-      "https://api.mercadopago.com/v1/payments",
+const pagseguro = await axios.post(
+  "https://api.pagseguro.com/orders",
+  {
+    reference_id: "pedido_" + tempId,
+    customer: {
+      name: nome,
+      email: "dionesantosx7@gmail.com"
+    },
+    items: [
       {
-        transaction_amount: 15.80,
-        description: "Site Romântico Premium 💖",
-        payment_method_id: "pix",
-        payer: { email: "dionesantosx7@gmail.com" },
-        metadata: { userId: tempId },
-        notification_url: `${req.protocol}://${req.get("host")}/webhook`
-      },
+        name: "Site Romântico Premium 💖",
+        quantity: 1,
+        unit_amount: 1580
+      }
+    ],
+    charges: [
       {
-        headers: {
-          Authorization: `Bearer ${MP_ACCESS_TOKEN}`,
-          "Content-Type": "application/json",
-          "X-Idempotency-Key": uuidv4()
+        reference_id: "charge_" + tempId,
+        description: "Pagamento via Pix",
+        amount: {
+          value: 1580,
+          currency: "BRL"
+        },
+        payment_method: {
+          type: "PIX",
+          pix: {
+            expiration_date: new Date(Date.now() + 30 * 60 * 1000).toISOString()
+          }
         }
       }
-    );
+    ],
+    notification_urls: [
+      `${req.protocol}://${req.get("host")}/webhook`
+    ]
+  },
+  {
+    headers: {
+      Authorization: `Bearer ${process.env.PAGSEGURO_TOKEN}`,
+      "Content-Type": "application/json"
+    }
+  }
+);
 
-    await payments.insertOne({
-      paymentId: String(mp.data.id),
-      userId: tempId,
-      status: "pending",
-      createdAt: new Date()
-    });
+const charge = pagseguro.data.charges[0];
+const pix = charge.payment_method.pix.qr_codes[0];
 
-    const pix = mp.data.point_of_interaction.transaction_data;
+await payments.insertOne({
+  paymentId: charge.id,
+  userId: tempId,
+  status: "pending",
+  createdAt: new Date()
+});
 
-    res.json({
-      payment_id: String(mp.data.id),
-      qr_base64: pix.qr_code_base64,
-      copia_cola: pix.qr_code
-    });
+   res.json({
+  payment_id: charge.id,
+  qr_base64: pix.links[0].href,
+  copia_cola: pix.text
+});
 
   } catch (err) {
     console.error("❌ Erro pagamento:", err.message);
