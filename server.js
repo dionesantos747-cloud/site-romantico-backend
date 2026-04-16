@@ -149,104 +149,108 @@ app.post("/upload-music", upload.single("file"), (req, res) => {
 ===================== */
 app.post("/create-payment", async (req, res) => {
   try {
-   const {
-  nome,
-  mensagem,
-  dataInicio,
-  fotos = [],
-  musica = null,
-  nomeMusica = "Nossa Música",
-  fundo = "azul"
-} = req.body;
+    const {
+      nome,
+      mensagem,
+      dataInicio,
+      fotos = [],
+      musica = null,
+      nomeMusica = "Nossa Música",
+      fundo = "azul"
+    } = req.body;
 
-/* 🔒 VALIDAÇÃO OBRIGATÓRIA */
-if (!nome || !mensagem || !dataInicio) {
-  return res.status(400).json({
-    error: "Dados obrigatórios não preenchidos"
-  });
-}
+    if (!nome || !mensagem || !dataInicio) {
+      return res.status(400).json({
+        error: "Dados obrigatórios não preenchidos"
+      });
+    }
 
     const tempId = uuidv4();
 
     await users.insertOne({
-  _id: tempId,
-  nome,
-  mensagem,
-  dataInicio,
-  fotos,
-  musica,
-  nomeMusica,    
-  fundo,
-  status: "pending",
-  createdAt: new Date()
-});
+      _id: tempId,
+      nome,
+      mensagem,
+      dataInicio,
+      fotos,
+      musica,
+      nomeMusica,
+      fundo,
+      status: "pending",
+      createdAt: new Date()
+    });
 
-const pagseguro = await axios.post(
-  "https://sandbox.api.pagseguro.com/orders",
-  {
-    reference_id: "pedido_" + tempId,
-    customer: {
-      name: nome,
-      email: "dionesantosx7@gmail.com",
-      tax_id: "12345678909"
-    },
-    items: [
+    const response = await axios.post(
+      "https://sandbox.api.pagseguro.com/orders",
       {
-        name: "Site Romântico Premium 💖",
-        quantity: 1,
-        unit_amount: 1580
-      }
-    ],
-    charges: [
-      {
-        reference_id: "charge_" + tempId,
-        description: "Pagamento via Pix",
-        amount: {
-          value: 1580,
-          currency: "BRL"
+        reference_id: "pedido_" + tempId,
+        customer: {
+          name: nome,
+          email: "dionesantosx7@gmail.com",
+          tax_id: "12345678909",
+          phones: [
+            {
+              country: "55",
+              area: "11",
+              number: "999999999",
+              type: "MOBILE"
+            }
+          ]
         },
-        payment_method: {
-          type: "PIX",
-          pix: {
+        items: [
+          {
+            name: "Site Romântico Premium 💖",
+            quantity: 1,
+            unit_amount: 1580
+          }
+        ],
+        qr_codes: [
+          {
+            amount: {
+              value: 1580
+            },
             expiration_date: new Date(Date.now() + 30 * 60 * 1000).toISOString()
           }
+        ],
+        notification_urls: [
+          `${req.protocol}://${req.get("host")}/webhook`
+        ]
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.PAGSEGURO_TOKEN}`,
+          "Content-Type": "application/json"
         }
       }
-    ],
-    notification_urls: [
-      `${req.protocol}://${req.get("host")}/webhook`
-    ]
-  },
-  {
-    headers: {
-      Authorization: `Bearer ${process.env.PAGSEGURO_TOKEN}`,
-      "Content-Type": "application/json"
+    );
+
+    const order = response.data;
+    const qr = order.qr_codes?.[0];
+
+    if (!qr) {
+      throw new Error("QR Code não retornado pelo PagBank");
     }
+
+    await payments.insertOne({
+      paymentId: qr.id,
+      orderId: order.id,
+      userId: tempId,
+      status: "pending",
+      createdAt: new Date()
+    });
+
+    res.json({
+      payment_id: qr.id,
+      qr_base64: qr.links?.find(link => link.rel === "QRCODE.PNG")?.href || null,
+      copia_cola: qr.text
+    });
+
+  } catch (err) {
+    console.error("❌ ERRO COMPLETO:", err.response?.data || err.message);
+    res.status(500).json({
+      error: err.response?.data || err.message
+    });
   }
-);
-
-const charge = pagseguro.data.charges[0];
-const pix = charge.payment_method.pix.qr_codes[0];
-
-await payments.insertOne({
-  paymentId: charge.id,
-  userId: tempId,
-  status: "pending",
-  createdAt: new Date()
-});
-
-  res.json({
-  payment_id: charge.id,
-qr_base64: pix.qr_code,
-  copia_cola: pix.text
-});
-
-} catch (err) {
-  console.error("❌ ERRO COMPLETO:", err.response?.data || err.message);
-  res.status(500).json({
-    error: err.response?.data || err.message
-  });
-}
 });
 
 /* =====================
@@ -386,13 +390,13 @@ app.get("/payment-info", async (req, res) => {
   try {
     const paymentId = String(req.query.payment_id);
 
-    if (!paymentId) {
-      return res.status(400).json({ error: "payment_id ausente" });
+    const pagamento = await payments.findOne({ paymentId });
+    if (!pagamento?.orderId) {
+      return res.status(404).json({ error: "Pagamento não encontrado" });
     }
 
-    // 🔥 consulta o pagamento no PagSeguro
     const response = await axios.get(
-      `https://api.pagseguro.com/charges/${paymentId}`,
+      `https://sandbox.api.pagseguro.com/orders/${pagamento.orderId}`,
       {
         headers: {
           Authorization: `Bearer ${process.env.PAGSEGURO_TOKEN}`
@@ -400,17 +404,15 @@ app.get("/payment-info", async (req, res) => {
       }
     );
 
-    const charge = response.data;
+    const qr = response.data.qr_codes?.find(q => q.id === paymentId) || response.data.qr_codes?.[0];
 
-    if (!charge || !charge.payment_method?.pix?.qr_codes?.length) {
-      return res.json({ status: "pending" });
+    if (!qr) {
+      return res.status(404).json({ error: "QR não encontrado" });
     }
 
-    const pix = charge.payment_method.pix.qr_codes[0];
-
     res.json({
-      qr_base64: pix.qr_code,   // ✅ imagem base64 correta
-      copia_cola: pix.text
+      qr_base64: qr.links?.find(link => link.rel === "QRCODE.PNG")?.href || null,
+      copia_cola: qr.text
     });
 
   } catch (err) {
