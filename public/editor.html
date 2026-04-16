@@ -231,11 +231,27 @@ hidden
 
 <div class="buyer-box">
   <label class="buyer-label" for="cpfInput">CPF do comprador</label>
-  <input type="text" id="cpfInput" class="buyer-input" placeholder="Digite seu CPF" autocomplete="off">
+<input
+  type="text"
+  id="cpfInput"
+  class="buyer-input"
+  placeholder="Digite seu CPF"
+  autocomplete="off"
+  inputmode="numeric"
+  maxlength="14"
+>
   <div class="error-text buyer-error">Campo não preenchido</div>
 
   <label class="buyer-label" for="emailInput">Email do comprador</label>
-  <input type="email" id="emailInput" class="buyer-input" placeholder="Digite seu email" autocomplete="off">
+ <input
+  type="email"
+  id="emailInput"
+  class="buyer-input"
+  placeholder="Digite seu email"
+  autocomplete="email"
+  autocapitalize="off"
+  spellcheck="false"
+>
   <div class="error-text buyer-error">Campo não preenchido</div>
 
   <div class="buyer-help">
