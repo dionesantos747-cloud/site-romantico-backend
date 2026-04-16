@@ -719,6 +719,31 @@ audio.addEventListener("ended", () => {
 });
 
 
+  
+
+function cpfValido(cpf) {
+  cpf = cpf.replace(/\D/g, "");
+
+  if (cpf.length !== 11) return false;
+  if (/^(\d)\1+$/.test(cpf)) return false;
+
+  let soma = 0;
+  for (let i = 0; i < 9; i++)
+    soma += parseInt(cpf.charAt(i)) * (10 - i);
+
+  let resto = (soma * 10) % 11;
+  if (resto === 10 || resto === 11) resto = 0;
+  if (resto !== parseInt(cpf.charAt(9))) return false;
+
+  soma = 0;
+  for (let i = 0; i < 10; i++)
+    soma += parseInt(cpf.charAt(i)) * (11 - i);
+
+  resto = (soma * 10) % 11;
+  if (resto === 10 || resto === 11) resto = 0;
+
+  return resto === parseInt(cpf.charAt(10));
+}
   /* =====================
      COMPRA
   ===================== */
@@ -726,24 +751,29 @@ btnComprar.onclick = async () => {
   if (!nomeInput.value.trim()) return erro(nomeInput);
   if (!msgInput.value.trim()) return erro(msgInput);
   if (!dataInput.value) return erro(dataInput);
-  if (!cpfInput.value.trim()) return erro(cpfInput);
+  if (!cpfInput.value.trim() || !cpfValido(cpfInput.value)) {
+  alert("Digite um CPF válido");
+  return erro(cpfInput);
+}
   if (!emailInput.value.trim()) return erro(emailInput);
 
   btnComprar.disabled = true;
   btnComprar.innerText = "Gerando pagamento...";
 
   try {
-    const payload = {
-      nome: nomeInput.value,
-      mensagem: msgInput.value,
-      dataInicio: dataInput.value,
-      fotos: fotos.filter(Boolean),
-      musica: musicaUrl || null,
-      nomeMusica: nomeMusicaSelecionada,
-      fundo: document.querySelector(".bg-card.selected")?.dataset.bg || "azul",
-      cpf: cpfInput.value.trim(),
-      email: emailInput.value.trim(),
-    };
+   const cpfLimpo = cpfInput.value.replace(/\D/g, "");
+
+const payload = {
+  nome: nomeInput.value,
+  mensagem: msgInput.value,
+  dataInicio: dataInput.value,
+  fotos: fotos.filter(Boolean),
+  musica: musicaUrl || null,
+  nomeMusica: nomeMusicaSelecionada,
+  fundo: document.querySelector(".bg-card.selected")?.dataset.bg || "azul",
+  cpf: cpfLimpo,
+  email: emailInput.value.trim(),
+};
 
     const res = await fetch("/create-payment", {
       method: "POST",
