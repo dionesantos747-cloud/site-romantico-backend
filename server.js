@@ -182,7 +182,7 @@ if (!nome || !mensagem || !dataInicio) {
 });
 
 const pagseguro = await axios.post(
-  "https://api.pagseguro.com/orders",
+  "https://sandbox.api.pagseguro.com/orders",
   {
     reference_id: "pedido_" + tempId,
     customer: {
@@ -326,7 +326,7 @@ app.get("/check-payment", async (req, res) => {
 
     // 🔥 CONSULTA DIRETO NO PAGSEGURO
     const response = await axios.get(
-      `https://api.pagseguro.com/charges/${paymentId}`,
+      `https://sandbox.api.pagseguro.com/charges/${paymentId}`,
       {
         headers: {
           Authorization: `Bearer ${process.env.PAGSEGURO_TOKEN}`
