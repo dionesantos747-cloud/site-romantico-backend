@@ -229,13 +229,19 @@ hidden
   padding: 0 20px;
 ">
 
-  <label>CPF do comprador</label>
-<input type="text" id="cpfInput" placeholder="Digite seu CPF">
-<div class="error-text">Campo não preenchido</div>
+<div class="buyer-box">
+  <label class="buyer-label" for="cpfInput">CPF do comprador</label>
+  <input type="text" id="cpfInput" class="buyer-input" placeholder="Digite seu CPF" autocomplete="off">
+  <div class="error-text buyer-error">Campo não preenchido</div>
 
-<label>Email do comprador</label>
-<input type="email" id="emailInput" placeholder="Digite seu email">
-<div class="error-text">Campo não preenchido</div>
+  <label class="buyer-label" for="emailInput">Email do comprador</label>
+  <input type="email" id="emailInput" class="buyer-input" placeholder="Digite seu email" autocomplete="off">
+  <div class="error-text buyer-error">Campo não preenchido</div>
+
+  <div class="buyer-help">
+    Para gerar o QR Code, informe CPF e email.
+  </div>
+</div>
 
 <div style="
   max-width:420px;
