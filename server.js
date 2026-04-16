@@ -324,21 +324,60 @@ app.get("/check-payment", async (req, res) => {
       return res.json({ status: "pending" });
     }
 
-    if (pagamento.status === "approved") {
+    // 🔥 CONSULTA DIRETO NO PAGSEGURO
+    const response = await axios.get(
+      `https://api.pagseguro.com/charges/${paymentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.PAGSEGURO_TOKEN}`
+        }
+      }
+    );
+
+    const status = response.data.status;
+
+    if (status === "PAID") {
+
+      let siteId = pagamento.siteId;
+
+      if (!siteId) {
+        siteId = crypto.randomUUID();
+
+        await payments.updateOne(
+          { paymentId },
+          {
+            $set: {
+              status: "approved",
+              siteId,
+              aprovadoEm: new Date()
+            }
+          }
+        );
+
+        await users.updateOne(
+          { _id: pagamento.userId },
+          {
+            $set: {
+              status: "approved",
+              activatedAt: new Date()
+            }
+          }
+        );
+      }
+
       return res.json({
         status: "approved",
-        siteId: pagamento.siteId
+        siteId
       });
     }
 
-    return res.json({ status: "pending" });
+    res.json({ status: "pending" });
 
   } catch (err) {
-    console.error("❌ check-payment erro:", err.message);
+    console.error("❌ check-payment erro:", err.response?.data || err.message);
     res.json({ status: "pending" });
   }
 });
-
 /* =====================
    SUCCESS
 ===================== */
