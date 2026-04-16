@@ -149,15 +149,17 @@ app.post("/upload-music", upload.single("file"), (req, res) => {
 ===================== */
 app.post("/create-payment", async (req, res) => {
   try {
-    const {
-      nome,
-      mensagem,
-      dataInicio,
-      fotos = [],
-      musica = null,
-      nomeMusica = "Nossa Música",
-      fundo = "azul"
-    } = req.body;
+  const {
+  nome,
+  mensagem,
+  dataInicio,
+  fotos = [],
+  musica = null,
+  nomeMusica = "Nossa Música",
+  fundo = "azul",
+  cpf,
+  email
+} = req.body;
 
     if (!nome || !mensagem || !dataInicio) {
       return res.status(400).json({
@@ -165,6 +167,13 @@ app.post("/create-payment", async (req, res) => {
       });
     }
 
+if (!cpf || !email) {
+  return res.status(400).json({
+    error: "CPF e email são obrigatórios"
+  });
+}
+
+    
     const tempId = uuidv4();
 
     await users.insertOne({
@@ -176,6 +185,8 @@ app.post("/create-payment", async (req, res) => {
       musica,
       nomeMusica,
       fundo,
+      cpf,
+      email,
       status: "pending",
       createdAt: new Date()
     });
@@ -184,10 +195,10 @@ app.post("/create-payment", async (req, res) => {
       "https://sandbox.api.pagseguro.com/orders",
       {
         reference_id: "pedido_" + tempId,
-        customer: {
-          name: nome,
-          email: "dionesantosx7@gmail.com",
-          tax_id: "12345678909",
+      customer: {
+        name: nome,
+        email: email,
+        tax_id: cpf,
           phones: [
             {
               country: "55",
@@ -235,6 +246,8 @@ app.post("/create-payment", async (req, res) => {
       paymentId: qr.id,
       orderId: order.id,
       userId: tempId,
+      cpf,
+      email,
       status: "pending",
       createdAt: new Date()
     });
