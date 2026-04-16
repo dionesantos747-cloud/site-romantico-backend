@@ -19,6 +19,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const cpfInput = document.getElementById("cpfInput");
 const emailInput = document.getElementById("emailInput");
 
+  if (cpfInput) {
+  cpfInput.addEventListener("input", () => {
+
+    // remove tudo que não é número
+    let v = cpfInput.value.replace(/\D/g, "").slice(0, 11);
+
+    // formata CPF automaticamente
+    v = v.replace(/(\d{3})(\d)/, "$1.$2");
+    v = v.replace(/(\d{3})(\d)/, "$1.$2");
+    v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+
+    cpfInput.value = v;
+
+    // remove erro ao digitar
+    limparErro(cpfInput);
+  });
+}
+
    const btnComprar = document.getElementById("btnComprar");
   const lerBtn     = document.getElementById("lerBtn");
  
