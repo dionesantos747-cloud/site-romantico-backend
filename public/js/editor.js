@@ -728,15 +728,12 @@ btnComprar.onclick = async () => {
 
     const data = await res.json();
 
-    if (!data.qr_base64) {
+    if (!data.payment_id) {
       throw new Error("Erro ao gerar pagamento");
     }
 
-    document.getElementById("paymentArea").style.display = "block";
-    document.getElementById("qrImage").src = data.qr_base64;
-    document.getElementById("pixCode").value = data.copia_cola;
-
-    btnComprar.innerText = "Aguardando pagamento...";
+    // ✅ REDIRECIONA PRA TELA DE PAGAMENTO
+    window.location.href = `/aguardando.html?payment_id=${data.payment_id}`;
 
   } catch (err) {
     alert("Erro ao gerar pagamento");
