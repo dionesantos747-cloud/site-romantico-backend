@@ -91,6 +91,63 @@ if (!paymentId) {
   throw new Error("payment_id ausente");
 }
 
+const card = document.querySelector(".card");
+
+// 🔥 cria área do PIX
+card.insertAdjacentHTML("beforeend", `
+  <div class="qr">
+    <img id="qr" style="width:220px;margin:20px auto">
+  </div>
+
+  <div id="code" style="
+    background:#000;
+    padding:12px;
+    border-radius:10px;
+    font-size:.75em;
+    word-break:break-all;
+    margin-bottom:10px;
+  "></div>
+
+  <button id="copyBtn" style="
+    background:#ffd400;
+    border:none;
+    color:#000;
+    padding:12px;
+    border-radius:12px;
+    width:100%;
+    font-weight:bold;
+    cursor:pointer;
+  ">Copiar código PIX</button>
+`);
+
+const qrImg = document.getElementById("qr");
+const pixBox = document.getElementById("code");
+const copyBtn = document.getElementById("copyBtn");
+
+copyBtn.onclick = () => {
+  navigator.clipboard.writeText(pixBox.innerText);
+  alert("Código PIX copiado!");
+};
+
+// 🔥 BUSCAR QR
+async function carregarPix() {
+  try {
+    const res = await fetch(`/payment-info?payment_id=${paymentId}`);
+    const data = await res.json();
+
+    if (data.qr_base64 && data.copia_cola) {
+      qrImg.src = "data:image/png;base64," + data.qr_base64;
+      pixBox.innerText = data.copia_cola;
+    } else {
+      pixBox.innerText = "Gerando PIX, aguarde...";
+    }
+
+  } catch {
+    pixBox.innerText = "Erro ao carregar PIX";
+  }
+}
+
+// 🔁 CHECK PAGAMENTO
 let polling = true;
 
 async function verificarPagamento() {
@@ -107,7 +164,6 @@ async function verificarPagamento() {
       document.getElementById("status").innerText =
         "✅ Pagamento aprovado! Redirecionando...";
 
-      // limpa editor
       localStorage.removeItem("romantico_editor_state");
 
       setTimeout(() => {
@@ -116,12 +172,11 @@ async function verificarPagamento() {
       }, 1200);
     }
 
-  } catch (err) {
-    console.log("erro check:", err);
-  }
+  } catch {}
 }
 
-// verifica a cada 3 segundos (leve)
+// iniciar
+carregarPix();
 setInterval(verificarPagamento, 3000);
 </script>
 
