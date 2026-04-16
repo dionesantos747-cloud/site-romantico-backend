@@ -17,6 +17,30 @@ const multer = require("multer");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+function cpfValido(cpf) {
+  cpf = cpf.replace(/\D/g, "");
+
+  if (cpf.length !== 11) return false;
+  if (/^(\d)\1+$/.test(cpf)) return false;
+
+  let soma = 0;
+  for (let i = 0; i < 9; i++)
+    soma += parseInt(cpf.charAt(i)) * (10 - i);
+
+  let resto = (soma * 10) % 11;
+  if (resto === 10 || resto === 11) resto = 0;
+  if (resto !== parseInt(cpf.charAt(9))) return false;
+
+  soma = 0;
+  for (let i = 0; i < 10; i++)
+    soma += parseInt(cpf.charAt(i)) * (11 - i);
+
+  resto = (soma * 10) % 11;
+  if (resto === 10 || resto === 11) resto = 0;
+
+  return resto === parseInt(cpf.charAt(10));
+}
+
 /* =====================
    MIDDLEWARES
 ===================== */
@@ -161,15 +185,17 @@ app.post("/create-payment", async (req, res) => {
   email
 } = req.body;
 
+    const cpfLimpo = String(cpf).replace(/\D/g, "");
+
     if (!nome || !mensagem || !dataInicio) {
       return res.status(400).json({
         error: "Dados obrigatórios não preenchidos"
       });
     }
 
-if (!cpf || !email) {
+if (!cpf || !email || !cpfValido(cpf)) {
   return res.status(400).json({
-    error: "CPF e email são obrigatórios"
+    error: "CPF inválido ou dados faltando"
   });
 }
 
@@ -198,7 +224,7 @@ if (!cpf || !email) {
       customer: {
         name: nome,
         email: email,
-        tax_id: cpf,
+       tax_id: cpfLimpo,
           phones: [
             {
               country: "55",
@@ -249,6 +275,7 @@ if (!cpf || !email) {
       cpf,
       email,
       status: "pending",
+      
       createdAt: new Date()
     });
 
