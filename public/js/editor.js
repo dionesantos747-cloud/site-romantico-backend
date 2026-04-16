@@ -722,7 +722,7 @@ btnComprar.onclick = async () => {
       fotos: fotos.filter(Boolean),
       musica: musicaUrl || null,
       nomeMusica: nomeMusicaSelecionada,
-      fundo: document.querySelector(".bg-card.selected")?.dataset.bg || "azul"
+      fundo: document.querySelector(".bg-card.selected")?.dataset.bg || "azul",
       cpf: cpfInput.value.trim(),
       email: emailInput.value.trim(),
     };
