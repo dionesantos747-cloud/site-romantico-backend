@@ -16,6 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const tempo    = document.getElementById("tempo");
   const preview  = document.getElementById("preview");
 
+  const cpfInput = document.getElementById("cpfInput");
+const emailInput = document.getElementById("emailInput");
+
    const btnComprar = document.getElementById("btnComprar");
   const lerBtn     = document.getElementById("lerBtn");
  
@@ -705,6 +708,8 @@ btnComprar.onclick = async () => {
   if (!nomeInput.value.trim()) return erro(nomeInput);
   if (!msgInput.value.trim()) return erro(msgInput);
   if (!dataInput.value) return erro(dataInput);
+  if (!cpfInput.value.trim()) return erro(cpfInput);
+  if (!emailInput.value.trim()) return erro(emailInput);
 
   btnComprar.disabled = true;
   btnComprar.innerText = "Gerando pagamento...";
@@ -718,6 +723,8 @@ btnComprar.onclick = async () => {
       musica: musicaUrl || null,
       nomeMusica: nomeMusicaSelecionada,
       fundo: document.querySelector(".bg-card.selected")?.dataset.bg || "azul"
+      cpf: cpfInput.value.trim(),
+      email: emailInput.value.trim(),
     };
 
     const res = await fetch("/create-payment", {
