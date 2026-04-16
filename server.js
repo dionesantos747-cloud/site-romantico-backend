@@ -324,7 +324,6 @@ app.get("/check-payment", async (req, res) => {
       return res.json({ status: "pending" });
     }
 
-    // 🔥 CONSULTA PEDIDO (NÃO CHARGE)
     const response = await axios.get(
       `https://sandbox.api.pagseguro.com/orders/${pagamento.orderId}`,
       {
@@ -334,18 +333,27 @@ app.get("/check-payment", async (req, res) => {
       }
     );
 
-    const qr = response.data.qr_codes?.find(q => q.id === paymentId);
+    const qr =
+      response.data.qr_codes?.find(q => q.id === paymentId) ||
+      response.data.qr_codes?.[0];
 
     if (!qr) {
+      console.log("❌ QR não encontrado");
       return res.json({ status: "pending" });
     }
 
-    const status = qr.status;
+    console.log("🔍 QR COMPLETO:", JSON.stringify(qr, null, 2));
+    console.log("🔍 ORDER COMPLETA:", JSON.stringify(response.data, null, 2));
+
+    const status =
+      qr.status ||
+      qr.payment_response?.status ||
+      response.data.status ||
+      null;
 
     console.log("📡 STATUS PIX:", status);
 
     if (status === "PAID") {
-
       let siteId = pagamento.siteId;
 
       if (!siteId) {
@@ -379,11 +387,11 @@ app.get("/check-payment", async (req, res) => {
       });
     }
 
-    res.json({ status: "pending" });
+    return res.json({ status: "pending" });
 
   } catch (err) {
     console.error("❌ check-payment erro:", err.response?.data || err.message);
-    res.json({ status: "pending" });
+    return res.json({ status: "pending" });
   }
 });
 
