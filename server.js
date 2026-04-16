@@ -378,6 +378,45 @@ app.get("/check-payment", async (req, res) => {
     res.json({ status: "pending" });
   }
 });
+
+
+
+app.get("/payment-info", async (req, res) => {
+  try {
+    const paymentId = String(req.query.payment_id);
+
+    if (!paymentId) {
+      return res.status(400).json({ error: "payment_id ausente" });
+    }
+
+    // 🔥 consulta o pagamento no PagSeguro
+    const response = await axios.get(
+      `https://api.pagseguro.com/charges/${paymentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.PAGSEGURO_TOKEN}`
+        }
+      }
+    );
+
+    const charge = response.data;
+
+    if (!charge || !charge.payment_method?.pix?.qr_codes?.length) {
+      return res.json({ status: "pending" });
+    }
+
+    const pix = charge.payment_method.pix.qr_codes[0];
+
+    res.json({
+      qr_base64: pix.qr_code,   // ✅ imagem base64 correta
+      copia_cola: pix.text
+    });
+
+  } catch (err) {
+    console.error("❌ payment-info erro:", err.response?.data || err.message);
+    res.status(500).json({ error: "Erro ao buscar PIX" });
+  }
+});
 /* =====================
    SUCCESS
 ===================== */
