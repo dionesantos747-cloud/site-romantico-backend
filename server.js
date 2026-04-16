@@ -264,22 +264,29 @@ app.post("/webhook", async (req, res) => {
 
     const order = req.body;
 
-    const qr = order.qr_codes?.[0];
+    // 🔥 O STATUS VEM AQUI
+    const status = order.status;
 
-    if (!qr) return;
-
-    const paymentId = qr.id;
-    const status = qr.status;
-
-    console.log("📡 Webhook status:", status);
+    console.log("📡 STATUS DO PEDIDO:", status);
 
     if (status !== "PAID") return;
 
+    const qr = order.qr_codes?.[0];
+    if (!qr) return;
+
+    const paymentId = qr.id;
+
     const pagamento = await payments.findOne({ paymentId });
 
-    if (!pagamento) return;
+    if (!pagamento) {
+      console.log("❌ Pagamento não encontrado");
+      return;
+    }
 
-    if (pagamento.status === "approved") return;
+    if (pagamento.status === "approved") {
+      console.log("⚠️ Já aprovado");
+      return;
+    }
 
     const siteId = crypto.randomUUID();
 
@@ -304,7 +311,7 @@ app.post("/webhook", async (req, res) => {
       }
     );
 
-    console.log("💖 APROVADO VIA WEBHOOK");
+    console.log("💖 PAGAMENTO APROVADO!");
 
   } catch (err) {
     console.error("❌ webhook erro:", err.message);
