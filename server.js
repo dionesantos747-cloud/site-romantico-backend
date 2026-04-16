@@ -187,7 +187,8 @@ const pagseguro = await axios.post(
     reference_id: "pedido_" + tempId,
     customer: {
       name: nome,
-      email: "dionesantosx7@gmail.com"
+      email: "dionesantosx7@gmail.com",
+      tax_id: "12345678909"
     },
     items: [
       {
