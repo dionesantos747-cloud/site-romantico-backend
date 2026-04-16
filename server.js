@@ -324,73 +324,17 @@ app.get("/check-payment", async (req, res) => {
       return res.json({ status: "pending" });
     }
 
-    const response = await axios.get(
-      `https://sandbox.api.pagseguro.com/orders/${pagamento.orderId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.PAGSEGURO_TOKEN}`
-        }
-      }
-    );
-
-    const qr =
-      response.data.qr_codes?.find(q => q.id === paymentId) ||
-      response.data.qr_codes?.[0];
-
-    if (!qr) {
-      console.log("❌ QR não encontrado");
-      return res.json({ status: "pending" });
-    }
-
-    console.log("🔍 QR COMPLETO:", JSON.stringify(qr, null, 2));
-    console.log("🔍 ORDER COMPLETA:", JSON.stringify(response.data, null, 2));
-
-    const status =
-      qr.status ||
-      qr.payment_response?.status ||
-      response.data.status ||
-      null;
-
-    console.log("📡 STATUS PIX:", status);
-
-    if (status === "PAID") {
-      let siteId = pagamento.siteId;
-
-      if (!siteId) {
-        siteId = crypto.randomUUID();
-
-        await payments.updateOne(
-          { paymentId },
-          {
-            $set: {
-              status: "approved",
-              siteId,
-              aprovadoEm: new Date()
-            }
-          }
-        );
-
-        await users.updateOne(
-          { _id: pagamento.userId },
-          {
-            $set: {
-              status: "approved",
-              activatedAt: new Date()
-            }
-          }
-        );
-      }
-
+    if (pagamento.status === "approved") {
       return res.json({
         status: "approved",
-        siteId
+        siteId: pagamento.siteId
       });
     }
 
     return res.json({ status: "pending" });
 
   } catch (err) {
-    console.error("❌ check-payment erro:", err.response?.data || err.message);
+    console.error("❌ check-payment erro:", err.message);
     return res.json({ status: "pending" });
   }
 });
