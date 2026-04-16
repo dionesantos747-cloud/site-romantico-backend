@@ -93,7 +93,6 @@ if (!paymentId) {
 
 const card = document.querySelector(".card");
 
-// 🔥 cria área do PIX
 card.insertAdjacentHTML("beforeend", `
   <div class="qr">
     <img id="qr" style="width:220px;margin:20px auto">
@@ -124,19 +123,22 @@ const qrImg = document.getElementById("qr");
 const pixBox = document.getElementById("code");
 const copyBtn = document.getElementById("copyBtn");
 
-copyBtn.onclick = () => {
-  navigator.clipboard.writeText(pixBox.innerText);
-  alert("Código PIX copiado!");
+copyBtn.onclick = async () => {
+  try {
+    await navigator.clipboard.writeText(pixBox.innerText);
+    alert("Código PIX copiado!");
+  } catch {
+    alert("Não foi possível copiar o código PIX.");
+  }
 };
 
-// 🔥 BUSCAR QR
 async function carregarPix() {
   try {
     const res = await fetch(`/payment-info?payment_id=${paymentId}`);
     const data = await res.json();
 
     if (data.qr_base64 && data.copia_cola) {
-      qrImg.src = "data:image/png;base64," + data.qr_base64;
+      qrImg.src = data.qr_base64;
       pixBox.innerText = data.copia_cola;
     } else {
       pixBox.innerText = "Gerando PIX, aguarde...";
@@ -147,7 +149,6 @@ async function carregarPix() {
   }
 }
 
-// 🔁 CHECK PAGAMENTO
 let polling = true;
 
 async function verificarPagamento() {
@@ -158,7 +159,6 @@ async function verificarPagamento() {
     const data = await res.json();
 
     if (data.status === "approved") {
-
       polling = false;
 
       document.getElementById("status").innerText =
@@ -167,15 +167,13 @@ async function verificarPagamento() {
       localStorage.removeItem("romantico_editor_state");
 
       setTimeout(() => {
-        window.location.href =
-          `/success.html?payment_id=${paymentId}`;
+        window.location.href = `/success.html?payment_id=${paymentId}`;
       }, 1200);
     }
 
   } catch {}
 }
 
-// iniciar
 carregarPix();
 setInterval(verificarPagamento, 3000);
 </script>
