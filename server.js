@@ -260,31 +260,26 @@ app.post("/webhook", async (req, res) => {
   res.sendStatus(200);
 
   try {
-    console.log("🔔 Webhook recebido:", JSON.stringify(req.body, null, 2));
+    console.log("🔔 Webhook:", JSON.stringify(req.body, null, 2));
 
-    const charges = req.body?.charges;
-    if (!charges || !charges.length) return;
+    const order = req.body;
 
-    const charge = charges[0];
+    const qr = order.qr_codes?.[0];
 
-    const paymentId = charge.id;
-    const status = charge.status;
+    if (!qr) return;
 
-    console.log("📡 Status PagSeguro:", status);
+    const paymentId = qr.id;
+    const status = qr.status;
+
+    console.log("📡 Webhook status:", status);
 
     if (status !== "PAID") return;
 
     const pagamento = await payments.findOne({ paymentId });
 
-    if (!pagamento) {
-      console.log("❌ Pagamento não encontrado");
-      return;
-    }
+    if (!pagamento) return;
 
-    if (pagamento.status === "approved") {
-      console.log("⚠️ Já aprovado");
-      return;
-    }
+    if (pagamento.status === "approved") return;
 
     const siteId = crypto.randomUUID();
 
@@ -309,10 +304,10 @@ app.post("/webhook", async (req, res) => {
       }
     );
 
-    console.log("💖 Pagamento aprovado:", paymentId);
+    console.log("💖 APROVADO VIA WEBHOOK");
 
   } catch (err) {
-    console.error("❌ Erro webhook:", err.message);
+    console.error("❌ webhook erro:", err.message);
   }
 });
 
@@ -329,9 +324,9 @@ app.get("/check-payment", async (req, res) => {
       return res.json({ status: "pending" });
     }
 
-    // 🔥 CONSULTA DIRETO NO PAGSEGURO
+    // 🔥 CONSULTA PEDIDO (NÃO CHARGE)
     const response = await axios.get(
-      `https://sandbox.api.pagseguro.com/charges/${paymentId}`,
+      `https://sandbox.api.pagseguro.com/orders/${pagamento.orderId}`,
       {
         headers: {
           Authorization: `Bearer ${process.env.PAGSEGURO_TOKEN}`
@@ -339,7 +334,15 @@ app.get("/check-payment", async (req, res) => {
       }
     );
 
-    const status = response.data.status;
+    const qr = response.data.qr_codes?.find(q => q.id === paymentId);
+
+    if (!qr) {
+      return res.json({ status: "pending" });
+    }
+
+    const status = qr.status;
+
+    console.log("📡 STATUS PIX:", status);
 
     if (status === "PAID") {
 
