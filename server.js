@@ -236,7 +236,7 @@ await payments.insertOne({
 
   res.json({
   payment_id: charge.id,
-  qr_base64: pix.links[0].href,
+qr_base64: pix.qr_code,
   copia_cola: pix.text
 });
 
