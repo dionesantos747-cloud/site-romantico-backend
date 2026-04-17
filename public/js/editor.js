@@ -79,6 +79,16 @@ function validarEtapaAtual() {
    const btnComprar = document.getElementById("btnComprar");
   const lerBtn     = document.getElementById("lerBtn");
 
+  function resetarBotaoCompra() {
+  if (!btnComprar) return;
+  btnComprar.disabled = false;
+  btnComprar.innerText = "Gerar QR Code por R$15.80";
+}
+
+window.addEventListener("pageshow", () => {
+  resetarBotaoCompra();
+});
+
   const buyerHelpBtn1 = document.getElementById("buyerHelpBtn1");
 const buyerHelpBtn2 = document.getElementById("buyerHelpBtn2");
 
