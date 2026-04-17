@@ -1226,8 +1226,7 @@ textarea:-webkit-autofill {
   color: #000 !important;
   -webkit-text-fill-color: #000 !important;
   font-weight: bold !important;
-   margin-top: 10px;
-}
+  }
 
 /* =========================
    PLAYER MINIMAL VIDRO
@@ -1830,7 +1829,6 @@ font-weight:bold;
   font-size:16px;
   -webkit-text-fill-color:#fff !important;
   caret-color:#ffd400
-  margin-bottom: 14px; /* 👈 espaço entre os campos */
 }
 
 .buyer-input::placeholder{
@@ -1990,4 +1988,12 @@ font-weight:bold;
 .error-text,
 .buyer-error{
   color: #ff3b3b !important;
+}
+
+.buyer-input{
+  margin-bottom: 14px; /* 👈 espaço entre os campos */
+}
+#buyerSection{
+  display: flex;
+  flex-direction: column;
 }
