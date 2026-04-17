@@ -23,6 +23,23 @@ const emailInput = document.getElementById("emailInput");
 const btnVoltarEtapa = document.getElementById("btnVoltarEtapa");
 const btnProximoEtapa = document.getElementById("btnProximoEtapa");
 
+  const stepNav = document.querySelector(".step-nav");
+const buyerSection = document.getElementById("buyerSection");
+
+function atualizarVisibilidadeStepNav() {
+  if (!stepNav || !buyerSection) return;
+
+  const topoBuyer = buyerSection.getBoundingClientRect().top;
+  const alturaTela = window.innerHeight;
+
+  // se a área de compra entrou na tela, esconde
+  if (topoBuyer < alturaTela * 0.75) {
+    stepNav.style.display = "none";
+  } else {
+    stepNav.style.display = "flex";
+  }
+}
+
 let etapaAtual = 0;
 
 function mostrarEtapa(index) {
@@ -929,6 +946,11 @@ if (btnProximoEtapa) {
 criarCoracoesPreview();
 carregarEstado();
 mostrarEtapa(etapaAtual);
+atualizarVisibilidadeStepNav();
+
+// 👇 COLOQUE AQUI
+window.addEventListener("scroll", atualizarVisibilidadeStepNav);
+window.addEventListener("resize", atualizarVisibilidadeStepNav);
 /* =====================
    BIBLIOTECA DE MÚSICAS
 ===================== */
