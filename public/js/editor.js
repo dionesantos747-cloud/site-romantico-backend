@@ -849,9 +849,9 @@ function cpfValido(cpf) {
 function emailValido(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 }
- if (buyerHelpBtn) {
+if (buyerHelpBtn) {
   buyerHelpBtn.addEventListener("click", () => {
-    alert("Informe CPF e Email para gerar o pagamento. Esses dados permitem localizar sua compra em caso de suporte ou reembolso.");
+    mostrarAviso("Informe CPF e Email para gerar o pagamento. Esses dados permitem localizar sua compra em caso de suporte ou reembolso.");
   });
 }
   /* =====================
