@@ -1927,6 +1927,33 @@ font-weight:bold;
   font-family:'Orbitron', sans-serif !important;
 }
 
+.buyer-label-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  margin-top:14px;
+}
 
+.buyer-label{
+  margin: 0;
+}
+
+.buyer-help-btn{
+  width:26px;
+  height:26px;
+  min-width:26px;
+  border:none;
+  border-radius:50%;
+  background: linear-gradient(135deg, #ff4d88, #a84dff);
+  color:#fff;
+  font-size:14px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  box-shadow:0 0 10px rgba(255,77,136,.35);
+}
 
 
