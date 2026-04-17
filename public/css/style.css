@@ -281,7 +281,8 @@ pointer-events: all;
   width: 360px;
   max-width: 92vw;
   aspect-ratio: 9 / 19.5;
-
+  min-height: 680px;
+  
   border-radius: 34px;
   background: #000;
   border: 10px solid #111;
@@ -294,6 +295,12 @@ pointer-events: all;
   position: relative;
 
   padding-top: 70px;
+  padding-bottom: 0;
+
+  overflow-anchor: none;
+  overscroll-behavior: contain;
+
+  z-index: 1;
 }
 
 .preview.azul {
@@ -764,25 +771,13 @@ border-radius: 32px;
 overflow: hidden;
 
  height: auto;
-  min-height: 720px;
+  min-height: 100px;
 
 position: relative;
 
 }
 
-/* Scroll real */
 
-.preview {
-
-padding-bottom: 0px;
-
-z-index: 1;
-  
-  overflow-anchor: none;
-  
- overscroll-behavior: contain;
-
-}
 
 /* esconder scrollbar feia */
 
