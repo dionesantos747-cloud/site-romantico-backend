@@ -1226,6 +1226,7 @@ textarea:-webkit-autofill {
   color: #000 !important;
   -webkit-text-fill-color: #000 !important;
   font-weight: bold !important;
+   margin-top: 10px;
 }
 
 /* =========================
@@ -1828,7 +1829,8 @@ font-weight:bold;
   color:#fff !important;
   font-size:16px;
   -webkit-text-fill-color:#fff !important;
-  caret-color:#ffd400;
+  caret-color:#ffd400
+  margin-bottom: 14px; /* 👈 espaço entre os campos */
 }
 
 .buyer-input::placeholder{
