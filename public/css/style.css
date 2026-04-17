@@ -1880,6 +1880,7 @@ font-weight:bold;
   border-radius: 20px;
   background: rgba(0,0,0,.55);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .step-btn{
@@ -1918,8 +1919,7 @@ font-weight:bold;
   cursor:not-allowed;
 }
 
-
-/* 🔥 FORÇA COR BRANCA NO BLOCO DE COMPRA */
+/* 🔥 BLOCO DE COMPRA */
 .buyer-box label,
 .buyer-box .buyer-label,
 .buyer-box .buyer-help{
@@ -1927,6 +1927,7 @@ font-weight:bold;
   font-family:'Orbitron', sans-serif !important;
 }
 
+/* 🔥 LABEL + BOTÃO ? */
 .buyer-label-row{
   display:flex;
   align-items:center;
@@ -1936,13 +1937,14 @@ font-weight:bold;
 }
 
 .buyer-label{
-  margin: 0;
+  margin:0;
 }
 
 .buyer-help-btn{
   width:26px;
   height:26px;
   min-width:26px;
+  padding:0;
   border:none;
   border-radius:50%;
   background: linear-gradient(135deg, #ff4d88, #a84dff);
@@ -1955,5 +1957,4 @@ font-weight:bold;
   cursor:pointer;
   box-shadow:0 0 10px rgba(255,77,136,.35);
 }
-
 
