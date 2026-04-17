@@ -1957,3 +1957,44 @@ font-weight:bold;
 .editor{
   padding-bottom:110px;
 }
+
+.preview-title{
+  text-align:center;
+  padding: 12px 0;
+  font-family:'Orbitron', sans-serif;
+  font-size:1.1rem;
+
+  /* 🔥 mesmo estilo do "Música" */
+  background: linear-gradient(90deg, #ff4d88, #a84dff, #4da6ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+
+/* seta clean */
+.arrow-down{
+  width:10px;
+  height:10px;
+  border-right:2px solid #a84dff;
+  border-bottom:2px solid #a84dff;
+  transform: rotate(45deg);
+  margin-top:4px;
+
+  animation: bounce 1.2s infinite;
+}
+
+/* animação suave */
+@keyframes bounce{
+  0%,100%{
+    transform: translateY(0) rotate(45deg);
+    opacity:0.7;
+  }
+  50%{
+    transform: translateY(6px) rotate(45deg);
+    opacity:1;
+  }
+}
