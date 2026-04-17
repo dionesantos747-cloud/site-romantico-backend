@@ -60,7 +60,8 @@ if (heartNameEl && heartContainer) {
 }
 
 // 🔥 SLIDER AUTOMÁTICO
-montarSliderFotos(data.fotos);
+const fotosValidas = (data.fotos || []).filter(f => !!f);
+montarSliderFotos(fotosValidas);
 
 textoCompleto = data.mensagem || "";
 atualizarTexto();
