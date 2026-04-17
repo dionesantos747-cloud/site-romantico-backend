@@ -194,7 +194,9 @@ let nomeMusicaSelecionada = "Nossa Música";
     if (txt && txt.classList.contains("error-text")) {
       txt.style.display = "block";
     }
-    input.scrollIntoView({ behavior: "smooth", block: "center" });
+   if (window.innerWidth < 768) {
+  input.scrollIntoView({ behavior: "smooth", block: "center" });
+}
     input.focus();
   }
 
