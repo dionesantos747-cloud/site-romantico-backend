@@ -531,11 +531,11 @@ async function reduzirImagem(file) {
   if (!file) return;
 
   // valida tamanho original antes de reduzir
-  if (file.size > 20 * 1024 * 1024) {
-    alert("A imagem deve ter no máximo 20MB.");
-    fotoInput.value = "";
-    return;
-  }
+ if (file.size > 20 * 1024 * 1024) {
+  mostrarAviso("A imagem deve ter no máximo 20MB.");
+  fotoInput.value = "";
+  return;
+}
 
  let imagemReduzida;
 try {
@@ -583,9 +583,9 @@ try {
      salvarEstado();
     fotoInput.value = "";
 
-  } catch {
-    alert("Erro ao enviar imagem");
-  }
+} catch {
+  mostrarAviso("Erro ao enviar imagem.");
+}
 };
 
   function atualizarMidias() {
@@ -741,13 +741,13 @@ musicaInput.addEventListener("change", async () => {
 
     musicBox.innerText = "🎵 Música adicionada";
 
-  } catch (err) {
-    alert("Erro ao enviar música");
+ } catch (err) {
+  mostrarAviso("Erro ao enviar música.");
 
-    musicaUrl = null;
-    musicaInput.value = "";
-    musicBox.innerText = "🎵 Adicionar música";
-  }
+  musicaUrl = null;
+  musicaInput.value = "";
+  musicBox.innerText = "🎵 Adicionar música";
+}
 
   isPickingMusic = false;
   musicBox.classList.remove("disabled");
