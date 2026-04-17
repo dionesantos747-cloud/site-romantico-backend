@@ -1812,9 +1812,11 @@ font-weight:bold;
 .buyer-label{
   display:block;
   margin: 14px 0 8px;
-  color:#ffd400;
-  font-weight:600;
+  color:#fff;
+  font-weight:400;
   font-size:0.95rem;
+  font-family:'Orbitron', sans-serif;
+  text-align:center;
 }
 
 .buyer-input{
@@ -1830,7 +1832,8 @@ font-weight:bold;
 }
 
 .buyer-input::placeholder{
-  color:rgba(255,255,255,.45) !important;
+  color:rgba(255,255,255,.28) !important;
+  font-size:14px;
 }
 
 .buyer-input:focus{
@@ -1840,10 +1843,12 @@ font-weight:bold;
 }
 
 .buyer-help{
-  margin-top:10px;
-  color:#ffd400;
+  margin-top:14px;
+  color:#fff;
   text-align:center;
-  font-size:.95em;
+  font-size:0.95rem;
+  font-family:'Orbitron', sans-serif;
+  line-height:1.4;
 }
 
 .buyer-input{
