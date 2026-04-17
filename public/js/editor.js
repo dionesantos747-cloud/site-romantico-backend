@@ -891,21 +891,18 @@ const payload = {
      CORAÇÕES
   ===================== */
 function criarCoracoesPreview() {
-
   document.querySelectorAll(".heart").forEach(h => h.remove());
 
- const alturaTotal = preview.scrollHeight + 200;
-
   for (let i = 0; i < 12; i++) {
-
     const h = document.createElement("div");
     h.className = "heart";
     h.innerText = "❤️";
 
     h.style.left = Math.random() * 100 + "%";
 
-    /* nascer sempre no fundo REAL da preview */
-    h.style.top = alturaTotal + "px";
+    /* nascer no fundo visível da preview, sem aumentar o scroll */
+    h.style.top = "auto";
+    h.style.bottom = "-20px";
 
     h.style.fontSize = (16 + Math.random() * 10) + "px";
     h.style.animationDuration = (6 + Math.random() * 6) + "s";
