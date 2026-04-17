@@ -106,8 +106,7 @@ window.addEventListener("pageshow", () => {
   resetarBotaoCompra();
 });
 
-  const buyerHelpBtn1 = document.getElementById("buyerHelpBtn1");
-const buyerHelpBtn2 = document.getElementById("buyerHelpBtn2");
+ const buyerHelpBtn = document.getElementById("buyerHelpBtn");
 
 const buyerHelpMessage = 'Informe CPF e email para gerar o pagamento. Esses dados permitem localizar sua compra em caso de suporte ou reembolso.';
  
@@ -823,15 +822,9 @@ function cpfValido(cpf) {
 }
 
 
-  if (buyerHelpBtn1) {
-  buyerHelpBtn1.addEventListener("click", () => {
-    alert(buyerHelpMessage);
-  });
-}
-
-if (buyerHelpBtn2) {
-  buyerHelpBtn2.addEventListener("click", () => {
-    alert(buyerHelpMessage);
+ if (buyerHelpBtn) {
+  buyerHelpBtn.addEventListener("click", () => {
+    alert("Informe CPF e Email para gerar o pagamento. Esses dados permitem localizar sua compra em caso de suporte ou reembolso.");
   });
 }
   /* =====================
