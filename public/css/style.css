@@ -1832,7 +1832,7 @@ font-weight:bold;
 }
 
 .buyer-input::placeholder{
-  color:rgba(255,255,255,.28) !important;
+  color:rgba(255,255,255,.25) !important;
   font-size:14px;
 }
 
@@ -1898,7 +1898,13 @@ font-weight:bold;
 }
 
 
-
+/* 🔥 FORÇA COR BRANCA NO BLOCO DE COMPRA */
+.buyer-box label,
+.buyer-box .buyer-label,
+.buyer-box .buyer-help{
+  color:#fff !important;
+  font-family:'Orbitron', sans-serif !important;
+}
 
 
 
