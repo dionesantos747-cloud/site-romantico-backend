@@ -278,33 +278,22 @@ pointer-events: all;
 /* ===== Preview (Molde Celular) ===== */
 
 .preview {
+  width: 360px;
+  max-width: 92vw;
+  aspect-ratio: 9 / 19.5;
 
-width: 360px;
+  border-radius: 34px;
+  background: #000;
+  border: 10px solid #111;
 
-max-width: 92vw;
+  overflow-y: auto;
+  overflow-x: hidden;
 
-aspect-ratio: 9 / 19.5;
+  -webkit-overflow-scrolling: touch;
 
-border-radius: 34px;
+  position: relative;
 
-background: #000;
-
-border: 10px solid #111;
-
-box-shadow:
-
-0 0 0 4px #000,
-
-0 25px 60px rgba(0,0,0,.8);
-
-overflow-y: auto;
-
-overflow-x: hidden;
-
--webkit-overflow-scrolling: touch;
-
-position: relative;
-
+  padding-top: 70px;
 }
 
 .preview.azul {
@@ -774,7 +763,8 @@ border-radius: 32px;
 
 overflow: hidden;
 
-height: 720px;
+ height: auto;
+  min-height: 720px;
 
 position: relative;
 
@@ -784,19 +774,7 @@ position: relative;
 
 .preview {
 
-height: 100%;
-
-overflow-y: auto;
-
-overflow-x: hidden;
-
--webkit-overflow-scrolling: touch;
-
-padding-top: 70px;
-
 padding-bottom: 0px;
-
-position: relative;
 
 z-index: 1;
   
@@ -1139,12 +1117,6 @@ html, body {
 .editor input,
 .editor textarea,
 button {
-  width: 100%;
-  max-width: 100%;
-}
-
-/* Preview nunca ultrapassa */
-.preview {
   width: 100%;
   max-width: 100%;
 }
@@ -1609,9 +1581,7 @@ text-overflow:ellipsis;
 white-space:nowrap;
 }
 
-.heart-container {
-  display: none;
-}
+
 
 *{
 -webkit-tap-highlight-color: transparent;
