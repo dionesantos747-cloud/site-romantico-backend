@@ -792,6 +792,19 @@ function cpfValido(cpf) {
 
   return resto === parseInt(cpf.charAt(10));
 }
+
+
+  if (buyerHelpBtn1) {
+  buyerHelpBtn1.addEventListener("click", () => {
+    alert(buyerHelpMessage);
+  });
+}
+
+if (buyerHelpBtn2) {
+  buyerHelpBtn2.addEventListener("click", () => {
+    alert(buyerHelpMessage);
+  });
+}
   /* =====================
      COMPRA
   ===================== */
