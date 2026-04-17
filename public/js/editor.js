@@ -874,10 +874,6 @@ if (btnVoltarEtapa) {
     if (etapaAtual > 0) {
       etapaAtual--;
       mostrarEtapa(etapaAtual);
-      document.getElementById("editor")?.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
     }
   });
 }
@@ -889,11 +885,14 @@ if (btnProximoEtapa) {
     if (etapaAtual < steps.length - 1) {
       etapaAtual++;
       mostrarEtapa(etapaAtual);
-      document.getElementById("editor")?.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
+      return;
     }
+
+    // última etapa: desce para CPF/email
+    document.getElementById("buyerSection")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
   });
 }
   
