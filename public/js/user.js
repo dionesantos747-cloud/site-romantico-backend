@@ -210,9 +210,20 @@ function atualizarTexto() {
       : textoCompleto.slice(0, 500) + "...";
 
     lerBtn.style.display = "block";
-    lerBtn.innerText = textoExpandido
-      ? "Ler menos ⬆️"
-      : "Continuar lendo ⬇️";
+
+    if (textoExpandido) {
+      lerBtn.innerHTML = `
+        <span class="ler-text">Ler menos</span>
+        <span class="ler-icon up">⌃</span>
+        <span class="ler-icon up">⌃</span>
+      `;
+    } else {
+      lerBtn.innerHTML = `
+        <span class="ler-text">Continuar lendo</span>
+        <span class="ler-icon down">⌄</span>
+        <span class="ler-icon down">⌄</span>
+      `;
+    }
   } else {
     msgEl.innerText = textoCompleto;
     lerBtn.style.display = "none";
@@ -220,43 +231,14 @@ function atualizarTexto() {
 }
 
 lerBtn.onclick = () => {
-
-  const isEditor = !!document.getElementById("editor");
-
-  const container = isEditor
-    ? document.querySelector(".preview")
-    : window;
-
-  const scrollAntes = isEditor
-    ? container.scrollTop
-    : window.scrollY;
+  const scrollAntes = window.scrollY;
 
   textoExpandido = !textoExpandido;
+  atualizarTexto();
 
-  mensagem.classList.toggle("limitada", !textoExpandido);
-
-  if (textoExpandido) {
-    lerBtn.innerHTML = `
-      <span class="ler-text">Ler menos</span>
-      <span class="ler-icon up">⌃</span>
-      <span class="ler-icon up">⌃</span>
-    `;
-  } else {
-    lerBtn.innerHTML = `
-      <span class="ler-text">Continuar lendo</span>
-      <span class="ler-icon down">⌄</span>
-      <span class="ler-icon down">⌄</span>
-    `;
-  }
-
-  // só corrige quando clicar em "Ler menos"
   if (!textoExpandido) {
     requestAnimationFrame(() => {
-      if (isEditor) {
-        container.scrollTop = scrollAntes;
-      } else {
-        window.scrollTo(0, scrollAntes);
-      }
+      window.scrollTo(0, scrollAntes);
     });
   }
 };
