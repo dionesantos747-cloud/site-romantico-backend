@@ -298,8 +298,7 @@ pointer-events: all;
   padding-bottom: 0;
 
   overflow-anchor: none;
-  overscroll-behavior: contain;
-
+  overscroll-behavior: auto;
   z-index: 1;
 }
 
@@ -828,13 +827,23 @@ display: none !important;
 body.final .preview {
   width: 100%;
   max-width: 100%;
-  aspect-ratio: auto;
+
+  height: auto !important;
+  min-height: 100vh;
+
+  aspect-ratio: unset !important;
 
   border-radius: 0;
   border: none;
   box-shadow: none;
 
   margin: 0;
+
+  overflow-y: visible !important;
+}
+
+body.final {
+  overflow-y: auto !important;
 }
 
 /* 🔥 SLIDER PRECISA EXISTIR */
