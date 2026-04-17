@@ -6,6 +6,31 @@ document.addEventListener("DOMContentLoaded", () => {
   /* =====================
      ELEMENTOS
   ===================== */
+const siteAlert = document.getElementById("siteAlert");
+const siteAlertMessage = document.getElementById("siteAlertMessage");
+const siteAlertOk = document.getElementById("siteAlertOk");
+
+function mostrarAviso(msg) {
+  if (!siteAlert || !siteAlertMessage) return;
+  siteAlertMessage.innerText = msg;
+  siteAlert.style.display = "flex";
+}
+
+function fecharAviso() {
+  if (!siteAlert) return;
+  siteAlert.style.display = "none";
+}
+
+if (siteAlertOk) {
+  siteAlertOk.addEventListener("click", fecharAviso);
+}
+
+if (siteAlert) {
+  siteAlert.addEventListener("click", (e) => {
+    if (e.target === siteAlert) fecharAviso();
+  });
+}
+  
   const nomeInput  = document.getElementById("nomeInput");
   const msgInput   = document.getElementById("msgInput");
   const dataInput  = document.getElementById("dataInput");
@@ -821,7 +846,9 @@ function cpfValido(cpf) {
   return resto === parseInt(cpf.charAt(10));
 }
 
-
+function emailValido(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+}
  if (buyerHelpBtn) {
   buyerHelpBtn.addEventListener("click", () => {
     alert("Informe CPF e Email para gerar o pagamento. Esses dados permitem localizar sua compra em caso de suporte ou reembolso.");
@@ -834,12 +861,19 @@ btnComprar.onclick = async () => {
   if (!nomeInput.value.trim()) return erro(nomeInput);
   if (!msgInput.value.trim()) return erro(msgInput);
   if (!dataInput.value) return erro(dataInput);
-  if (!cpfInput.value.trim() || !cpfValido(cpfInput.value)) {
-  alert("Digite um CPF válido");
+if (!cpfInput.value.trim() || !cpfValido(cpfInput.value)) {
+  mostrarAviso("Digite um CPF válido.");
   return erro(cpfInput);
 }
-  if (!emailInput.value.trim()) return erro(emailInput);
+ if (!emailInput.value.trim()) {
+  mostrarAviso("Preencha o email.");
+  return erro(emailInput);
+}
 
+if (!emailValido(emailInput.value)) {
+  mostrarAviso("Digite um email válido.");
+  return erro(emailInput);
+}
   btnComprar.disabled = true;
   btnComprar.innerText = "Gerando pagamento...";
 
@@ -874,7 +908,7 @@ const payload = {
     window.location.href = `/aguardando.html?payment_id=${data.payment_id}`;
 
   } catch (err) {
-    alert("Erro ao gerar pagamento");
+    mostrarAviso("Erro ao gerar pagamento.");
     btnComprar.disabled = false;
     btnComprar.innerText = "Gerar QR Code por R$15.80";
   }
