@@ -1852,7 +1852,45 @@ font-weight:bold;
   -webkit-text-fill-color:#fff !important;
 }
 
+.step{
+  display:none;
+}
 
+.step.active{
+  display:block;
+}
+
+.step-nav{
+  display:flex;
+  gap:12px;
+  margin-top:24px;
+}
+
+.step-btn{
+  flex:1;
+  padding:14px 18px;
+  border:none;
+  border-radius:16px;
+  font-size:1rem;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.step-btn.secondary{
+  background:#1b1b1b;
+  color:#fff;
+  border:1px solid rgba(255,255,255,.15);
+}
+
+.step-btn.primary{
+  background:#ffd400;
+  color:#000;
+}
+
+.step-btn[disabled]{
+  opacity:.5;
+  cursor:not-allowed;
+}
 
 
 
