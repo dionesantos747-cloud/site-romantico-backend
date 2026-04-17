@@ -361,11 +361,185 @@ body.final .device-preview{
   transform:scale(1.05);
   box-shadow:0 0 10px #ff2ad4;
 }
+/* =========================
+   TEXTO ACIMA DA PREVIEW
+========================= */
+
+.device-preview + div,
+div[style*="Veja como vai ficar"]{
+  font-family:'Orbitron', sans-serif !important;
+  font-size:1.4rem !important;
+  text-align:center;
+  background:linear-gradient(90deg,#ffd400,#ffae00);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+/* =========================
+   PREVIEW / CELULAR FAKE (FIX)
+========================= */
+
+.device-preview{
+  max-width:390px;
+  margin:0 auto 40px;
+  background:#000;
+  border-radius:44px;
+  padding:14px;
+  box-shadow:
+    0 0 0 6px #111,
+    0 30px 80px rgba(0,0,0,.9);
+  position:relative;
+}
+
+.device-top{
+  height:70px;
+  background:transparent;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  padding-bottom:8px;
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  z-index:10;
+}
+
+.device-top::before{
+  content:"";
+  width:120px;
+  height:22px;
+  background:rgba(0,0,0,0.9);
+  border-radius:16px;
+  position:absolute;
+  top:6px;
+}
+
+.chrome-url{
+  font-size:.75em;
+  color:#ccc;
+  background:rgba(20,20,20,0.6);
+  backdrop-filter:blur(12px);
+  padding:6px 16px;
+  border-radius:999px;
+  max-width:85%;
+  text-align:center;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+}
+
+.device-screen{
+  background:#000;
+  border-radius:32px;
+  overflow:hidden;
+  height:720px;
+  position:relative;
+}
+
+.preview{
+  width:360px;
+  max-width:92vw;
+  height:100%;
+  border-radius:34px;
+  background:#000;
+  border:10px solid #111;
+  box-shadow:
+    0 0 0 4px #000,
+    0 25px 60px rgba(0,0,0,.8);
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  position:relative;
+  padding-top:70px;
+  padding-bottom:40px;
+  z-index:1;
+}
+
+.preview::-webkit-scrollbar{
+  width:0;
+}
+
+.preview.azul{
+  background:
+    radial-gradient(circle at 30% 20%, #3aa0ff, #050b1a 70%),
+    radial-gradient(circle at 80% 80%, rgba(0,150,255,.3), transparent 60%);
+}
+
+.preview.roxo{
+  background:
+    radial-gradient(circle at 30% 20%, #9b4dff, #12071a 70%),
+    radial-gradient(circle at 80% 80%, rgba(150,0,255,.3), transparent 60%);
+}
+
+.preview.rosa{
+  background:
+    radial-gradient(circle at 30% 20%, #ff4fd8, #1a050f 70%),
+    radial-gradient(circle at 80% 80%, rgba(255,0,150,.3), transparent 60%);
+}
+
+.preview.preto{
+  background:
+    radial-gradient(circle at 30% 20%, #333, #000 70%),
+    radial-gradient(circle at 80% 80%, rgba(255,255,255,.05), transparent 60%);
+}
 
 
+/* =========================
+   CORAÇÕES / ANIMAÇÃO
+========================= */
 
+.heart-container{
+  position:relative;
+  margin:40px auto 20px;
+  width:160px;
+  height:160px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
 
+.heart-img{
+  width:100%;
+  opacity:0.9;
+  filter:drop-shadow(0 0 12px rgba(255,0,120,.4));
+}
 
+.heart-name{
+  position:absolute;
+  font-family:'Playfair Display', serif;
+  font-size:18px;
+  color:#fff;
+  text-align:center;
+  max-width:80%;
+  word-break:break-word;
+}
+
+/* ❤️ CORAÇÕES FLUTUANDO */
+
+.heart{
+  position:absolute;
+  bottom:-20px;
+  font-size:18px;
+  color:#ff4d88;
+  animation:floatUp linear infinite;
+  opacity:0.8;
+  pointer-events:none;
+}
+
+@keyframes floatUp{
+  0%{
+    transform:translateY(0) scale(1);
+    opacity:0;
+  }
+  20%{
+    opacity:1;
+  }
+  100%{
+    transform:translateY(-600px) scale(1.4);
+    opacity:0;
+  }
+}
 
 
 
