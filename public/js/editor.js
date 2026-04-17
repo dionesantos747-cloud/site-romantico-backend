@@ -19,6 +19,45 @@ document.addEventListener("DOMContentLoaded", () => {
   const cpfInput = document.getElementById("cpfInput");
 const emailInput = document.getElementById("emailInput");
 
+  const steps = Array.from(document.querySelectorAll(".step"));
+const btnVoltarEtapa = document.getElementById("btnVoltarEtapa");
+const btnProximoEtapa = document.getElementById("btnProximoEtapa");
+
+let etapaAtual = 0;
+
+function mostrarEtapa(index) {
+  steps.forEach((step, i) => {
+    step.classList.toggle("active", i === index);
+  });
+
+  if (btnVoltarEtapa) {
+    btnVoltarEtapa.style.display = index === 0 ? "none" : "inline-block";
+  }
+
+  if (btnProximoEtapa) {
+    btnProximoEtapa.innerText = index === steps.length - 1 ? "Finalizar" : "Próximo";
+  }
+}
+
+function validarEtapaAtual() {
+  if (etapaAtual === 0 && !nomeInput.value.trim()) {
+    erro(nomeInput);
+    return false;
+  }
+
+  if (etapaAtual === 1 && !msgInput.value.trim()) {
+    erro(msgInput);
+    return false;
+  }
+
+  if (etapaAtual === 2 && !dataInput.value) {
+    erro(dataInput);
+    return false;
+  }
+
+  return true;
+}
+
   if (cpfInput) {
   cpfInput.addEventListener("input", () => {
 
@@ -825,9 +864,38 @@ function criarCoracoesPreview() {
   }
 }
 
+
+if (btnVoltarEtapa) {
+  btnVoltarEtapa.addEventListener("click", () => {
+    if (etapaAtual > 0) {
+      etapaAtual--;
+      mostrarEtapa(etapaAtual);
+      document.getElementById("editor")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+  });
+}
+
+if (btnProximoEtapa) {
+  btnProximoEtapa.addEventListener("click", () => {
+    if (!validarEtapaAtual()) return;
+
+    if (etapaAtual < steps.length - 1) {
+      etapaAtual++;
+      mostrarEtapa(etapaAtual);
+      document.getElementById("editor")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+  });
+}
+  
 criarCoracoesPreview();
 carregarEstado();
-
+mostrarEtapa(etapaAtual);
 /* =====================
    BIBLIOTECA DE MÚSICAS
 ===================== */
