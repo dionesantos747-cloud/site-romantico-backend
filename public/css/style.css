@@ -1,11 +1,11 @@
-/* 🔒 BLOQUEIO TOTAL DE DARK MODE */
+/* 🔒 BLOQUEIO TOTAL DE DARK MODE (CHROME + SAMSUNG) */
 :root {
   color-scheme: light !important;
 }
 
 html {
   color-scheme: light !important;
-  background-color: #fff !important;
+  background-color: #fff !important; /* engana o Samsung */
 }
 
 body {
@@ -18,23 +18,925 @@ html, body, * {
   filter: none !important;
   -webkit-filter: none !important;
 }
+html, body {
 
-/* Reset */
-*{
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
+color-scheme: light !important;
+
+}
+
+{
+
+box-sizing: border-box;
+
+-webkit-tap-highlight-color: transparent;
+
+
 }
 
 html, body {
-  margin: 0;
-  background: #000 !important;
-  color: #fff !important;
-  font-family: 'Playfair Display', serif;
-  overflow-x: hidden;
-  max-width: 100%;
+
+margin: 0;
+
+background: #000 !important;
+
+color: #fff !important;
+
+font-family: 'Playfair Display', serif;
+
+overflow-x: hidden;
+
 }
 
-/* ===== EDITOR ===== */
+/* ===== Inputs ===== */
+
+input,
+
+textarea,
+
+button {
+
+background-color: #fff;
+
+color: #000;
+
+appearance: none;
+
+-webkit-appearance: none;
+
+}
+
+/* ===== Editor ===== */
+
+.editor {
+
+padding: 20px;
+
+background: #000;
+
+max-width: 520px;
+
+margin: 0 auto;
+
+}
+
+.editor input,
+
+.editor textarea {
+
+background: #fff;
+
+color: #000;
+
+}
+
+.editor input::placeholder,
+
+.editor textarea::placeholder {
+
+color: #777;
+
+}
+
+label {
+
+color: #ffb3d9;
+
+display: block;
+
+margin: 14px 0 6px;
+
+}
+
+input, textarea {
+
+width: 100%;
+
+padding: 14px;
+
+border-radius: 14px;
+
+border: none;
+
+font-size: 1em;
+
+}
+
+textarea {
+
+min-height: 90px;
+
+}
+
+input.error,
+
+textarea.error {
+
+border: 2px solid red;
+
+}
+
+.error-text {
+
+display: none;
+
+color: red;
+
+font-size: .9em;
+
+}
+
+/* ===== Fundos ===== */
+
+.bg-options {
+
+display: flex;
+
+gap: 12px;
+
+justify-content: center;
+
+}
+
+.bg-card {
+
+width: 60px;
+
+height: 60px;
+
+border-radius: 14px;
+
+border: 3px solid rgba(255,255,255,.25);
+
+cursor: pointer;
+
+}
+
+.bg-card.selected {
+
+border-color: #fff;
+
+}
+
+.bg-card.azul  { background: radial-gradient(#2b6cff,#000); }
+
+.bg-card.roxo  { background: radial-gradient(#8a5cff,#000); }
+
+.bg-card.rosa  { background: radial-gradient(#ff5fa2,#000); }
+
+.bg-card.preto { background: #000; }
+
+/* ===== Fotos (Slots Editor) ===== */
+
+.photo-grid {
+
+display: flex;
+
+gap: 10px;
+
+justify-content: center;
+
+}
+
+.photo-slot {
+
+width: 90px;
+
+height: 90px;
+
+border-radius: 18px;
+
+border: 2px dashed #777;
+
+display: flex;
+
+align-items: center;
+
+justify-content: center;
+
+font-size: 2em;
+
+cursor: pointer;
+
+position: relative;
+
+}
+
+.photo-slot.filled {
+
+border: none;
+
+}
+
+.photo-slot.filled img {
+
+width: 100%;
+
+height: 100%;
+
+object-fit: cover;
+
+border-radius: 14px;
+
+pointer-events: none;
+
+}
+
+.photo-remove {
+
+position: absolute;
+
+top: 6px;
+
+right: 6px;
+
+width: 26px;
+
+height: 26px;
+
+background: rgba(0,0,0,.75);
+
+color: #fff;
+
+border-radius: 50%;
+
+font-size: 16px;
+
+display: flex;
+
+align-items: center;
+
+justify-content: center;
+
+cursor: pointer;
+
+z-index: 5;
+
+pointer-events: all;
+
+}
+
+/* ===== Preview (Molde Celular) ===== */
+
+.preview {
+
+width: 360px;
+
+max-width: 92vw;
+
+aspect-ratio: 9 / 19.5;
+
+border-radius: 34px;
+
+background: #000;
+
+border: 10px solid #111;
+
+box-shadow:
+
+0 0 0 4px #000,
+
+0 25px 60px rgba(0,0,0,.8);
+
+overflow-y: auto;
+
+overflow-x: hidden;
+
+-webkit-overflow-scrolling: touch;
+
+position: relative;
+
+}
+
+.preview.azul {
+  background:
+    radial-gradient(circle at 30% 20%, #3aa0ff, #050b1a 70%),
+    radial-gradient(circle at 80% 80%, rgba(0,150,255,.3), transparent 60%);
+}
+
+.preview.roxo {
+  background:
+    radial-gradient(circle at 30% 20%, #9b4dff, #12071a 70%),
+    radial-gradient(circle at 80% 80%, rgba(150,0,255,.3), transparent 60%);
+}
+
+.preview.rosa {
+  background:
+    radial-gradient(circle at 30% 20%, #ff4fd8, #1a050f 70%),
+    radial-gradient(circle at 80% 80%, rgba(255,0,150,.3), transparent 60%);
+}
+
+.preview.preto {
+  background:
+    radial-gradient(circle at 30% 20%, #333, #000 70%),
+    radial-gradient(circle at 80% 80%, rgba(255,255,255,.05), transparent 60%);
+}
+/* ===== NOME PREMIUM ===== */
+
+.nome {
+  font-family: 'Rye', cursive;
+
+  font-size: 3em;
+  font-weight: 400;
+  letter-spacing: 2px;
+
+  text-align: center;
+  margin: 32px 0 16px;
+
+ color: #f7efe8;
+
+  text-shadow:
+    0 2px 6px rgba(0,0,0,0.85);
+}
+@keyframes pulse {
+
+from { transform: scale(1); }
+
+to   { transform: scale(1.05); }
+
+}
+
+/* ===== MENSAGEM PREMIUM ===== */
+
+.mensagem {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.18em;
+  line-height: 1.6;
+  text-align: center;
+
+  color: rgba(240,230,225,0.9); /* tom champagne */
+
+  margin: 18px 26px 10px;
+
+  text-shadow:
+    0 1px 5px rgba(0,0,0,0.6);
+}
+.mensagem.limitada {
+
+max-height: 180px;
+
+overflow: hidden;
+
+}
+.mensagem::before {
+  content: "❦";
+  display: block;
+  margin: 12px auto 14px;
+  font-size: 1.2em;
+  opacity: 0.4;
+}
+.ler-mais {
+
+background: transparent;
+
+color: #ffd400;
+
+border: none;
+
+font-size: 1em;
+
+}
+
+/* ===== SLIDER POLAROID (EDITOR) ===== */
+
+.slider {
+
+overflow: hidden;
+
+width: 100%;
+
+margin: 30px 0;
+
+}
+
+.slider-track {
+
+display: flex;
+
+width: 100%;
+
+transition: transform .8s ease;
+
+will-change: transform;
+
+}
+
+#midias .photo {
+
+min-width: 100%;
+
+display: flex;
+
+justify-content: center;
+
+}
+
+.slide {
+
+min-width: 100%;
+
+display: flex;
+
+justify-content: center;
+
+flex-shrink: 0;
+
+}
+
+/* ===== POLAROID REAL ===== */
+
+.polaroid {
+
+background: #fff;
+
+padding: 12px 12px 36px;
+
+border-radius: 6px;
+
+max-width: 280px;
+
+width: 85vw;
+
+box-shadow:
+
+0 12px 25px rgba(0,0,0,.35),
+
+0 4px 10px rgba(0,0,0,.25);
+
+}
+
+.polaroid img {
+
+width: 100%;
+
+max-width: 260px;
+
+max-height: 360px;
+
+object-fit: cover;
+
+border-radius: 4px;
+
+}
+
+/* =========================
+   TEMPO – PREMIUM ESTÁTICO
+========================= */
+
+#tempo {
+  margin: 50px 0 30px;
+  text-align: center;
+}
+
+/* Título */
+#tempo .titulo {
+  font-family: 'Keania One', sans-serif;
+  font-size: 1.6em;
+  letter-spacing: 1.5px;
+  color: #ffffff;
+  margin-bottom: 24px;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+  text-transform: lowercase;
+}
+
+/* Container */
+#tempo .contador {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  justify-items: center;
+  margin-top: 20px;
+  padding: 0 10px; /* evita estourar no mobile */
+}
+
+/* Cápsulas */
+#tempo .item {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.9em;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  color: #fff;
+  padding: 14px 18px;
+  min-width: 90px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.14);
+  backdrop-filter: blur(6px);
+  text-align: center;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.25),
+    0 6px 16px rgba(0,0,0,0.35);
+}
+
+/* Linha do horário */
+#tempo .tempo-hms {
+  grid-column: 1 / -1;
+  justify-self: center;
+  font-size: 1.7em;
+  letter-spacing: 2px;
+  margin-top: 8px;
+}
+/* ===== Música ===== */
+
+.music-box {
+
+background: #222;
+
+padding: 14px;
+
+border-radius: 14px;
+
+text-align: center;
+
+cursor: pointer;
+
+}
+
+.music-box.disabled {
+
+opacity: .6;
+
+}
+
+.remove-music {
+
+display: none;
+
+color: #ff4b4b;
+
+text-align: center;
+
+margin-top: 8px;
+
+}
+
+/* ===== Player ===== */
+
+#audioPlayer {
+
+display: block;
+
+margin: 20px auto;
+
+width: 80%;
+
+max-width: 320px;
+
+}
+
+/* ===== Botão Compra ===== */
+
+button {
+
+width: 100%;
+
+padding: 18px;
+
+border-radius: 18px;
+
+font-size: 1.1em;
+
+border: none;
+
+}
+
+button.pay {
+
+background: #ffd400 !important;
+
+color: #000 !important;
+
+font-weight: bold;
+
+animation: pulseBuy 1.8s infinite;
+
+}
+
+@keyframes pulseBuy {
+
+0%   { box-shadow: 0 0 0 0 rgba(255,212,0,.6); }
+
+70%  { box-shadow: 0 0 0 14px rgba(255,212,0,0); }
+
+100% { box-shadow: 0 0 0 0 rgba(255,212,0,0); }
+
+}
+
+/* ===== Corações ===== */
+
+.heart {
+
+position: absolute;
+
+bottom: -20px;
+
+font-size: 18px;
+
+opacity: .6;
+
+animation: float 8s linear infinite;
+
+z-index: 9999;   /* 🔥 garante que fique na frente */
+
+pointer-events: none;
+
+}
+
+@keyframes float {
+to { transform: translateY(-230vh); opacity: 0; }
+}
+
+/* ===== Segurança Site Final ===== */
+
+body.final .editor,
+
+body.final .photo-grid,
+
+body.final .music-box,
+
+body.final .remove-music {
+
+display: none !important;
+
+}
+
+/* ==========================
+
+MOLDE IPHONE 15 REAL
+
+========================== */
+
+.device-preview {
+
+max-width: 390px;
+
+margin: 0 auto 40px;
+
+background: #000;
+
+border-radius: 44px;
+
+padding: 14px;
+
+box-shadow:
+
+0 0 0 6px #111,
+
+0 30px 80px rgba(0,0,0,.9);
+
+position: relative;
+
+}
+
+/* Notch / Ilha dinâmica */
+
+.device-top {
+
+height: 70px;
+
+background: transparent;
+
+display: flex;
+
+align-items: flex-end;
+
+justify-content: center;
+
+padding-bottom: 8px;
+
+position: absolute;
+
+top: 0;
+
+left: 0;
+
+right: 0;
+
+z-index: 10; /* 🔥 aumente isso */
+
+}
+
+.device-top::before {
+
+content: "";
+
+width: 120px;
+
+height: 22px;
+
+background: rgba(0,0,0,0.9);
+
+border-radius: 16px;
+
+position: absolute;
+
+top: 6px;
+
+}
+
+/* URL Chrome */
+
+.chrome-url {
+
+font-size: 0.75em;
+
+color: #ccc;
+
+background: rgba(20,20,20,0.6);
+
+backdrop-filter: blur(12px);
+
+padding: 6px 16px;
+
+border-radius: 999px;
+
+max-width: 85%;
+
+text-align: center;
+
+white-space: nowrap;
+
+overflow: hidden;
+
+text-overflow: ellipsis;
+
+box-shadow:
+
+inset 0 0 0 1px rgba(255,255,255,.08);
+
+}
+
+/* Tela real */
+
+.device-screen {
+
+background: #000;
+
+border-radius: 32px;
+
+overflow: hidden;
+
+height: 720px;
+
+position: relative;
+
+}
+
+/* Scroll real */
+
+.preview {
+
+height: 100%;
+
+overflow-y: auto;
+
+overflow-x: hidden;
+
+-webkit-overflow-scrolling: touch;
+
+padding-top: 70px;
+
+padding-bottom: 40px;
+
+position: relative;
+
+z-index: 1;
+
+}
+
+/* esconder scrollbar feia */
+
+.preview::-webkit-scrollbar {
+
+width: 0;
+
+}
+
+.editor,
+
+.editor * {
+
+background-color: transparent;
+
+}
+
+/* 🔥 NÃO APLICAR NO SITE FINAL */
+
+body.final .polaroid {
+
+background: #fff !important;
+
+}
+
+/* ===== SITE FINAL LIMPO (SEM QUEBRAR SLIDER) ===== */
+
+body.final .editor,
+
+body.final .photo-grid,
+
+body.final .music-box,
+
+body.final .remove-music,
+
+body.final .device-preview,
+
+body.final .device-top,
+
+body.final .chrome-url {
+
+display: none !important;
+
+}
+
+/* ===== SITE FINAL LIMPO REAL ===== */
+
+body.final .preview {
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: auto;
+
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+
+  margin: 0;
+}
+
+/* 🔥 SLIDER PRECISA EXISTIR */
+
+body.final .slider {
+
+overflow: hidden;
+
+width: 100%;
+
+margin: 30px 0;
+
+}
+
+body.final .slider-track {
+
+display: flex;
+
+width: 100%;
+
+transition: transform .8s ease;
+
+}
+
+body.final .slide {
+
+min-width: 100%;
+
+display: flex;
+
+justify-content: center;
+
+}
+
+
+
+body.final {
+  color-scheme: light !important;
+}
+
+body.final * {
+
+forced-color-adjust: none !important;
+
+}
+
+input,
+
+textarea,
+
+button,
+
+select {
+
+color-scheme: light !important;
+
+}
+
+html {
+
+background-color: #000 !important;
+
+}
+
+
+/* =========================
+   FUNDO GALÁXIA
+========================= */
+
+body {
+  background: radial-gradient(circle at 30% 20%, #2b0a3d, #0b0015 60%);
+  background-color: #0b0015;
+  color: #fff;
+}
+
+/* =========================
+   EDITOR CENTRALIZADO
+========================= */
+
 .editor {
   max-width: 520px;
   margin: 0 auto;
@@ -42,7 +944,10 @@ html, body {
   text-align: center;
 }
 
-/* ===== LABELS ===== */
+/* =========================
+   TÍTULOS CENTRALIZADOS
+========================= */
+
 .editor label {
   display: block;
   font-family: 'Orbitron', sans-serif;
@@ -54,7 +959,10 @@ html, body {
   -webkit-text-fill-color: transparent;
 }
 
-/* ===== INPUTS ===== */
+/* =========================
+   INPUTS NEON
+========================= */
+
 .editor input,
 .editor textarea {
   width: 100%;
@@ -77,16 +985,13 @@ html, body {
 .editor input:focus,
 .editor textarea:focus {
   border-color: #ff00cc;
-  box-shadow: 0 0 20px #ff00cc;
+  box-shadow: 0 0 20px #ff00cc, 0 0 40px rgba(255,0,255,.4);
 }
 
-input::placeholder,
-textarea::placeholder {
-  color: rgba(255,255,255,.4);
-  font-size: 14px;
-}
+/* =========================
+   ERRO
+========================= */
 
-/* ===== ERRO ===== */
 .error-text {
   color: #ff4d4d;
   font-size: .9rem;
@@ -94,26 +999,15 @@ textarea::placeholder {
   text-align: left;
 }
 
-/* ===== DATA ===== */
-.date-box {
-  margin: 20px auto;
-  padding: 14px 25px;
-  border-radius: 30px;
-  border: 2px solid #ff00cc;
-  background: linear-gradient(90deg,#1a0033,#330033);
-  font-family: 'Orbitron', sans-serif;
-  cursor: pointer;
-  box-shadow: 0 0 15px rgba(255,0,255,.4);
-  text-align: center;
-}
+/* =========================
+   FOTOS NEON
+========================= */
 
-/* ===== FOTOS ===== */
 .photo-grid {
   display: flex;
   justify-content: center;
   gap: 20px;
   margin-top: 15px;
-  flex-wrap: wrap;
 }
 
 .photo-slot {
@@ -127,9 +1021,17 @@ textarea::placeholder {
   font-size: 28px;
   cursor: pointer;
   background: rgba(0,0,0,.5);
+  transition: .3s;
 }
 
-/* ===== MÚSICA ===== */
+.photo-slot:hover {
+  box-shadow: 0 0 20px #ff00cc;
+}
+
+/* =========================
+   BOTÃO MÚSICA NEON
+========================= */
+
 .music-box {
   margin: 20px auto;
   padding: 14px 25px;
@@ -138,26 +1040,24 @@ textarea::placeholder {
   background: linear-gradient(90deg,#1a0033,#330033);
   font-family: 'Orbitron', sans-serif;
   cursor: pointer;
+  transition: .3s;
   box-shadow: 0 0 15px rgba(255,0,255,.4);
 }
 
-.music-library-btn{
-  margin:20px auto;
-  padding:14px 25px;
-  border-radius:30px;
-  border:2px solid #ff00cc;
-  background:linear-gradient(90deg,#1a0033,#330033);
-  font-family:'Orbitron',sans-serif;
-  text-align:center;
+.music-box:hover {
+  box-shadow: 0 0 25px #ff00cc, 0 0 50px rgba(255,0,255,.5);
+  transform: scale(1.03);
 }
 
-/* ===== FUNDO ===== */
+/* =========================
+   FUNDO CORES (QUADRADOS)
+========================= */
+
 .bg-options {
   display: flex;
   justify-content: center;
   gap: 20px;
   margin-top: 15px;
-  flex-wrap: wrap;
 }
 
 .bg-card {
@@ -166,172 +1066,688 @@ textarea::placeholder {
   border-radius: 18px;
   border: 2px solid #ff00cc;
   cursor: pointer;
+  transition: .3s;
+  box-shadow: 0 0 15px rgba(255,0,255,.3);
 }
 
-.bg-card.azul { background: radial-gradient(circle,#008cff,#001b3d); }
-.bg-card.roxo { background: radial-gradient(circle,#7b2cff,#1a0033); }
-.bg-card.rosa { background: radial-gradient(circle,#ff00cc,#330033); }
-.bg-card.preto { background: radial-gradient(circle,#000,#111); }
+.bg-card:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 25px #ff00cc;
+}
 
-/* ===== PREVIEW ===== */
+/* CORES */
+
+.bg-card.azul {
+  background: radial-gradient(circle,#008cff,#001b3d);
+}
+
+.bg-card.roxo {
+  background: radial-gradient(circle,#7b2cff,#1a0033);
+}
+
+.bg-card.rosa {
+  background: radial-gradient(circle,#ff00cc,#330033);
+}
+
+.bg-card.preto {
+  background: radial-gradient(circle,#000,#111);
+}
+
+/* =========================
+   TEXTO VEJA COMO VAI FICAR
+========================= */
+
+.device-preview + div,
+div[style*="Veja como vai ficar"] {
+  font-family: 'Orbitron', sans-serif !important;
+  font-size: 1.4rem !important;
+  text-align: center;
+  background: linear-gradient(90deg,#ffd400,#ffae00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* =========================
+   CORREÇÃO MOBILE DEFINITIVA
+========================= */
+
+/* Garante que nada ultrapasse a tela */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove qualquer estouro lateral */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden !important;
+}
+
+/* Editor 100% responsivo */
+.editor {
+  width: 100%;
+  max-width: 520px;
+  padding: 20px;
+}
+
+/* Inputs não podem ultrapassar */
+.editor input,
+.editor textarea,
+button {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Preview nunca ultrapassa */
 .preview {
-  width: 360px;
-  max-width: 92vw;
-  border-radius: 34px;
-  background: #000;
-  border: 10px solid #111;
-  overflow-y: auto;
-  padding-top: 70px;
+  width: 100%;
+  max-width: 100%;
 }
 
-/* ===== NOME ===== */
-.nome {
-  font-family: 'Rye', cursive;
-  font-size: 2.8em;
+/* Corrige fundos */
+.bg-options {
+  flex-wrap: wrap;
+  padding: 0 10px;
+}
+
+/* Fotos responsivas */
+.photo-grid {
+  flex-wrap: wrap;
+}
+
+/* ===== PREVIEW PREMIUM ===== */
+
+.preview {
+  backdrop-filter: blur(6px);
+}
+
+.polaroid {
+  border-radius: 10px;
+  box-shadow:
+    0 15px 35px rgba(0,0,0,.5),
+    0 0 25px rgba(255,0,200,.2);
+}
+
+
+
+/* ===== CORREÇÃO TEXTO BOTÃO FINAL ===== */
+
+body.final button.pay {
+  color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
+}
+
+
+input, textarea {
+  background-color: #000 !important;
+  color: #fff !important;
+  border: 2px solid #ff00c8;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #aaa;
+}
+
+/* Corrige autofill do Chrome no celular */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #000 inset !important;
+  -webkit-text-fill-color: #fff !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.date-box {
+  margin: 20px auto;
+  padding: 14px 25px;
+  border-radius: 30px;
+  border: 2px solid #ff00cc;
+  background: linear-gradient(90deg,#1a0033,#330033);
+  font-family: 'Orbitron', sans-serif;
+  cursor: pointer;
+  transition: .3s;
+  box-shadow: 0 0 15px rgba(255,0,255,.4);
   text-align: center;
-  margin: 30px 0 10px;
-  color: #f7efe8;
 }
 
-/* ===== MENSAGEM ===== */
-.mensagem {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.15em;
-  text-align: center;
-  margin: 10px 20px;
-  color: rgba(240,230,225,0.9);
+.date-box:hover {
+  box-shadow: 0 0 25px #ff00cc, 0 0 50px rgba(255,0,255,.5);
+  transform: scale(1.03);
 }
 
-/* ===== PLAYER ===== */
+#btnComprar {
+  color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
+  font-weight: bold !important;
+}
+
+/* =========================
+   PLAYER MINIMAL VIDRO
+========================= */
+
 .music-player {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin: 20px auto;
+  gap: 14px;
+
+  background: rgba(255, 255, 255, 0.08); /* vidro leve */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  border-radius: 999px;
+  padding: 10px 18px;
+
   width: 75%;
+  max-width: 280px;
+  margin: 20px auto;
+
+  border: 1px solid rgba(255,255,255,0.15);
 }
 
+/* Botão minimal */
 .play-btn {
   width: 40px;
   height: 40px;
+  min-width: 40px;
+
   border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.25);
+
   background: transparent;
   color: #fff;
-  border: 1px solid rgba(255,255,255,.3);
+
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  transition: 0.3s ease;
 }
 
-/* ===== COMPRA ===== */
-.buyer-label{
-  color:#fff;
-  font-family:'Orbitron', sans-serif;
-  text-align:center;
+.play-btn:hover {
+  background: rgba(255,255,255,0.15);
 }
 
-.buyer-input{
-  width:100%;
-  padding:14px;
-  border-radius:14px;
-  border:2px solid #2f2f2f;
-  background:#111;
-  color:#fff;
+/* Texto */
+.music-title {
+  font-size: 15px;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 4px;
 }
 
-.buyer-help{
-  margin-top:14px;
-  color:#fff;
-  text-align:center;
-  font-family:'Orbitron', sans-serif;
+/* Barra */
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+  overflow: hidden;
 }
 
-/* ===== BOTÃO PAGAR ===== */
-button.pay {
-  background:#ffd400;
-  color:#000;
-  font-weight:bold;
-  border-radius:18px;
-  padding:18px;
+.progress {
+  height: 100%;
+  width: 0%;
+  background: rgba(255,255,255,0.9);
+  transition: width 0.2s;
+}
+.music-info {
+  flex: 1;
+  color: #fff;
+  font-family: 'Cormorant Garamond', serif;
 }
 
-/* ===== STEPS ===== */
-.step{ display:none; }
-.step.active{ display:block; }
-
-.step-nav{
-  display:flex;
-  gap:12px;
-  margin-top:24px;
+.music-title {
+  font-size: 16px;
+  display: block;
+  margin-bottom: 5px;
 }
 
-.step-btn{
-  flex:1;
-  padding:14px;
-  border-radius:16px;
-  font-weight:700;
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+  overflow: hidden;
 }
 
-.step-btn.secondary{
-  background:#1b1b1b;
-  color:#fff;
+.progress {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #ff4d88, #ff99cc);
+  transition: width 0.2s;
 }
 
-.step-btn.primary{
-  background: linear-gradient(135deg, #ff4d88, #a84dff);
-  color:#fff;
-  box-shadow:0 0 12px rgba(255,77,136,.5);
+.music-box.disabled {
+  pointer-events: none;
+  opacity: 0.6;
 }
 
-/* ===== FINAL ===== */
-body.final .editor,
-body.final .device-preview{
-  display:none !important;
-}
 /* =========================
-   BIBLIOTECA DE MÚSICAS (FIX)
+   LER MAIS / MENOS PREMIUM
 ========================= */
 
-.music-library{
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  max-height:75vh;
-  background:#0a0a0a;
-  border-top-left-radius:26px;
-  border-top-right-radius:26px;
-  padding:25px;
-  overflow-y:auto;
-  display:none;
-  z-index:9999;
-  box-shadow:0 -10px 40px rgba(0,0,0,.8);
+.ler-mais {
+  margin: 24px auto 10px;
+  padding: 12px 26px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.12),
+    rgba(255,255,255,0.04)
+  );
+  backdrop-filter: blur(12px);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.05em;
+  color: #f2f2f2;
+  letter-spacing: 1px;
+  box-shadow:
+    0 8px 25px rgba(0,0,0,0.35),
+    inset 0 0 0 1px rgba(255,255,255,0.08);
+  transition: all 0.35s ease;
 }
+
+.ler-mais:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 14px 35px rgba(0,0,0,0.45),
+    inset 0 0 0 1px rgba(255,255,255,0.15);
+}
+
+/* Texto */
+.ler-text {
+  white-space: nowrap;
+}
+
+/* Ícones */
+.ler-icon {
+  font-size: 1.1em;
+  opacity: 0.75;
+  animation: bounceDown 1.4s infinite;
+}
+
+/* Animação descendo */
+.ler-icon.down {
+  animation-name: bounceDown;
+}
+
+/* Animação subindo */
+.ler-icon.up {
+  animation-name: bounceUp;
+}
+
+/* Keyframes */
+@keyframes bounceDown {
+  0%   { transform: translateY(0); opacity: 0.5; }
+  50%  { transform: translateY(4px); opacity: 1; }
+  100% { transform: translateY(0); opacity: 0.5; }
+}
+
+@keyframes bounceUp {
+  0%   { transform: translateY(0); opacity: 0.5; }
+  50%  { transform: translateY(-4px); opacity: 1; }
+  100% { transform: translateY(0); opacity: 0.5; }
+}
+@media (max-width: 420px) {
+
+  #tempo {
+    margin: 35px 0 25px;
+  }
+
+  #tempo .contador {
+    gap: 10px;
+  }
+
+  #tempo .item {
+    font-size: 1.6em;
+    min-width: 88px;
+    padding: 12px 18px;
+  }
+
+  #tempo .tempo-hms {
+    font-size: 1.5em;
+    min-width: 140px;
+  }
+
+}
+
+@media (max-width: 420px) {
+  #tempo .titulo {
+    font-size: 1.5em;
+    letter-spacing: 1px;
+  }
+}
+@media (max-width: 420px) {
+  .nome {
+    font-size: 2.4em;
+    letter-spacing: 1.5px;
+  }
+}
+/* ===== PLAYER SITE FINAL ===== */
+
+body.final #audioPlayer {
+  display: block;
+  width: 80%;
+  max-width: 280px;
+  margin: 20px auto;
+}
+/* =========================
+   TELA ABRIR PRESENTE
+========================= */
+
+.gift-screen {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at top, #ff4d88, #1a0010 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.gift-card {
+  text-align: center;
+  color: #fff;
+  padding: 40px 30px;
+  max-width: 320px;
+}
+
+.gift-card h1 {
+  font-family: 'Keania One', sans-serif;
+  font-size: 1.8em;
+  margin-bottom: 30px;
+}
+
+.gift-box {
+  font-size: 90px;
+  animation: giftPulse 1.8s infinite;
+  margin-bottom: 30px;
+}
+
+@keyframes giftPulse {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+#openGiftBtn {
+  background: #fff;
+  color: #000;
+  border: none;
+  padding: 16px 28px;
+  border-radius: 999px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0,0,0,.4);
+}
+
+/* 🚫 FIX DEFINITIVO SAMSUNG INTERNET */
+@media (prefers-color-scheme: dark) {
+  html {
+    background-color: #fff !important;
+  }
+
+  body {
+    background-color: #000 !important;
+    color: #fff !important;
+  }
+
+  img, video, iframe {
+    filter: none !important;
+  }
+}
+
+/* =========================
+   TEMPO – NÚMERO EM CIMA (AJUSTADO)
+========================= */
+
+#tempo .item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 18px;
+}
+
+#tempo .numero {
+  font-size: 0.90em;   /* 🔥 menor e equilibrado */
+  font-weight: 500;
+  line-height: 1;
+}
+
+#tempo .label {
+  font-size: 0.75em;  /* 🔥 menor que antes */
+  opacity: 0.6;
+  margin-top: 3px;
+  text-transform: lowercase;
+}
+/* =========================
+   CONTADOR – FIX REAL
+========================= */
+
+.contador {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;              /* espaço real entre eles */
+  flex-wrap: nowrap;      /* impede quebra estranha */
+}
+
+.contador .item {
+  flex: 0 0 auto;         /* impede encolher */
+  min-width: 85px;        /* largura menor */
+  padding: 12px 14px;
+}
+
+/* versão mobile mais controlada */
+@media (max-width: 420px) {
+  .contador {
+    gap: 10px;
+  }
+
+  .contador .item {
+    min-width: 75px;
+    padding: 10px 10px;
+  }
+}
+
+.heart-container {
+  position: relative;
+  width: 100%;
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+
+.heart-img{
+width:120%;
+display:block;
+
+/* deslocamento visual */
+transform: translateX(-10%);
+}
+
+
+.heart-name {
+  position: absolute;
+
+  left: 53.5%;
+  top: 77.1%;
+
+  transform: translate(-50%, -50%);
+
+  width: 42%;
+  text-align: center;
+
+  font-family: 'Coiny', cursive;
+
+  font-size: clamp(12px, 2.2vw, 14px);
+
+  color: #e8e8e8;
+
+  letter-spacing: 1px;
+
+  text-shadow:
+    1px 1px 2px rgba(0,0,0,0.8);
+max-width:90%;
+overflow:hidden;
+text-overflow:ellipsis;
+white-space:nowrap;
+}
+
+.heart-container {
+  display: none;
+}
+
+*{
+-webkit-tap-highlight-color: transparent;
+outline: none;
+}
+
+body,
+a,
+button,
+div,
+input,
+textarea{
+-webkit-tap-highlight-color: transparent;
+outline: none;
+}
+
+
+/* =========================
+   BIBLIOTECA DE MÚSICAS
+========================= */
+
+.music-library-btn{
+
+margin:20px auto;
+
+padding:14px 25px;
+
+border-radius:30px;
+
+border:2px solid #ff00cc;
+
+background:linear-gradient(90deg,#1a0033,#330033);
+
+font-family:'Orbitron',sans-serif;
+
+cursor:pointer;
+
+transition:.3s;
+
+box-shadow:0 0 15px rgba(255,0,255,.4);
+
+text-align:center;
+
+}
+
+.music-library-btn:hover{
+
+box-shadow:0 0 25px #ff00cc,0 0 50px rgba(255,0,255,.5);
+
+transform:scale(1.03);
+
+}
+
+/* janela biblioteca */
+
+.music-library{
+
+position:fixed;
+
+bottom:0;
+left:0;
+
+width:100%;
+
+max-height:75vh;
+
+background:#0a0a0a;
+
+border-top-left-radius:26px;
+border-top-right-radius:26px;
+
+padding:25px;
+
+overflow-y:auto;
+
+display:none;
+
+z-index:9999;
+
+box-shadow:0 -10px 40px rgba(0,0,0,.8);
+
+}
+
+/* header */
 
 .music-header{
-  font-family:'Orbitron',sans-serif;
-  font-size:18px;
-  color:#fff;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:20px;
+
+font-family:'Orbitron',sans-serif;
+
+font-size:18px;
+
+color:#fff;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:20px;
+
 }
+
+/* linha musica */
 
 .music-item{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:14px 6px;
-  border-bottom:1px solid rgba(255,255,255,.08);
+
+display:flex;
+
+align-items:center;
+
+justify-content:space-between;
+
+padding:14px 6px;
+
+border-bottom:1px solid rgba(255,255,255,.08);
+
 }
+
+/* nome */
 
 .music-item span{
-  color:#fff;
-  font-size:16px;
+
+color:#fff;
+
+font-size:16px;
+
 }
 
+/* ações */
+
 .music-actions{
-  display:flex;
-  gap:10px;
+
+display:flex;
+
+gap:10px;
+
 }
+
+/* botão play */
 
 .preview-btn{
   width:44px;
@@ -342,203 +1758,152 @@ body.final .device-preview{
   color:white;
   font-size:18px;
   cursor:pointer;
+
   display:flex;
   align-items:center;
   justify-content:center;
 }
 
+/* botão escolher */
+
 .select-btn{
-  padding:10px 16px;
-  border:none;
-  border-radius:14px;
-  background:linear-gradient(90deg,#ff2ad4,#ff6ef7);
-  color:#fff;
-  font-weight:bold;
-  cursor:pointer;
+
+padding:10px 16px;
+
+border:none;
+
+border-radius:14px;
+
+background:linear-gradient(90deg,#ff2ad4,#ff6ef7);
+
+color:#fff;
+
+font-weight:bold;
+
+cursor:pointer;
+
 }
 
 .select-btn:hover{
-  transform:scale(1.05);
-  box-shadow:0 0 10px #ff2ad4;
-}
-/* =========================
-   TEXTO ACIMA DA PREVIEW
-========================= */
 
-.device-preview + div,
-div[style*="Veja como vai ficar"]{
-  font-family:'Orbitron', sans-serif !important;
-  font-size:1.4rem !important;
+transform:scale(1.05);
+
+box-shadow:0 0 10px #ff2ad4;
+
+}
+
+.selected-music{
+
+background:#22c55e;
+
+color:#fff;
+
+font-weight:bold;
+
+}
+
+
+
+
+.buyer-box{
+  margin-bottom: 18px;
+}
+
+.buyer-label{
+  display:block;
+  margin: 14px 0 8px;
+  color:#fff;
+  font-weight:400;
+  font-size:0.95rem;
+  font-family:'Orbitron', sans-serif;
   text-align:center;
-  background:linear-gradient(90deg,#ffd400,#ffae00);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-/* =========================
-   PREVIEW / CELULAR FAKE (FIX)
-========================= */
-
-.device-preview{
-  max-width:390px;
-  margin:0 auto 40px;
-  background:#000;
-  border-radius:44px;
-  padding:14px;
-  box-shadow:
-    0 0 0 6px #111,
-    0 30px 80px rgba(0,0,0,.9);
-  position:relative;
 }
 
-.device-top{
-  height:70px;
-  background:transparent;
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
-  padding-bottom:8px;
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  z-index:10;
-}
-
-.device-top::before{
-  content:"";
-  width:120px;
-  height:22px;
-  background:rgba(0,0,0,0.9);
-  border-radius:16px;
-  position:absolute;
-  top:6px;
-}
-
-.chrome-url{
-  font-size:.75em;
-  color:#ccc;
-  background:rgba(20,20,20,0.6);
-  backdrop-filter:blur(12px);
-  padding:6px 16px;
-  border-radius:999px;
-  max-width:85%;
-  text-align:center;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
-}
-
-.device-screen{
-  background:#000;
-  border-radius:32px;
-  overflow:hidden;
-  height:720px;
-  position:relative;
-}
-
-.preview{
-  width:360px;
-  max-width:92vw;
-  height:100%;
-  border-radius:34px;
-  background:#000;
-  border:10px solid #111;
-  box-shadow:
-    0 0 0 4px #000,
-    0 25px 60px rgba(0,0,0,.8);
-  overflow-y:auto;
-  overflow-x:hidden;
-  -webkit-overflow-scrolling:touch;
-  position:relative;
-  padding-top:70px;
-  padding-bottom:40px;
-  z-index:1;
-}
-
-.preview::-webkit-scrollbar{
-  width:0;
-}
-
-.preview.azul{
-  background:
-    radial-gradient(circle at 30% 20%, #3aa0ff, #050b1a 70%),
-    radial-gradient(circle at 80% 80%, rgba(0,150,255,.3), transparent 60%);
-}
-
-.preview.roxo{
-  background:
-    radial-gradient(circle at 30% 20%, #9b4dff, #12071a 70%),
-    radial-gradient(circle at 80% 80%, rgba(150,0,255,.3), transparent 60%);
-}
-
-.preview.rosa{
-  background:
-    radial-gradient(circle at 30% 20%, #ff4fd8, #1a050f 70%),
-    radial-gradient(circle at 80% 80%, rgba(255,0,150,.3), transparent 60%);
-}
-
-.preview.preto{
-  background:
-    radial-gradient(circle at 30% 20%, #333, #000 70%),
-    radial-gradient(circle at 80% 80%, rgba(255,255,255,.05), transparent 60%);
-}
-
-
-/* =========================
-   CORAÇÕES / ANIMAÇÃO
-========================= */
-
-.heart-container{
-  position:relative;
-  margin:40px auto 20px;
-  width:160px;
-  height:160px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.heart-img{
+.buyer-input{
   width:100%;
-  opacity:0.9;
-  filter:drop-shadow(0 0 12px rgba(255,0,120,.4));
+  padding:14px 16px;
+  border-radius:14px;
+  border:2px solid #2f2f2f;
+  background:#111 !important;
+  color:#fff !important;
+  font-size:16px;
+  -webkit-text-fill-color:#fff !important;
+  caret-color:#ffd400;
 }
 
-.heart-name{
-  position:absolute;
-  font-family:'Playfair Display', serif;
-  font-size:18px;
+.buyer-input::placeholder{
+  color:rgba(255,255,255,.25) !important;
+  font-size:14px;
+}
+
+.buyer-input:focus{
+  outline:none;
+  border-color:#ffd400;
+  box-shadow:0 0 0 2px rgba(255,212,0,.12);
+}
+
+.buyer-help{
+  margin-top:14px;
   color:#fff;
   text-align:center;
-  max-width:80%;
-  word-break:break-word;
+  font-size:0.95rem;
+  font-family:'Orbitron', sans-serif;
+  line-height:1.4;
 }
 
-/* ❤️ CORAÇÕES FLUTUANDO */
-
-.heart{
-  position:absolute;
-  bottom:-20px;
-  font-size:18px;
-  color:#ff4d88;
-  animation:floatUp linear infinite;
-  opacity:0.8;
-  pointer-events:none;
+.buyer-input{
+  background:#111 !important;
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
 }
 
-@keyframes floatUp{
-  0%{
-    transform:translateY(0) scale(1);
-    opacity:0;
-  }
-  20%{
-    opacity:1;
-  }
-  100%{
-    transform:translateY(-600px) scale(1.4);
-    opacity:0;
-  }
+.step{
+  display:none;
+}
+
+.step.active{
+  display:block;
+}
+
+.step-nav{
+  display:flex;
+  gap:12px;
+  margin-top:24px;
+}
+
+.step-btn{
+  flex:1;
+  padding:14px 18px;
+  border:none;
+  border-radius:16px;
+  font-size:1rem;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.step-btn.secondary{
+  background:#1b1b1b;
+  color:#fff;
+  border:1px solid rgba(255,255,255,.15);
+}
+
+.step-btn.primary{
+  background:#ffd400;
+  color:#000;
+}
+
+.step-btn[disabled]{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+
+/* 🔥 FORÇA COR BRANCA NO BLOCO DE COMPRA */
+.buyer-box label,
+.buyer-box .buyer-label,
+.buyer-box .buyer-help{
+  color:#fff !important;
+  font-family:'Orbitron', sans-serif !important;
 }
 
 
