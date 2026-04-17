@@ -78,6 +78,11 @@ function validarEtapaAtual() {
 
    const btnComprar = document.getElementById("btnComprar");
   const lerBtn     = document.getElementById("lerBtn");
+
+  const buyerHelpBtn1 = document.getElementById("buyerHelpBtn1");
+const buyerHelpBtn2 = document.getElementById("buyerHelpBtn2");
+
+const buyerHelpMessage = 'Informe CPF e email para gerar o pagamento. Esses dados permitem localizar sua compra em caso de suporte ou reembolso.';
  
   const fotoInput = document.getElementById("fotoInput");
   const midias    = document.getElementById("midias");
