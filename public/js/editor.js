@@ -482,11 +482,11 @@ lerBtn.onclick = () => {
       }
     });
   }
+if (isEditor) {
+   criarCoracoesPreview();
+  }
 };
-    criarCoracoesPreview();
-  };
-
-
+  
   /* =====================
    FUNDOS
 ===================== */
