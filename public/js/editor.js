@@ -135,6 +135,8 @@ dataInput.addEventListener("change", () => {
     const mo = Math.floor(diff / 2592000000) % 12;
     const a = Math.floor(diff / 31536000000);
 
+ const scrollAtual = preview.scrollTop;
+    
     tempo.innerHTML = `
       <span class="titulo">compartilhamos a vida já faz:</span>
 
@@ -160,6 +162,8 @@ dataInput.addEventListener("change", () => {
       </div>
     `;
 
+ preview.scrollTop = scrollAtual;
+    
   }, 1000);
 
   criarCoracoesPreview();
