@@ -344,19 +344,19 @@ app.post("/webhook", async (req, res) => {
   try {
     console.log("🔔 Webhook:", JSON.stringify(req.body, null, 2));
 
-    const order = req.body;
+  const order = req.body;
 
-    // 🔥 O STATUS VEM AQUI
-    const status = order.status;
+const charge = order.charges?.find(c => c.status === "PAID");
+const status = charge?.status;
 
-    console.log("📡 STATUS DO PEDIDO:", status);
+console.log("📡 STATUS DO PAGAMENTO:", status);
 
-    if (status !== "PAID") return;
+if (status !== "PAID") return;
 
-    const qr = order.qr_codes?.[0];
-    if (!qr) return;
+const qr = order.qr_codes?.[0];
+if (!qr) return;
 
-    const paymentId = qr.id;
+const paymentId = qr.id;
 
     const pagamento = await payments.findOne({ paymentId });
 
