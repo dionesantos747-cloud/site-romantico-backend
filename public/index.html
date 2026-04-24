@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -57,6 +58,32 @@ body{
   font-weight:800;
   margin-bottom:18px;
   font-size:1rem;
+}
+
+.promo-extra{
+  margin-top:10px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+}
+
+.promo-badge{
+  display:inline-block;
+  padding:6px 14px;
+  border-radius:999px;
+  background:rgba(0,0,0,.85);
+  color:#ffd400;
+  font-size:.9rem;
+  font-weight:900;
+  box-shadow:0 0 16px rgba(255,212,0,.35);
+}
+
+.promo-small{
+  color:#220018;
+  font-size:.78rem;
+  font-weight:700;
+  opacity:.9;
 }
 
 /* =====================
@@ -170,6 +197,43 @@ body{
   font-family:'Playfair Display',serif;
 }
 
+.refund-box{
+  margin:18px auto 0;
+  padding:14px 16px;
+  max-width:360px;
+  border-radius:18px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,80,200,.25);
+  font-size:.78rem;
+  line-height:1.55;
+  color:rgba(255,255,255,.78);
+}
+
+.refund-box strong{
+  color:#ffd400;
+}
+
+.refund-links{
+  margin-top:8px;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.refund-links a{
+  color:#ff9de6;
+  text-decoration:none;
+  font-weight:600;
+}
+
+.brand-small{
+  margin-top:10px;
+  font-family:'Playfair Display',serif;
+  font-size:.82rem;
+  color:rgba(255,255,255,.45);
+  letter-spacing:.08em;
+}
+
 /* =====================
    CTA
 ===================== */
@@ -274,7 +338,7 @@ body{
 }
 
 .mini-phone {
-  width: 180px;               /* 🔥 pequeno e elegante */
+  width: 180px;
   aspect-ratio: 9 / 19.5;
   background: #000;
   border-radius: 26px;
@@ -351,6 +415,11 @@ body{
 <div class="promo">
 🔥 Promoção exclusiva <br>
 <strong>de R$ 29,90 por apenas R$ 15.80</strong>
+
+<div class="promo-extra">
+  <span class="promo-badge">47% OFF • quase metade do preço!</span>
+  <span class="promo-small">por tempo ilimitado</span>
+</div>
 </div>
 
 <h1 class="hero-title">
@@ -414,6 +483,19 @@ Imagine a pessoa lendo suas palavras… e descobrindo um link com fotos, música
 <div class="price-box">
   <div class="old">de R$ 29.90</div>
   <div class="price">R$ 15.80</div>
+
+  <div class="refund-box">
+    Você pode pedir seu dinheiro de volta em até <strong>7 dias</strong>, caso não fique satisfeito com sua compra.
+
+    <div class="refund-links">
+      <a href="mailto:memoryitlove@gmail.com">E-mail: memoryitlove@gmail.com</a>
+      <a href="https://wa.me/5538998050662?text=Ol%C3%A1%2C%20tenho%20d%C3%BAvidas%20ou%20quero%20reembolso." target="_blank">
+        Contato: 3899805...
+      </a>
+    </div>
+
+    <div class="brand-small">memoryit</div>
+  </div>
 </div>
 
 <a href="editor.html?novo" class="cta">Criar agora</a>
