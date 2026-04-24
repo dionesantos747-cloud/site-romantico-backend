@@ -169,6 +169,48 @@ app.post("/upload-music", upload.single("file"), (req, res) => {
 });
 
 /* =====================
+   PAGBANK PUBLIC KEY
+===================== */
+let cachedPublicKey = null;
+let cachedPublicKeyAt = null;
+
+app.get("/public-key", async (req, res) => {
+  try {
+    // cache por 24h
+    if (
+      cachedPublicKey &&
+      cachedPublicKeyAt &&
+      Date.now() - cachedPublicKeyAt < 24 * 60 * 60 * 1000
+    ) {
+      return res.json(cachedPublicKey);
+    }
+
+    const response = await axios.post(
+      "https://api.pagseguro.com/public-keys",
+      {
+        type: "card"
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.PAGSEGURO_TOKEN}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    cachedPublicKey = response.data;
+    cachedPublicKeyAt = Date.now();
+
+    res.json(response.data);
+
+  } catch (err) {
+    console.error("❌ Erro public-key:", err.response?.data || err.message);
+    res.status(500).json({
+      error: err.response?.data || err.message
+    });
+  }
+});
+/* =====================
    CREATE PAYMENT
 ===================== */
 app.post("/create-payment", async (req, res) => {
@@ -250,7 +292,7 @@ if (!cpf || !email || !cpfValido(cpf)) {
           }
         ],
         notification_urls: [
-          `${req.protocol}://${req.get("host")}/webhook`
+          "https://memoryit.com.br/webhook"
         ]
       },
       {
