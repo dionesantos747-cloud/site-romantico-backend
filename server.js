@@ -218,7 +218,7 @@ if (!cpf || !email || !cpfValido(cpf)) {
     });
 
     const response = await axios.post(
-      "https://sandbox.api.pagseguro.com/orders",
+      "https://api.pagseguro.com/orders",
       {
         reference_id: "pedido_" + tempId,
       customer: {
@@ -398,7 +398,7 @@ app.get("/payment-info", async (req, res) => {
     }
 
     const response = await axios.get(
-      `https://sandbox.api.pagseguro.com/orders/${pagamento.orderId}`,
+      `https://api.pagseguro.com/orders/${pagamento.orderId}`,
       {
         headers: {
           Authorization: `Bearer ${process.env.PAGSEGURO_TOKEN}`
